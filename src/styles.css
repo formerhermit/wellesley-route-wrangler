@@ -1,0 +1,913 @@
+:root {
+  --ink: #1d2b36;
+  --ink-soft: #536371;
+  --paper: #f3efe4;
+  --card: #fffdf7;
+  --line: #d9d2c1;
+
+  --club: #12405c;
+  --club-bright: #1c6b95;
+  --hi-vis: #f2c14e;
+  --route: #e8622c;
+  --pass: #2f7d5c;
+  --fail: #bc4749;
+  --pigeon: #7c8a99;
+  --water: #7fb2cf;
+  --grass: #86ad6a;
+
+  --radius: 14px;
+  --shadow: 0 10px 26px rgb(29 43 54 / 12%);
+
+  color-scheme: light;
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 8%, #fff8e6 0%, transparent 42%),
+    radial-gradient(circle at 88% 92%, #e7eef2 0%, transparent 46%),
+    var(--paper);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.page {
+  min-height: 100vh;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+
+.layout {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+/* ---------- Header ---------- */
+
+.game-header__club {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--club-bright);
+}
+
+.game-header__title {
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.9rem, 6vw, 2.9rem);
+  line-height: 1.05;
+  color: var(--club);
+}
+
+.game-header__level {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-weight: 700;
+}
+
+.game-header__strapline {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.game-header__instructions {
+  margin: 0.5rem 0 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* ---------- Layout ---------- */
+
+.layout__main {
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  grid-template-columns: 1fr;
+}
+
+.layout__side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+@media (min-width: 900px) {
+  .layout__main {
+    grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr);
+    align-items: start;
+  }
+}
+
+.page__footer {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.page__footer p {
+  margin: 0;
+}
+
+/* ---------- Map ---------- */
+
+.map {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.35rem;
+  overflow: hidden;
+}
+
+.map-stage {
+  position: relative;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: manipulation;
+}
+
+/*
+ * Real buttons sitting over the map. Percentages track the SVG viewBox, so
+ * they stay on their junctions at any width.
+ */
+.junction-buttons {
+  position: absolute;
+  inset: 0;
+}
+
+.junction-button {
+  position: absolute;
+  width: 6.6%;
+  min-width: 36px;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.junction-button:disabled {
+  cursor: default;
+}
+
+.junction-button[aria-disabled="true"]:not(:disabled) {
+  cursor: not-allowed;
+}
+
+.junction-button:focus-visible {
+  outline: 3px solid var(--club);
+  outline-offset: -2px;
+  background: rgb(28 107 149 / 12%);
+}
+
+@media (hover: hover) {
+  .junction-button.is-selectable:hover {
+    background: rgb(28 107 149 / 12%);
+  }
+}
+
+.map-ground {
+  fill: #fbf7ec;
+}
+
+/* Landmarks */
+.canal-water {
+  fill: none;
+  stroke: var(--water);
+  stroke-width: 26;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.canal-shimmer {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 14 22;
+  opacity: 0.6;
+}
+
+.park-ground {
+  fill: var(--grass);
+  opacity: 0.28;
+}
+
+.pond-water {
+  fill: var(--water);
+  opacity: 0.5;
+}
+
+.terrace rect {
+  fill: #e3dbc9;
+}
+
+.tree-trunk {
+  fill: #8a6a4a;
+}
+
+.tree-leaf {
+  fill: var(--grass);
+}
+
+.build-wall {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.build-dome {
+  fill: var(--club-bright);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.build-telescope {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.build-door {
+  fill: var(--club);
+}
+
+.build-awning {
+  fill: var(--route);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.build-cup {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.build-handle,
+.build-steam {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.build-shutter {
+  fill: #c9bfa8;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.build-wheel {
+  fill: var(--ink);
+}
+
+.hill-body {
+  fill: #cbb894;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.hill-cap {
+  fill: #fff;
+  opacity: 0.8;
+}
+
+.closed-bar {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.closed-stripe {
+  fill: var(--fail);
+}
+
+.closed-post {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* Roads */
+.road {
+  stroke: #c6bda8;
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+.road--hill {
+  stroke-dasharray: 2 13;
+  stroke-width: 11;
+  stroke: #b9a988;
+}
+
+.road--closed {
+  stroke: #d8b3b4;
+  stroke-dasharray: 10 9;
+}
+
+.route-line {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.route-line--top {
+  stroke: var(--route);
+  stroke-width: 9;
+}
+
+.map-svg.is-running .route-line--top {
+  stroke-dasharray: 16 12;
+  animation: route-flow 1.1s linear infinite;
+}
+
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+/* Junctions */
+
+.junction-halo {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.junction-dot {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.junction--observatory .junction-dot {
+  fill: var(--club);
+}
+
+.junction--cafe .junction-dot {
+  fill: var(--route);
+}
+
+.junction--canal .junction-dot {
+  fill: var(--water);
+}
+
+.junction--park .junction-dot {
+  fill: var(--grass);
+}
+
+.junction--pigeon .junction-dot {
+  fill: var(--pigeon);
+}
+
+.junction--hill .junction-dot,
+.junction--depot .junction-dot {
+  fill: #cbb894;
+}
+
+.junction.is-selectable .junction-halo {
+  stroke: var(--club-bright);
+  stroke-width: 3;
+  stroke-dasharray: 5 5;
+}
+
+.junction.is-visited .junction-dot {
+  stroke-width: 4;
+  r: 12;
+}
+
+.junction.is-end .junction-halo {
+  fill: var(--hi-vis);
+  stroke-width: 3.5;
+}
+
+.junction-step {
+  font-size: 12px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: #fff;
+  paint-order: stroke;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  pointer-events: none;
+}
+
+.junction-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: #fbf7ec;
+  stroke-width: 4;
+  pointer-events: none;
+}
+
+.junction.is-rejected {
+  animation: junction-wobble 0.45s ease;
+}
+
+.junction.is-rejected .junction-halo {
+  stroke: var(--fail);
+  stroke-width: 4;
+}
+
+@keyframes junction-wobble {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Runners */
+.runner-head {
+  fill: #f0c9a4;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.runner-body {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.vest-a {
+  stroke: var(--hi-vis);
+}
+.vest-b {
+  stroke: var(--club-bright);
+}
+.vest-c {
+  stroke: var(--route);
+}
+.vest-d {
+  stroke: var(--pass);
+}
+
+.runner-arms,
+.runner-legs {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+/* Pigeons */
+.pigeon-body,
+.pigeon-head {
+  fill: var(--pigeon);
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.pigeon-wing {
+  fill: #9aa7b5;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  transform-origin: -2px -3px;
+  animation: wing-idle 2.4s ease-in-out infinite;
+}
+
+.pigeon-tail {
+  fill: #6f7d8c;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+.pigeon-beak {
+  fill: var(--hi-vis);
+}
+
+.pigeon-eye {
+  fill: var(--ink);
+}
+
+.pigeon-legs {
+  stroke: var(--hi-vis);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.sprite--pigeon.is-alarmed .pigeon-wing {
+  animation: wing-flap 0.28s linear infinite;
+}
+
+@keyframes wing-idle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes wing-flap {
+  0%,
+  100% {
+    transform: rotate(-38deg);
+  }
+  50% {
+    transform: rotate(22deg);
+  }
+}
+
+.flock-bird {
+  animation: pigeon-bob 2.6s ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes pigeon-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+.flock.is-alarmed .flock-bird {
+  animation: none;
+  transform: translate(var(--flee-x), var(--flee-y)) rotate(-12deg);
+}
+
+.flock.is-still .flock-bird {
+  animation: none;
+}
+
+.flock-alarm {
+  font-size: 30px;
+  font-weight: 900;
+  text-anchor: middle;
+  fill: var(--fail);
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 4;
+}
+
+/* ---------- Panels ---------- */
+
+.controls,
+.objectives {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.9rem 1rem;
+}
+
+.controls__distance {
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.controls__distance-value {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  font-weight: 800;
+  color: var(--club);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls__distance-detail {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.controls__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.controls__hint {
+  margin: 0.7rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.button {
+  flex: 1 1 auto;
+  min-height: 46px;
+  padding: 0.6rem 1.1rem;
+  border: 2px solid var(--club);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--club);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    background 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+  background: #eef4f8;
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
+.button--primary {
+  background: var(--club);
+  color: #fff;
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--club-bright);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Objectives */
+.objectives h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+.objectives__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.objective {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  gap: 0.55rem;
+  align-items: start;
+  padding: 0.5rem 0.55rem;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fdfbf5;
+}
+
+.objective__mark {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 800;
+  border: 2px solid currentColor;
+}
+
+.objective__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.objective__label {
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.3;
+}
+
+.objective__detail {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.objective__state {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-top: 0.15rem;
+}
+
+.objective--passed {
+  border-color: color-mix(in srgb, var(--pass) 45%, white);
+  color: var(--pass);
+}
+
+.objective--failed {
+  border-color: color-mix(in srgb, var(--fail) 45%, white);
+  color: var(--fail);
+}
+
+.objective--incomplete {
+  color: var(--ink-soft);
+}
+
+.objective__label,
+.objective__detail {
+  color: var(--ink);
+}
+
+.objective--incomplete .objective__detail {
+  color: var(--ink-soft);
+}
+
+/* ---------- Result ---------- */
+
+.result-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(29 43 54 / 55%);
+  z-index: 10;
+  animation: fade-in 0.2s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.result {
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card);
+  border: 3px solid var(--club);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 30%);
+  padding: clamp(1rem, 3vw, 1.6rem);
+}
+
+.result--failure {
+  border-color: var(--fail);
+}
+
+.result--success {
+  border-color: var(--pass);
+}
+
+.result__badge {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.result h2 {
+  margin: 0.2rem 0 0.5rem;
+  font-size: clamp(1.5rem, 5vw, 2.1rem);
+  line-height: 1.1;
+  color: var(--club);
+}
+
+.result h2:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 4px;
+}
+
+.result--failure h2 {
+  color: var(--fail);
+}
+
+.result--success h2 {
+  color: var(--pass);
+}
+
+.result__message {
+  margin: 0 0 1rem;
+  line-height: 1.55;
+}
+
+.result__stats {
+  margin: 0 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.6rem;
+}
+
+.result__stats div {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  background: #fdfbf5;
+}
+
+.result__stats dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.result__stats dd {
+  margin: 0.15rem 0 0;
+  font-weight: 800;
+}
+
+.result__notes {
+  margin-bottom: 1rem;
+}
+
+.result__notes h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.result__notes ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.result__actions-hint {
+  margin: 0.7rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .flock-bird,
+  .pigeon-wing {
+    animation: none !important;
+  }
+
+  .flock.is-alarmed .flock-bird {
+    transform: translate(var(--flee-x), var(--flee-y));
+  }
+}

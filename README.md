@@ -1,0 +1,81 @@
+# Wellesley Runners: Route Wrangler
+
+A browser route-planning puzzle for a running club that takes its Tuesday
+social run far too seriously. Plan a loop through town, keep everyone away from
+the pigeons, and get the group back to the Observatory in one piece.
+
+Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine,
+no canvas, no external image dependencies in the playable map.
+
+## The level: Tuesday Social Run
+
+Twelve junctions, twenty roads, and one closed shortcut of questionable
+legality. A successful route must:
+
+- start at The Observatory
+- finish back at The Observatory
+- cover between 5 km and 7 km
+- visit the canal (Canal Bridge or the Grubby Towpath)
+- avoid the closed road
+- pass through no more than one pigeon hotspot
+- never use the same road twice
+
+The objective checklist updates as you build. Objectives that cannot yet be
+decided — finishing the loop, reaching the canal — stay at "Not yet" rather
+than showing a premature failure.
+
+You can knowingly plan a losing route and run it anyway. That is most of the
+fun.
+
+## Playing
+
+- Select a junction joined to the end of your route to add a road.
+- Select the junction you just came from to undo that step.
+- Roads cannot be reused.
+- **Run Route** unlocks once the route has at least one road and closes the
+  loop back at the Observatory.
+- **Reset Route** clears everything.
+
+Everything is keyboard reachable: the junctions are real HTML buttons laid over
+the map, so `Tab` and `Enter` work as you would expect, and each announces
+whether it is currently selectable. `prefers-reduced-motion` shortens playback
+and stops the bouncing and flapping.
+
+## Development
+
+```bash
+npm install
+npm run dev      # local dev server
+npm run test     # Vitest — pure route logic
+npm run build    # type-check and production build
+npm run lint     # oxlint, as shipped by the Vite template
+```
+
+## Project layout
+
+```text
+src/
+  components/    presentation: map, sprites, panels, controls
+  data/          level content only, no behaviour
+  game/          pure rules: graph, evaluation, result selection
+  hooks/         reduced motion, requestAnimationFrame playback
+```
+
+The rules in `src/game/` know nothing about React. Route playback writes
+positions straight to the DOM through refs, so the animation does not push
+sixty renders a second through React. Level content is declarative enough that
+a second level is a new object in `src/data/`, not a rewrite.
+
+## Tests
+
+`src/game/routeLogic.test.ts` covers distance totals, bidirectional roads,
+canal detection, the closed road, pigeon exposure, repeated roads, undo, the
+Run Route gate, and deterministic result selection — with fixtures for a
+perfect route, one too short, one too long, one through the closure, and one
+overrun by pigeons.
+
+## Deployment
+
+A static Vite build, deployable to Vercel as-is: framework preset **Vite**,
+build command `npm run build`, output directory `dist`. `vercel.json` pins
+those settings so an import needs no configuration.
