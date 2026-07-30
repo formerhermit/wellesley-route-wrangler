@@ -76,6 +76,13 @@ overrun by pigeons.
 
 ## Deployment
 
-A static Vite build, deployable to Vercel as-is: framework preset **Vite**,
-build command `npm run build`, output directory `dist`. `vercel.json` pins
-those settings so an import needs no configuration.
+Hosted on GitHub Pages at **https://runners.sillygame.studio**.
+
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`.
+Tests, lint and the type-checked build all run first, so a red test stops the
+deploy rather than shipping. The custom domain lives in `public/CNAME`, which
+Vite copies into `dist` on each build — so Pages does not lose it.
+
+Because the site is served from the root of its own domain, Vite's `base` stays
+`/`. Moving to a `github.io/<repo>/` URL instead would mean setting
+`base: "/wellesley-route-wrangler/"` in `vite.config.ts`, or every asset 404s.
