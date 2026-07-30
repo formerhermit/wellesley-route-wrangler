@@ -264,25 +264,23 @@ body {
   fill: var(--club);
 }
 
-.build-awning {
-  fill: var(--route);
+.bush-leaf {
+  fill: var(--grass);
   stroke: var(--ink);
   stroke-width: 2;
-  stroke-linejoin: round;
 }
 
-.build-cup {
+.bush-highlight {
   fill: #fff;
-  stroke: var(--ink);
-  stroke-width: 2;
+  opacity: 0.35;
 }
 
-.build-handle,
-.build-steam {
+.bush-ground {
   fill: none;
   stroke: var(--ink);
   stroke-width: 2;
   stroke-linecap: round;
+  opacity: 0.45;
 }
 
 .build-shutter {
@@ -383,8 +381,8 @@ body {
   fill: var(--club);
 }
 
-.junction--cafe .junction-dot {
-  fill: var(--route);
+.junction--bush .junction-dot {
+  fill: #4f7a3d;
 }
 
 .junction--canal .junction-dot {

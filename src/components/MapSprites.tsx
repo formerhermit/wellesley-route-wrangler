@@ -14,14 +14,18 @@ export function Observatory() {
   );
 }
 
-export function Cafe() {
+/** A discreet bush. The joke is entirely in the place name. */
+export function Bush() {
   return (
-    <g className="sprite sprite--cafe" aria-hidden="true">
-      <rect x={-20} y={-16} width={40} height={30} rx={3} className="build-wall" />
-      <path d="M -24 -16 h 48 l -6 -9 h -36 Z" className="build-awning" />
-      <circle cx={0} cy={0} r={7} className="build-cup" />
-      <path d="M 7 -2 q 6 2 0 5" className="build-handle" />
-      <path d="M -3 -12 q 3 -4 0 -8 M 3 -12 q 3 -4 0 -8" className="build-steam" />
+    <g className="sprite sprite--bush" aria-hidden="true">
+      <ellipse cx={-11} cy={4} rx={12} ry={10} className="bush-leaf" />
+      <ellipse cx={11} cy={4} rx={12} ry={10} className="bush-leaf" />
+      <ellipse cx={0} cy={-5} rx={14} ry={12} className="bush-leaf" />
+      <ellipse cx={-5} cy={-9} rx={6} ry={5} className="bush-highlight" />
+      <path
+        d="M -18 12 h 36"
+        className="bush-ground"
+      />
     </g>
   );
 }

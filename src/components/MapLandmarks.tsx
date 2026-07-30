@@ -1,4 +1,4 @@
-import { Cafe, Depot, HillMarker, Observatory, Tree } from "./MapSprites";
+import { Bush, Depot, HillMarker, Observatory, Tree } from "./MapSprites";
 import { nodeById } from "../game/routeGraph";
 import type { Level } from "../game/types";
 
@@ -6,7 +6,7 @@ import type { Level } from "../game/types";
 export function MapLandmarks({ level }: { level: Level }) {
   const at = (id: string) => nodeById(level, id);
   const observatory = at("observatory");
-  const cafe = at("coffee-stop");
+  const bush = at("private-bush");
   const depot = at("depot");
   const hill = at("hill-top");
   const park = at("memorial-park");
@@ -83,8 +83,8 @@ export function MapLandmarks({ level }: { level: Level }) {
       <g transform={`translate(${observatory.x} ${observatory.y - 60})`}>
         <Observatory />
       </g>
-      <g transform={`translate(${cafe.x + 8} ${cafe.y - 58})`}>
-        <Cafe />
+      <g transform={`translate(${bush.x + 10} ${bush.y - 46})`}>
+        <Bush />
       </g>
       <g transform={`translate(${depot.x + 2} ${depot.y - 52})`}>
         <Depot />

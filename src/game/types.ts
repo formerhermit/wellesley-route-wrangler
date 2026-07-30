@@ -1,7 +1,7 @@
 export type MapNodeType =
   | "junction"
   | "observatory"
-  | "cafe"
+  | "bush"
   | "canal"
   | "park"
   | "pigeon"
