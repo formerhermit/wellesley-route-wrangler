@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import type { Level, Route, RouteEvaluation } from "../game/types";
 import { nodeById } from "../game/routeGraph";
 
@@ -7,6 +8,8 @@ interface Props {
   evaluation: RouteEvaluation;
   canRun: boolean;
   running: boolean;
+  /** Focus lands here when the result dialog closes. */
+  runButtonRef: RefObject<HTMLButtonElement | null>;
   onRun: () => void;
   onReset: () => void;
 }
@@ -17,6 +20,7 @@ export function GameControls({
   evaluation,
   canRun,
   running,
+  runButtonRef,
   onRun,
   onReset,
 }: Props) {
@@ -42,6 +46,7 @@ export function GameControls({
       <div className="controls__buttons">
         <button
           type="button"
+          ref={runButtonRef}
           className="button button--primary"
           onClick={onRun}
           disabled={!canRun || running}

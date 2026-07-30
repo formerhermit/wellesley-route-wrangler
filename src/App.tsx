@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import { GameHeader } from "./components/GameHeader";
 import { GameControls } from "./components/GameControls";
 import { ObjectivePanel } from "./components/ObjectivePanel";
@@ -122,6 +122,8 @@ function reducer(state: GameState, action: Action): GameState {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, initialState);
   const reducedMotion = useReducedMotion();
+  const runButtonRef = useRef<HTMLButtonElement>(null);
+  const showingResult = state.phase === "result";
 
   const evaluation = useMemo(
     () => evaluateRoute(level, state.route),
@@ -139,9 +141,24 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [state.rejectedNodeId, state.nonce]);
 
+  // Send focus somewhere sensible when the result dialog closes — but only on
+  // an actual close, never on first render.
+  const wasShowingResult = useRef(false);
+  useEffect(() => {
+    if (
+      wasShowingResult.current &&
+      !showingResult &&
+      document.activeElement === document.body
+    ) {
+      runButtonRef.current?.focus();
+    }
+    wasShowingResult.current = showingResult;
+  }, [showingResult]);
+
   return (
     <div className="page">
-      <div className="layout">
+      {/* The dialog is modal: nothing behind it should be reachable. */}
+      <div className="layout" inert={showingResult}>
         <GameHeader level={level} />
 
         <main className="layout__main">
@@ -162,6 +179,7 @@ export default function App() {
               evaluation={evaluation}
               canRun={canRun}
               running={state.phase === "running"}
+              runButtonRef={runButtonRef}
               onRun={() => dispatch({ type: "run" })}
               onReset={() => dispatch({ type: "reset" })}
             />
@@ -181,7 +199,7 @@ export default function App() {
         </footer>
       </div>
 
-      {state.phase === "result" && state.result && (
+      {showingResult && state.result && (
         <ResultPanel
           result={state.result}
           evaluation={evaluation}
