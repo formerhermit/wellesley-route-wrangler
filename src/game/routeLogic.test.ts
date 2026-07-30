@@ -41,17 +41,17 @@ const fixtures = {
     "canal-bridge",
     "towpath",
     "hill-top",
-    "memorial-park",
+    "gardens",
     "observatory",
   ),
   /** 4.70 km — an honest loop, just not far enough. */
   tooShort: routeOf(
     "observatory",
     "high-street",
-    "duck-pond",
+    "geese-pond",
     "towpath",
     "hill-top",
-    "memorial-park",
+    "gardens",
     "observatory",
   ),
   /** 7.50 km via the bin lorry depot. */
@@ -64,13 +64,13 @@ const fixtures = {
     "canal-bridge",
     "towpath",
     "hill-top",
-    "memorial-park",
+    "gardens",
     "observatory",
   ),
   /** Straight through the closure at the shortcut. */
   closedRoad: routeOf(
     "observatory",
-    "memorial-park",
+    "gardens",
     "shortcut",
     "hill-top",
     "towpath",
@@ -86,7 +86,7 @@ const fixtures = {
     "bandstand",
     "towpath",
     "hill-top",
-    "memorial-park",
+    "gardens",
     "observatory",
   ),
   /** Out and straight back down the same road. */
@@ -94,8 +94,8 @@ const fixtures = {
   /** Ends on the towpath rather than coming home. */
   strandedAtCanal: routeOf(
     "observatory",
-    "memorial-park",
-    "duck-pond",
+    "gardens",
+    "geese-pond",
     "towpath",
   ),
 };
@@ -222,7 +222,7 @@ describe("result selection", () => {
     const noCanal = routeOf("observatory", "high-street", "observatory");
     expect(titleFor(noCanal)).toBe("Everyone Returned Eventually");
     expect(
-      titleFor(routeOf("observatory", "high-street", "duck-pond")),
+      titleFor(routeOf("observatory", "high-street", "geese-pond")),
     ).toBe("Nobody Visited the Canal");
   });
 
@@ -269,10 +269,10 @@ describe("route editing", () => {
   });
 
   it("refuses to reuse a road that is not the immediate previous step", () => {
-    const route = routeOf("observatory", "high-street", "duck-pond");
-    // duck-pond -> high-street would reuse high-pond, and is not an undo.
-    const loop = routeOf("observatory", "high-street", "duck-pond", "towpath");
-    const outcome = selectNode(level, loop, "duck-pond");
+    const route = routeOf("observatory", "high-street", "geese-pond");
+    // geese-pond -> high-street would reuse high-pond, and is not an undo.
+    const loop = routeOf("observatory", "high-street", "geese-pond", "towpath");
+    const outcome = selectNode(level, loop, "geese-pond");
     expect(outcome.kind).toBe("undone");
     expect(selectNode(level, route, "observatory").kind).toBe("rejected");
   });

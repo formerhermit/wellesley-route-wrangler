@@ -9,10 +9,10 @@ export function MapLandmarks({ level }: { level: Level }) {
   const bush = at("private-bush");
   const depot = at("depot");
   const hill = at("hill-top");
-  const park = at("memorial-park");
+  const gardens = at("gardens");
   const canalA = at("canal-bridge");
   const canalB = at("towpath");
-  const pond = at("duck-pond");
+  const pond = at("geese-pond");
 
   return (
     <g aria-hidden="true">
@@ -26,26 +26,26 @@ export function MapLandmarks({ level }: { level: Level }) {
         d={`M 790 372 Q 742 336 ${canalA.x} ${canalA.y} Q 590 262 ${canalB.x} ${canalB.y} Q 404 302 352 268`}
       />
 
-      {/* Memorial Park */}
+      {/* Municipal Gardens */}
       <rect
-        className="park-ground"
-        x={park.x - 78}
-        y={park.y - 62}
+        className="gardens-ground"
+        x={gardens.x - 78}
+        y={gardens.y - 62}
         width={150}
         height={124}
         rx={26}
       />
-      <g transform={`translate(${park.x - 46} ${park.y - 26})`}>
+      <g transform={`translate(${gardens.x - 46} ${gardens.y - 26})`}>
         <Tree />
       </g>
-      <g transform={`translate(${park.x + 40} ${park.y + 12})`}>
+      <g transform={`translate(${gardens.x + 40} ${gardens.y + 12})`}>
         <Tree />
       </g>
-      <g transform={`translate(${park.x - 30} ${park.y + 34})`}>
+      <g transform={`translate(${gardens.x - 30} ${gardens.y + 34})`}>
         <Tree />
       </g>
 
-      {/* Duck pond */}
+      {/* The geese pond */}
       <ellipse
         className="pond-water"
         cx={pond.x - 40}
