@@ -424,6 +424,15 @@ body {
   fill: #fbf7ec;
 }
 
+/*
+ * The trail run is out in fields, so the whole map is grass rather than a
+ * green patch on paper. Kept well short of the woods' own green, so the wood
+ * still reads as a wood on top of it.
+ */
+.map-ground--trail {
+  fill: color-mix(in srgb, var(--grass) 14%, #fbf7ec);
+}
+
 /* Landmarks */
 .canal-water {
   fill: none;

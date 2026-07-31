@@ -93,12 +93,13 @@ export function RouteMap({
         <title id="map-title">{level.title} route map</title>
         <desc id="map-description">{description}</desc>
 
+        {/* Open country is green underfoot; a town is not. */}
         <rect
           x={0}
           y={0}
           width={level.view.width}
           height={level.view.height}
-          className="map-ground"
+          className={`map-ground map-ground--${level.theme}`}
         />
         <MapLandmarks level={level} />
         <MapRoads level={level} route={route} />

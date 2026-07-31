@@ -11,10 +11,9 @@ export function ClubFooter() {
   return (
     <footer className="club-footer">
       <p className="club-footer__text">
-        The pigeons in this game are made up —{" "}
-        <strong>Wellesley Runners are real.</strong> If this made you smile,
-        there is an actual Thursday run with actual people, and nobody minds how
-        fast you are.
+        <strong>Wellesley Runners are actually a real running group.</strong> If
+        this made you smile, there is an actual Thursday run with actual people,
+        and nobody minds how fast you are.
       </p>
 
       <div className="club-footer__actions">
