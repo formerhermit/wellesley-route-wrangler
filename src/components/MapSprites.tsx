@@ -72,11 +72,9 @@ const COW_IMAGE = `${import.meta.env.BASE_URL}sprites/cow.png`;
 export function Cow() {
   return (
     <g className="sprite sprite--cow" aria-hidden="true">
-      {/* Flipped to face the way the drawn cow did, which is into the field
-          rather than off the edge of the map. */}
-      <g transform="scale(-1 1)">
-        <image href={COW_IMAGE} x={-22} y={-13.5} width={44} height={27} />
-      </g>
+      {/* Drawn facing left, and left is back towards Cow Field from where it
+          stands — so it is looking at the junction, not away off the map. */}
+      <image href={COW_IMAGE} x={-22} y={-13.5} width={44} height={27} />
     </g>
   );
 }

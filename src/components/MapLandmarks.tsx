@@ -16,7 +16,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   bush: { render: () => <Bush />, dy: -46, dx: 10 },
   shop: { render: () => <Superstore />, dy: -50, dx: 0 },
   carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
-  cow: { render: () => <Cow />, dy: -38, dx: 10 },
+  // Well clear to the side: the trail out of Cow Field runs north through the
+  // junction, and a cow standing on the path is a cow you cannot see.
+  cow: { render: () => <Cow />, dy: -32, dx: 60 },
   hill: { render: () => <HillMarker />, dy: 4, dx: -44 },
   hangar: { render: () => <Hangar />, dy: -46, dx: 2 },
 };
