@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { payloadToClipboard } from "../game/shareText";
+import { shareLinksFor } from "../game/shareLinks";
 import type { SharePayload } from "../game/shareText";
-
-type Status = "idle" | "copied" | "failed";
 
 interface Props {
   payload: SharePayload;
@@ -11,27 +10,62 @@ interface Props {
 }
 
 /**
- * Uses the native share sheet where there is one — which is how a phone
- * reaches Instagram, WhatsApp and the rest — and falls back to putting the
- * text on the clipboard everywhere else.
+ * On a phone the native share sheet is the right answer — it is the only route
+ * to Instagram and WhatsApp. Desktops either have no share sheet at all, or a
+ * macOS one with no social networks in it, so there we open our own menu of
+ * share links instead.
  */
 export function ShareButton({ payload, label, className = "" }: Props) {
-  const [status, setStatus] = useState<Status>("idle");
-  const timer = useRef<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const copiedTimer = useRef<number | null>(null);
+  const menuId = useId();
+  const links = shareLinksFor(payload);
 
   useEffect(() => {
     return () => {
-      if (timer.current !== null) clearTimeout(timer.current);
+      if (copiedTimer.current !== null) clearTimeout(copiedTimer.current);
     };
   }, []);
 
-  const flash = (next: Status) => {
-    setStatus(next);
-    if (timer.current !== null) clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setStatus("idle"), 2500);
+  // Close on Escape, or on a click anywhere outside the menu.
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.stopPropagation();
+      setOpen(false);
+      buttonRef.current?.focus();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown, true);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open]);
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(payloadToClipboard(payload));
+      setCopied(true);
+      if (copiedTimer.current !== null) clearTimeout(copiedTimer.current);
+      copiedTimer.current = window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
+    setOpen(false);
+    buttonRef.current?.focus();
   };
 
-  const share = async () => {
+  const onShareClick = async () => {
     if (navigator.share) {
       try {
         await navigator.share(payload);
@@ -41,35 +75,50 @@ export function ShareButton({ payload, label, className = "" }: Props) {
         if (error instanceof DOMException && error.name === "AbortError") return;
       }
     }
-
-    try {
-      await navigator.clipboard.writeText(payloadToClipboard(payload));
-      flash("copied");
-    } catch {
-      flash("failed");
-    }
+    setOpen((wasOpen) => !wasOpen);
   };
 
   return (
-    <>
+    <div className="share" ref={wrapperRef}>
       <button
         type="button"
+        ref={buttonRef}
         className={`button ${className}`}
-        onClick={() => void share()}
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        onClick={() => void onShareClick()}
       >
-        {status === "copied"
-          ? "Copied!"
-          : status === "failed"
-            ? "Could not share"
-            : label}
+        {copied ? "Link copied!" : label}
       </button>
+
+      {open && (
+        <div className="share__menu" id={menuId}>
+          <p className="share__menu-heading">Share to</p>
+          {links.map((link) => (
+            <a
+              key={link.id}
+              className="share__option"
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+          <button
+            type="button"
+            className="share__option share__option--copy"
+            onClick={() => void copyLink()}
+          >
+            Copy link
+          </button>
+        </div>
+      )}
+
       <span role="status" aria-live="polite" className="visually-hidden">
-        {status === "copied"
-          ? "Link copied to the clipboard."
-          : status === "failed"
-            ? "Sharing is not available on this device."
-            : ""}
+        {copied ? "Link copied to the clipboard." : ""}
       </span>
-    </>
+    </div>
   );
 }

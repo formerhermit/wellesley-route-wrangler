@@ -13,6 +13,7 @@ import {
   verdictFor,
 } from "./incidentReport";
 import { buildGameShare, buildRunShare, payloadToClipboard } from "./shareText";
+import { shareLinksFor } from "./shareLinks";
 import type { Level, Route } from "./types";
 
 function routeOf(level: Level, ...nodeIds: string[]): Route {
@@ -162,5 +163,34 @@ describe("share text", () => {
     const payload = buildGameShare();
     expect(payload.title).toBe("About Five Kilometres");
     expect(payloadToClipboard(payload)).toContain(payload.url);
+  });
+});
+
+describe("share links", () => {
+  const payload = buildGameShare();
+  const links = shareLinksFor(payload);
+
+  it("offers the platforms that have a web intent", () => {
+    expect(links.map((l) => l.id)).toEqual([
+      "whatsapp",
+      "x",
+      "facebook",
+      "threads",
+    ]);
+  });
+
+  it("encodes the message into every link", () => {
+    for (const link of links) {
+      expect(link.href).toMatch(/^https:\/\//);
+      expect(link.href).toContain(encodeURIComponent(payload.url));
+      // Nothing raw and unescaped should reach the query string.
+      expect(link.href).not.toContain(" ");
+    }
+  });
+
+  it("sends Facebook the link only, since it writes its own preview", () => {
+    const facebook = links.find((l) => l.id === "facebook");
+    expect(facebook?.href).toContain(encodeURIComponent(payload.url));
+    expect(facebook?.href).not.toContain(encodeURIComponent(payload.text));
   });
 });

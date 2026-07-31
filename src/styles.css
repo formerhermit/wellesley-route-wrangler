@@ -283,6 +283,70 @@ body {
   gap: 0.6rem;
 }
 
+/* Share menu, used by both the result dialog and the footer. */
+.share {
+  position: relative;
+  display: flex;
+}
+
+.share .button {
+  white-space: nowrap;
+}
+
+.share__menu {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 20;
+  min-width: 180px;
+  padding: 0.4rem;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgb(29 43 54 / 22%);
+}
+
+.share__menu-heading {
+  margin: 0.15rem 0.55rem 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.share__option {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.share__option:hover {
+  background: #eef4f8;
+  color: var(--club);
+}
+
+.share__option:focus-visible {
+  outline: 3px solid var(--club);
+  outline-offset: -2px;
+}
+
+.share__option--copy {
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 8px 8px;
+  margin-top: 0.2rem;
+  padding-top: 0.55rem;
+}
+
 /* Anchors need the button styling spelled out a little more than buttons do. */
 .club-footer__cta {
   display: inline-flex;
