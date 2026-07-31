@@ -2,6 +2,8 @@
   "name": "wellesley-route-wrangler",
   "private": true,
   "version": "0.0.0",
+  "author": "Jo Hutchins-Joss / Silly Game Studio",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

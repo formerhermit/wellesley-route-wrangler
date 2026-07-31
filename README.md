@@ -199,3 +199,19 @@ The custom domain lives in `public/CNAME`, which Vite copies into `dist` on
 every build — without it Pages drops the domain each time it republishes.
 Because the site is served from the root of its own domain, Vite's `base`
 stays `/`.
+
+## Licence
+
+Copyright © 2026 Jo Hutchins-Joss / Silly Game Studio.
+
+The **code** is MIT — see [LICENSE](LICENSE). Fork it, learn from it, build on
+it.
+
+The **music and artwork** are not. All rights reserved: the tracks in
+`public/audio`, the bitmaps in `public/sprites`, the favicon, and the drawn
+sprites in `src/components/MapSprites.tsx` stay mine. See
+[LICENSE-ASSETS.md](LICENSE-ASSETS.md) for what that means in practice —
+briefly, fork the code and bring your own art, or ask.
+
+The sprites are the awkward case, being drawings written as code. The file is
+MIT as code; the drawings in it are not free to lift into something else.

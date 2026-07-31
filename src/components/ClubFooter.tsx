@@ -2,6 +2,7 @@ import { ShareButton } from "./ShareButton";
 import { buildGameShare } from "../game/shareText";
 
 const CLUB_URL = "https://www.wellesleyrunners.co.uk/";
+const REPO_URL = "https://github.com/formerhermit/wellesley-route-wrangler";
 
 /**
  * The real-world call to action. The actions sit in a row so the sharing
@@ -27,6 +28,14 @@ export function ClubFooter() {
           Run with Wellesley Runners
         </a>
       </div>
+
+      {/* Quiet, and last: the club's message is the one that matters here. */}
+      <p className="club-footer__credit">
+        © 2026 Jo Hutchins-Joss / Silly Game Studio ·{" "}
+        <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+          Code on GitHub
+        </a>
+      </p>
     </footer>
   );
 }
