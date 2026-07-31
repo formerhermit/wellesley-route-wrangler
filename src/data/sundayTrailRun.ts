@@ -38,6 +38,7 @@ export const sundayTrailRun: Level = {
       kind: "visit",
       nodeIds: ["cow-field"],
       what: "the cows",
+      reportLabel: "Cows greeted",
       done: "Hellos exchanged. The cows were unmoved.",
       pending: "The cows have not been greeted.",
       missed: {

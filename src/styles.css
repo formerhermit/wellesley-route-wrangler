@@ -1046,55 +1046,99 @@ body {
   line-height: 1.55;
 }
 
-.result__stats {
+/* The club's post-run paperwork, inside the result dialog. */
+.report {
   margin: 0 0 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 0.6rem;
-}
-
-.result__stats div {
+  padding: 0.85rem 1rem 0.95rem;
   border: 2px solid var(--line);
-  border-radius: 10px;
-  padding: 0.5rem 0.6rem;
+  border-radius: 12px;
   background: #fdfbf5;
 }
 
-.result__stats dt {
-  font-size: 0.72rem;
+.report__club {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-soft);
+  color: var(--club);
 }
 
-.result__stats dd {
-  margin: 0.15rem 0 0;
+.report__heading {
+  margin: 0.1rem 0 0.7rem;
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+
+.report__lines {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.report__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px dotted var(--line);
+}
+
+.report__line dt {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.report__line dd {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.report__value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.report__mark {
   font-weight: 800;
 }
 
-.result__notes {
-  margin-bottom: 1rem;
+.report__line.is-good .report__mark {
+  color: var(--pass);
 }
 
-.result__notes h3 {
-  margin: 0 0 0.35rem;
-  font-size: 0.85rem;
+.report__line.is-bad .report__mark,
+.report__line.is-bad .report__value {
+  color: var(--fail);
+}
+
+.report__verdict {
+  margin: 0.8rem 0 0;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.report__verdict-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--ink-soft);
-}
-
-.result__notes ul {
-  margin: 0;
-  padding-left: 1.1rem;
-  font-size: 0.88rem;
-  line-height: 1.45;
 }
 
 .dialog__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
+}
+
+.dialog__actions--secondary {
+  margin-top: 0.6rem;
 }
 
 .dialog__actions-hint {

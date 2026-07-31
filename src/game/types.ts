@@ -63,6 +63,8 @@ export type LevelObjective =
       kind: "visit";
       nodeIds: string[];
       what: string;
+      /** Overrides the incident report's line, e.g. "Cows greeted". */
+      reportLabel?: string;
       done: string;
       pending: string;
       missed: ResultCopy;

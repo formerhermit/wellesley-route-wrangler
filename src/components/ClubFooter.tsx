@@ -1,3 +1,6 @@
+import { ShareButton } from "./ShareButton";
+import { buildGameShare } from "../game/shareText";
+
 const CLUB_URL = "https://www.wellesleyrunners.co.uk/";
 
 /**
@@ -15,7 +18,7 @@ export function ClubFooter() {
       </p>
 
       <div className="club-footer__actions">
-        {/* Social sharing joins this row next. */}
+        <ShareButton payload={buildGameShare()} label="Tell a friend" />
         <a
           className="button button--primary club-footer__cta"
           href={CLUB_URL}

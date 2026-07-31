@@ -1,23 +1,27 @@
 import { Dialog } from "./Dialog";
-import type { GameResult, RouteEvaluation } from "../game/types";
+import { IncidentReportCard } from "./IncidentReport";
+import { ShareButton } from "./ShareButton";
+import { buildRunShare } from "../game/shareText";
+import type { IncidentReport } from "../game/incidentReport";
+import type { GameResult, Level } from "../game/types";
 
 interface Props {
+  level: Level;
   result: GameResult;
-  evaluation: RouteEvaluation;
+  report: IncidentReport;
   onEdit: () => void;
   onTryAgain: () => void;
   onReset: () => void;
 }
 
 export function ResultPanel({
+  level,
   result,
-  evaluation,
+  report,
   onEdit,
   onTryAgain,
   onReset,
 }: Props) {
-  const failed = evaluation.objectives.filter((o) => o.state !== "passed");
-
   return (
     <Dialog
       titleId="result-title"
@@ -36,27 +40,7 @@ export function ResultPanel({
         {result.message}
       </p>
 
-      <dl className="result__stats">
-        {evaluation.stats.map((stat) => (
-          <div key={stat.label}>
-            <dt>{stat.label}</dt>
-            <dd>{stat.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      {failed.length > 0 && (
-        <div className="result__notes">
-          <h3>Still outstanding</h3>
-          <ul>
-            {failed.map((objective) => (
-              <li key={objective.id}>
-                {objective.label} — {objective.detail}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <IncidentReportCard report={report} />
 
       <div className="dialog__actions">
         <button type="button" className="button button--primary" onClick={onEdit}>
@@ -68,6 +52,13 @@ export function ResultPanel({
         <button type="button" className="button" onClick={onReset}>
           Reset Route
         </button>
+      </div>
+
+      <div className="dialog__actions dialog__actions--secondary">
+        <ShareButton
+          payload={buildRunShare(level, result, report)}
+          label="Share this run"
+        />
       </div>
       <p className="dialog__actions-hint">
         Edit Route keeps what you planned · Try Again replays it · Reset Route

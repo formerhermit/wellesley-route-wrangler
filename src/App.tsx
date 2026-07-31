@@ -9,6 +9,7 @@ import { RouteMap } from "./components/RouteMap";
 import { LevelPicker } from "./components/LevelPicker";
 import { levels } from "./data/levels";
 import { canRunRoute, evaluateRoute } from "./game/routeEvaluation";
+import { buildIncidentReport } from "./game/incidentReport";
 import { selectResult } from "./game/resultSelection";
 import {
   emptyRoute,
@@ -176,6 +177,10 @@ export default function App() {
     [level, state.route],
   );
   const canRun = canRunRoute(level, state.route);
+  const report = useMemo(
+    () => buildIncidentReport(level, state.route, evaluation),
+    [level, state.route, evaluation],
+  );
 
   // The rejection wobble is a one-shot; clear it so it can fire again.
   useEffect(() => {
@@ -258,8 +263,9 @@ export default function App() {
 
       {showingResult && state.result && (
         <ResultPanel
+          level={level}
           result={state.result}
-          evaluation={evaluation}
+          report={report}
           onEdit={() => dispatch({ type: "edit" })}
           onTryAgain={() => dispatch({ type: "run" })}
           onReset={() => dispatch({ type: "reset" })}
