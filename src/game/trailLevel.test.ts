@@ -16,28 +16,28 @@ function routeOf(...nodeIds: string[]): Route {
 
 /** 10.00 km, all trail, cows greeted, no barn. */
 const perfect = routeOf(
-  "village-hall",
+  "suspicious-car",
   "stile",
   "gate",
-  "bogs",
-  "ridge",
+  "portaloos",
+  "soldiers",
   "woods",
   "cow-field",
-  "ford",
+  "cattlegrid",
   "car-park",
 );
 
 /** 11.20 km over the trig point — a genuinely different winning line. */
 const alternative = routeOf(
-  "village-hall",
+  "suspicious-car",
   "stile",
   "gate",
-  "bogs",
-  "ridge",
+  "portaloos",
+  "soldiers",
   "trig",
   "woods",
   "cow-field",
-  "ford",
+  "cattlegrid",
   "car-park",
 );
 
@@ -65,23 +65,23 @@ describe("Sunday Trail Run", () => {
   });
 
   it("fails a route that nips along the lanes", () => {
-    const onTheRoad = routeOf("village-hall", "gate", "bogs", "ridge", "woods", "cow-field", "ford", "car-park");
+    const onTheRoad = routeOf("suspicious-car", "gate", "portaloos", "soldiers", "woods", "cow-field", "cattlegrid", "car-park");
     expect(countSurface(level, onTheRoad, "road")).toBe(1);
     expect(titleFor(onTheRoad)).toBe("That Was Just a Road Run");
   });
 
   it("fails a route that skips the cows", () => {
-    const noCows = routeOf("village-hall", "stile", "gate", "bogs", "ridge", "trig", "reservoir", "car-park");
+    const noCows = routeOf("suspicious-car", "stile", "gate", "portaloos", "soldiers", "trig", "stinky-pond", "car-park");
     expect(titleFor(noCows)).toBe("The Cows Were Not Greeted");
   });
 
   it("fails a route past the pigeon barn", () => {
     const barn = routeOf(
-      "village-hall",
+      "suspicious-car",
       "stile",
       "cow-field",
       "woods",
-      "ridge",
+      "soldiers",
       "trig",
       "pigeon-barn",
       "car-park",
@@ -90,12 +90,12 @@ describe("Sunday Trail Run", () => {
   });
 
   it("fails a route through the lambing closure", () => {
-    const closed = routeOf("village-hall", "stile", "cow-field", "woods", "ridge", "gate");
+    const closed = routeOf("suspicious-car", "stile", "cow-field", "woods", "soldiers", "gate");
     expect(titleFor(closed)).toBe("It Was Closed For Lambing");
   });
 
   it("fails a route that comes up short", () => {
-    const short = routeOf("village-hall", "stile", "cow-field", "ford", "car-park");
+    const short = routeOf("suspicious-car", "stile", "cow-field", "cattlegrid", "car-park");
     expect(totalDistanceKm(level, short)).toBeLessThan(10);
     expect(titleFor(short)).toBe("An Innovative Definition of 10K");
   });

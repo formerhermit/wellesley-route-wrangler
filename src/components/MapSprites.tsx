@@ -80,14 +80,14 @@ const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green
 export function Cow() {
   return (
     <g className="sprite sprite--cow" aria-hidden="true">
-      <ellipse cx={0} cy={0} rx={20} ry={12} className="cow-body" />
-      <ellipse cx={-8} cy={-3} rx={7} ry={5} className="cow-patch" />
-      <ellipse cx={7} cy={4} rx={5} ry={3.5} className="cow-patch" />
-      <circle cx={19} cy={-9} r={7} className="cow-body" />
-      <path d="M 14 -15 l -3 -5 M 24 -15 l 3 -5" className="cow-horns" />
-      <circle cx={22} cy={-7} r={1.4} className="cow-eye" />
-      <path d="M -13 11 v 8 M -4 11 v 8 M 6 11 v 8 M 14 10 v 9" className="cow-legs" />
-      <path d="M -20 -4 q -8 -4 -6 8" className="cow-tail" />
+      <ellipse cx={0} cy={0} rx={13} ry={8} className="cow-body" />
+      <ellipse cx={-5} cy={-2} rx={4.5} ry={3.2} className="cow-patch" />
+      <ellipse cx={5} cy={2.5} rx={3.2} ry={2.2} className="cow-patch" />
+      <circle cx={12.5} cy={-6} r={4.6} className="cow-body" />
+      <path d="M 9 -10 l -2 -3.5 M 16 -10 l 2 -3.5" className="cow-horns" />
+      <circle cx={14.5} cy={-4.8} r={1} className="cow-eye" />
+      <path d="M -8.5 7 v 5.5 M -2.5 7 v 5.5 M 4 7 v 5.5 M 9 6.5 v 6" className="cow-legs" />
+      <path d="M -13 -2.5 q -5.5 -2.5 -4 5.5" className="cow-tail" />
     </g>
   );
 }

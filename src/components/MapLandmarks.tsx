@@ -15,7 +15,7 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   bush: { render: () => <Bush />, dy: -46, dx: 10 },
   depot: { render: () => <Depot />, dy: -52, dx: 2 },
   carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
-  cow: { render: () => <Cow />, dy: -44, dx: 14 },
+  cow: { render: () => <Cow />, dy: -38, dx: 10 },
   hill: { render: () => <HillMarker />, dy: 4, dx: -44 },
 };
 

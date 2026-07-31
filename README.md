@@ -20,9 +20,9 @@ shortcut of questionable legality. A loop, in which a successful route must:
 - pass through no more than one pigeon hotspot
 - never use the same road twice
 
-**Sunday Trail Run** — a point-to-point from the Village Hall to the Muddy
-Car Park: reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon
-barn, and mind the path closed for lambing.
+**Sunday Trail Run** — a point-to-point from the Suspicious Car to the
+Overpriced Car Park: reach 10 km, greet the cows, stay off the tarmac, avoid
+the pigeon barn, and mind the path closed for lambing.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is

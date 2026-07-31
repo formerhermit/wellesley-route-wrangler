@@ -8,11 +8,11 @@ import type { Level } from "../game/types";
 export const sundayTrailRun: Level = {
   id: "sunday-trail-run",
   title: "Sunday Trail Run",
-  strapline: "Bring gaiters. No, proper ones.",
+  strapline: "There's coffee at the end.",
   instructions:
-    "Get the group from the Village Hall out to the Muddy Car Park, the long way round. Stay on the trails, say hello to the cows, and keep off the tarmac — this is supposed to be a trail run.",
+    "Get the group from the Suspicious Car out to the Overpriced Car Park, the long way round. Stay on the trails, say hello to the cows, and keep off the tarmac — this is supposed to be a trail run.",
   theme: "trail",
-  startNodeId: "village-hall",
+  startNodeId: "suspicious-car",
   finishNodeId: "car-park",
   view: { width: 800, height: 560 },
 
@@ -99,7 +99,7 @@ export const sundayTrailRun: Level = {
   emptyRoute: {
     title: "Barely Left the Start Line",
     message:
-      "The group stood in the Village Hall car park comparing gaiters until it got dark.",
+      "The group stood around the Suspicious Car comparing shoes until it got dark.",
   },
   fallback: {
     title: "Everyone Returned Eventually",
@@ -109,11 +109,11 @@ export const sundayTrailRun: Level = {
 
   nodes: [
     {
-      id: "village-hall",
+      id: "suspicious-car",
       x: 90,
       y: 470,
-      label: "The Village Hall",
-      blurb: "start, and the only working tap",
+      label: "Suspicious Car",
+      blurb: "start; nobody knows whose it is",
       labelAbove: true,
     },
     {
@@ -133,35 +133,35 @@ export const sundayTrailRun: Level = {
       type: "cow",
     },
     {
-      id: "ford",
+      id: "cattlegrid",
       x: 610,
       y: 470,
-      label: "The Ford (Optimistic)",
-      blurb: "wet feet from here on",
+      label: "Scary Cattlegrid",
+      blurb: "everyone slows down, nobody admits why",
       labelAbove: true,
     },
     {
       id: "car-park",
       x: 720,
       y: 335,
-      label: "Muddy Car Park",
-      blurb: "finish",
+      label: "Overpriced Car Park",
+      blurb: "finish, and £4.50 for two hours",
       type: "carpark",
     },
     {
       id: "woods",
       x: 455,
       y: 330,
-      label: "Whispering Woods",
+      label: "Wellesley Woods",
       blurb: "roots, mainly",
       type: "park",
     },
     {
-      id: "ridge",
+      id: "soldiers",
       x: 285,
       y: 225,
-      label: "Windy Ridge",
-      blurb: "the view is allegedly worth it",
+      label: "Hiding Soldiers",
+      blurb: "allegedly on manoeuvres",
       type: "hill",
       labelAbove: true,
     },
@@ -175,11 +175,11 @@ export const sundayTrailRun: Level = {
       labelAbove: true,
     },
     {
-      id: "reservoir",
+      id: "stinky-pond",
       x: 690,
       y: 195,
-      label: "The Reservoir",
-      blurb: "colder than it looks",
+      label: "The Stinky Pond",
+      blurb: "you can smell it from up here",
       type: "pond",
       labelAbove: true,
     },
@@ -192,11 +192,11 @@ export const sundayTrailRun: Level = {
       type: "pigeon",
     },
     {
-      id: "bogs",
+      id: "portaloos",
       x: 145,
       y: 315,
-      label: "The Bogs of Regret",
-      blurb: "shoe-claiming",
+      label: "Random Portaloos",
+      blurb: "unexpectedly welcome",
       labelAbove: true,
     },
     {
@@ -210,19 +210,19 @@ export const sundayTrailRun: Level = {
 
   roads: [
     // The trails.
-    { id: "hall-stile", from: "village-hall", to: "stile", distanceKm: 1.2, surface: "trail" },
+    { id: "car-stile", from: "suspicious-car", to: "stile", distanceKm: 1.2, surface: "trail" },
     { id: "stile-cows", from: "stile", to: "cow-field", distanceKm: 1.3, surface: "trail" },
-    { id: "cows-ford", from: "cow-field", to: "ford", distanceKm: 1.5, surface: "trail" },
-    { id: "ford-park", from: "ford", to: "car-park", distanceKm: 1.3, surface: "trail" },
+    { id: "cows-cattlegrid", from: "cow-field", to: "cattlegrid", distanceKm: 1.5, surface: "trail" },
+    { id: "cattlegrid-park", from: "cattlegrid", to: "car-park", distanceKm: 1.3, surface: "trail" },
     { id: "cows-woods", from: "cow-field", to: "woods", distanceKm: 1.3, surface: "trail" },
-    { id: "woods-ridge", from: "woods", to: "ridge", distanceKm: 1.4, surface: "trail", hill: true },
-    { id: "ridge-bogs", from: "ridge", to: "bogs", distanceKm: 1.2, surface: "trail", hill: true },
-    { id: "bogs-gate", from: "bogs", to: "gate", distanceKm: 1, surface: "trail" },
+    { id: "woods-soldiers", from: "woods", to: "soldiers", distanceKm: 1.4, surface: "trail", hill: true },
+    { id: "soldiers-portaloos", from: "soldiers", to: "portaloos", distanceKm: 1.2, surface: "trail", hill: true },
+    { id: "portaloos-gate", from: "portaloos", to: "gate", distanceKm: 1, surface: "trail" },
     { id: "gate-stile", from: "gate", to: "stile", distanceKm: 1.1, surface: "trail" },
     { id: "woods-trig", from: "woods", to: "trig", distanceKm: 1.1, surface: "trail", hill: true },
-    { id: "ridge-trig", from: "ridge", to: "trig", distanceKm: 1.5, surface: "trail", hill: true },
-    { id: "trig-reservoir", from: "trig", to: "reservoir", distanceKm: 1.2, surface: "trail" },
-    { id: "reservoir-park", from: "reservoir", to: "car-park", distanceKm: 1.1, surface: "trail" },
+    { id: "soldiers-trig", from: "soldiers", to: "trig", distanceKm: 1.5, surface: "trail", hill: true },
+    { id: "trig-pond", from: "trig", to: "stinky-pond", distanceKm: 1.2, surface: "trail" },
+    { id: "pond-park", from: "stinky-pond", to: "car-park", distanceKm: 1.1, surface: "trail" },
     {
       id: "trig-barn",
       from: "trig",
@@ -240,18 +240,18 @@ export const sundayTrailRun: Level = {
       pigeonRisk: 0.6,
     },
     {
-      id: "gate-ridge",
+      id: "gate-soldiers",
       from: "gate",
-      to: "ridge",
+      to: "soldiers",
       distanceKm: 1.1,
       surface: "trail",
       closed: true,
     },
 
     // The tarmac. Shorter, flatter, and entirely against the point.
-    { id: "hall-gate", from: "village-hall", to: "gate", distanceKm: 0.9 },
-    { id: "stile-ford", from: "stile", to: "ford", distanceKm: 2 },
-    { id: "ford-reservoir", from: "ford", to: "reservoir", distanceKm: 1.3 },
+    { id: "car-gate", from: "suspicious-car", to: "gate", distanceKm: 0.9 },
+    { id: "stile-cattlegrid", from: "stile", to: "cattlegrid", distanceKm: 2 },
+    { id: "cattlegrid-pond", from: "cattlegrid", to: "stinky-pond", distanceKm: 1.3 },
     { id: "woods-park", from: "woods", to: "car-park", distanceKm: 1.6 },
   ],
 };

@@ -400,7 +400,7 @@ body {
 .cow-body {
   fill: #fff;
   stroke: var(--ink);
-  stroke-width: 2;
+  stroke-width: 1.6;
 }
 
 .cow-patch {
@@ -413,7 +413,7 @@ body {
 .cow-tail {
   fill: none;
   stroke: var(--ink);
-  stroke-width: 2.2;
+  stroke-width: 1.7;
   stroke-linecap: round;
 }
 
