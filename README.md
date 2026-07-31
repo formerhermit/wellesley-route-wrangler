@@ -6,7 +6,7 @@ the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
-handful of bitmaps (the cow, the Duke) live in `public/sprites/`, cropped to
+handful of bitmaps (the cow, the Duke, the ghost) live in `public/sprites/`, cropped to
 their content and sized to a few times the space they are ever drawn in.
 
 ## The levels
@@ -55,6 +55,19 @@ are under water. Eight winning routes — four loops, each of which works either
 way round. The Posh Cows are on one of them and compulsory on none of them, and
 the Village Shop is reachable only on tarmac, so a legal run can never get to
 it at all.
+
+**Level 7 — Spooky Run** — the Town Run map on the last Thursday in October,
+after dark. The Big Tesco and the Duke are gone and every road off them with
+them; a Spooky Church now stands on the hill road between Wellesley Rumble and
+Redan Road; the pigeons are crows; and the east side is a street of trick or
+treaters no group of adults gets through. Ten winning routes, six of them over
+Redan Road and four over the ski slope, so which hill you spend is a real
+choice.
+
+Three fields carry the whole of Halloween, and the rules never learn about any
+of them: `mood: "dusk"` takes the light out of the map, `flock: "crow"` decides
+what the birds are, and `music` names the level's own track. Levels without
+them are daylight, pigeons and the house theme.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
@@ -123,8 +136,10 @@ header is pressed. That choice is remembered, but browsers will not autoplay
 audio on a fresh page load, so a returning player's music starts on their next
 click or key press rather than failing silently.
 
-`useMusic` takes the track as an argument, so a level that wants its own theme
-is a different string, not a different mechanism.
+`useMusic` takes the track as an argument, which is how the Spooky Run gets its
+own: the level names a file in `public/audio` and the hook swaps the audio
+without disturbing the on/off preference. Changing level mid-track changes the
+music and keeps playing.
 
 ## Development
 
@@ -162,10 +177,11 @@ Run Route gate, and deterministic result selection — with fixtures for a
 perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
 
-`src/game/trailLevel.test.ts` and `src/game/tilfordLevel.test.ts` do the same
-for levels 2 and 6 against their own maps. Tilford's ends by walking every
-route out of the pub and back, so the level is held to exactly its eight
-winners: a road whose distance drifts takes the count with it and fails.
+`trailLevel.test.ts`, `tilfordLevel.test.ts` and `spookyLevel.test.ts` do the
+same for levels 2, 6 and 7 against their own maps. The last two end by walking
+every route out of the start and back, so each level is held to exactly its
+winners — eight for Tilford, ten for the Spooky Run, split six and four across
+the two hills. A road whose distance drifts takes the count with it and fails.
 
 `src/game/progression.test.ts` covers the unlock rules against a stub roster:
 the first level always open, later ones shut until their predecessor is done,

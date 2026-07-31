@@ -339,6 +339,55 @@ export function Bridge() {
   );
 }
 
+/** The spooky church, and the only steeple on any of the maps. */
+export function Church() {
+  return (
+    <g className="sprite sprite--church" aria-hidden="true">
+      <rect x={-24} y={-6} width={34} height={20} rx={2} className="build-wall" />
+      <path d="M -26 -6 h 38 l -7 -8 h -24 Z" className="tower-roof" />
+      <rect x={12} y={-22} width={16} height={36} rx={2} className="build-wall" />
+      <path d="M 10 -22 h 20 l -10 -16 Z" className="church-spire" />
+      <path d="M 20 -40 v -6 M 17 -43 h 6" className="church-cross" />
+      <path d="M -14 14 v -9 a 5 5 0 0 1 10 0 v 9 Z" className="church-door" />
+      <circle cx={17} cy={-12} r={3} className="church-window" />
+    </g>
+  );
+}
+
+/** The one that keeps turning up. Bitmap, like the cow and the Duke. */
+const GHOST_IMAGE = `${import.meta.env.BASE_URL}sprites/ghost.png`;
+
+export function Ghost() {
+  return (
+    <g className="sprite sprite--ghost" aria-hidden="true">
+      <image href={GHOST_IMAGE} x={-16} y={-16} width={32} height={33} />
+    </g>
+  );
+}
+
+/**
+ * Three trick or treaters, which is as many as fit and rather fewer than are
+ * ever actually there.
+ */
+export function Treaters() {
+  return (
+    <g className="sprite sprite--treaters" aria-hidden="true">
+      {/* A witch, a sheet, and a small person in a bin bag. */}
+      <path d="M -22 14 v -12 a 7 7 0 0 1 14 0 v 12 Z" className="treater-cloak" />
+      <circle cx={-15} cy={-4} r={4} className="treater-head" />
+      <path d="M -23 -7 h 16 l -8 -9 Z" className="treater-hat" />
+
+      <path d="M -4 14 v -13 a 7 7 0 0 1 14 0 v 13 Z" className="treater-sheet" />
+      <circle cx={-1} cy={-2} r={1.4} className="treater-eye" />
+      <circle cx={6} cy={-2} r={1.4} className="treater-eye" />
+
+      <path d="M 13 14 v -9 a 6 6 0 0 1 12 0 v 9 Z" className="treater-cloak" />
+      <circle cx={19} cy={-1} r={3.6} className="treater-head" />
+      <circle cx={26} cy={8} r={4} className="treater-bucket" />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (
@@ -348,6 +397,25 @@ export function Runner({ index }: { index: number }) {
       <path d="M 0 -7 v 8" className={`runner-body ${vest}`} />
       <path d="M 0 -5 l -6 4 M 0 -5 l 6 -2" className="runner-arms" />
       <path d="M 0 1 l -5 7 M 0 1 l 6 6" className="runner-legs" />
+    </g>
+  );
+}
+
+/**
+ * The same bird, later in the year: bigger, blacker, and with a beak that
+ * means it. Drawn to the pigeon's proportions so the flock animation, which
+ * knows nothing about species, still lands them in the same places.
+ */
+export function Crow({ alarmed = false }: { alarmed?: boolean }) {
+  return (
+    <g className={`sprite sprite--crow${alarmed ? " is-alarmed" : ""}`} aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={10} ry={6.5} className="crow-body" />
+      <circle cx={7.5} cy={-6.5} r={4.2} className="crow-body" />
+      <polygon points="10.5,-7 19,-5 10.5,-3" className="crow-beak" />
+      <circle cx={8.8} cy={-7.6} r={0.9} className="crow-eye" />
+      <polygon points="-13,-2 -1,-4.5 -3,3.5" className="crow-tail" />
+      <path d="M -2 -3 q 7 -6.5 12 1 q -6.5 3.5 -12 -1 Z" className="crow-wing" />
+      <path d="M -3 6 v 4 M 3 6 v 4" className="crow-legs" />
     </g>
   );
 }

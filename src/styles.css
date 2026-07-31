@@ -470,6 +470,46 @@ body {
   fill: color-mix(in srgb, var(--grass) 14%, #fbf7ec);
 }
 
+/*
+ * Dusk. The light goes, not the map: everything still reads as the same
+ * hand-drawn paper, just gone cold and blue. Ink stays dark, so every label
+ * keeps its contrast against a ground that has only dropped a little.
+ */
+.map-svg--dusk .map-ground {
+  fill: #c3c8d2;
+}
+
+.map-svg--dusk .terrace rect {
+  fill: #adb1bd;
+}
+
+.map-svg--dusk .tree-leaf {
+  fill: #4f6d59;
+}
+
+.map-svg--dusk .tree-trunk {
+  fill: #5d4d3e;
+}
+
+.map-svg--dusk .gardens-ground {
+  fill: #4f6d59;
+  opacity: 0.3;
+}
+
+.map-svg--dusk .road {
+  stroke: #a9a99f;
+}
+
+.map-svg--dusk .road--hill {
+  stroke: #9e9b8c;
+}
+
+.map-svg--dusk .build-wall,
+.map-svg--dusk .plane-body,
+.map-svg--dusk .van-body {
+  fill: #cfcec4;
+}
+
 /* Landmarks */
 .canal-water {
   fill: none;
@@ -755,6 +795,96 @@ body {
   stroke: var(--ink);
   stroke-width: 2;
   stroke-linejoin: round;
+}
+
+.church-spire {
+  fill: #8d8577;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.church-cross {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.church-door {
+  fill: #6b5442;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.church-window {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.treater-cloak {
+  fill: #3f3a4d;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.treater-sheet {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.treater-head {
+  fill: #e8cfae;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.treater-hat {
+  fill: #3f3a4d;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.treater-eye {
+  fill: var(--ink);
+}
+
+.treater-bucket {
+  fill: #e08a1e;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.crow-body,
+.crow-wing,
+.crow-tail {
+  fill: #2b2f38;
+}
+
+.crow-wing {
+  stroke: #10131a;
+  stroke-width: 1.2;
+  /* Same hinge and idle beat as the pigeon's, so a flock reads as a flock. */
+  transform-origin: -2px -3px;
+  animation: wing-idle 2.4s ease-in-out infinite;
+}
+
+.crow-beak {
+  fill: #6b6f78;
+}
+
+.crow-eye {
+  fill: var(--hi-vis);
+}
+
+.crow-legs {
+  stroke: #6b6f78;
+  stroke-width: 1.6;
+  stroke-linecap: round;
 }
 
 .bin-body,
@@ -1149,7 +1279,8 @@ body {
   stroke-linecap: round;
 }
 
-.sprite--pigeon.is-alarmed .pigeon-wing {
+.sprite--pigeon.is-alarmed .pigeon-wing,
+.sprite--crow.is-alarmed .crow-wing {
   animation: wing-flap 0.28s linear infinite;
 }
 

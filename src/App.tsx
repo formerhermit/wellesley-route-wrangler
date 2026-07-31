@@ -28,11 +28,12 @@ import { useReducedMotion } from "./hooks/useReducedMotion";
 import { useMusic } from "./hooks/useMusic";
 import { useProgress } from "./hooks/useProgress";
 
-/**
- * The house theme. Levels will bring their own tracks as they arrive; the
- * music hook takes the source as an argument for exactly that reason.
- */
-const MAIN_THEME = `${import.meta.env.BASE_URL}audio/main-theme.mp3`;
+/** The house theme, for every level that does not name one of its own. */
+const MAIN_THEME = "main-theme.mp3";
+
+function trackFor(level: Level): string {
+  return `${import.meta.env.BASE_URL}audio/${level.music ?? MAIN_THEME}`;
+}
 
 /** Remembers that the player has seen the how-to-play dialog. */
 const HELP_SEEN_KEY = "route-wrangler:help-seen";
@@ -179,7 +180,7 @@ export default function App() {
   );
   const level = state.level;
   const reducedMotion = useReducedMotion();
-  const music = useMusic(MAIN_THEME);
+  const music = useMusic(trackFor(level));
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
   const levelsButtonRef = useRef<HTMLButtonElement>(null);

@@ -31,7 +31,11 @@ export type MapNodeType =
   | "mosque"
   /** Drawn on the water rather than beside it: both stand in the river. */
   | "bridge"
-  | "ducks";
+  | "ducks"
+  | "church"
+  | "ghost"
+  /** A street of trick or treaters. A group of adults gets no further. */
+  | "treaters";
 
 export type RoadSurface = "road" | "trail";
 
@@ -136,6 +140,18 @@ export interface Level {
   instructions: string;
   /** Drives the incidental scenery: terraced houses versus open country. */
   theme: "town" | "trail";
+  /**
+   * The light the map is drawn in. Scenery and rules are unaffected — this is
+   * the paper going cold, nothing more. Undefined is daylight.
+   */
+  mood?: "dusk";
+  /**
+   * What the birds are. They loiter, scatter and get counted identically
+   * whichever they are; only the drawing and the paperwork change.
+   */
+  flock?: "pigeon" | "crow";
+  /** A file in `public/audio`. Without one the level plays the house theme. */
+  music?: string;
   nodes: MapNode[];
   roads: Road[];
   startNodeId: string;

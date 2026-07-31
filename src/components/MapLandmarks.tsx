@@ -5,11 +5,13 @@ import {
   Bush,
   CarPark,
   Cemetery,
+  Church,
   CoffeeVan,
   Cow,
   CricketStumps,
   Ducks,
   FootballPitch,
+  Ghost,
   GolfFlag,
   Hangar,
   HillMarker,
@@ -21,6 +23,7 @@ import {
   Statue,
   Superstore,
   TownCentre,
+  Treaters,
   Tree,
   Woods,
 } from "./MapSprites";
@@ -54,6 +57,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   golf: { render: () => <GolfFlag />, dy: -26, dx: -48 },
   sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
   bin: { render: () => <Bin />, dy: -34, dx: 0 },
+  church: { render: () => <Church />, dy: -52, dx: 0 },
+  ghost: { render: () => <Ghost />, dy: -42, dx: 0 },
+  treaters: { render: () => <Treaters />, dy: -44, dx: 0 },
   // Beside the junction rather than over it: an aeroplane sitting on top of
   // the stop reads as a flypast, which Hecking Airport has never managed.
   airport: { render: () => <Aeroplane />, dy: 2, dx: -92 },

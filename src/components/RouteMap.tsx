@@ -86,7 +86,9 @@ export function RouteMap({
       <div className="map-stage">
       <svg
         viewBox={`0 0 ${level.view.width} ${level.view.height}`}
-        className={`map-svg${running ? " is-running" : ""}`}
+        className={`map-svg${level.mood ? ` map-svg--${level.mood}` : ""}${
+          running ? " is-running" : ""
+        }`}
         role="img"
         aria-labelledby="map-title map-description"
       >

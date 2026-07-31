@@ -105,7 +105,7 @@ export function buildIncidentReport(
   });
 
   lines.push({
-    label: "Unexpected pigeons",
+    label: level.flock === "crow" ? "Unexpected crows" : "Unexpected pigeons",
     value: String(pigeonsSighted(level, route)),
     tone: "neutral",
   });
