@@ -13,7 +13,14 @@ export type MapNodeType =
   | "hangar"
   | "statue"
   | "towncentre"
-  | "cemetery";
+  | "cemetery"
+  /** Junctions on a pond's bank. Three or more of them draw the water. */
+  | "shore"
+  | "coffee"
+  | "railway"
+  | "football"
+  | "golf"
+  | "woods";
 
 export type RoadSurface = "road" | "trail";
 

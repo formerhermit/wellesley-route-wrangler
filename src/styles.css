@@ -442,6 +442,22 @@ body {
   opacity: 0.45;
 }
 
+/* A whole body of water, drawn through the ring of junctions on its bank. */
+.pond-body {
+  fill: var(--water);
+  stroke: color-mix(in srgb, var(--ink) 35%, var(--water));
+  stroke-width: 2;
+}
+
+.pond-shimmer {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 10 46;
+  opacity: 0.55;
+}
+
 .canal-shimmer {
   fill: none;
   stroke: #fff;
@@ -620,6 +636,81 @@ body {
 
 .junction--cemetery .junction-dot {
   fill: #b9b3a7;
+}
+
+.junction--shore .junction-dot {
+  fill: var(--water);
+}
+
+.van-body {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.van-window {
+  fill: var(--water);
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.van-wheel {
+  fill: #4a4a4a;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.van-steam {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.rail {
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.sleeper {
+  stroke: #8a6a4a;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.pitch {
+  fill: var(--grass);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.pitch-line {
+  stroke: #fffdf7;
+  stroke-width: 1.8;
+}
+
+.golf-green {
+  fill: var(--grass);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.golf-pole {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.golf-flag {
+  fill: var(--fail);
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.golf-hole {
+  fill: var(--ink);
 }
 
 .carpark-sign {

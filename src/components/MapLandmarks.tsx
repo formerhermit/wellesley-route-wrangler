@@ -2,14 +2,19 @@ import {
   Bush,
   CarPark,
   Cemetery,
+  CoffeeVan,
   Cow,
+  FootballPitch,
+  GolfFlag,
   Hangar,
   HillMarker,
   Observatory,
+  Railway,
   Statue,
   Superstore,
   TownCentre,
   Tree,
+  Woods,
 } from "./MapSprites";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
@@ -32,7 +37,29 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   statue: { render: () => <Statue />, dy: -48, dx: 0 },
   towncentre: { render: () => <TownCentre />, dy: -52, dx: 0 },
   cemetery: { render: () => <Cemetery />, dy: -46, dx: 0 },
+  woods: { render: () => <Woods />, dy: -46, dx: 0 },
+  coffee: { render: () => <CoffeeVan />, dy: -44, dx: 0 },
+  railway: { render: () => <Railway />, dy: -42, dx: 0 },
+  football: { render: () => <FootballPitch />, dy: -48, dx: 0 },
+  golf: { render: () => <GolfFlag />, dy: -46, dx: 0 },
 };
+
+/**
+ * A closed shape through a ring of junctions, curving through the midpoint of
+ * each side and pulled towards each junction. The result sits inside the ring,
+ * so the bank junctions and the track between them stay on dry land.
+ */
+function waterThrough(bank: MapNode[]): string {
+  const mid = (a: MapNode, b: MapNode) => [(a.x + b.x) / 2, (a.y + b.y) / 2];
+  const [sx, sy] = mid(bank[bank.length - 1], bank[0]);
+  let d = `M ${sx} ${sy}`;
+  for (let i = 0; i < bank.length; i += 1) {
+    const here = bank[i];
+    const [mx, my] = mid(here, bank[(i + 1) % bank.length]);
+    d += ` Q ${here.x} ${here.y} ${mx} ${my}`;
+  }
+  return `${d} Z`;
+}
 
 /** Trees scattered around a park, relative to its junction. */
 const PARK_TREES = [
@@ -61,8 +88,19 @@ export function MapLandmarks({ level }: { level: Level }) {
         }`
       : "";
 
+  // Three or more bank junctions mean they surround something.
+  const bank = nodesOfType(level, "shore");
+  const pondPath = bank.length >= 3 ? waterThrough(bank) : "";
+
   return (
     <g aria-hidden="true">
+      {pondPath && (
+        <>
+          <path className="pond-body" d={pondPath} />
+          <path className="pond-shimmer" d={pondPath} />
+        </>
+      )}
+
       {canalPath && (
         <>
           <path className="canal-water" d={canalPath} />

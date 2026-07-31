@@ -156,6 +156,77 @@ export function Cemetery() {
   );
 }
 
+/** Not a wood, exactly. Enough trees together to get lost in. */
+export function Woods() {
+  return (
+    <g className="sprite sprite--woods" aria-hidden="true">
+      <g transform="translate(-16 4)">
+        <Tree />
+      </g>
+      <g transform="translate(16 2)">
+        <Tree />
+      </g>
+      <g transform="translate(0 -8)">
+        <Tree />
+      </g>
+    </g>
+  );
+}
+
+/** The van that is never in the same place twice, hence the surprise. */
+export function CoffeeVan() {
+  return (
+    <g className="sprite sprite--coffee" aria-hidden="true">
+      <path d="M -22 8 v -12 h 26 l 9 8 v 4 Z" className="van-body" />
+      <rect x={-18} y={-2} width={11} height={7} rx={1} className="van-window" />
+      <circle cx={-13} cy={9} r={3.5} className="van-wheel" />
+      <circle cx={7} cy={9} r={3.5} className="van-wheel" />
+      {/* Steam, because it is always freezing at the pond. */}
+      <path
+        d="M -4 -8 q 4 -4 0 -8 M 4 -8 q 4 -4 0 -8"
+        className="van-steam"
+      />
+    </g>
+  );
+}
+
+/** A stretch of the line. The level crossing is somebody else's problem. */
+export function Railway() {
+  return (
+    <g className="sprite sprite--railway" aria-hidden="true">
+      <line x1={-24} y1={-5} x2={24} y2={-5} className="rail" />
+      <line x1={-24} y1={5} x2={24} y2={5} className="rail" />
+      <path
+        d="M -18 -9 v 8 M -6 -9 v 8 M 6 -9 v 8 M 18 -9 v 8"
+        className="sleeper"
+      />
+    </g>
+  );
+}
+
+export function FootballPitch() {
+  return (
+    <g className="sprite sprite--football" aria-hidden="true">
+      <rect x={-26} y={-15} width={52} height={30} rx={2} className="pitch" />
+      <line x1={0} y1={-15} x2={0} y2={15} className="pitch-line" />
+      <circle cx={0} cy={0} r={6} className="pitch-line" fill="none" />
+      <rect x={-26} y={-6} width={5} height={12} className="pitch-line" fill="none" />
+      <rect x={21} y={-6} width={5} height={12} className="pitch-line" fill="none" />
+    </g>
+  );
+}
+
+export function GolfFlag() {
+  return (
+    <g className="sprite sprite--golf" aria-hidden="true">
+      <ellipse cx={0} cy={10} rx={20} ry={7} className="golf-green" />
+      <line x1={0} y1={10} x2={0} y2={-16} className="golf-pole" />
+      <path d="M 0 -16 l 14 5 l -14 5 Z" className="golf-flag" />
+      <circle cx={0} cy={10} r={2.4} className="golf-hole" />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (

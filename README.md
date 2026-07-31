@@ -34,6 +34,14 @@ map, past no more than one of the two massive hills, and not down the road
 they have had fenced off since March. Six routes satisfy all of it, against
 twenty-four on level 1.
 
+**Level 4 — Fleet Pond** — a wheel: the track round the water, the places
+beyond it, and the paths joining the two. Middling difficulty, sixteen winning
+routes. Nothing on this map is a dead end, which is deliberate — every corner of
+the pond can be reached more than one way, and that is how a group of adults
+ends up somewhere they did not intend to be. The pond itself is drawn from the
+ring of junctions on its bank, the same way the canal on level 1 is drawn from
+its two canal junctions.
+
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. A new level really is a new
