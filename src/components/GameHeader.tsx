@@ -27,9 +27,6 @@ export function GameHeader({
   onShowHelp,
 }: Props) {
   const target = distanceTarget(level);
-  const passed = evaluation.objectives.filter(
-    (objective) => objective.state === "passed",
-  ).length;
 
   return (
     <header className="game-header">
@@ -94,12 +91,6 @@ export function GameHeader({
           <span className="stat-pill__label">
             {target ? `of ${target.minKm}–${target.maxKm}` : "so far"}
           </span>
-        </p>
-        <p className="stat-pill">
-          <span className="stat-pill__value">
-            {passed}/{evaluation.objectives.length}
-          </span>
-          <span className="stat-pill__label">objectives</span>
         </p>
       </div>
     </header>

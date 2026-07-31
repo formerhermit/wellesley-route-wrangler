@@ -24,9 +24,7 @@ export function HelpDialog({ level, onClose }: Props) {
         Plan it, run it, take the blame
       </h2>
       <p id="help-intro" className="dialog__lead">
-        Every run is a map of junctions and the roads between them. You plan the
-        route, the club runs exactly what you planned, and the committee has
-        opinions afterwards.
+        Plan the route, the club runs it and everyone judges you afterwards.
       </p>
 
       <h3 className="help__subhead">Building a route</h3>
@@ -39,10 +37,9 @@ export function HelpDialog({ level, onClose }: Props) {
 
       <h3 className="help__subhead">What counts</h3>
       <p className="help__note">
-        Each run sets its own brief, on screen throughout as the run objectives.{" "}
-        <em>Not yet</em> means undecided, not failed. Ignore the lot and send
-        everyone somewhere daft if you like — finish one as briefed and the next
-        run opens up.
+        Each run has run objectives. You&rsquo;re welcome to ignore them and
+        send everyone somewhere daft if you like. But to qualify for the next
+        level you have to follow the rules.
       </p>
 
       <p className="help__today">

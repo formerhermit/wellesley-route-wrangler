@@ -29,15 +29,11 @@ export function LevelDialog({
   onClose,
 }: Props) {
   return (
-    <Dialog titleId="levels-title" describedBy="levels-intro" onClose={onClose}>
+    <Dialog titleId="levels-title" onClose={onClose}>
       <p className="dialog__badge">Fixture list</p>
       <h2 id="levels-title" tabIndex={-1}>
         Choose a run
       </h2>
-      <p id="levels-intro" className="dialog__lead">
-        Finish a run as briefed and the next one opens up. Anything you have
-        already done stays here for another go.
-      </p>
 
       <ul className="levels">
         {levels.map((level, index) => {
