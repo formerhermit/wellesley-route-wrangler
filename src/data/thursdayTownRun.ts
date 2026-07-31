@@ -126,6 +126,10 @@ export const thursdayTownRun: Level = {
       label: "The Big Tesco",
       blurb: "the car park is a roundabout with ambitions",
       type: "shop",
+      // Below the label rather than above the junction: the road up to the
+      // statue leaves northwards and goes straight through the usual spot.
+      // Nothing else is down here, this being the corner of the map.
+      spriteDy: 78,
     },
     {
       id: "redan-road",
@@ -153,6 +157,10 @@ export const thursdayTownRun: Level = {
       label: "Aldershot Town Centre",
       blurb: "the clock is right twice a day",
       type: "towncentre",
+      // Left and down off the road climbing away to the ski slope, which
+      // otherwise clips the clock tower.
+      spriteDx: -22,
+      spriteDy: -38,
     },
     {
       id: "wellington-statue",
@@ -168,8 +176,10 @@ export const thursdayTownRun: Level = {
     {
       id: "cemetery",
       // Roads leave downwards and to the right, and the headstones sit above,
-      // so left is the only clear side for the writing.
+      // so left is the only clear side for the writing — dropped a little so
+      // it sits under the graves rather than alongside them.
       labelSide: "left",
+      labelDy: 16,
       x: 330,
       y: 80,
       label: "The Cemetery",

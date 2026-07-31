@@ -34,6 +34,15 @@ export interface MapNode {
   labelAbove?: boolean;
   /** Or beside it, where there is no room above or below. */
   labelSide?: "left" | "right";
+  /** Shift the label off wherever its placement put it. Down is positive. */
+  labelDy?: number;
+  /**
+   * Where the landmark sits, when this junction wants it somewhere other than
+   * where its type puts every other one. Replaces the type's offset rather
+   * than adding to it, so the number reads as a position, not a correction.
+   */
+  spriteDx?: number;
+  spriteDy?: number;
 }
 
 export interface Road {

@@ -40,6 +40,11 @@ placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
+Where a junction needs its landmark or its label somewhere other than where its
+type puts every other one — because a road happens to run through the spot — it
+says so itself with `spriteDx`, `spriteDy` or `labelDy`. Landmarks are drawn
+under the roads, so a sprite left sitting on one is simply lost beneath it.
+
 Note that an objective has to be *failable* to be worth declaring. "Never use
 the same road twice" used to be on every level and could never fail, because
 `selectNode` refuses a road already in the route; it sat there reading "Passed"

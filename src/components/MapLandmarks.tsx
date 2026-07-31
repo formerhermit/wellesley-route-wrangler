@@ -153,10 +153,14 @@ export function MapLandmarks({ level }: { level: Level }) {
         const kind = node.sprite ?? node.type;
         const sprite = kind ? ABOVE_NODE[kind] : undefined;
         if (!sprite) return null;
+        // A junction may put its landmark somewhere other than where the type
+        // puts every other one, for the roads that happen to run past it.
+        const dx = node.spriteDx ?? sprite.dx;
+        const dy = node.spriteDy ?? sprite.dy;
         return (
           <g
             key={`sprite-${node.id}`}
-            transform={`translate(${node.x + sprite.dx} ${node.y + sprite.dy})`}
+            transform={`translate(${node.x + dx} ${node.y + dy})`}
           >
             {sprite.render()}
           </g>

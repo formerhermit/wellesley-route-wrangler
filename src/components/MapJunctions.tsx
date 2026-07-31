@@ -110,7 +110,10 @@ export function MapJunctions(props: Props) {
                 className="junction-label"
                 textAnchor={side === "left" ? "end" : side ? "start" : "middle"}
                 x={side === "left" ? -24 : side === "right" ? 24 : 0}
-                y={side ? sideY : above ? -30 - (lines.length - 1) * 13 : 32}
+                y={
+                  (side ? sideY : above ? -30 - (lines.length - 1) * 13 : 32) +
+                  (node.labelDy ?? 0)
+                }
               >
                 {lines.map((line, index) => (
                   <tspan
