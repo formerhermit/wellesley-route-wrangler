@@ -50,6 +50,16 @@ the map, so `Tab` and `Enter` work as you would expect, and each announces
 whether it is currently selectable. `prefers-reduced-motion` shortens playback
 and stops the bouncing and flapping.
 
+## Music
+
+The main theme loops behind the game, off until the speaker button in the
+header is pressed. That choice is remembered, but browsers will not autoplay
+audio on a fresh page load, so a returning player's music starts on their next
+click or key press rather than failing silently.
+
+`useMusic` takes the track as an argument, so a level that wants its own theme
+is a different string, not a different mechanism.
+
 ## Development
 
 ```bash
@@ -67,7 +77,9 @@ src/
   components/    presentation: map, sprites, panels, controls
   data/          level content only, no behaviour
   game/          pure rules: graph, evaluation, result selection
-  hooks/         reduced motion, requestAnimationFrame playback
+  hooks/         reduced motion, requestAnimationFrame playback, music
+public/
+  audio/         music, served as-is
 ```
 
 The rules in `src/game/` know nothing about React. Route playback writes

@@ -155,8 +155,16 @@ body {
   color: var(--ink-soft);
 }
 
-.icon-button {
+/* Music and ? travel together, wherever the header decides to put them. */
+.game-header__tools {
   order: 3;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.icon-button {
   flex: none;
   display: grid;
   place-items: center;
@@ -178,6 +186,11 @@ body {
   background: var(--club);
   border-color: var(--club);
   color: #fff;
+}
+
+.icon-button__glyph {
+  width: 22px;
+  height: 22px;
 }
 
 .icon-button:focus-visible {

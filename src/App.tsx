@@ -19,6 +19,13 @@ import {
 } from "./game/routeGraph";
 import type { GameResult, Level, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
+import { useMusic } from "./hooks/useMusic";
+
+/**
+ * The house theme. Levels will bring their own tracks as they arrive; the
+ * music hook takes the source as an argument for exactly that reason.
+ */
+const MAIN_THEME = `${import.meta.env.BASE_URL}audio/main-theme.mp3`;
 
 /** Remembers that the player has seen the how-to-play dialog. */
 const HELP_SEEN_KEY = "route-wrangler:help-seen";
@@ -160,6 +167,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, levels[0], initialState);
   const level = state.level;
   const reducedMotion = useReducedMotion();
+  const music = useMusic(MAIN_THEME);
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
   // Opens itself on a first visit, and by the ? button after that.
@@ -213,6 +221,8 @@ export default function App() {
           level={level}
           evaluation={evaluation}
           helpButtonRef={helpButtonRef}
+          musicOn={music.on}
+          onToggleMusic={music.toggle}
           onShowHelp={() => setHelpOpen(true)}
         />
 

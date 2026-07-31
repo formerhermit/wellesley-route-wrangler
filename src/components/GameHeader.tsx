@@ -1,11 +1,14 @@
 import type { RefObject } from "react";
 import { distanceTarget } from "../game/routeEvaluation";
 import type { Level, RouteEvaluation } from "../game/types";
+import { MusicButton } from "./MusicButton";
 
 interface Props {
   level: Level;
   evaluation: RouteEvaluation;
   helpButtonRef: RefObject<HTMLButtonElement | null>;
+  musicOn: boolean;
+  onToggleMusic: () => void;
   onShowHelp: () => void;
 }
 
@@ -13,6 +16,8 @@ export function GameHeader({
   level,
   evaluation,
   helpButtonRef,
+  musicOn,
+  onToggleMusic,
   onShowHelp,
 }: Props) {
   const target = distanceTarget(level);
@@ -27,15 +32,19 @@ export function GameHeader({
         <p className="game-header__subtitle">{level.strapline}</p>
       </div>
 
-      <button
-        type="button"
-        ref={helpButtonRef}
-        className="icon-button"
-        onClick={onShowHelp}
-      >
-        <span aria-hidden="true">?</span>
-        <span className="visually-hidden">How to play</span>
-      </button>
+      <div className="game-header__tools">
+        <MusicButton on={musicOn} onToggle={onToggleMusic} />
+
+        <button
+          type="button"
+          ref={helpButtonRef}
+          className="icon-button"
+          onClick={onShowHelp}
+        >
+          <span aria-hidden="true">?</span>
+          <span className="visually-hidden">How to play</span>
+        </button>
+      </div>
 
       <div className="game-header__stats">
         <p className="stat-pill">
