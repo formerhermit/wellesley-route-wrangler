@@ -85,8 +85,7 @@ export function ResultPanel({
         />
       </div>
       <p className="dialog__actions-hint">
-        Edit Route keeps what you planned, ready to run again · Try Again clears
-        it and starts the week over.
+        Edit Route to make changes. Try Again to start over.
       </p>
     </Dialog>
   );

@@ -12,8 +12,11 @@ import type { Level, MapNode, MapNodeType } from "../game/types";
 
 /** Sprites drawn above their junction, keyed by what the junction is. */
 const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; dy: number; dx: number }>> = {
-  observatory: { render: () => <Observatory />, dy: -60, dx: 0 },
-  bush: { render: () => <Bush />, dy: -46, dx: 10 },
+  // Both sit off to one side of their junction: landmarks are drawn under the
+  // roads, so anything left sitting on one is simply lost beneath it. The
+  // Observatory needs the wider berth because of its telescope.
+  observatory: { render: () => <Observatory />, dy: -60, dx: -38 },
+  bush: { render: () => <Bush />, dy: -46, dx: 45 },
   shop: { render: () => <Superstore />, dy: -50, dx: 0 },
   carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
   // Well clear to the side: the trail out of Cow Field runs north through the
