@@ -11,9 +11,10 @@ interface Props {
   report: IncidentReport;
   /** The run this one has just opened up, if there is one. */
   nextLevel?: Level;
+  /** Back to planning with the route intact, ready to be run again. */
   onEdit: () => void;
-  onTryAgain: () => void;
-  onReset: () => void;
+  /** Back to planning with nothing laid, to start the week afresh. */
+  onStartOver: () => void;
   onNextLevel: () => void;
 }
 
@@ -23,8 +24,7 @@ export function ResultPanel({
   report,
   nextLevel,
   onEdit,
-  onTryAgain,
-  onReset,
+  onStartOver,
   onNextLevel,
 }: Props) {
   const advancing = result.success && nextLevel !== undefined;
@@ -73,11 +73,8 @@ export function ResultPanel({
         >
           Edit Route
         </button>
-        <button type="button" className="button" onClick={onTryAgain}>
+        <button type="button" className="button" onClick={onStartOver}>
           Try Again
-        </button>
-        <button type="button" className="button" onClick={onReset}>
-          Reset Route
         </button>
       </div>
 
@@ -88,8 +85,8 @@ export function ResultPanel({
         />
       </div>
       <p className="dialog__actions-hint">
-        Edit Route keeps what you planned · Try Again replays it · Reset Route
-        clears it.
+        Edit Route keeps what you planned, ready to run again · Try Again clears
+        it and starts the week over.
       </p>
     </Dialog>
   );

@@ -325,8 +325,7 @@ export default function App() {
           report={report}
           nextLevel={upcoming}
           onEdit={() => dispatch({ type: "edit" })}
-          onTryAgain={() => dispatch({ type: "run" })}
-          onReset={() => dispatch({ type: "reset" })}
+          onStartOver={() => dispatch({ type: "reset" })}
           onNextLevel={() =>
             upcoming && dispatch({ type: "select-level", level: upcoming })
           }
