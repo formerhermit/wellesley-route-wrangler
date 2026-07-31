@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { ClubFooter } from "./components/ClubFooter";
 import { GameHeader } from "./components/GameHeader";
 import { HelpDialog } from "./components/HelpDialog";
 import { GameControls } from "./components/GameControls";
@@ -250,12 +251,7 @@ export default function App() {
           {state.announcement}
         </p>
 
-        <footer className="page__footer">
-          <p>
-            A Wellesley Runners prototype. No pigeons were negotiated with
-            during development.
-          </p>
-        </footer>
+        <ClubFooter />
       </div>
 
       {helpOpen && <HelpDialog level={level} onClose={closeHelp} />}

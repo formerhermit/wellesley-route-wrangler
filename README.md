@@ -1,7 +1,7 @@
-# Wellesley Runners: Route Wrangler
+# About Five Kilometres
 
-A browser route-planning puzzle for a running club that takes its Thursday
-social run far too seriously. Plan a loop through town, keep everyone away from
+A browser route-planning puzzle for Wellesley Runners, a club that takes its
+Thursday social run far too seriously. Plan a loop through town, keep everyone away from
 the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine,

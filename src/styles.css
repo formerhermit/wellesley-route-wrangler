@@ -248,14 +248,49 @@ body {
   }
 }
 
-.page__footer {
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  text-align: center;
+/*
+ * The real-world call to action, sitting under the game like the donate box
+ * in the reference design.
+ */
+.club-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem 1.25rem;
+  padding: 1rem 1.15rem;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-.page__footer p {
+.club-footer__text {
+  flex: 1 1 22ch;
   margin: 0;
+  min-width: 0;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.club-footer__text strong {
+  color: var(--ink);
+}
+
+.club-footer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* Anchors need the button styling spelled out a little more than buttons do. */
+.club-footer__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 /* ---------- Map ---------- */

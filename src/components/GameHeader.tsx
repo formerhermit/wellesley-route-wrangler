@@ -23,10 +23,8 @@ export function GameHeader({
   return (
     <header className="game-header">
       <div className="game-header__identity">
-        <h1 className="game-header__title">Route Wrangler</h1>
-        <p className="game-header__subtitle">
-          Wellesley Runners <span aria-hidden="true">·</span> {level.strapline}
-        </p>
+        <h1 className="game-header__title">About Five Kilometres</h1>
+        <p className="game-header__subtitle">{level.strapline}</p>
       </div>
 
       <button
