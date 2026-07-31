@@ -140,6 +140,10 @@ export const sundayTrailRun: Level = {
       label: "Overpriced Car Park",
       blurb: "start and finish, £4.50 for two hours",
       type: "carpark",
+      // Beside the junction, not above it: the lane up to the pond leaves
+      // northwards and went straight through the sign.
+      spriteDx: 42,
+      spriteDy: -14,
     },
     {
       id: "woods",

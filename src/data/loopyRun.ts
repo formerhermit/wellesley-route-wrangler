@@ -114,6 +114,10 @@ export const loopyRun: Level = {
       blurb: "pigeon hotspot; they nest in the roof",
       type: "pigeon",
       sprite: "hangar",
+      // Left of the junction: the path up to the towpath leaves northwards,
+      // straight through the hangar door.
+      spriteDx: -55,
+      spriteDy: -46,
     },
     {
       id: "private-bush",
@@ -175,8 +179,11 @@ export const loopyRun: Level = {
       label: "Pool Loop",
       blurb: "round the back, where the pool is",
       type: "pool",
+      // The pool is inside the building. What the loop actually goes past is
+      // the bins.
+      sprite: "bin",
       spriteDx: -6,
-      spriteDy: 34,
+      spriteDy: 38,
     },
     {
       id: "hockey-loop",

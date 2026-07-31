@@ -16,6 +16,16 @@ export const thursdaySocialRun: Level = {
   finishNodeId: "observatory",
   view: { width: 800, height: 560 },
 
+  // On past the towpath and clean off the western edge, threading the gap
+  // between the Observatory and Wellesley Rumble. Canals come from somewhere
+  // and go somewhere; this one no longer stops in a field.
+  canalTail: [
+    { x: 360, y: 250 },
+    { x: 250, y: 232 },
+    { x: 120, y: 228 },
+    { x: -30, y: 210 },
+  ],
+
   objectives: [
     { kind: "start", detail: "Everyone gathers by the telescope, as ever." },
     { kind: "finish", detail: "Route closes the loop." },

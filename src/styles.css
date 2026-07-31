@@ -757,15 +757,24 @@ body {
   stroke-linejoin: round;
 }
 
-.pool-water {
-  fill: var(--water);
+.bin-body,
+.bin-lid {
+  fill: #7f9b6d;
   stroke: var(--ink);
   stroke-width: 2;
+  stroke-linejoin: round;
 }
 
-.pool-lane {
-  stroke: #fffdf7;
-  stroke-width: 1.6;
+.bin-rib {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  opacity: 0.4;
+}
+
+.bin-wheel {
+  fill: #4a4a4a;
+  stroke: var(--ink);
+  stroke-width: 1.4;
 }
 
 .plane-body {

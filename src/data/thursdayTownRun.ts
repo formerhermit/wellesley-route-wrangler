@@ -118,6 +118,9 @@ export const thursdayTownRun: Level = {
       blurb: "pigeon hotspot, and a hill about it",
       type: "pigeon",
       sprite: "hill",
+      // Below the label rather than beside the junction: the lane west to the
+      // Medical Centre runs through where a hill usually sits.
+      spriteDy: 60,
     },
     {
       id: "big-tesco",
@@ -126,10 +129,11 @@ export const thursdayTownRun: Level = {
       label: "The Big Tesco",
       blurb: "the car park is a roundabout with ambitions",
       type: "shop",
-      // Below the label rather than above the junction: the road up to the
-      // statue leaves northwards and goes straight through the usual spot.
-      // Nothing else is down here, this being the corner of the map.
-      spriteDy: 78,
+      // Beside the junction rather than above it: the road up to the statue
+      // leaves northwards and goes straight through the usual spot. Right is
+      // clear all the way to the edge of the map.
+      spriteDx: 52,
+      spriteDy: 8,
     },
     {
       id: "redan-road",

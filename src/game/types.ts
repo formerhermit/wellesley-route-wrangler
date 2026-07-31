@@ -22,7 +22,9 @@ export type MapNodeType =
   | "golf"
   | "woods"
   | "sportscentre"
+  /** The junction is the pool; what you run past out the back is the bin. */
   | "pool"
+  | "bin"
   | "airport"
   | "pub"
   | "cricket"
@@ -146,8 +148,9 @@ export interface Level {
   /**
    * Where the canal goes after its last junction. Water does not stop in a
    * field, so a level whose canal should leave the map says where it heads.
-   * Without this it tapers off past the last towpath, as the Thursday map's
-   * does.
+   * Without this it simply tapers off a little past the last towpath, which
+   * no shipped level now does: water that stops in a field looks like a
+   * mistake, because it is one.
    */
   canalTail?: { x: number; y: number }[];
   /** viewBox of the map SVG. */

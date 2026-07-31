@@ -136,6 +136,10 @@ export const fleetPondRun: Level = {
       label: "Station Car Park",
       blurb: "start and finish, £4.80 all day",
       type: "carpark",
+      // Beside the junction, not above it: the road up to the line runs
+      // through where the sign used to stand.
+      spriteDx: 52,
+      spriteDy: -40,
     },
     {
       id: "train-line",

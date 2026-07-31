@@ -227,25 +227,32 @@ export function GolfFlag() {
   );
 }
 
-/** The building the road goes round. Drawn to sit inside its own loop. */
+/**
+ * The building the road goes round. Drawn small enough to sit inside its own
+ * loop without the road running over the roof.
+ */
 export function SportsCentre() {
   return (
     <g className="sprite sprite--sportscentre" aria-hidden="true">
-      <rect x={-30} y={-18} width={60} height={36} rx={4} className="build-wall" />
-      <path d="M -30 -18 h 60 l -8 -10 h -44 Z" className="centre-roof" />
-      <rect x={-8} y={2} width={16} height={16} rx={1.5} className="shop-door" />
-      <rect x={-24} y={-8} width={12} height={8} rx={1} className="shop-window" />
-      <rect x={12} y={-8} width={12} height={8} rx={1} className="shop-window" />
+      <rect x={-23} y={-13} width={46} height={26} rx={3} className="build-wall" />
+      <path d="M -23 -13 h 46 l -6 -8 h -34 Z" className="centre-roof" />
+      <rect x={-6} y={1} width={12} height={12} rx={1.5} className="shop-door" />
+      <rect x={-18} y={-6} width={9} height={6} rx={1} className="shop-window" />
+      <rect x={9} y={-6} width={9} height={6} rx={1} className="shop-window" />
     </g>
   );
 }
 
-/** Round the back, where the pool is. */
-export function Pool() {
+/** Round the back of the sports centre, where the bins live. */
+export function Bin() {
   return (
-    <g className="sprite sprite--pool" aria-hidden="true">
-      <rect x={-20} y={-11} width={40} height={22} rx={3} className="pool-water" />
-      <path d="M -20 -4 h 40 M -20 4 h 40" className="pool-lane" />
+    <g className="sprite sprite--bin" aria-hidden="true">
+      <path d="M -11 -6 h 22 l -2 20 h -18 Z" className="bin-body" />
+      <rect x={-13} y={-11} width={26} height={5} rx={1.5} className="bin-lid" />
+      <rect x={-4} y={-14} width={8} height={3} rx={1.5} className="bin-lid" />
+      <path d="M -4 -2 v 12 M 4 -2 v 12" className="bin-rib" />
+      <circle cx={-7} cy={15} r={2.4} className="bin-wheel" />
+      <circle cx={7} cy={15} r={2.4} className="bin-wheel" />
     </g>
   );
 }

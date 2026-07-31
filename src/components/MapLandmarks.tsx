@@ -1,5 +1,6 @@
 import {
   Aeroplane,
+  Bin,
   Bridge,
   Bush,
   CarPark,
@@ -14,7 +15,6 @@ import {
   HillMarker,
   Mosque,
   Observatory,
-  Pool,
   Pub,
   Railway,
   SportsCentre,
@@ -44,15 +44,19 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   hangar: { render: () => <Hangar />, dy: -46, dx: 2 },
   statue: { render: () => <Statue />, dy: -48, dx: 0 },
   towncentre: { render: () => <TownCentre />, dy: -52, dx: 0 },
-  cemetery: { render: () => <Cemetery />, dy: -46, dx: 0 },
+  cemetery: { render: () => <Cemetery />, dy: -34, dx: 0 },
   woods: { render: () => <Woods />, dy: -46, dx: 0 },
   coffee: { render: () => <CoffeeVan />, dy: -44, dx: 0 },
   railway: { render: () => <Railway />, dy: -42, dx: 0 },
-  football: { render: () => <FootballPitch />, dy: -48, dx: 0 },
-  golf: { render: () => <GolfFlag />, dy: -46, dx: 0 },
+  // Both are pushed off to one side: the path down to the pitches and the one
+  // up to the Woods each ran straight through the middle of them.
+  football: { render: () => <FootballPitch />, dy: -48, dx: 40 },
+  golf: { render: () => <GolfFlag />, dy: -26, dx: -48 },
   sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
-  pool: { render: () => <Pool />, dy: -40, dx: 0 },
-  airport: { render: () => <Aeroplane />, dy: -44, dx: 0 },
+  bin: { render: () => <Bin />, dy: -34, dx: 0 },
+  // Beside the junction rather than over it: an aeroplane sitting on top of
+  // the stop reads as a flypast, which Hecking Airport has never managed.
+  airport: { render: () => <Aeroplane />, dy: 2, dx: -92 },
   // Clear of the label underneath it: the pub's sign stands proud of the roof.
   pub: { render: () => <Pub />, dy: -60, dx: 0 },
   // Higher than the rest: the stumps stand up, and the label goes underneath.
