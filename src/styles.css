@@ -574,34 +574,6 @@ body {
   fill: #cbb894;
 }
 
-.cow-body {
-  fill: #2a3440;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-}
-
-.cow-patch {
-  fill: #fff;
-  opacity: 0.92;
-}
-
-.cow-horns,
-.cow-legs,
-.cow-tail {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.7;
-  stroke-linecap: round;
-}
-
-.cow-face {
-  fill: #fff;
-}
-
-.cow-eye {
-  fill: var(--ink);
-}
-
 .carpark-sign {
   fill: var(--club);
   stroke: var(--ink);

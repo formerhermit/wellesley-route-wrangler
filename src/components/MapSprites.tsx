@@ -66,19 +66,17 @@ export function RoadClosedMarker() {
 /** Club kit: Wellesley blue, green and white, so the group reads as a club. */
 const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green"];
 
+/** The one drawn sprite that is a bitmap: everything else here is vector. */
+const COW_IMAGE = `${import.meta.env.BASE_URL}sprites/cow.png`;
+
 export function Cow() {
   return (
     <g className="sprite sprite--cow" aria-hidden="true">
-      <ellipse cx={0} cy={0} rx={13} ry={8} className="cow-body" />
-      <ellipse cx={-5} cy={-2} rx={4.5} ry={3.2} className="cow-patch" />
-      <ellipse cx={5} cy={2.5} rx={3.2} ry={2.2} className="cow-patch" />
-      <circle cx={12.5} cy={-6} r={4.6} className="cow-body" />
-      {/* A white blaze, so the head still reads as a head at map scale. */}
-      <ellipse cx={14.6} cy={-5.6} rx={2.6} ry={3.6} className="cow-face" />
-      <path d="M 9 -10 l -2 -3.5 M 16 -10 l 2 -3.5" className="cow-horns" />
-      <circle cx={14.2} cy={-7.4} r={0.9} className="cow-eye" />
-      <path d="M -8.5 7 v 5.5 M -2.5 7 v 5.5 M 4 7 v 5.5 M 9 6.5 v 6" className="cow-legs" />
-      <path d="M -13 -2.5 q -5.5 -2.5 -4 5.5" className="cow-tail" />
+      {/* Flipped to face the way the drawn cow did, which is into the field
+          rather than off the edge of the map. */}
+      <g transform="scale(-1 1)">
+        <image href={COW_IMAGE} x={-22} y={-13.5} width={44} height={27} />
+      </g>
     </g>
   );
 }
