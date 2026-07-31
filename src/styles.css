@@ -139,6 +139,46 @@ body {
   color: var(--ink-soft);
 }
 
+.level-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.level-picker__option {
+  padding: 0.45rem 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-soft);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.level-picker__option:hover:not(:disabled) {
+  border-color: var(--club);
+  color: var(--club);
+}
+
+.level-picker__option.is-current {
+  background: var(--club);
+  border-color: var(--club);
+  color: #fff;
+}
+
+.level-picker__option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.level-picker__option:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
 /* ---------- Layout ---------- */
 
 .layout__main {

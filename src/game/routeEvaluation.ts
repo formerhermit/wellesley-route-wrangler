@@ -153,7 +153,9 @@ function evaluateObjective(
       const count = countNodeType(level, route, objective.nodeType);
       return {
         kind: objective.kind,
-        label: `Pass no more than ${objective.limit} ${objective.what}`,
+        label:
+          objective.label ??
+          `Pass no more than ${objective.limit} ${objective.what}`,
         detail: `${count} on the route.`,
         state: count > objective.limit ? "failed" : "passed",
         fail: fillCopy(objective.fail, totalKm),

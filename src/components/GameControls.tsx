@@ -25,6 +25,7 @@ export function GameControls({
   onRun,
   onReset,
 }: Props) {
+  const startLabel = nodeById(level, level.startNodeId).label;
   const finishLabel = nodeById(level, level.finishNodeId).label;
   const roadCount = route.roadIds.length;
   const target = distanceTarget(level);
@@ -68,7 +69,7 @@ export function GameControls({
       {!canRun && !running && (
         <p className="controls__hint">
           {roadCount === 0
-            ? "Pick a junction joined to the Observatory to lay your first road."
+            ? `Pick a junction joined to ${startLabel} to lay your first road.`
             : `Bring the route back to ${finishLabel} to enable Run Route.`}
         </p>
       )}

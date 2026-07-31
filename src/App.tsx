@@ -5,7 +5,8 @@ import { GameControls } from "./components/GameControls";
 import { ObjectivePanel } from "./components/ObjectivePanel";
 import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
-import { thursdaySocialRun } from "./data/thursdaySocialRun";
+import { LevelPicker } from "./components/LevelPicker";
+import { levels } from "./data/levels";
 import { canRunRoute, evaluateRoute } from "./game/routeEvaluation";
 import { selectResult } from "./game/resultSelection";
 import {
@@ -14,10 +15,8 @@ import {
   selectNode,
   totalDistanceKm,
 } from "./game/routeGraph";
-import type { GameResult, Route } from "./game/types";
+import type { GameResult, Level, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
-
-const level = thursdaySocialRun;
 
 /** Remembers that the player has seen the how-to-play dialog. */
 const HELP_SEEN_KEY = "route-wrangler:help-seen";
@@ -42,6 +41,7 @@ function rememberHelpSeen(): void {
 type Phase = "planning" | "running" | "result";
 
 interface GameState {
+  level: Level;
   route: Route;
   phase: Phase;
   result: GameResult | null;
@@ -57,10 +57,12 @@ type Action =
   | { type: "reset" }
   | { type: "run" }
   | { type: "finish" }
-  | { type: "edit" };
+  | { type: "edit" }
+  | { type: "select-level"; level: Level };
 
-function initialState(): GameState {
+function initialState(level: Level): GameState {
   return {
+    level,
     route: emptyRoute(level),
     phase: "planning",
     result: null,
@@ -70,11 +72,13 @@ function initialState(): GameState {
   };
 }
 
-function describe(route: Route, prefix: string): string {
+function describe(level: Level, route: Route, prefix: string): string {
   return `${prefix} Route now ${totalDistanceKm(level, route).toFixed(2)} km.`;
 }
 
 function reducer(state: GameState, action: Action): GameState {
+  const { level } = state;
+
   switch (action.type) {
     case "select": {
       if (state.phase !== "planning") return state;
@@ -96,8 +100,8 @@ function reducer(state: GameState, action: Action): GameState {
         rejectedNodeId: null,
         announcement:
           outcome.kind === "undone"
-            ? describe(outcome.route, `Removed the road back to ${label}.`)
-            : describe(outcome.route, `Added the road to ${label}.`),
+            ? describe(level, outcome.route, `Removed the road back to ${label}.`)
+            : describe(level, outcome.route, `Added the road to ${label}.`),
         nonce: state.nonce + 1,
       };
     }
@@ -105,10 +109,20 @@ function reducer(state: GameState, action: Action): GameState {
     case "clear-rejection":
       return { ...state, rejectedNodeId: null };
 
-    case "reset":
+    case "reset": {
+      const start = nodeById(level, level.startNodeId).label;
       return {
-        ...initialState(),
-        announcement: "Route cleared. Everyone back at the Observatory.",
+        ...initialState(level),
+        announcement: `Route cleared. Everyone back at ${start}.`,
+        nonce: state.nonce + 1,
+      };
+    }
+
+    case "select-level":
+      if (action.level.id === level.id) return state;
+      return {
+        ...initialState(action.level),
+        announcement: `${action.level.title} loaded.`,
         nonce: state.nonce + 1,
       };
 
@@ -141,7 +155,8 @@ function reducer(state: GameState, action: Action): GameState {
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+  const [state, dispatch] = useReducer(reducer, levels[0], initialState);
+  const level = state.level;
   const reducedMotion = useReducedMotion();
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
@@ -157,7 +172,7 @@ export default function App() {
 
   const evaluation = useMemo(
     () => evaluateRoute(level, state.route),
-    [state.route],
+    [level, state.route],
   );
   const canRun = canRunRoute(level, state.route);
 
@@ -192,6 +207,13 @@ export default function App() {
           level={level}
           helpButtonRef={helpButtonRef}
           onShowHelp={() => setHelpOpen(true)}
+        />
+
+        <LevelPicker
+          levels={levels}
+          currentId={level.id}
+          disabled={state.phase === "running"}
+          onSelect={(next) => dispatch({ type: "select-level", level: next })}
         />
 
         <main className="layout__main">

@@ -7,10 +7,10 @@ the pigeons, and get the group back to the Observatory in one piece.
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine,
 no canvas, no external image dependencies in the playable map.
 
-## The level: Thursday Social Run
+## The levels
 
-Twelve junctions, twenty roads, and one closed shortcut of questionable
-legality. A successful route must:
+**Thursday Social Run** — twelve junctions, twenty roads, and one closed
+shortcut of questionable legality. A loop, in which a successful route must:
 
 - start at The Observatory
 - finish back at The Observatory
@@ -19,6 +19,15 @@ legality. A successful route must:
 - avoid the closed road
 - pass through no more than one pigeon hotspot
 - never use the same road twice
+
+**Sunday Trail Run** — a point-to-point from the Village Hall to the Muddy
+Car Park: reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon
+barn, and mind the path closed for lambing.
+
+Objectives are declared per level as data, with their own failure copy, so the
+rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
+placed from junction types for the same reason. Adding a third level really is
+a new object in `src/data/`.
 
 The objective checklist updates as you build. Objectives that cannot yet be
 decided — finishing the loop, reaching the canal — stay at "Not yet" rather

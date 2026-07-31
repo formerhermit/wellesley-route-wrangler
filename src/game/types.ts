@@ -81,6 +81,8 @@ export type LevelObjective =
       nodeType: MapNodeType;
       limit: number;
       what: string;
+      /** Overrides the generated label, which reads poorly at a limit of 0. */
+      label?: string;
       fail: ResultCopy;
     }
   | { kind: "no-repeat"; fail: ResultCopy };
