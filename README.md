@@ -85,17 +85,13 @@ overrun by pigeons.
 
 ## Deployment
 
-Hosted on GitHub Pages at
-**https://formerhermit.github.io/wellesley-route-wrangler/**.
+Hosted on GitHub Pages at **https://runners.sillygame.studio**.
 
 `.github/workflows/deploy.yml` builds and publishes on every push to `main`.
 Tests, lint and the type-checked build all run first, so a red test stops the
 deploy rather than shipping.
 
-Because the site sits on a subpath rather than a domain root, `vite.config.ts`
-sets `base: "/wellesley-route-wrangler/"`. Without it every asset resolves to
-`/assets/…` and 404s, giving a blank page. The dev server serves the same
-subpath, so `npm run dev` opens at `localhost:5173/wellesley-route-wrangler/`.
-
-To move to a custom domain later: set `base` back to `/`, add `public/CNAME`
-containing the domain, and set the same domain under Settings → Pages.
+The custom domain lives in `public/CNAME`, which Vite copies into `dist` on
+every build — without it Pages drops the domain each time it republishes.
+Because the site is served from the root of its own domain, Vite's `base`
+stays `/`.

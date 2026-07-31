@@ -3,11 +3,10 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Served from https://formerhermit.github.io/wellesley-route-wrangler/, so
-  // assets must resolve under that subpath. If this ever moves to a custom
-  // domain at the root (runners.sillygame.studio), set base back to "/" and
-  // restore public/CNAME.
-  base: '/wellesley-route-wrangler/',
+  // Served from the root of runners.sillygame.studio, so base stays "/".
+  // Moving back to a github.io project path would mean setting this to
+  // "/wellesley-route-wrangler/" and dropping public/CNAME.
+  base: '/',
   plugins: [react()],
   test: {
     include: ['src/**/*.test.ts'],
