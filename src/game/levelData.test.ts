@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { levels } from "../data/levels";
-import { graphFor, otherEnd } from "./routeGraph";
+import { graphFor, otherEnd, roadPathData } from "./routeGraph";
 import type { Level } from "./types";
 
 /**
@@ -38,16 +38,28 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       }
     });
 
-    it("has at most one road between any pair of junctions", () => {
-      // roadBetween finds the first match only, so a second road between the
-      // same pair is unreachable: the player could never choose it.
+    it("joins any pair of junctions by at most two roads", () => {
+      // Two is a loop out and back around something, which the editing rules
+      // and the drawing both handle. Three would have nowhere left to go: the
+      // third road would be drawn on top of one of the first two.
       const pairs = new Map<string, string[]>();
       for (const road of level.roads) {
         const key = [road.from, road.to].sort().join(" – ");
         pairs.set(key, [...(pairs.get(key) ?? []), road.id]);
       }
-      const duplicated = [...pairs].filter(([, ids]) => ids.length > 1);
-      expect(duplicated).toEqual([]);
+      const crowded = [...pairs].filter(([, ids]) => ids.length > 2);
+      expect(crowded).toEqual([]);
+    });
+
+    it("draws every road on its own line", () => {
+      // Whatever the level says, no two roads may end up with the same path.
+      const drawn = new Map<string, string[]>();
+      for (const road of level.roads) {
+        const d = roadPathData(level, road);
+        drawn.set(d, [...(drawn.get(d) ?? []), road.id]);
+      }
+      const overlapping = [...drawn.values()].filter((ids) => ids.length > 1);
+      expect(overlapping).toEqual([]);
     });
 
     it("starts and finishes at junctions that exist", () => {

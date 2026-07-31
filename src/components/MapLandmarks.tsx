@@ -1,4 +1,5 @@
 import {
+  Aeroplane,
   Bush,
   CarPark,
   Cemetery,
@@ -9,7 +10,9 @@ import {
   Hangar,
   HillMarker,
   Observatory,
+  Pool,
   Railway,
+  SportsCentre,
   Statue,
   Superstore,
   TownCentre,
@@ -42,6 +45,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   railway: { render: () => <Railway />, dy: -42, dx: 0 },
   football: { render: () => <FootballPitch />, dy: -48, dx: 0 },
   golf: { render: () => <GolfFlag />, dy: -46, dx: 0 },
+  sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
+  pool: { render: () => <Pool />, dy: -40, dx: 0 },
+  airport: { render: () => <Aeroplane />, dy: -44, dx: 0 },
 };
 
 /**

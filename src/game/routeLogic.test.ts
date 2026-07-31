@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { thursdaySocialRun as level } from "../data/thursdaySocialRun";
+import { levels } from "../data/levels";
 import {
   emptyRoute,
   roadBetween,
+  roadPathData,
+  roadsBetween,
   selectNode,
   totalDistanceKm,
   undoLastStep,
@@ -327,5 +330,67 @@ describe("route editing", () => {
     const outcome = selectNode(level, loop, "geese-pond");
     expect(outcome.kind).toBe("undone");
     expect(selectNode(level, route, "observatory").kind).toBe("rejected");
+  });
+});
+
+/**
+ * Two roads joining the same two junctions: the road out and back around the
+ * Sports Centre building on level 5. The editing rules have to tell them
+ * apart, and undo has to unwind the whole excursion rather than half of it.
+ */
+describe("a road that loops out and back", () => {
+  const loopy = levels.find((l) => l.id === "loopy-run")!;
+  const atSportsCentre: Route = {
+    nodeIds: ["polo-fields", "sports-centre"],
+    roadIds: ["polo-sports"],
+  };
+
+  it("declares two separate roads between the same pair", () => {
+    expect(roadsBetween(loopy, "sports-centre", "pool-loop")).toHaveLength(2);
+  });
+
+  it("draws them on different lines", () => {
+    const [out, back] = roadsBetween(loopy, "sports-centre", "pool-loop");
+    expect(roadPathData(loopy, out)).not.toBe(roadPathData(loopy, back));
+  });
+
+  it("goes round the far side rather than undoing, while a road is free", () => {
+    const there = selectNode(loopy, atSportsCentre, "pool-loop");
+    expect(there.kind).toBe("extended");
+    if (there.kind !== "extended") return;
+
+    // Back to the Sports Centre: the other side of the building, not an undo.
+    const round = selectNode(loopy, there.route, "sports-centre");
+    expect(round.kind).toBe("extended");
+    if (round.kind !== "extended") return;
+    expect(round.route.roadIds).toHaveLength(3);
+    expect(new Set(round.route.roadIds).size).toBe(3);
+  });
+
+  it("undoes the whole loop in one move, so nobody is stuck going round", () => {
+    const there = selectNode(loopy, atSportsCentre, "pool-loop");
+    if (there.kind !== "extended") throw new Error("expected to set off");
+    const round = selectNode(loopy, there.route, "sports-centre");
+    if (round.kind !== "extended") throw new Error("expected to come back");
+
+    const undone = selectNode(loopy, round.route, "pool-loop");
+    expect(undone.kind).toBe("undone");
+    if (undone.kind !== "undone") return;
+    // All the way back to before the loop, not half way round it.
+    expect(undone.route).toEqual(atSportsCentre);
+  });
+
+  it("still refuses a road already run, where there is no twin", () => {
+    const outAndBack: Route = {
+      nodeIds: ["observatory", "polo-fields", "observatory"],
+      roadIds: ["obs-polo", "obs-polo"],
+    };
+    expect(hasRepeatedRoad(outAndBack)).toBe(true);
+    const blocked = selectNode(
+      loopy,
+      { nodeIds: ["observatory", "polo-fields"], roadIds: ["obs-polo"] },
+      "sports-centre",
+    );
+    expect(blocked.kind).toBe("extended");
   });
 });

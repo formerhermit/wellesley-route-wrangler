@@ -227,6 +227,41 @@ export function GolfFlag() {
   );
 }
 
+/** The building the road goes round. Drawn to sit inside its own loop. */
+export function SportsCentre() {
+  return (
+    <g className="sprite sprite--sportscentre" aria-hidden="true">
+      <rect x={-30} y={-18} width={60} height={36} rx={4} className="build-wall" />
+      <path d="M -30 -18 h 60 l -8 -10 h -44 Z" className="centre-roof" />
+      <rect x={-8} y={2} width={16} height={16} rx={1.5} className="shop-door" />
+      <rect x={-24} y={-8} width={12} height={8} rx={1} className="shop-window" />
+      <rect x={12} y={-8} width={12} height={8} rx={1} className="shop-window" />
+    </g>
+  );
+}
+
+/** Round the back, where the pool is. */
+export function Pool() {
+  return (
+    <g className="sprite sprite--pool" aria-hidden="true">
+      <rect x={-20} y={-11} width={40} height={22} rx={3} className="pool-water" />
+      <path d="M -20 -4 h 40 M -20 4 h 40" className="pool-lane" />
+    </g>
+  );
+}
+
+/** Hecking Airport: one aeroplane, permanently about to leave. */
+export function Aeroplane() {
+  return (
+    <g className="sprite sprite--airport" aria-hidden="true">
+      <path d="M -24 2 q 24 -8 48 0 q -24 6 -48 0 Z" className="plane-body" />
+      <path d="M -2 0 l -12 -14 h 7 l 14 12 Z" className="plane-wing" />
+      <path d="M -2 2 l -12 14 h 7 l 14 -12 Z" className="plane-wing" />
+      <path d="M -22 0 l -6 -8 h 4 l 7 7 Z" className="plane-tail" />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (

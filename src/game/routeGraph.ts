@@ -39,15 +39,50 @@ export function roadById(level: Level, id: string): Road {
   return road;
 }
 
-/** Roads join two junctions in either direction. */
+/**
+ * Every road joining two junctions, in either direction. Usually one. Two
+ * where a road runs out and back around something, as it does around the
+ * Sports Centre.
+ */
+export function roadsBetween(level: Level, a: string, b: string): Road[] {
+  return (graphFor(level).roadsByNode.get(a) ?? []).filter(
+    (road) => otherEnd(road, a) === b,
+  );
+}
+
+/** The first road joining two junctions, where any of them will do. */
 export function roadBetween(
   level: Level,
   a: string,
   b: string,
 ): Road | undefined {
-  return graphFor(level)
-    .roadsByNode.get(a)
-    ?.find((road) => otherEnd(road, a) === b);
+  return roadsBetween(level, a, b)[0];
+}
+
+/** How far a road is pushed off the straight line, and to which side. */
+const LOOP_OFFSET = 46;
+/** The turn at each corner of a loop. Kept tight: it is a building, not a bay. */
+const LOOP_CORNER = 15;
+
+function loopSide(level: Level, road: Road): number {
+  const pair = roadsBetween(level, road.from, road.to);
+  if (pair.length < 2) return 0;
+  return pair.findIndex((other) => other.id === road.id) === 0 ? 1 : -1;
+}
+
+/**
+ * SVG path data for one road. Almost every road is a straight line. A pair
+ * joining the same two junctions cannot be, or one would be drawn underneath
+ * the other, so each goes out square, along, and back in — three sides of a
+ * rectangle with the corners taken off, which is what running round a building
+ * actually looks like from above.
+ *
+ * Built from the road's own ends rather than the direction of travel, so the
+ * shape is the same whichever way it is run.
+ */
+export function roadPathData(level: Level, road: Road): string {
+  const from = nodeById(level, road.from);
+  return `M ${from.x} ${from.y} ${roadSegmentFrom(level, road, true)}`;
 }
 
 export function otherEnd(road: Road, from: string): string {
@@ -77,12 +112,23 @@ export function totalDistanceKm(level: Level, route: Route): number {
   return Math.round(total * 100) / 100;
 }
 
-/** Undo the last road taken. Pure, so it is directly testable. */
+/**
+ * Undo the last road taken. Pure, so it is directly testable.
+ *
+ * Going out and straight back between the same two junctions is only possible
+ * where two roads join them, since a road cannot be run twice. That whole
+ * excursion undoes as one move: undoing half of it would drop the player back
+ * on the loop with the return leg still open, and the only way off would be to
+ * go round again.
+ */
 export function undoLastStep(route: Route): Route {
   if (route.roadIds.length === 0) return route;
+  const n = route.nodeIds.length;
+  const wentRoundALoop = n >= 3 && route.nodeIds[n - 1] === route.nodeIds[n - 3];
+  const steps = wentRoundALoop ? 2 : 1;
   return {
-    nodeIds: route.nodeIds.slice(0, -1),
-    roadIds: route.roadIds.slice(0, -1),
+    nodeIds: route.nodeIds.slice(0, -steps),
+    roadIds: route.roadIds.slice(0, -steps),
   };
 }
 
@@ -124,16 +170,12 @@ export function selectNode(
 ): SelectionOutcome {
   const end = currentNodeId(route);
 
-  if (nodeId === previousNodeId(route)) {
-    return { kind: "undone", route: undoLastStep(route) };
-  }
-
   if (nodeId === end) {
     return { kind: "rejected", reason: "You are already standing there." };
   }
 
-  const road = roadBetween(level, end, nodeId);
-  if (!road) {
+  const joining = roadsBetween(level, end, nodeId);
+  if (joining.length === 0) {
     return {
       kind: "rejected",
       reason: `No road joins ${nodeById(level, end).label} to ${
@@ -142,19 +184,26 @@ export function selectNode(
     };
   }
 
-  if (route.roadIds.includes(road.id)) {
+  // Where two roads join these junctions and one is still free, going back the
+  // way you came means the other side of the loop, not an undo.
+  const road = joining.find(({ id }) => !route.roadIds.includes(id));
+  if (road) {
     return {
-      kind: "rejected",
-      reason: "That road is already in your route — no doubling back.",
+      kind: "extended",
+      route: {
+        nodeIds: [...route.nodeIds, nodeId],
+        roadIds: [...route.roadIds, road.id],
+      },
     };
   }
 
+  if (nodeId === previousNodeId(route)) {
+    return { kind: "undone", route: undoLastStep(route) };
+  }
+
   return {
-    kind: "extended",
-    route: {
-      nodeIds: [...route.nodeIds, nodeId],
-      roadIds: [...route.roadIds, road.id],
-    },
+    kind: "rejected",
+    reason: "That road is already in your route — no doubling back.",
   };
 }
 
@@ -183,12 +232,56 @@ export function routePoints(level: Level, route: Route): MapNode[] {
   return route.nodeIds.map((id) => nodeById(level, id));
 }
 
-/** SVG path data for the route polyline. Empty string for an unstarted route. */
+/**
+ * SVG path data for the drawn route. Empty string for an unstarted route.
+ *
+ * Follows each road's own shape rather than joining the junctions up, so a leg
+ * round a loop is drawn round the loop — and, because the runners are placed
+ * by measuring this path, run round it too.
+ */
 export function routePathData(level: Level, route: Route): string {
   if (route.roadIds.length === 0) return "";
-  return routePoints(level, route)
-    .map((node, index) => `${index === 0 ? "M" : "L"} ${node.x} ${node.y}`)
-    .join(" ");
+  const start = nodeById(level, route.nodeIds[0]);
+  return route.roadIds.reduce((path, roadId, index) => {
+    const road = roadById(level, roadId);
+    const forwards = road.from === route.nodeIds[index];
+    return `${path} ${roadSegmentFrom(level, road, forwards)}`;
+  }, `M ${start.x} ${start.y}`);
+}
+
+/** One road's path data without its opening move, run in the given direction. */
+function roadSegmentFrom(level: Level, road: Road, forwards: boolean): string {
+  const from = nodeById(level, road.from);
+  const to = nodeById(level, road.to);
+  const side = loopSide(level, road);
+  if (side === 0) {
+    const end = forwards ? to : from;
+    return `L ${end.x} ${end.y}`;
+  }
+
+  const [head, tail] = forwards ? [from, to] : [to, from];
+  const dx = tail.x - head.x;
+  const dy = tail.y - head.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const ux = dx / length;
+  const uy = dy / length;
+  // The side is fixed to the road, so flip it when running against the grain.
+  const turn = forwards ? side : -side;
+  const px = (-dy / length) * turn;
+  const py = (dx / length) * turn;
+
+  const out = LOOP_OFFSET;
+  const r = Math.min(LOOP_CORNER, out / 2, length / 2);
+  const c1 = { x: head.x + px * out, y: head.y + py * out };
+  const c2 = { x: tail.x + px * out, y: tail.y + py * out };
+
+  return [
+    `L ${(head.x + px * (out - r)).toFixed(1)} ${(head.y + py * (out - r)).toFixed(1)}`,
+    `Q ${c1.x.toFixed(1)} ${c1.y.toFixed(1)} ${(c1.x + ux * r).toFixed(1)} ${(c1.y + uy * r).toFixed(1)}`,
+    `L ${(c2.x - ux * r).toFixed(1)} ${(c2.y - uy * r).toFixed(1)}`,
+    `Q ${c2.x.toFixed(1)} ${c2.y.toFixed(1)} ${(c2.x - px * r).toFixed(1)} ${(c2.y - py * r).toFixed(1)}`,
+    `L ${tail.x} ${tail.y}`,
+  ].join(" ");
 }
 
 /**

@@ -20,7 +20,10 @@ export type MapNodeType =
   | "railway"
   | "football"
   | "golf"
-  | "woods";
+  | "woods"
+  | "sportscentre"
+  | "pool"
+  | "airport";
 
 export type RoadSurface = "road" | "trail";
 

@@ -1,5 +1,5 @@
 import { RoadClosedMarker } from "./MapSprites";
-import { acrossRoadAngle, nodeById } from "../game/routeGraph";
+import { acrossRoadAngle, nodeById, roadPathData } from "../game/routeGraph";
 import type { Level, Route } from "../game/types";
 
 interface Props {
@@ -14,8 +14,6 @@ export function MapRoads({ level, route }: Props) {
   return (
     <g aria-hidden="true">
       {level.roads.map((road) => {
-        const from = nodeById(level, road.from);
-        const to = nodeById(level, road.to);
         const classes = [
           "road",
           road.closed ? "road--closed" : "",
@@ -26,15 +24,10 @@ export function MapRoads({ level, route }: Props) {
           .filter(Boolean)
           .join(" ");
 
+        // A path rather than a line: most roads are straight, but a pair
+        // joining the same two junctions has to go round the building.
         return (
-          <line
-            key={road.id}
-            className={classes}
-            x1={from.x}
-            y1={from.y}
-            x2={to.x}
-            y2={to.y}
-          />
+          <path key={road.id} className={classes} d={roadPathData(level, road)} />
         );
       })}
 

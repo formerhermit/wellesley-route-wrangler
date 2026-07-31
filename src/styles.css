@@ -713,6 +713,47 @@ body {
   fill: var(--ink);
 }
 
+.centre-roof {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.pool-water {
+  fill: var(--water);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.pool-lane {
+  stroke: #fffdf7;
+  stroke-width: 1.6;
+}
+
+.plane-body {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.plane-wing,
+.plane-tail {
+  fill: #c9d2d8;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.junction--pool .junction-dot {
+  fill: var(--water);
+}
+
+.junction--sportscentre .junction-dot {
+  fill: var(--club-bright);
+}
+
 .carpark-sign {
   fill: var(--club);
   stroke: var(--ink);
@@ -741,6 +782,8 @@ body {
 
 /* Roads */
 .road {
+  /* Drawn as paths, so the fill has to be turned off explicitly. */
+  fill: none;
   stroke: #c6bda8;
   stroke-width: 9;
   stroke-linecap: round;
