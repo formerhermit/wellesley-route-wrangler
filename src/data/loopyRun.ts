@@ -50,6 +50,14 @@ export const loopyRun: Level = {
       },
     },
     {
+      kind: "avoid-closed",
+      fail: {
+        title: "The Towpath Goes Nowhere",
+        message:
+          "You took the group up to the canal and then straight through the fence at the far end of it. The towpath is shut. It has been shut for years. There is a sign.",
+      },
+    },
+    {
       kind: "visit",
       nodeIds: ["shoe-lane"],
       what: "Shoe Lane",
@@ -119,6 +127,16 @@ export const loopyRun: Level = {
       spriteDy: 30,
     },
 
+    {
+      id: "grubby-towpath",
+      labelAbove: true,
+      x: 480,
+      y: 110,
+      label: "Grubby Towpath",
+      blurb: "the canal, and the only way on is shut",
+      type: "canal",
+    },
+
     // New, below.
     {
       id: "hecking-airport",
@@ -184,6 +202,22 @@ export const loopyRun: Level = {
       to: "private-bush",
       distanceKm: 0.8,
       pigeonRisk: 0.6,
+    },
+
+    // Up to the canal from the Hanger, and the only path onward from it shut.
+    // Worth the detour to nobody, which is rather the point.
+    {
+      id: "hanger-towpath",
+      from: "the-hanger",
+      to: "grubby-towpath",
+      distanceKm: 0.6,
+    },
+    {
+      id: "towpath-bush",
+      from: "grubby-towpath",
+      to: "private-bush",
+      distanceKm: 0.8,
+      closed: true,
     },
 
     // The middle of the Thursday map is not on this one, so these put the two

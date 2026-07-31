@@ -84,9 +84,11 @@ function nodesOfType(level: Level, type: MapNodeType): MapNode[] {
  * without touching this file.
  */
 export function MapLandmarks({ level }: { level: Level }) {
+  // One canal junction is enough to draw a stretch of water through: the
+  // Loopy map has a single towpath where the Thursday map has a bridge too.
   const canal = nodesOfType(level, "canal");
   const canalPath =
-    canal.length >= 2
+    canal.length >= 1
       ? `M ${level.view.width - 10} ${canal[0].y + 72} ` +
         canal.map((node) => `L ${node.x} ${node.y}`).join(" ") +
         ` L ${Math.max(canal[canal.length - 1].x - 120, 20)} ${
