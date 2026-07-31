@@ -70,9 +70,15 @@ export function RouteMap({
     };
   }, [running, start, cancel]);
 
-  const description = `A schematic map of twelve junctions. Your route is currently ${
-    route.nodeIds.map((id) => nodeById(level, id).label).join(", then ") ||
-    "empty"
+  // Counted, not stated: the description is the only version of the map a
+  // screen reader gets, so it must not go stale when a level is added.
+  // An unstarted route still holds the start junction, so it has to be tested
+  // on the roads taken — otherwise "empty" never gets said and the description
+  // opens by naming a junction nobody has run to yet.
+  const description = `A schematic map of ${level.nodes.length} junctions. Your route is currently ${
+    route.roadIds.length === 0
+      ? "empty"
+      : route.nodeIds.map((id) => nodeById(level, id).label).join(", then ")
   }.`;
 
   return (

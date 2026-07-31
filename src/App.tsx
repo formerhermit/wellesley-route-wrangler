@@ -206,11 +206,12 @@ export default function App() {
 
   // A run that met the brief opens the next level, for good. Idempotent, so
   // re-running a level already completed is harmless.
+  const recordCompletion = progress.complete;
   useEffect(() => {
     if (state.phase === "result" && state.result?.success) {
-      progress.complete(level.id);
+      recordCompletion(level.id);
     }
-  }, [state.phase, state.result, level.id, progress]);
+  }, [state.phase, state.result, level.id, recordCompletion]);
 
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
