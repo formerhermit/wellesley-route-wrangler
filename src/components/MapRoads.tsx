@@ -1,5 +1,5 @@
 import { RoadClosedMarker } from "./MapSprites";
-import { nodeById } from "../game/routeGraph";
+import { acrossRoadAngle, nodeById } from "../game/routeGraph";
 import type { Level, Route } from "../game/types";
 
 interface Props {
@@ -43,10 +43,15 @@ export function MapRoads({ level, route }: Props) {
         .map((road) => {
           const from = nodeById(level, road.from);
           const to = nodeById(level, road.to);
+          // Barred across the road, whichever way the road happens to run.
+          const angle = acrossRoadAngle(from, to);
           return (
             <g
               key={`${road.id}-marker`}
-              transform={`translate(${(from.x + to.x) / 2} ${(from.y + to.y) / 2})`}
+              transform={
+                `translate(${(from.x + to.x) / 2} ${(from.y + to.y) / 2}) ` +
+                `rotate(${angle.toFixed(1)})`
+              }
             >
               <RoadClosedMarker />
             </g>

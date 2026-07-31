@@ -175,7 +175,8 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "back-passage",
-      labelSide: "left",
+      // Right, not left: the closure barrier sits on the road to its left.
+      labelSide: "right",
       x: 285,
       y: 470,
       label: "Up The Back Passage",

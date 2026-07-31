@@ -158,6 +158,26 @@ export function selectNode(
   };
 }
 
+/**
+ * The angle, in degrees, at which to draw a marker that must lie *across* a
+ * road rather than along it — the closure barrier. Sprites are drawn along the
+ * x-axis, so this is the road's own angle turned a quarter turn.
+ *
+ * Normalised to (-90, 90] so the sprite never ends up on its head: the bar is
+ * symmetric, so half a turn costs nothing and keeps the post pointing the way
+ * it was drawn.
+ */
+export function acrossRoadAngle(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+): number {
+  const along = (Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI;
+  let across = along + 90;
+  if (across > 90) across -= 180;
+  else if (across <= -90) across += 180;
+  return across;
+}
+
 /** Screen-space points of the route, in order, for drawing and animation. */
 export function routePoints(level: Level, route: Route): MapNode[] {
   return route.nodeIds.map((id) => nodeById(level, id));
