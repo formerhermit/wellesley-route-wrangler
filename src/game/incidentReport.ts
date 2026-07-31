@@ -89,10 +89,12 @@ export function buildIncidentReport(
     tone: tick(evaluation.endsAtFinish),
   });
 
-  for (const objective of level.objectives) {
-    if (objective.kind !== "visit") continue;
-    const result = evaluation.objectives.find((o) => o.kind === "visit");
-    const visited = result?.state === "passed";
+  // evaluateRoute returns one result per declared objective, in order, so
+  // pair them by index — matching on kind alone reports the first "visit"
+  // objective's state for every one of them.
+  level.objectives.forEach((objective, index) => {
+    if (objective.kind !== "visit") return;
+    const visited = evaluation.objectives[index]?.state === "passed";
     lines.push({
       label:
         objective.reportLabel ??
@@ -100,7 +102,7 @@ export function buildIncidentReport(
       value: visited ? "Yes" : "No",
       tone: tick(visited),
     });
-  }
+  });
 
   lines.push({
     label: "Unexpected pigeons",

@@ -36,35 +36,35 @@ const fixtures = {
   /** 6.20 km, one hotspot, canal visited, closes the loop. */
   perfect: routeOf(
     "observatory",
-    "high-street",
+    "squirrel-pub",
     "pigeon-square",
     "private-bush",
     "canal-bridge",
     "towpath",
-    "hill-top",
+    "redan-road",
     "gardens",
     "observatory",
   ),
   /** 4.70 km — an honest loop, just not far enough. */
   tooShort: routeOf(
     "observatory",
-    "high-street",
+    "squirrel-pub",
     "geese-pond",
     "towpath",
-    "hill-top",
+    "redan-road",
     "gardens",
     "observatory",
   ),
   /** 7.50 km via the bin lorry depot. */
   tooLong: routeOf(
     "observatory",
-    "high-street",
+    "squirrel-pub",
     "pigeon-square",
     "private-bush",
-    "depot",
+    "hangar",
     "canal-bridge",
     "towpath",
-    "hill-top",
+    "redan-road",
     "gardens",
     "observatory",
   ),
@@ -72,26 +72,26 @@ const fixtures = {
   closedRoad: routeOf(
     "observatory",
     "gardens",
-    "shortcut",
-    "hill-top",
+    "back-passage",
+    "redan-road",
     "towpath",
     "canal-bridge",
   ),
   /** Pigeon Square and the Bandstand: two hotspots. */
   pigeonInfested: routeOf(
     "observatory",
-    "high-street",
+    "squirrel-pub",
     "pigeon-square",
     "private-bush",
-    "depot",
-    "bandstand",
+    "hangar",
+    "polo-field",
     "towpath",
-    "hill-top",
+    "redan-road",
     "gardens",
     "observatory",
   ),
   /** Out and straight back down the same road. */
-  repeatedRoad: routeOf("observatory", "high-street", "observatory"),
+  repeatedRoad: routeOf("observatory", "squirrel-pub", "observatory"),
   /** Ends on the towpath rather than coming home. */
   strandedAtCanal: routeOf(
     "observatory",
@@ -129,14 +129,14 @@ describe("distance", () => {
 
 describe("roads are bidirectional", () => {
   it("finds the same road from either end", () => {
-    const there = roadBetween(level, "observatory", "high-street");
-    const back = roadBetween(level, "high-street", "observatory");
-    expect(there?.id).toBe("obs-high");
+    const there = roadBetween(level, "observatory", "squirrel-pub");
+    const back = roadBetween(level, "squirrel-pub", "observatory");
+    expect(there?.id).toBe("obs-pub");
     expect(back?.id).toBe(there?.id);
   });
 
   it("returns nothing for junctions that are not joined", () => {
-    expect(roadBetween(level, "observatory", "depot")).toBeUndefined();
+    expect(roadBetween(level, "observatory", "hangar")).toBeUndefined();
   });
 });
 
@@ -244,10 +244,10 @@ describe("result selection", () => {
   });
 
   it("reports a missing canal before quibbling about distance", () => {
-    const noCanal = routeOf("observatory", "high-street", "observatory");
+    const noCanal = routeOf("observatory", "squirrel-pub", "observatory");
     expect(titleFor(noCanal)).toBe("Everyone Returned Eventually");
     expect(
-      titleFor(routeOf("observatory", "high-street", "geese-pond")),
+      titleFor(routeOf("observatory", "squirrel-pub", "geese-pond")),
     ).toBe("Nobody Visited the Canal");
   });
 
@@ -261,15 +261,15 @@ describe("result selection", () => {
 
 describe("route editing", () => {
   it("extends the route along a connected road", () => {
-    const outcome = selectNode(level, emptyRoute(level), "high-street");
+    const outcome = selectNode(level, emptyRoute(level), "squirrel-pub");
     expect(outcome.kind).toBe("extended");
     if (outcome.kind !== "extended") return;
-    expect(outcome.route.nodeIds).toEqual(["observatory", "high-street"]);
-    expect(outcome.route.roadIds).toEqual(["obs-high"]);
+    expect(outcome.route.nodeIds).toEqual(["observatory", "squirrel-pub"]);
+    expect(outcome.route.roadIds).toEqual(["obs-pub"]);
   });
 
   it("rejects an unconnected junction with a reason", () => {
-    const outcome = selectNode(level, emptyRoute(level), "depot");
+    const outcome = selectNode(level, emptyRoute(level), "hangar");
     expect(outcome.kind).toBe("rejected");
     if (outcome.kind !== "rejected") return;
     expect(outcome.reason).toMatch(/No road joins/);
@@ -277,7 +277,7 @@ describe("route editing", () => {
 
   it("undoes the last step when the previous junction is selected", () => {
     const start = emptyRoute(level);
-    const stepped = selectNode(level, start, "high-street");
+    const stepped = selectNode(level, start, "squirrel-pub");
     if (stepped.kind !== "extended") throw new Error("expected extension");
     const undone = selectNode(level, stepped.route, "observatory");
     expect(undone.kind).toBe("undone");
@@ -294,9 +294,9 @@ describe("route editing", () => {
   });
 
   it("refuses to reuse a road that is not the immediate previous step", () => {
-    const route = routeOf("observatory", "high-street", "geese-pond");
+    const route = routeOf("observatory", "squirrel-pub", "geese-pond");
     // geese-pond -> high-street would reuse high-pond, and is not an undo.
-    const loop = routeOf("observatory", "high-street", "geese-pond", "towpath");
+    const loop = routeOf("observatory", "squirrel-pub", "geese-pond", "towpath");
     const outcome = selectNode(level, loop, "geese-pond");
     expect(outcome.kind).toBe("undone");
     expect(selectNode(level, route, "observatory").kind).toBe("rejected");

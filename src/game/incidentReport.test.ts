@@ -29,12 +29,12 @@ const town = thursdaySocialRun;
 const perfect = routeOf(
   town,
   "observatory",
-  "high-street",
+  "squirrel-pub",
   "pigeon-square",
   "private-bush",
   "canal-bridge",
   "towpath",
-  "hill-top",
+  "redan-road",
   "gardens",
   "observatory",
 );
@@ -42,8 +42,8 @@ const throughTheClosure = routeOf(
   town,
   "observatory",
   "gardens",
-  "shortcut",
-  "hill-top",
+  "back-passage",
+  "redan-road",
   "towpath",
   "canal-bridge",
 );

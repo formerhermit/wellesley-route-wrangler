@@ -3,8 +3,11 @@ import {
   CarPark,
   Cow,
   Depot,
+  Hangar,
   HillMarker,
   Observatory,
+  Pub,
+  Statue,
   Tree,
 } from "./MapSprites";
 import type { Level, MapNode, MapNodeType } from "../game/types";
@@ -17,6 +20,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
   cow: { render: () => <Cow />, dy: -38, dx: 10 },
   hill: { render: () => <HillMarker />, dy: 4, dx: -44 },
+  pub: { render: () => <Pub />, dy: -48, dx: -4 },
+  hangar: { render: () => <Hangar />, dy: -46, dx: 2 },
+  statue: { render: () => <Statue />, dy: -52, dx: 0 },
 };
 
 /** Trees scattered around a park, relative to its junction. */
@@ -135,7 +141,8 @@ export function MapLandmarks({ level }: { level: Level }) {
       )}
 
       {level.nodes.map((node) => {
-        const sprite = node.type ? ABOVE_NODE[node.type] : undefined;
+        const kind = node.sprite ?? node.type;
+        const sprite = kind ? ABOVE_NODE[kind] : undefined;
         if (!sprite) return null;
         return (
           <g

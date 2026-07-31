@@ -9,7 +9,10 @@ export type MapNodeType =
   | "depot"
   | "pond"
   | "cow"
-  | "carpark";
+  | "carpark"
+  | "statue"
+  | "pub"
+  | "hangar";
 
 export type RoadSurface = "road" | "trail";
 
@@ -21,6 +24,11 @@ export interface MapNode {
   /** Short line of flavour text used in the accessible name. */
   blurb?: string;
   type?: MapNodeType;
+  /**
+   * Draw a different landmark from the one `type` implies — the Hangar counts
+   * as a pigeon hotspot but should not look like Pigeon Square.
+   */
+  sprite?: MapNodeType;
   /** Put the label above the junction, where below would collide. */
   labelAbove?: boolean;
 }

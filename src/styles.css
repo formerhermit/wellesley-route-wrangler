@@ -544,6 +544,68 @@ body {
   stroke-linecap: round;
 }
 
+.pub-roof {
+  fill: #a2603f;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.pub-sign {
+  fill: var(--brand-green);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.pub-post {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hangar-shell {
+  fill: #c9d2d8;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.hangar-door {
+  fill: #8d99a3;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.hangar-ground {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.statue-plinth {
+  fill: #cfc6b4;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.statue-figure {
+  fill: #8a8f7d;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.statue-limb {
+  fill: none;
+  stroke: #8a8f7d;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.junction--statue .junction-dot,
+.junction--pub .junction-dot {
+  fill: #cbb894;
+}
+
 .cow-body {
   fill: #2a3440;
   stroke: var(--ink);
