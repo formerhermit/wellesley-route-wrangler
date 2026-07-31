@@ -398,14 +398,14 @@ body {
 }
 
 .cow-body {
-  fill: #fff;
+  fill: #2a3440;
   stroke: var(--ink);
   stroke-width: 1.6;
 }
 
 .cow-patch {
-  fill: var(--ink);
-  opacity: 0.85;
+  fill: #fff;
+  opacity: 0.92;
 }
 
 .cow-horns,
@@ -415,6 +415,10 @@ body {
   stroke: var(--ink);
   stroke-width: 1.7;
   stroke-linecap: round;
+}
+
+.cow-face {
+  fill: #fff;
 }
 
 .cow-eye {

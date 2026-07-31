@@ -84,8 +84,10 @@ export function Cow() {
       <ellipse cx={-5} cy={-2} rx={4.5} ry={3.2} className="cow-patch" />
       <ellipse cx={5} cy={2.5} rx={3.2} ry={2.2} className="cow-patch" />
       <circle cx={12.5} cy={-6} r={4.6} className="cow-body" />
+      {/* A white blaze, so the head still reads as a head at map scale. */}
+      <ellipse cx={14.6} cy={-5.6} rx={2.6} ry={3.6} className="cow-face" />
       <path d="M 9 -10 l -2 -3.5 M 16 -10 l 2 -3.5" className="cow-horns" />
-      <circle cx={14.5} cy={-4.8} r={1} className="cow-eye" />
+      <circle cx={14.2} cy={-7.4} r={0.9} className="cow-eye" />
       <path d="M -8.5 7 v 5.5 M -2.5 7 v 5.5 M 4 7 v 5.5 M 9 6.5 v 6" className="cow-legs" />
       <path d="M -13 -2.5 q -5.5 -2.5 -4 5.5" className="cow-tail" />
     </g>
