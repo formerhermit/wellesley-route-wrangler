@@ -10,11 +10,20 @@ interface Props {
 }
 
 /**
- * On a phone the native share sheet is the right answer — it is the only route
- * to Instagram and WhatsApp. Desktops either have no share sheet at all, or a
- * macOS one with no social networks in it, so there we open our own menu of
- * share links instead.
+ * The native share sheet is only worth using where it is actually good: a
+ * phone or tablet, where it is the one route to Instagram and WhatsApp.
+ *
+ * Presence of navigator.share is NOT a good enough test. Safari and DuckDuckGo
+ * on macOS both have it, and both open the macOS share sheet — which has
+ * carried no social networks since Apple dropped built-in Facebook and Twitter
+ * integration. So we key off the pointer instead: coarse means touch, which
+ * means a share sheet worth opening.
  */
+function prefersNativeShare(): boolean {
+  if (typeof navigator.share !== "function") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 export function ShareButton({ payload, label, className = "" }: Props) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -66,7 +75,7 @@ export function ShareButton({ payload, label, className = "" }: Props) {
   };
 
   const onShareClick = async () => {
-    if (navigator.share) {
+    if (prefersNativeShare()) {
       try {
         await navigator.share(payload);
         return;
