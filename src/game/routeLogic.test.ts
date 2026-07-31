@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { tuesdaySocialRun as level } from "../data/tuesdaySocialRun";
+import { thursdaySocialRun as level } from "../data/thursdaySocialRun";
 import {
   emptyRoute,
   roadBetween,

@@ -4,7 +4,7 @@ import { GameControls } from "./components/GameControls";
 import { ObjectivePanel } from "./components/ObjectivePanel";
 import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
-import { tuesdaySocialRun } from "./data/tuesdaySocialRun";
+import { thursdaySocialRun } from "./data/thursdaySocialRun";
 import { canRunRoute, evaluateRoute } from "./game/routeEvaluation";
 import { selectResult } from "./game/resultSelection";
 import {
@@ -16,7 +16,7 @@ import {
 import type { GameResult, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 
-const level = tuesdaySocialRun;
+const level = thursdaySocialRun;
 
 type Phase = "planning" | "running" | "result";
 

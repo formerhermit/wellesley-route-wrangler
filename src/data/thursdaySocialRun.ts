@@ -5,10 +5,10 @@ import type { Level } from "../game/types";
  * rules that read it are in `src/game/`, so a second level is just another
  * object of this shape.
  */
-export const tuesdaySocialRun: Level = {
-  id: "tuesday-social-run",
-  title: "Tuesday Social Run",
-  strapline: "Nobody is racing. Everybody is racing.",
+export const thursdaySocialRun: Level = {
+  id: "thursday-social-run",
+  title: "Thursday Social Run",
+  strapline: "It's totally flat this week.",
   instructions:
     "Plan a loop from the Observatory and back. Tap or click a junction joined to the end of your route to add a road; tap the junction you just came from to undo it.",
   startNodeId: "observatory",

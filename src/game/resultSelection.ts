@@ -57,7 +57,7 @@ export function selectResult(
     return {
       title: "Nobody Visited the Canal",
       message:
-        "The route committee are furious. The canal is the entire point of a Tuesday. There will be an email.",
+        "The route committee are furious. The canal is the entire point of a Thursday. There will be an email.",
       success: false,
     };
   }
@@ -76,7 +76,7 @@ export function selectResult(
       title: "Accidental Long Run",
       message: `${evaluation.totalDistanceKm.toFixed(
         2,
-      )} km on a social Tuesday. Three people have gone quiet and one has started talking about a marathon.`,
+      )} km on a social Thursday. Three people have gone quiet and one has started talking about a marathon.`,
       success: false,
     };
   }

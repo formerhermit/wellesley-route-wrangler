@@ -1,13 +1,13 @@
 # Wellesley Runners: Route Wrangler
 
-A browser route-planning puzzle for a running club that takes its Tuesday
+A browser route-planning puzzle for a running club that takes its Thursday
 social run far too seriously. Plan a loop through town, keep everyone away from
 the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine,
 no canvas, no external image dependencies in the playable map.
 
-## The level: Tuesday Social Run
+## The level: Thursday Social Run
 
 Twelve junctions, twenty roads, and one closed shortcut of questionable
 legality. A successful route must:
