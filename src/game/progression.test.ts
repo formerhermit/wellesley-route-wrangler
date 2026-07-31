@@ -6,6 +6,7 @@ import {
   levelStatus,
   nextLevel,
   nextUnlockedLevel,
+  resumeLevel,
   unlockedBy,
 } from "./progression";
 import type { Level } from "./types";
@@ -88,6 +89,29 @@ describe("nextUnlockedLevel", () => {
   it("offers nothing at the end of the roster", () => {
     const all = new Set(["one", "two", "three"]);
     expect(nextUnlockedLevel(levels, all, "three")).toBeUndefined();
+  });
+});
+
+describe("resumeLevel", () => {
+  it("starts a new player at level one", () => {
+    expect(resumeLevel(levels, none).id).toBe("one");
+  });
+
+  it("drops a returning player on the run they are up to", () => {
+    expect(resumeLevel(levels, new Set(["one"])).id).toBe("two");
+    expect(resumeLevel(levels, new Set(["one", "two"])).id).toBe("three");
+  });
+
+  it("stays on the last level once the roster is finished", () => {
+    expect(resumeLevel(levels, new Set(["one", "two", "three"])).id).toBe(
+      "three",
+    );
+  });
+
+  it("skips a completed level to reach the first one still outstanding", () => {
+    // A new level added ahead of runs already completed: that is what they
+    // are up to, not the finished ones behind it.
+    expect(resumeLevel(levels, new Set(["one", "three"])).id).toBe("two");
   });
 });
 

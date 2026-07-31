@@ -12,6 +12,7 @@ import {
   levelNumber,
   nextLevel as levelAfter,
   nextUnlockedLevel,
+  resumeLevel,
 } from "./game/progression";
 import { canRunRoute, evaluateRoute } from "./game/routeEvaluation";
 import { buildIncidentReport } from "./game/incidentReport";
@@ -170,11 +171,15 @@ function reducer(state: GameState, action: Action): GameState {
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, levels[0], initialState);
+  const progress = useProgress();
+  // Only read on the first render: a returning player opens on the run they
+  // are up to, rather than being sent back to level one every visit.
+  const [state, dispatch] = useReducer(reducer, progress.completed, (saved) =>
+    initialState(resumeLevel(levels, saved)),
+  );
   const level = state.level;
   const reducedMotion = useReducedMotion();
   const music = useMusic(MAIN_THEME);
-  const progress = useProgress();
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
   const levelsButtonRef = useRef<HTMLButtonElement>(null);

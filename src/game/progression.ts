@@ -52,6 +52,20 @@ export function nextUnlockedLevel(
   return isUnlocked(levels, completed, next.id) ? next : undefined;
 }
 
+/**
+ * Where to drop a returning player: the run they are up to, meaning the first
+ * one open to them that they have not yet completed. With the whole roster
+ * behind them there is nothing left to be up to, so they land on the last
+ * level rather than being sent back to the beginning.
+ */
+export function resumeLevel(levels: Level[], completed: Completed): Level {
+  const upNext = levels.find(
+    (level) =>
+      !completed.has(level.id) && isUnlocked(levels, completed, level.id),
+  );
+  return upNext ?? levels[levels.length - 1] ?? levels[0];
+}
+
 export type LevelStatus = "completed" | "unlocked" | "locked";
 
 export function levelStatus(

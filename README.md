@@ -37,6 +37,10 @@ everybody; every level after that opens when the one before it has been run
 successfully, and once opened it stays open — the **Level _n_** button in the
 header brings up the fixture list to run an old favourite again.
 
+A returning player opens on the run they are up to — the first one open to
+them that they have not completed — rather than back at level 1. Once the whole
+roster is behind them they land on the last level.
+
 Losing does not cost anything. You can attempt an unlocked run as often as you
 like, and plan a deliberately terrible route without being sent back anywhere;
 you simply do not bank the level until a run meets its brief.
