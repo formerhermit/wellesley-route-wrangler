@@ -10,15 +10,15 @@ export const sundayTrailRun: Level = {
   title: "Sunday Trail Run",
   strapline: "There's coffee at the end.",
   instructions:
-    "Get the group from the Suspicious Car out to the Overpriced Car Park, the long way round. Stay on the trails, say hello to the cows, and keep off the tarmac — this is supposed to be a trail run.",
+    "Plan a loop out from the Overpriced Car Park and back. Stay on the trails, say hello to the cows, and keep off the tarmac — this is supposed to be a trail run.",
   theme: "trail",
-  startNodeId: "suspicious-car",
+  startNodeId: "car-park",
   finishNodeId: "car-park",
   view: { width: 800, height: 560 },
 
   objectives: [
-    { kind: "start", detail: "Boots on, optimism high." },
-    { kind: "finish", detail: "Everyone accounted for by the boot of the car." },
+    { kind: "start", detail: "Boots on, ticket bought, optimism high." },
+    { kind: "finish", detail: "Everyone accounted for, before the ticket runs out." },
     {
       kind: "distance",
       minKm: 10,
@@ -99,7 +99,7 @@ export const sundayTrailRun: Level = {
   emptyRoute: {
     title: "Barely Left the Start Line",
     message:
-      "The group stood around the Suspicious Car comparing shoes until it got dark.",
+      "The group stood in the car park comparing shoes until the ticket expired.",
   },
   fallback: {
     title: "Everyone Returned Eventually",
@@ -113,7 +113,7 @@ export const sundayTrailRun: Level = {
       x: 90,
       y: 470,
       label: "Suspicious Car",
-      blurb: "start; nobody knows whose it is",
+      blurb: "nobody knows whose it is",
       labelAbove: true,
     },
     {
@@ -145,7 +145,7 @@ export const sundayTrailRun: Level = {
       x: 720,
       y: 335,
       label: "Overpriced Car Park",
-      blurb: "finish, and £4.50 for two hours",
+      blurb: "start and finish, £4.50 for two hours",
       type: "carpark",
     },
     {
@@ -209,20 +209,33 @@ export const sundayTrailRun: Level = {
   ],
 
   roads: [
-    // The trails.
-    { id: "car-stile", from: "suspicious-car", to: "stile", distanceKm: 1.2, surface: "trail" },
-    { id: "stile-cows", from: "stile", to: "cow-field", distanceKm: 1.3, surface: "trail" },
-    { id: "cows-cattlegrid", from: "cow-field", to: "cattlegrid", distanceKm: 1.5, surface: "trail" },
-    { id: "cattlegrid-park", from: "cattlegrid", to: "car-park", distanceKm: 1.3, surface: "trail" },
-    { id: "cows-woods", from: "cow-field", to: "woods", distanceKm: 1.3, surface: "trail" },
-    { id: "woods-soldiers", from: "woods", to: "soldiers", distanceKm: 1.4, surface: "trail", hill: true },
-    { id: "soldiers-portaloos", from: "soldiers", to: "portaloos", distanceKm: 1.2, surface: "trail", hill: true },
-    { id: "portaloos-gate", from: "portaloos", to: "gate", distanceKm: 1, surface: "trail" },
-    { id: "gate-stile", from: "gate", to: "stile", distanceKm: 1.1, surface: "trail" },
-    { id: "woods-trig", from: "woods", to: "trig", distanceKm: 1.1, surface: "trail", hill: true },
+    // The trails. Between them these form a loop out from the car park and
+    // back, in either direction.
+    { id: "park-cattlegrid", from: "car-park", to: "cattlegrid", distanceKm: 1.1, surface: "trail" },
+    { id: "cattlegrid-cows", from: "cattlegrid", to: "cow-field", distanceKm: 1.2, surface: "trail" },
+    { id: "cows-stile", from: "cow-field", to: "stile", distanceKm: 1, surface: "trail" },
+    { id: "stile-car", from: "stile", to: "suspicious-car", distanceKm: 0.9, surface: "trail" },
+    { id: "car-gate", from: "suspicious-car", to: "gate", distanceKm: 0.8, surface: "trail" },
+    { id: "gate-portaloos", from: "gate", to: "portaloos", distanceKm: 0.9, surface: "trail" },
+    { id: "portaloos-soldiers", from: "portaloos", to: "soldiers", distanceKm: 1.1, surface: "trail", hill: true },
+    { id: "soldiers-woods", from: "soldiers", to: "woods", distanceKm: 1.2, surface: "trail", hill: true },
+    { id: "woods-trig", from: "woods", to: "trig", distanceKm: 1, surface: "trail", hill: true },
+    { id: "trig-pond", from: "trig", to: "stinky-pond", distanceKm: 1.1, surface: "trail" },
+    { id: "pond-park", from: "stinky-pond", to: "car-park", distanceKm: 0.9, surface: "trail" },
+
+    // Cross-country links, for a shorter or a different way round.
+    { id: "cows-woods", from: "cow-field", to: "woods", distanceKm: 1.1, surface: "trail" },
     { id: "soldiers-trig", from: "soldiers", to: "trig", distanceKm: 1.5, surface: "trail", hill: true },
-    { id: "trig-pond", from: "trig", to: "stinky-pond", distanceKm: 1.2, surface: "trail" },
-    { id: "pond-park", from: "stinky-pond", to: "car-park", distanceKm: 1.1, surface: "trail" },
+    {
+      id: "gate-soldiers",
+      from: "gate",
+      to: "soldiers",
+      distanceKm: 1.1,
+      surface: "trail",
+      closed: true,
+    },
+
+    // Past the barn. Shorter, and a terrible idea.
     {
       id: "trig-barn",
       from: "trig",
@@ -239,19 +252,10 @@ export const sundayTrailRun: Level = {
       surface: "trail",
       pigeonRisk: 0.6,
     },
-    {
-      id: "gate-soldiers",
-      from: "gate",
-      to: "soldiers",
-      distanceKm: 1.1,
-      surface: "trail",
-      closed: true,
-    },
 
     // The tarmac. Shorter, flatter, and entirely against the point.
-    { id: "car-gate", from: "suspicious-car", to: "gate", distanceKm: 0.9 },
-    { id: "stile-cattlegrid", from: "stile", to: "cattlegrid", distanceKm: 2 },
-    { id: "cattlegrid-pond", from: "cattlegrid", to: "stinky-pond", distanceKm: 1.3 },
+    { id: "stile-woods", from: "stile", to: "woods", distanceKm: 1.5 },
     { id: "woods-park", from: "woods", to: "car-park", distanceKm: 1.6 },
+    { id: "cattlegrid-pond", from: "cattlegrid", to: "stinky-pond", distanceKm: 1.3 },
   ],
 };
