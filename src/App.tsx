@@ -205,6 +205,7 @@ export default function App() {
       <div className="layout" inert={modalOpen}>
         <GameHeader
           level={level}
+          evaluation={evaluation}
           helpButtonRef={helpButtonRef}
           onShowHelp={() => setHelpOpen(true)}
         />
@@ -217,27 +218,30 @@ export default function App() {
         />
 
         <main className="layout__main">
-          <RouteMap
-            level={level}
-            route={state.route}
-            running={state.phase === "running"}
-            rejectedNodeId={state.rejectedNodeId}
-            reducedMotion={reducedMotion}
-            onSelect={(nodeId) => dispatch({ type: "select", nodeId })}
-            onRunFinished={() => dispatch({ type: "finish" })}
-          />
+          {/* The map and its actions read as one unit, on every width. */}
+          <div className="layout__play">
+            <RouteMap
+              level={level}
+              route={state.route}
+              running={state.phase === "running"}
+              rejectedNodeId={state.rejectedNodeId}
+              reducedMotion={reducedMotion}
+              onSelect={(nodeId) => dispatch({ type: "select", nodeId })}
+              onRunFinished={() => dispatch({ type: "finish" })}
+            />
 
-          <div className="layout__side">
             <GameControls
               level={level}
               route={state.route}
-              evaluation={evaluation}
               canRun={canRun}
               running={state.phase === "running"}
               runButtonRef={runButtonRef}
               onRun={() => dispatch({ type: "run" })}
               onReset={() => dispatch({ type: "reset" })}
             />
+          </div>
+
+          <div className="layout__side">
             <ObjectivePanel evaluation={evaluation} />
           </div>
         </main>

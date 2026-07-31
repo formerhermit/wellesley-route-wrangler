@@ -1,12 +1,10 @@
 import type { RefObject } from "react";
-import type { Level, Route, RouteEvaluation } from "../game/types";
+import type { Level, Route } from "../game/types";
 import { nodeById } from "../game/routeGraph";
-import { distanceTarget } from "../game/routeEvaluation";
 
 interface Props {
   level: Level;
   route: Route;
-  evaluation: RouteEvaluation;
   canRun: boolean;
   running: boolean;
   /** Focus lands here when the result dialog closes. */
@@ -15,10 +13,10 @@ interface Props {
   onReset: () => void;
 }
 
+/** The action bar, sitting directly under the map. */
 export function GameControls({
   level,
   route,
-  evaluation,
   canRun,
   running,
   runButtonRef,
@@ -28,29 +26,18 @@ export function GameControls({
   const startLabel = nodeById(level, level.startNodeId).label;
   const finishLabel = nodeById(level, level.finishNodeId).label;
   const roadCount = route.roadIds.length;
-  const target = distanceTarget(level);
 
   return (
     <section className="controls" aria-labelledby="controls-heading">
-      <h3 id="controls-heading" className="visually-hidden">
+      <h2 id="controls-heading" className="visually-hidden">
         Route controls
-      </h3>
-
-      <p className="controls__distance">
-        <span className="controls__distance-value">
-          {evaluation.totalDistanceKm.toFixed(2)} km
-        </span>
-        <span className="controls__distance-detail">
-          {roadCount} {roadCount === 1 ? "road" : "roads"}
-          {target ? ` · target ${target.minKm}–${target.maxKm} km` : ""}
-        </span>
-      </p>
+      </h2>
 
       <div className="controls__buttons">
         <button
           type="button"
           ref={runButtonRef}
-          className="button button--primary"
+          className="button button--primary button--action"
           onClick={onRun}
           disabled={!canRun || running}
         >
@@ -58,7 +45,7 @@ export function GameControls({
         </button>
         <button
           type="button"
-          className="button"
+          className="button button--action"
           onClick={onReset}
           disabled={running || roadCount === 0}
         >
