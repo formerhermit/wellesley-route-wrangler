@@ -324,5 +324,14 @@ export const loopyRun: Level = {
       "{km} km of loops, none of them the right loops. The committee has drawn a diagram and it has not helped.",
   },
 
+  // On past the towpath, then north off the top of the map, keeping well to
+  // the right of the Observatory and its label.
+  canalTail: [
+    { x: 370, y: 95 },
+    { x: 300, y: 80 },
+    { x: 262, y: 40 },
+    { x: 250, y: -30 },
+  ],
+
   view: { width: 800, height: 560 },
 };

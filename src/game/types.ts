@@ -137,6 +137,13 @@ export interface Level {
   success: ResultCopy;
   emptyRoute: ResultCopy;
   fallback: ResultCopy;
+  /**
+   * Where the canal goes after its last junction. Water does not stop in a
+   * field, so a level whose canal should leave the map says where it heads.
+   * Without this it tapers off past the last towpath, as the Thursday map's
+   * does.
+   */
+  canalTail?: { x: number; y: number }[];
   /** viewBox of the map SVG. */
   view: { width: number; height: number };
 }

@@ -87,13 +87,19 @@ export function MapLandmarks({ level }: { level: Level }) {
   // One canal junction is enough to draw a stretch of water through: the
   // Loopy map has a single towpath where the Thursday map has a bridge too.
   const canal = nodesOfType(level, "canal");
+  const last = canal[canal.length - 1];
+  // Where the water goes after the last towpath: off the map if the level says
+  // so, otherwise tapering away past it.
+  const tail = level.canalTail ?? [
+    { x: Math.max((last?.x ?? 0) - 120, 20), y: (last?.y ?? 0) + 15 },
+  ];
   const canalPath =
     canal.length >= 1
-      ? `M ${level.view.width - 10} ${canal[0].y + 72} ` +
-        canal.map((node) => `L ${node.x} ${node.y}`).join(" ") +
-        ` L ${Math.max(canal[canal.length - 1].x - 120, 20)} ${
-          canal[canal.length - 1].y + 15
-        }`
+      ? [
+          `M ${level.view.width - 10} ${canal[0].y + 72}`,
+          ...canal.map((node) => `L ${node.x} ${node.y}`),
+          ...tail.map((point) => `L ${point.x} ${point.y}`),
+        ].join(" ")
       : "";
 
   // Three or more bank junctions mean they surround something.
