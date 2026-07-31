@@ -33,36 +33,35 @@ function routeOf(...nodeIds: string[]): Route {
 }
 
 const fixtures = {
-  /** 6.20 km, one hotspot, canal visited, closes the loop. */
+  /** 6.40 km, one hotspot, canal visited, closes the loop. */
   perfect: routeOf(
     "observatory",
     "wellesley-rumble",
-    "the-hanger",
-    "private-bush",
-    "canal-bridge",
-    "towpath",
     "medical-centre",
+    "towpath",
+    "private-bush",
+    "the-hanger",
+    "geese-pond",
     "polo-fields",
     "observatory",
   ),
-  /** 4.70 km — an honest loop, just not far enough. */
+  /** 4.40 km — an honest loop, just not far enough. */
   tooShort: routeOf(
     "observatory",
     "wellesley-rumble",
-    "geese-pond",
-    "towpath",
     "medical-centre",
+    "towpath",
+    "geese-pond",
     "polo-fields",
     "observatory",
   ),
-  /** 7.50 km via the bin lorry depot. */
+  /** 7.10 km, out around the hangar. */
   tooLong: routeOf(
     "observatory",
     "wellesley-rumble",
+    "geese-pond",
     "the-hanger",
     "private-bush",
-    "big-tesco",
-    "canal-bridge",
     "towpath",
     "medical-centre",
     "polo-fields",
@@ -71,22 +70,22 @@ const fixtures = {
   /** Straight through the closure at the shortcut. */
   closedRoad: routeOf(
     "observatory",
-    "polo-fields",
+    "wellesley-rumble",
+    "geese-pond",
     "back-passage",
-    "medical-centre",
-    "towpath",
-    "canal-bridge",
+    "polo-fields",
+    "observatory",
   ),
-  /** Pigeon Square and the Bandstand: two hotspots. */
+  /** The Hangar and Hospital Hill: two hotspots. */
   pigeonInfested: routeOf(
     "observatory",
     "wellesley-rumble",
-    "the-hanger",
-    "private-bush",
-    "big-tesco",
+    "medical-centre",
     "hospital-hill",
     "towpath",
-    "medical-centre",
+    "private-bush",
+    "the-hanger",
+    "geese-pond",
     "polo-fields",
     "observatory",
   ),
@@ -111,9 +110,9 @@ function stateOf(route: Route, objectiveId: string): ObjectiveState {
 
 describe("distance", () => {
   it("sums the roads taken", () => {
-    expect(totalDistanceKm(level, fixtures.perfect)).toBe(6.2);
-    expect(totalDistanceKm(level, fixtures.tooShort)).toBe(4.7);
-    expect(totalDistanceKm(level, fixtures.tooLong)).toBe(7.5);
+    expect(totalDistanceKm(level, fixtures.perfect)).toBe(6.4);
+    expect(totalDistanceKm(level, fixtures.tooShort)).toBe(4.4);
+    expect(totalDistanceKm(level, fixtures.tooLong)).toBe(7.1);
   });
 
   it("is zero for a route that has not left the start", () => {
@@ -200,7 +199,7 @@ describe("objectives are driven by the level", () => {
 
   it("puts the route distance into the failure copy", () => {
     const result = selectResult(level, evaluateRoute(level, fixtures.tooLong));
-    expect(result.message).toContain("7.50 km");
+    expect(result.message).toContain("7.10 km");
     expect(result.message).not.toContain("{km}");
   });
 });

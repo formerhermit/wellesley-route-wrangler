@@ -30,11 +30,11 @@ const perfect = routeOf(
   town,
   "observatory",
   "wellesley-rumble",
-  "the-hanger",
-  "private-bush",
-  "canal-bridge",
-  "towpath",
   "medical-centre",
+  "towpath",
+  "private-bush",
+  "the-hanger",
+  "geese-pond",
   "polo-fields",
   "observatory",
 );
@@ -43,20 +43,20 @@ const overHospitalHill = routeOf(
   town,
   "observatory",
   "wellesley-rumble",
-  "the-hanger",
-  "private-bush",
-  "big-tesco",
-  "hospital-hill",
   "medical-centre",
+  "hospital-hill",
+  "big-tesco",
+  "private-bush",
+  "the-hanger",
 );
 const throughTheClosure = routeOf(
   town,
   "observatory",
-  "polo-fields",
+  "wellesley-rumble",
+  "geese-pond",
   "back-passage",
-  "medical-centre",
-  "towpath",
-  "canal-bridge",
+  "polo-fields",
+  "observatory",
 );
 
 const reportFor = (level: Level, route: Route) =>
@@ -92,7 +92,7 @@ describe("incident report tallies", () => {
 describe("incident report lines", () => {
   it("ticks distance and everyone being home on a perfect run", () => {
     expect(lineIn(town, perfect, "Distance")).toMatchObject({
-      value: "6.20 km",
+      value: "6.40 km",
       tone: "good",
     });
     expect(lineIn(town, perfect, "Nobody forgotten")).toMatchObject({
@@ -166,7 +166,7 @@ describe("share text", () => {
       buildIncidentReport(town, perfect, evaluation),
     );
     expect(payload.title).toContain("Perfect Social Run");
-    expect(payload.text).toContain("6.20 km");
+    expect(payload.text).toContain("6.40 km");
     expect(payload.text).toContain("Thursday Social Run");
     expect(payload.text).not.toContain("{km}");
     expect(payload.url).toBe("https://runners.sillygame.studio");
