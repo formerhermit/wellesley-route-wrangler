@@ -9,11 +9,12 @@ import {
 } from "./routeGraph";
 import {
   canRunRoute,
+  countNodeType,
+  countSurface,
   evaluateRoute,
   hasRepeatedRoad,
-  pigeonHotspotIds,
   usedClosedRoad,
-  visitedCheckpoint,
+  visitedNodes,
 } from "./routeEvaluation";
 import { selectResult } from "./resultSelection";
 import type { ObjectiveState, Route } from "./types";
@@ -141,13 +142,14 @@ describe("roads are bidirectional", () => {
 
 describe("checkpoint detection", () => {
   it("spots a visit to the canal", () => {
-    expect(visitedCheckpoint(level, fixtures.perfect)).toBe(true);
-    expect(visitedCheckpoint(level, fixtures.repeatedRoad)).toBe(false);
+    const canal = ["canal-bridge", "towpath"];
+    expect(visitedNodes(fixtures.perfect, canal)).toBe(true);
+    expect(visitedNodes(fixtures.repeatedRoad, canal)).toBe(false);
   });
 
   it("holds the objective at incomplete until the canal is reached", () => {
-    expect(stateOf(fixtures.repeatedRoad, "checkpoint")).toBe("incomplete");
-    expect(stateOf(fixtures.perfect, "checkpoint")).toBe("passed");
+    expect(stateOf(fixtures.repeatedRoad, "visit")).toBe("incomplete");
+    expect(stateOf(fixtures.perfect, "visit")).toBe("passed");
   });
 });
 
@@ -155,20 +157,20 @@ describe("closed road detection", () => {
   it("notices the shortcut of questionable legality", () => {
     expect(usedClosedRoad(level, fixtures.closedRoad)).toBe(true);
     expect(usedClosedRoad(level, fixtures.perfect)).toBe(false);
-    expect(stateOf(fixtures.closedRoad, "closed-road")).toBe("failed");
+    expect(stateOf(fixtures.closedRoad, "avoid-closed")).toBe("failed");
   });
 });
 
 describe("pigeon exposure", () => {
   it("counts distinct hotspots on the route", () => {
-    expect(pigeonHotspotIds(level, fixtures.perfect)).toEqual(["pigeon-square"]);
-    expect(pigeonHotspotIds(level, fixtures.pigeonInfested)).toHaveLength(2);
-    expect(pigeonHotspotIds(level, fixtures.tooShort)).toHaveLength(0);
+    expect(countNodeType(level, fixtures.perfect, "pigeon")).toBe(1);
+    expect(countNodeType(level, fixtures.pigeonInfested, "pigeon")).toBe(2);
+    expect(countNodeType(level, fixtures.tooShort, "pigeon")).toBe(0);
   });
 
   it("fails only above the level's allowance", () => {
-    expect(stateOf(fixtures.perfect, "pigeons")).toBe("passed");
-    expect(stateOf(fixtures.pigeonInfested, "pigeons")).toBe("failed");
+    expect(stateOf(fixtures.perfect, "max-node-type")).toBe("passed");
+    expect(stateOf(fixtures.pigeonInfested, "max-node-type")).toBe("failed");
   });
 });
 
@@ -176,7 +178,30 @@ describe("repeated roads", () => {
   it("detects a road used twice", () => {
     expect(hasRepeatedRoad(fixtures.repeatedRoad)).toBe(true);
     expect(hasRepeatedRoad(fixtures.perfect)).toBe(false);
-    expect(stateOf(fixtures.repeatedRoad, "unique-roads")).toBe("failed");
+    expect(stateOf(fixtures.repeatedRoad, "no-repeat")).toBe("failed");
+  });
+});
+
+describe("surfaces", () => {
+  it("counts road versus trail stretches", () => {
+    // This level is all roads; the trail level exercises the other side.
+    expect(countSurface(level, fixtures.perfect, "road")).toBe(8);
+    expect(countSurface(level, fixtures.perfect, "trail")).toBe(0);
+  });
+});
+
+describe("objectives are driven by the level", () => {
+  it("builds one checklist entry per declared objective, in order", () => {
+    const evaluation = evaluateRoute(level, fixtures.perfect);
+    expect(evaluation.objectives.map((o) => o.kind)).toEqual(
+      level.objectives.map((o) => o.kind),
+    );
+  });
+
+  it("puts the route distance into the failure copy", () => {
+    const result = selectResult(level, evaluateRoute(level, fixtures.tooLong));
+    expect(result.message).toContain("7.50 km");
+    expect(result.message).not.toContain("{km}");
   });
 });
 

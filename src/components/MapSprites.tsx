@@ -77,6 +77,33 @@ export function Depot() {
 /** Club kit: Wellesley blue, green and white, so the group reads as a club. */
 const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green"];
 
+export function Cow() {
+  return (
+    <g className="sprite sprite--cow" aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={20} ry={12} className="cow-body" />
+      <ellipse cx={-8} cy={-3} rx={7} ry={5} className="cow-patch" />
+      <ellipse cx={7} cy={4} rx={5} ry={3.5} className="cow-patch" />
+      <circle cx={19} cy={-9} r={7} className="cow-body" />
+      <path d="M 14 -15 l -3 -5 M 24 -15 l 3 -5" className="cow-horns" />
+      <circle cx={22} cy={-7} r={1.4} className="cow-eye" />
+      <path d="M -13 11 v 8 M -4 11 v 8 M 6 11 v 8 M 14 10 v 9" className="cow-legs" />
+      <path d="M -20 -4 q -8 -4 -6 8" className="cow-tail" />
+    </g>
+  );
+}
+
+export function CarPark() {
+  return (
+    <g className="sprite sprite--carpark" aria-hidden="true">
+      <rect x={-20} y={-16} width={40} height={32} rx={4} className="carpark-sign" />
+      <path
+        d="M -6 8 v -18 h 8 a 6 6 0 0 1 0 12 h -8"
+        className="carpark-letter"
+      />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (

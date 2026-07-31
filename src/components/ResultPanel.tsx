@@ -37,18 +37,12 @@ export function ResultPanel({
       </p>
 
       <dl className="result__stats">
-        <div>
-          <dt>Distance</dt>
-          <dd>{evaluation.totalDistanceKm.toFixed(2)} km</dd>
-        </div>
-        <div>
-          <dt>Pigeon hotspots</dt>
-          <dd>{evaluation.pigeonHotspotCount}</dd>
-        </div>
-        <div>
-          <dt>Canal</dt>
-          <dd>{evaluation.visitedCheckpoint ? "Visited" : "Missed"}</dd>
-        </div>
+        {evaluation.stats.map((stat) => (
+          <div key={stat.label}>
+            <dt>{stat.label}</dt>
+            <dd>{stat.value}</dd>
+          </div>
+        ))}
       </dl>
 
       {failed.length > 0 && (

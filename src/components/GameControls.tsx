@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 import type { Level, Route, RouteEvaluation } from "../game/types";
 import { nodeById } from "../game/routeGraph";
+import { distanceTarget } from "../game/routeEvaluation";
 
 interface Props {
   level: Level;
@@ -26,6 +27,7 @@ export function GameControls({
 }: Props) {
   const finishLabel = nodeById(level, level.finishNodeId).label;
   const roadCount = route.roadIds.length;
+  const target = distanceTarget(level);
 
   return (
     <section className="controls" aria-labelledby="controls-heading">
@@ -38,8 +40,8 @@ export function GameControls({
           {evaluation.totalDistanceKm.toFixed(2)} km
         </span>
         <span className="controls__distance-detail">
-          {roadCount} {roadCount === 1 ? "road" : "roads"} · target{" "}
-          {level.minDistanceKm}–{level.maxDistanceKm} km
+          {roadCount} {roadCount === 1 ? "road" : "roads"}
+          {target ? ` · target ${target.minKm}–${target.maxKm} km` : ""}
         </span>
       </p>
 

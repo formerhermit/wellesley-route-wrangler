@@ -86,7 +86,7 @@ export function MapJunctions(props: Props) {
       {level.nodes.map((node) => {
         const state = states.get(node.id)!;
         const lines = labelLines(node.label);
-        const above = node.y > 400 || node.id === "hill-top" || node.id === "geese-pond";
+        const above = node.labelAbove === true;
 
         return (
           <g

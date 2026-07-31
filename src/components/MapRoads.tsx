@@ -20,6 +20,7 @@ export function MapRoads({ level, route }: Props) {
           "road",
           road.closed ? "road--closed" : "",
           road.hill ? "road--hill" : "",
+          road.surface === "trail" ? "road--trail" : "",
           used.has(road.id) ? "road--used" : "",
         ]
           .filter(Boolean)

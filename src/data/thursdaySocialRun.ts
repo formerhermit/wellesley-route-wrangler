@@ -11,18 +11,95 @@ export const thursdaySocialRun: Level = {
   strapline: "It's totally flat this week.",
   instructions:
     "Plan a loop from the Observatory and back. Tap or click a junction joined to the end of your route to add a road; tap the junction you just came from to undo it.",
+  theme: "town",
   startNodeId: "observatory",
   finishNodeId: "observatory",
-  checkpointNodeIds: ["canal-bridge", "towpath"],
-  checkpointLabel: "the canal",
-  minDistanceKm: 5,
-  maxDistanceKm: 7,
-  maxPigeonHotspots: 1,
   view: { width: 800, height: 560 },
+
+  objectives: [
+    { kind: "start", detail: "Everyone gathers by the telescope, as ever." },
+    { kind: "finish", detail: "Route closes the loop." },
+    {
+      kind: "distance",
+      minKm: 5,
+      maxKm: 7,
+      tooLong: {
+        title: "Accidental Long Run",
+        message:
+          "{km} km on a social Thursday. Three people have gone quiet and one has started talking about a marathon.",
+      },
+      tooShort: {
+        title: "An Innovative Definition of 5K",
+        message:
+          "{km} km, generously measured. The pace was superb, which is the sort of thing people say about a short run.",
+      },
+    },
+    {
+      kind: "visit",
+      nodeIds: ["canal-bridge", "towpath"],
+      what: "the canal",
+      done: "Towpath duly trotted.",
+      pending: "Not been anywhere near the water yet.",
+      missed: {
+        title: "Nobody Visited the Canal",
+        message:
+          "The route committee are furious. The canal is the entire point of a Thursday. There will be an email.",
+      },
+      stranded: {
+        title: "Nobody Left the Canal",
+        message:
+          "They reached the towpath, admired a narrowboat called Vitamin Sea, and simply never came back.",
+      },
+    },
+    {
+      kind: "avoid-closed",
+      fail: {
+        title: "The Closed Road Was, In Fact, Closed",
+        message:
+          "The barrier was not a suggestion. Fifteen runners are now doing a three-point turn in front of a man with a clipboard.",
+      },
+    },
+    {
+      kind: "max-node-type",
+      nodeType: "pigeon",
+      limit: 1,
+      what: "pigeon hotspot",
+      fail: {
+        title: "Pigeon-Controlled Route",
+        message:
+          "Two hotspots. Two. The pigeons have taken the front three runners hostage and are negotiating for the flapjacks.",
+      },
+    },
+    {
+      kind: "no-repeat",
+      fail: {
+        title: "Everyone Returned Eventually",
+        message:
+          "You sent the group up and down the same stretch until somebody\u2019s watch gave up and somebody else pretended to have a hamstring.",
+      },
+    },
+  ],
+
+  success: {
+    title: "Perfect Social Run",
+    message:
+      "Bang on distance, canal duly admired, and only one pigeon incident. The club WhatsApp will be insufferable about this for a fortnight.",
+  },
+  emptyRoute: {
+    title: "Barely Left the Start Line",
+    message:
+      "Everyone stood outside the Observatory discussing trainers for forty minutes, then went home.",
+  },
+  fallback: {
+    title: "Everyone Returned Eventually",
+    message:
+      "Something went awry out there, but the group is back, damp and cheerful, and nobody wants to discuss it.",
+  },
 
   nodes: [
     {
       id: "observatory",
+      labelAbove: true,
       x: 110,
       y: 460,
       label: "The Observatory",
@@ -31,6 +108,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "high-street",
+      labelAbove: true,
       x: 285,
       y: 470,
       label: "High Street",
@@ -38,6 +116,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "pigeon-square",
+      labelAbove: true,
       x: 455,
       y: 480,
       label: "Pigeon Square",
@@ -46,6 +125,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "private-bush",
+      labelAbove: true,
       x: 645,
       y: 445,
       label: "A Private Bush",
@@ -70,10 +150,12 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "geese-pond",
+      labelAbove: true,
       x: 300,
       y: 330,
       label: "Vengeful Geese Pond",
       blurb: "they remember faces",
+      type: "pond",
     },
     {
       id: "gardens",
@@ -85,6 +167,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "hill-top",
+      labelAbove: true,
       x: 320,
       y: 165,
       label: "The Slightly Unnecessary Hill",
