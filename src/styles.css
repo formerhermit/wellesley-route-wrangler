@@ -198,11 +198,18 @@ body {
   outline-offset: 2px;
 }
 
-/* Opens the fixture list, and says which run you are on while it waits. */
+/*
+ * Opens the fixture list, and says which run you are on while it waits. Reads
+ * as a menu rather than a badge: the chevron, the "all runs" hint and the
+ * squared-off corners are all there to say it can be pressed.
+ */
 .level-button {
-  padding: 0.45rem 0.9rem;
-  border: 2px solid var(--line);
-  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.85rem;
+  border: 2px solid var(--club);
+  border-radius: 12px;
   background: var(--card);
   color: var(--club);
   font: inherit;
@@ -210,13 +217,43 @@ body {
   font-size: 0.9rem;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.level-button__hint {
+  padding-left: 0.5rem;
+  border-left: 1px solid color-mix(in srgb, var(--club) 35%, transparent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.level-button__chevron {
+  width: 11px;
+  height: 8px;
+  flex: none;
+  transition: transform 0.15s ease;
 }
 
 .level-button:hover {
   background: var(--club);
   border-color: var(--club);
   color: #fff;
+}
+
+.level-button:hover .level-button__chevron {
+  transform: translateY(1px);
+}
+
+@media (max-width: 520px) {
+  /* Tight headers keep the chevron and drop the words. */
+  .level-button__hint {
+    display: none;
+  }
 }
 
 .level-button:focus-visible {
@@ -1416,6 +1453,20 @@ body {
 .help__note {
   margin: 0;
   line-height: 1.55;
+}
+
+/* The one line about this particular run, set apart from the rules. */
+.help__today {
+  margin: 1.1rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--club) 8%, transparent);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.help__today strong {
+  color: var(--club);
 }
 
 /* ---------- Fixture list ---------- */

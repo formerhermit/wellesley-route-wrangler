@@ -15,7 +15,7 @@ export const fleetPondRun: Level = {
   theme: "trail",
 
   objectives: [
-    { kind: "start", detail: "Boots on, permit displayed, hope high." },
+    { kind: "start", detail: "Trainers on, permit displayed, hope high." },
     { kind: "finish", detail: "Route closes the loop." },
     {
       kind: "distance",

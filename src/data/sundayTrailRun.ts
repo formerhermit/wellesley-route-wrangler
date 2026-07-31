@@ -17,7 +17,7 @@ export const sundayTrailRun: Level = {
   view: { width: 800, height: 560 },
 
   objectives: [
-    { kind: "start", detail: "Boots on, ticket bought, optimism high." },
+    { kind: "start", detail: "Trail shoes on, ticket bought, optimism high." },
     { kind: "finish", detail: "Everyone accounted for, before the ticket runs out." },
     {
       kind: "distance",

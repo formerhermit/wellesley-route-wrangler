@@ -45,10 +45,32 @@ export function GameHeader({
           type="button"
           ref={levelsButtonRef}
           className="level-button"
+          aria-haspopup="dialog"
           onClick={onShowLevels}
         >
-          Level {levelNumber}
-          <span className="visually-hidden">: {level.title}. Choose a run</span>
+          <span className="level-button__label">
+            Level {levelNumber}
+            <span className="visually-hidden">: {level.title}</span>
+          </span>
+          <span className="level-button__hint" aria-hidden="true">
+            All runs
+          </span>
+          {/* Points down at the list it opens. */}
+          <svg
+            className="level-button__chevron"
+            viewBox="0 0 12 8"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M1 1.5 L6 6.5 L11 1.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
 
         <MusicButton on={musicOn} onToggle={onToggleMusic} />
