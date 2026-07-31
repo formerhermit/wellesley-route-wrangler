@@ -1,16 +1,21 @@
 import {
   Aeroplane,
+  Bridge,
   Bush,
   CarPark,
   Cemetery,
   CoffeeVan,
   Cow,
+  CricketStumps,
+  Ducks,
   FootballPitch,
   GolfFlag,
   Hangar,
   HillMarker,
+  Mosque,
   Observatory,
   Pool,
+  Pub,
   Railway,
   SportsCentre,
   Statue,
@@ -48,6 +53,15 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
   pool: { render: () => <Pool />, dy: -40, dx: 0 },
   airport: { render: () => <Aeroplane />, dy: -44, dx: 0 },
+  // Clear of the label underneath it: the pub's sign stands proud of the roof.
+  pub: { render: () => <Pub />, dy: -60, dx: 0 },
+  // Higher than the rest: the stumps stand up, and the label goes underneath.
+  cricket: { render: () => <CricketStumps />, dy: -58, dx: 0 },
+  mosque: { render: () => <Mosque />, dy: -48, dx: 0 },
+  // Both stand in the river rather than beside it: the bridge sits on its own
+  // junction, and the ducks just off it, on the water.
+  bridge: { render: () => <Bridge />, dy: 0, dx: 0 },
+  ducks: { render: () => <Ducks />, dy: 12, dx: -40 },
 };
 
 /**

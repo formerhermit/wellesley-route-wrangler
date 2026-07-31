@@ -142,7 +142,9 @@ function evaluateObjective(
         label: `Stay off ${objective.what}`,
         detail:
           count === 0
-            ? `No ${objective.what} on this route.`
+            ? // "No the tarmac" is not a sentence; "3 stretches of the
+              // tarmac" is, so the article only goes in the second one.
+              `No ${objective.what.replace(/^the /, "")} on this route.`
             : `${count} stretch${count === 1 ? "" : "es"} of ${objective.what}.`,
         state: count > 0 ? "failed" : "passed",
         fail: fillCopy(objective.fail, totalKm),

@@ -3,6 +3,7 @@ import { loopyRun } from "./loopyRun";
 import { sundayTrailRun } from "./sundayTrailRun";
 import { thursdaySocialRun } from "./thursdaySocialRun";
 import { thursdayTownRun } from "./thursdayTownRun";
+import { tilfordRun } from "./tilfordRun";
 import type { Level } from "../game/types";
 
 /** Every level, in the order they are offered. */
@@ -12,4 +13,5 @@ export const levels: Level[] = [
   thursdayTownRun,
   fleetPondRun,
   loopyRun,
+  tilfordRun,
 ];

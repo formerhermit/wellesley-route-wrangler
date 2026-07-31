@@ -262,6 +262,76 @@ export function Aeroplane() {
   );
 }
 
+/** The Barley Mow, hanging sign and all. The destination, really. */
+export function Pub() {
+  return (
+    <g className="sprite sprite--pub" aria-hidden="true">
+      <rect x={-30} y={-10} width={44} height={22} rx={3} className="build-wall" />
+      <path d="M -32 -10 h 48 l -7 -9 h -34 Z" className="tower-roof" />
+      <rect x={-22} y={1} width={11} height={11} rx={1.5} className="shop-door" />
+      <rect x={-6} y={-5} width={16} height={9} rx={1.5} className="shop-window" />
+      <line x1={20} y1={-16} x2={20} y2={12} className="pub-post" />
+      <rect x={20} y={-14} width={16} height={11} rx={1.5} className="pub-sign" />
+    </g>
+  );
+}
+
+/** Stumps and a ball. Enough cricket for anybody running past it. */
+export function CricketStumps() {
+  return (
+    <g className="sprite sprite--cricket" aria-hidden="true">
+      <path d="M -6 10 v -18 M 0 10 v -18 M 6 10 v -18" className="stump" />
+      <path d="M -9 -9 h 18" className="bail" />
+      <circle cx={20} cy={7} r={4} className="cricket-ball" />
+      <line x1={-24} y1={10} x2={26} y2={10} className="hangar-ground" />
+    </g>
+  );
+}
+
+/** A duck and two ducklings, in the usual formation: behind, and late. */
+export function Ducks() {
+  return (
+    <g className="sprite sprite--ducks" aria-hidden="true">
+      <ellipse cx={6} cy={0} rx={11} ry={7} className="duck-body" />
+      <circle cx={15} cy={-8} r={5} className="duck-head" />
+      <polygon points="19,-9 27,-7 19,-5" className="duck-beak" />
+      <circle cx={16.4} cy={-9.4} r={0.9} className="duck-eye" />
+      <ellipse cx={-12} cy={5} rx={5} ry={3.5} className="duck-body" />
+      <circle cx={-8} cy={1} r={2.8} className="duck-head" />
+      <ellipse cx={-26} cy={8} rx={5} ry={3.5} className="duck-body" />
+      <circle cx={-22} cy={4} r={2.8} className="duck-head" />
+    </g>
+  );
+}
+
+export function Mosque() {
+  return (
+    <g className="sprite sprite--mosque" aria-hidden="true">
+      <rect x={-24} y={-6} width={38} height={20} rx={3} className="build-wall" />
+      <path d="M -13 -6 a 13 14 0 0 1 26 0 Z" className="mosque-dome" />
+      <path d="M 0 -20 v -7" className="mosque-finial" />
+      <rect x={18} y={-18} width={9} height={32} rx={2} className="mosque-minaret" />
+      <path d="M 17 -18 h 11 l -5.5 -8 Z" className="mosque-cap" />
+      <path d="M -10 14 v -8 a 5 5 0 0 1 10 0 v 8 Z" className="shop-door" />
+    </g>
+  );
+}
+
+/**
+ * The bridge, drawn on its junction rather than beside it — it stands in the
+ * river, and landmarks are drawn over the water and under the roads, which is
+ * exactly where a bridge belongs.
+ */
+export function Bridge() {
+  return (
+    <g className="sprite sprite--bridge" aria-hidden="true">
+      <path d="M -34 14 v -5 a 34 22 0 0 1 68 0 v 5 Z" className="bridge-body" />
+      <path d="M -16 14 a 16 13 0 0 1 32 0 Z" className="bridge-arch" />
+      <path d="M -33 -2 h 66" className="bridge-parapet" />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (

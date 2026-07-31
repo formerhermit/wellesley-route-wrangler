@@ -28,7 +28,7 @@ and mind the path closed for lambing.
 
 **Level 3 — Thursday Town Run** — the Observatory and its four northern
 neighbours from level 1, and then everything above them that the social run
-never bothers with. Deliberately the hardest of the three: 7 to 8 km, taking in
+never bothers with. The hardest of the first three: 7 to 8 km, taking in
 both Aldershot Town Centre and the Wellington Statue at opposite ends of the
 map, past no more than one of the two massive hills, and not down the road
 they have had fenced off since March. Six routes satisfy all of it, against
@@ -41,6 +41,20 @@ the pond can be reached more than one way, and that is how a group of adults
 ends up somewhere they did not intend to be. The pond itself is drawn from the
 ring of junctions on its bank, the same way the canal on level 1 is drawn from
 its two canal junctions.
+
+**Level 5 — Loopy** — the Thursday map from the Observatory down, lifted to
+make room for what is underneath it. The signature is the road round the Sports
+Centre: two roads joining the same two junctions, one either side of the
+building, so the pool at the back can only be reached by going round. Sixteen
+winning routes.
+
+**Level 6 — Tilford** — a trail loop from the Barley Mow, and the hardest run
+on the roster: 7.5 to 8 km, over the river bridge, along to the ducks at the
+paddling spot, off the village lanes, and not across the stepping stones, which
+are under water. Eight winning routes — four loops, each of which works either
+way round. The Posh Cows are on one of them and compulsory on none of them, and
+the Village Shop is reachable only on tarmac, so a legal run can never get to
+it at all.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
@@ -147,6 +161,11 @@ canal detection, the closed road, pigeon exposure, repeated roads, undo, the
 Run Route gate, and deterministic result selection — with fixtures for a
 perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
+
+`src/game/trailLevel.test.ts` and `src/game/tilfordLevel.test.ts` do the same
+for levels 2 and 6 against their own maps. Tilford's ends by walking every
+route out of the pub and back, so the level is held to exactly its eight
+winners: a road whose distance drifts takes the count with it and fails.
 
 `src/game/progression.test.ts` covers the unlock rules against a stub roster:
 the first level always open, later ones shut until their predecessor is done,

@@ -23,7 +23,13 @@ export type MapNodeType =
   | "woods"
   | "sportscentre"
   | "pool"
-  | "airport";
+  | "airport"
+  | "pub"
+  | "cricket"
+  | "mosque"
+  /** Drawn on the water rather than beside it: both stand in the river. */
+  | "bridge"
+  | "ducks";
 
 export type RoadSurface = "road" | "trail";
 

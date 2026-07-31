@@ -783,6 +783,103 @@ body {
   stroke-linejoin: round;
 }
 
+.pub-sign {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.pub-post {
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.stump {
+  stroke: #c9a06a;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.bail {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.cricket-ball {
+  fill: var(--fail);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.duck-body,
+.duck-head {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.duck-beak {
+  fill: #e8a33d;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.duck-eye {
+  fill: var(--ink);
+}
+
+.mosque-dome,
+.mosque-cap {
+  fill: var(--club-bright);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.mosque-minaret {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.mosque-finial {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.bridge-body {
+  fill: #cfc6b2;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* The span shows the river through it, so it is painted as water. */
+.bridge-arch {
+  fill: var(--water);
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.bridge-parapet {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.junction--pub .junction-dot {
+  fill: var(--club);
+}
+
+.junction--cricket .junction-dot {
+  fill: var(--grass);
+}
+
 .junction--pool .junction-dot {
   fill: var(--water);
 }
