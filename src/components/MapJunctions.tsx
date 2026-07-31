@@ -89,28 +89,31 @@ export function MapJunctions(props: Props) {
         const above = node.labelAbove === true;
 
         return (
-          <g
-            key={node.id}
-            className={junctionClasses(node, state)}
-            transform={`translate(${node.x} ${node.y})`}
-          >
-            <circle className="junction-halo" r={16} />
-            <circle className="junction-dot" r={9} />
-            {state.visited && (
-              <text className="junction-step" y={4}>
-                {(visitOrder.get(node.id) ?? 0) + 1}
+          // Outer group holds the position as an SVG attribute; the inner one
+          // carries the classes, including the rejection wobble. A CSS
+          // transform beats the transform attribute outright, so an animated
+          // element must never also be positioned by one — the junction would
+          // snap to the map's origin for the length of the animation.
+          <g key={node.id} transform={`translate(${node.x} ${node.y})`}>
+            <g className={junctionClasses(node, state)}>
+              <circle className="junction-halo" r={16} />
+              <circle className="junction-dot" r={9} />
+              {state.visited && (
+                <text className="junction-step" y={4}>
+                  {(visitOrder.get(node.id) ?? 0) + 1}
+                </text>
+              )}
+              <text
+                className="junction-label"
+                y={above ? -30 - (lines.length - 1) * 13 : 32}
+              >
+                {lines.map((line, index) => (
+                  <tspan key={line} x={0} dy={index === 0 ? 0 : 13}>
+                    {line}
+                  </tspan>
+                ))}
               </text>
-            )}
-            <text
-              className="junction-label"
-              y={above ? -30 - (lines.length - 1) * 13 : 32}
-            >
-              {lines.map((line, index) => (
-                <tspan key={line} x={0} dy={index === 0 ? 0 : 13}>
-                  {line}
-                </tspan>
-              ))}
-            </text>
+            </g>
           </g>
         );
       })}
