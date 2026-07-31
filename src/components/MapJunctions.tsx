@@ -87,6 +87,9 @@ export function MapJunctions(props: Props) {
         const state = states.get(node.id)!;
         const lines = labelLines(node.label);
         const above = node.labelAbove === true;
+        const side = node.labelSide;
+        // Beside the marker, the block is centred on the junction instead.
+        const sideY = 4 - (lines.length - 1) * 6.5;
 
         return (
           // Outer group holds the position as an SVG attribute; the inner one
@@ -105,10 +108,16 @@ export function MapJunctions(props: Props) {
               )}
               <text
                 className="junction-label"
-                y={above ? -30 - (lines.length - 1) * 13 : 32}
+                textAnchor={side === "left" ? "end" : side ? "start" : "middle"}
+                x={side === "left" ? -24 : side === "right" ? 24 : 0}
+                y={side ? sideY : above ? -30 - (lines.length - 1) * 13 : 32}
               >
                 {lines.map((line, index) => (
-                  <tspan key={line} x={0} dy={index === 0 ? 0 : 13}>
+                  <tspan
+                    key={line}
+                    x={side === "left" ? -24 : side === "right" ? 24 : 0}
+                    dy={index === 0 ? 0 : 13}
+                  >
                     {line}
                   </tspan>
                 ))}

@@ -29,6 +29,8 @@ export interface MapNode {
   sprite?: MapNodeType;
   /** Put the label above the junction, where below would collide. */
   labelAbove?: boolean;
+  /** Or beside it, where there is no room above or below. */
+  labelSide?: "left" | "right";
 }
 
 export interface Road {

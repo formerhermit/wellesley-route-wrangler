@@ -175,6 +175,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "back-passage",
+      labelSide: "left",
       x: 150,
       y: 175,
       label: "Up The Back Passage",

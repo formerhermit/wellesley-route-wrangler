@@ -12,7 +12,7 @@ interface Props {
 const FLOCK = [
   { dx: -30, dy: -26, flee: [-24, -30] },
   { dx: 26, dy: -18, flee: [30, -26] },
-  { dx: -6, dy: -40, flee: [2, -34] },
+  { dx: -30, dy: 22, flee: [-34, -16] },
   { dx: 36, dy: 14, flee: [34, -12] },
 ];
 

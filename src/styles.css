@@ -746,7 +746,6 @@ body {
 .junction-label {
   font-size: 13px;
   font-weight: 700;
-  text-anchor: middle;
   fill: var(--ink);
   paint-order: stroke;
   stroke: #fbf7ec;
