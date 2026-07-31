@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { GameHeader } from "./components/GameHeader";
+import { HelpDialog } from "./components/HelpDialog";
 import { GameControls } from "./components/GameControls";
 import { ObjectivePanel } from "./components/ObjectivePanel";
 import { ResultPanel } from "./components/ResultPanel";
@@ -17,6 +18,26 @@ import type { GameResult, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 
 const level = thursdaySocialRun;
+
+/** Remembers that the player has seen the how-to-play dialog. */
+const HELP_SEEN_KEY = "route-wrangler:help-seen";
+
+function hasSeenHelp(): boolean {
+  try {
+    return localStorage.getItem(HELP_SEEN_KEY) === "1";
+  } catch {
+    // Storage blocked. Better to stay quiet than to nag on every visit.
+    return true;
+  }
+}
+
+function rememberHelpSeen(): void {
+  try {
+    localStorage.setItem(HELP_SEEN_KEY, "1");
+  } catch {
+    // Storage blocked; the dialog simply offers itself again next time.
+  }
+}
 
 type Phase = "planning" | "running" | "result";
 
@@ -123,7 +144,16 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, initialState);
   const reducedMotion = useReducedMotion();
   const runButtonRef = useRef<HTMLButtonElement>(null);
+  const helpButtonRef = useRef<HTMLButtonElement>(null);
+  // Opens itself on a first visit, and by the ? button after that.
+  const [helpOpen, setHelpOpen] = useState(() => !hasSeenHelp());
   const showingResult = state.phase === "result";
+  const modalOpen = showingResult || helpOpen;
+
+  const closeHelp = () => {
+    setHelpOpen(false);
+    rememberHelpSeen();
+  };
 
   const evaluation = useMemo(
     () => evaluateRoute(level, state.route),
@@ -141,25 +171,28 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [state.rejectedNodeId, state.nonce]);
 
-  // Send focus somewhere sensible when the result dialog closes — but only on
-  // an actual close, never on first render.
-  const wasShowingResult = useRef(false);
+  // When a dialog closes, hand focus back to whatever it belongs to, rather
+  // than dropping it on the body. Never fires on first render.
+  const previousModal = useRef<"result" | "help" | null>(null);
   useEffect(() => {
-    if (
-      wasShowingResult.current &&
-      !showingResult &&
-      document.activeElement === document.body
-    ) {
-      runButtonRef.current?.focus();
+    const current = showingResult ? "result" : helpOpen ? "help" : null;
+    const previous = previousModal.current;
+    if (previous && !current && document.activeElement === document.body) {
+      const target = previous === "help" ? helpButtonRef : runButtonRef;
+      target.current?.focus();
     }
-    wasShowingResult.current = showingResult;
-  }, [showingResult]);
+    previousModal.current = current;
+  }, [showingResult, helpOpen]);
 
   return (
     <div className="page">
       {/* The dialog is modal: nothing behind it should be reachable. */}
-      <div className="layout" inert={showingResult}>
-        <GameHeader level={level} />
+      <div className="layout" inert={modalOpen}>
+        <GameHeader
+          level={level}
+          helpButtonRef={helpButtonRef}
+          onShowHelp={() => setHelpOpen(true)}
+        />
 
         <main className="layout__main">
           <RouteMap
@@ -198,6 +231,8 @@ export default function App() {
           </p>
         </footer>
       </div>
+
+      {helpOpen && <HelpDialog level={level} onClose={closeHelp} />}
 
       {showingResult && state.result && (
         <ResultPanel

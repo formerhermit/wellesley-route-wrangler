@@ -74,12 +74,15 @@ export function Depot() {
   );
 }
 
+/** Club kit: Wellesley blue, green and white, so the group reads as a club. */
+const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green"];
+
 export function Runner({ index }: { index: number }) {
-  // Four vest colours so the group reads as a club, not a clone army.
-  const vest = ["vest-a", "vest-b", "vest-c", "vest-d", "vest-a"][index % 5];
+  const vest = VESTS[index % VESTS.length];
   return (
     <g className="sprite sprite--runner" aria-hidden="true">
       <circle cx={0} cy={-11} r={4} className="runner-head" />
+      <path d="M 0 -7 v 8" className="runner-casing" />
       <path d="M 0 -7 v 8" className={`runner-body ${vest}`} />
       <path d="M 0 -5 l -6 4 M 0 -5 l 6 -2" className="runner-arms" />
       <path d="M 0 1 l -5 7 M 0 1 l 6 6" className="runner-legs" />

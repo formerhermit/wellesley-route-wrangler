@@ -5,15 +5,25 @@
   --card: #fffdf7;
   --line: #d9d2c1;
 
-  --club: #12405c;
-  --club-bright: #1c6b95;
-  --hi-vis: #f2c14e;
-  --route: #e8622c;
-  --pass: #2f7d5c;
+  /*
+   * Wellesley Runners club colours (issue #3): blue #4293CF, green #5DB571,
+   * white. Both brand colours are too light to carry small text on this cream
+   * background (3.3:1 and 2.5:1), so they are used for fills and illustration
+   * only, and --club / --pass are deeper tones of them for text.
+   */
+  --brand-blue: #4293cf;
+  --brand-green: #5db571;
+
+  --club: #1d5c87;
+  --club-bright: var(--brand-blue);
+  --pass: #2f7d52;
   --fail: #bc4749;
   --pigeon: #7c8a99;
-  --water: #7fb2cf;
-  --grass: #86ad6a;
+  --water: #8fc2df;
+  --grass: var(--brand-green);
+  /* Complements the club blue; reserved for focus rings and "you are here". */
+  --hi-vis: #f2c14e;
+  --route: #e8622c;
 
   --radius: 14px;
   --shadow: 0 10px 26px rgb(29 43 54 / 12%);
@@ -68,13 +78,46 @@ body {
 
 /* ---------- Header ---------- */
 
+.game-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.help-button {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--club);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--club);
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.help-button:hover {
+  background: var(--club);
+  color: #fff;
+}
+
+.help-button:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
 .game-header__club {
   margin: 0;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--club-bright);
+  color: var(--club);
 }
 
 .game-header__title {
@@ -94,13 +137,6 @@ body {
   font-weight: 400;
   font-style: italic;
   color: var(--ink-soft);
-}
-
-.game-header__instructions {
-  margin: 0.5rem 0 0;
-  max-width: 62ch;
-  color: var(--ink-soft);
-  line-height: 1.5;
 }
 
 /* ---------- Layout ---------- */
@@ -382,7 +418,7 @@ body {
 }
 
 .junction--bush .junction-dot {
-  fill: #4f7a3d;
+  fill: #3f8c55;
 }
 
 .junction--canal .junction-dot {
@@ -469,23 +505,31 @@ body {
   stroke-width: 1.6;
 }
 
+/* Sits under the vest so a white one still reads against the pale map. */
+.runner-casing {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 8.6;
+  stroke-linecap: round;
+}
+
 .runner-body {
   fill: none;
   stroke-width: 7;
   stroke-linecap: round;
 }
 
-.vest-a {
-  stroke: var(--hi-vis);
+.vest-blue {
+  stroke: var(--brand-blue);
 }
-.vest-b {
-  stroke: var(--club-bright);
+.vest-green {
+  stroke: var(--brand-green);
 }
-.vest-c {
-  stroke: var(--route);
+.vest-white {
+  stroke: #fff;
 }
-.vest-d {
-  stroke: var(--pass);
+.vest-deep {
+  stroke: var(--club);
 }
 
 .runner-arms,
@@ -669,7 +713,7 @@ body {
 }
 
 .button--primary:hover:not(:disabled) {
-  background: var(--club-bright);
+  background: #26709f;
 }
 
 .button:disabled {
@@ -762,7 +806,7 @@ body {
 
 /* ---------- Result ---------- */
 
-.result-backdrop {
+.dialog-backdrop {
   position: fixed;
   inset: 0;
   display: grid;
@@ -779,7 +823,7 @@ body {
   }
 }
 
-.result {
+.dialog {
   width: min(560px, 100%);
   max-height: 90vh;
   overflow-y: auto;
@@ -790,15 +834,15 @@ body {
   padding: clamp(1rem, 3vw, 1.6rem);
 }
 
-.result--failure {
+.dialog--failure {
   border-color: var(--fail);
 }
 
-.result--success {
+.dialog--success {
   border-color: var(--pass);
 }
 
-.result__badge {
+.dialog__badge {
   margin: 0;
   font-size: 0.72rem;
   font-weight: 800;
@@ -807,27 +851,27 @@ body {
   color: var(--ink-soft);
 }
 
-.result h2 {
+.dialog h2 {
   margin: 0.2rem 0 0.5rem;
   font-size: clamp(1.5rem, 5vw, 2.1rem);
   line-height: 1.1;
   color: var(--club);
 }
 
-.result h2:focus-visible {
+.dialog h2:focus-visible {
   outline: 3px solid var(--hi-vis);
   outline-offset: 4px;
 }
 
-.result--failure h2 {
+.dialog--failure h2 {
   color: var(--fail);
 }
 
-.result--success h2 {
+.dialog--success h2 {
   color: var(--pass);
 }
 
-.result__message {
+.dialog__lead {
   margin: 0 0 1rem;
   line-height: 1.55;
 }
@@ -877,16 +921,39 @@ body {
   line-height: 1.45;
 }
 
-.result__actions {
+.dialog__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
 }
 
-.result__actions-hint {
+.dialog__actions-hint {
   margin: 0.7rem 0 0;
   font-size: 0.78rem;
   color: var(--ink-soft);
+}
+
+.help__subhead {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.help__list {
+  margin: 0;
+  padding-left: 1.15rem;
+  line-height: 1.55;
+}
+
+.help__list li + li {
+  margin-top: 0.35rem;
+}
+
+.help__note {
+  margin: 0;
+  line-height: 1.55;
 }
 
 /* ---------- Reduced motion ---------- */
