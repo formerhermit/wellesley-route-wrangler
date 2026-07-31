@@ -1048,7 +1048,7 @@ body {
 
 /* The club's post-run paperwork, inside the result dialog. */
 .report {
-  margin: 0 0 1rem;
+  margin: 0;
   padding: 0.85rem 1rem 0.95rem;
   border: 2px solid var(--line);
   border-radius: 12px;
@@ -1132,6 +1132,7 @@ body {
 }
 
 .dialog__actions {
+  margin-top: 1.15rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;

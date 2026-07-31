@@ -10,7 +10,7 @@ export const sundayTrailRun: Level = {
   title: "Sunday Trail Run",
   strapline: "There's coffee at the end.",
   instructions:
-    "Plan a loop out from the Overpriced Car Park and back. Stay on the trails, say hello to the cows, and keep off the tarmac — this is supposed to be a trail run.",
+    "A proper loop from the car park, out on the trails and back before the parking ticket expires. This one is not flat and nobody pretended it was.",
   theme: "trail",
   startNodeId: "car-park",
   finishNodeId: "car-park",

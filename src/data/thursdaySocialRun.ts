@@ -10,7 +10,7 @@ export const thursdaySocialRun: Level = {
   title: "Thursday Social Run",
   strapline: "It's totally flat this week.",
   instructions:
-    "Plan a loop from the Observatory and back. Tap or click a junction joined to the end of your route to add a road; tap the junction you just came from to undo it.",
+    "A gentle loop out from the Observatory and back, with the canal somewhere in the middle of it, and as few pigeons as you can manage.",
   theme: "town",
   startNodeId: "observatory",
   finishNodeId: "observatory",

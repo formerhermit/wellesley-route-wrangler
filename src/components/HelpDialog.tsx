@@ -1,5 +1,4 @@
 import { Dialog } from "./Dialog";
-import { nodeById } from "../game/routeGraph";
 import type { Level } from "../game/types";
 
 interface Props {
@@ -7,9 +6,12 @@ interface Props {
   onClose: () => void;
 }
 
+/**
+ * Deliberately high level. The specific rules for a run live in the objective
+ * checklist, which is always on screen and updates as you plan — repeating
+ * them here only made two places to keep in step.
+ */
 export function HelpDialog({ level, onClose }: Props) {
-  const finish = nodeById(level, level.finishNodeId).label;
-
   return (
     <Dialog titleId="help-title" describedBy="help-intro" onClose={onClose}>
       <p className="dialog__badge">How to play</p>
@@ -20,34 +22,19 @@ export function HelpDialog({ level, onClose }: Props) {
         {level.instructions}
       </p>
 
-      <h3 className="help__subhead">The rules</h3>
+      <h3 className="help__subhead">Building a route</h3>
       <ul className="help__list">
-        <li>
-          You may only pick a junction <strong>joined by a road</strong> to the
-          end of your route.
-        </li>
-        <li>
-          Picking the junction you have just come from{" "}
-          <strong>undoes that step</strong>.
-        </li>
-        <li>
-          <strong>No road twice.</strong> Once you have run down it, it is spent.
-        </li>
-        <li>
-          <strong>Run Route</strong> only wakes up once your route comes back to{" "}
-          {finish}.
-        </li>
-        <li>
-          The closed road is <strong>not</strong> blocked off. You are welcome to
-          run down it and find out what happens.
-        </li>
+        <li>Choose a junction joined to the end of your route to run there.</li>
+        <li>Choose the one you have just come from to undo that step.</li>
+        <li>Happy with it? Press Run Route and watch it unfold.</li>
       </ul>
 
-      <h3 className="help__subhead">Getting it right</h3>
+      <h3 className="help__subhead">What counts</h3>
       <p className="help__note">
-        The checklist beside the map scores your route as you build it. Anything
-        marked <em>Not yet</em> is simply undecided — the canal is not missed
-        until you get home without it.
+        The run objectives list is this week's brief. It scores your route as
+        you build it, and <em>Not yet</em> means undecided rather than failed.
+        You are also free to ignore it completely and send everyone somewhere
+        daft — the club will have plenty to say about that afterwards.
       </p>
 
       <div className="dialog__actions">
