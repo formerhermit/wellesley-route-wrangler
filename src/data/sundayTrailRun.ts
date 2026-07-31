@@ -82,14 +82,6 @@ export const sundayTrailRun: Level = {
           "You took them past the barn. Forty pigeons came out at chest height. It is being described, already, as an ambush.",
       },
     },
-    {
-      kind: "no-repeat",
-      fail: {
-        title: "Everyone Returned Eventually",
-        message:
-          "You doubled back through the same gate so many times it has started to feel personal.",
-      },
-    },
   ],
 
   success: {

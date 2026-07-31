@@ -70,14 +70,6 @@ export const thursdaySocialRun: Level = {
           "Two hotspots. Two. The pigeons have taken the front three runners hostage and are negotiating for the flapjacks.",
       },
     },
-    {
-      kind: "no-repeat",
-      fail: {
-        title: "Everyone Returned Eventually",
-        message:
-          "You sent the group up and down the same stretch until somebody\u2019s watch gave up and somebody else pretended to have a hamstring.",
-      },
-    },
   ],
 
   success: {

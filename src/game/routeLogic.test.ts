@@ -174,10 +174,30 @@ describe("pigeon exposure", () => {
 });
 
 describe("repeated roads", () => {
+  /**
+   * No level declares the "no-repeat" objective any more: `selectNode` refuses
+   * a road already in the route, so it could never fail in play and simply sat
+   * in the checklist reading "Passed". The rule itself is still enforced, and
+   * the engine still carries the objective for a level that one day lets the
+   * player double back on purpose.
+   */
   it("detects a road used twice", () => {
     expect(hasRepeatedRoad(fixtures.repeatedRoad)).toBe(true);
     expect(hasRepeatedRoad(fixtures.perfect)).toBe(false);
-    expect(stateOf(fixtures.repeatedRoad, "no-repeat")).toBe("failed");
+  });
+
+  it("is not something the editing rules will let a player do", () => {
+    // Round a loop, back to the start, then try to set off down the first road
+    // a second time.
+    const loop = routeOf(
+      "observatory",
+      "wellesley-rumble",
+      "medical-centre",
+      "polo-fields",
+      "observatory",
+    );
+    const outcome = selectNode(level, loop, "wellesley-rumble");
+    expect(outcome.kind).toBe("rejected");
   });
 });
 
@@ -235,7 +255,6 @@ describe("result selection", () => {
     expect(titleFor(fixtures.closedRoad)).toBe(
       "The Closed Road Was, In Fact, Closed",
     );
-    expect(titleFor(fixtures.repeatedRoad)).toBe("Everyone Returned Eventually");
     expect(titleFor(fixtures.pigeonInfested)).toBe("Pigeon-Controlled Route");
     expect(titleFor(fixtures.strandedAtCanal)).toBe("Nobody Left the Canal");
     expect(titleFor(fixtures.tooLong)).toBe("Accidental Long Run");
@@ -243,8 +262,17 @@ describe("result selection", () => {
   });
 
   it("reports a missing canal before quibbling about distance", () => {
-    const noCanal = routeOf("observatory", "wellesley-rumble", "observatory");
-    expect(titleFor(noCanal)).toBe("Everyone Returned Eventually");
+    // A legitimate 3.40 km loop that never goes near the water: short as well
+    // as canal-less, and the canal is the one worth saying out loud.
+    const noCanal = routeOf(
+      "observatory",
+      "wellesley-rumble",
+      "medical-centre",
+      "polo-fields",
+      "observatory",
+    );
+    expect(totalDistanceKm(level, noCanal)).toBe(3.4);
+    expect(titleFor(noCanal)).toBe("Nobody Visited the Canal");
     expect(
       titleFor(routeOf("observatory", "wellesley-rumble", "geese-pond")),
     ).toBe("Nobody Visited the Canal");

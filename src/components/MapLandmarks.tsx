@@ -12,11 +12,13 @@ import type { Level, MapNode, MapNodeType } from "../game/types";
 
 /** Sprites drawn above their junction, keyed by what the junction is. */
 const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; dy: number; dx: number }>> = {
-  // Both sit off to one side of their junction: landmarks are drawn under the
-  // roads, so anything left sitting on one is simply lost beneath it. The
-  // Observatory needs the wider berth because of its telescope.
-  observatory: { render: () => <Observatory />, dy: -60, dx: -38 },
-  bush: { render: () => <Bush />, dy: -46, dx: 45 },
+  // Both sit below and to one side of their junction. Landmarks are drawn
+  // under the roads, so anything left on one is lost beneath it, and both of
+  // these junctions label upwards, so above is where the writing goes. The
+  // Observatory needs the wider berth: its telescope juts out to the right,
+  // and the road down to the Polo Fields runs past that shoulder.
+  observatory: { render: () => <Observatory />, dy: 42, dx: -52 },
+  bush: { render: () => <Bush />, dy: 30, dx: 45 },
   shop: { render: () => <Superstore />, dy: -50, dx: 0 },
   carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
   // Well clear to the side: the trail out of Cow Field runs north through the
