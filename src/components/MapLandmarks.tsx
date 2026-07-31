@@ -1,11 +1,14 @@
 import {
   Bush,
   CarPark,
+  Cemetery,
   Cow,
   Hangar,
   HillMarker,
   Observatory,
+  Statue,
   Superstore,
+  TownCentre,
   Tree,
 } from "./MapSprites";
 import type { Level, MapNode, MapNodeType } from "../game/types";
@@ -26,6 +29,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   cow: { render: () => <Cow />, dy: -32, dx: 60 },
   hill: { render: () => <HillMarker />, dy: 4, dx: -44 },
   hangar: { render: () => <Hangar />, dy: -46, dx: 2 },
+  statue: { render: () => <Statue />, dy: -48, dx: 0 },
+  towncentre: { render: () => <TownCentre />, dy: -52, dx: 0 },
+  cemetery: { render: () => <Cemetery />, dy: -46, dx: 0 },
 };
 
 /** Trees scattered around a park, relative to its junction. */

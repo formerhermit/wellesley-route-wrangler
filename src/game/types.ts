@@ -10,7 +10,10 @@ export type MapNodeType =
   | "pond"
   | "cow"
   | "carpark"
-  | "hangar";
+  | "hangar"
+  | "statue"
+  | "towncentre"
+  | "cemetery";
 
 export type RoadSurface = "road" | "trail";
 

@@ -112,6 +112,50 @@ export function Hangar() {
   );
 }
 
+/** The Duke, on his horse, on his plinth. The second bitmap sprite. */
+const STATUE_IMAGE = `${import.meta.env.BASE_URL}sprites/statue.png`;
+
+export function Statue() {
+  return (
+    <g className="sprite sprite--statue" aria-hidden="true">
+      <image href={STATUE_IMAGE} x={-16} y={-20} width={32} height={39} />
+    </g>
+  );
+}
+
+/**
+ * A parade of shops with the clock tower behind. Deliberately busier than the
+ * lone superstore, so the town centre reads as somewhere rather than a shop.
+ */
+export function TownCentre() {
+  return (
+    <g className="sprite sprite--towncentre" aria-hidden="true">
+      <rect x={-4} y={-30} width={13} height={22} rx={1.5} className="build-wall" />
+      <path d="M -6 -30 h 17 l -8.5 -8 Z" className="tower-roof" />
+      <circle cx={2.5} cy={-24} r={3.4} className="tower-clock" />
+      <rect x={-26} y={-8} width={20} height={20} rx={2} className="build-wall" />
+      <rect x={-4} y={-8} width={16} height={20} rx={2} className="build-wall" />
+      <rect x={14} y={-8} width={18} height={20} rx={2} className="build-wall" />
+      <rect x={-22} y={-3} width={12} height={6} rx={1} className="shop-window" />
+      <rect x={0} y={-3} width={8} height={6} rx={1} className="shop-window" />
+      <rect x={18} y={-3} width={10} height={6} rx={1} className="shop-window" />
+      <line x1={-26} y1={12} x2={32} y2={12} className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Three headstones and a yew. Nobody is in a hurry here. */
+export function Cemetery() {
+  return (
+    <g className="sprite sprite--cemetery" aria-hidden="true">
+      <path d="M -18 10 v -9 a 5 5 0 0 1 10 0 v 9 Z" className="grave-stone" />
+      <path d="M -4 10 v -12 a 4.5 4.5 0 0 1 9 0 v 12 Z" className="grave-stone" />
+      <path d="M 9 10 v -7 h 3 v -4 h 4 v 4 h 3 v 7 Z" className="grave-cross" />
+      <line x1={-22} y1={10} x2={22} y2={10} className="hangar-ground" />
+    </g>
+  );
+}
+
 export function Runner({ index }: { index: number }) {
   const vest = VESTS[index % VESTS.length];
   return (

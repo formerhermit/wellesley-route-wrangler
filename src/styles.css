@@ -570,8 +570,47 @@ body {
   stroke-linecap: round;
 }
 
+.tower-roof {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.tower-clock {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.grave-stone {
+  fill: #cfcac0;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.grave-cross {
+  fill: #bdb7ac;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
 .junction--shop .junction-dot {
   fill: #cbb894;
+}
+
+.junction--towncentre .junction-dot {
+  fill: var(--club-bright);
+}
+
+.junction--statue .junction-dot {
+  fill: #9aa3ac;
+}
+
+.junction--cemetery .junction-dot {
+  fill: #b9b3a7;
 }
 
 .carpark-sign {

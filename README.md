@@ -4,8 +4,10 @@ A browser route-planning puzzle for Wellesley Runners, a club that takes its
 Thursday social run far too seriously. Plan a loop through town, keep everyone away from
 the pigeons, and get the group back to the Observatory in one piece.
 
-Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine,
-no canvas, no external image dependencies in the playable map.
+Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
+and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
+handful of bitmaps (the cow, the Duke) live in `public/sprites/`, cropped to
+their content and sized to a few times the space they are ever drawn in.
 
 ## The levels
 
@@ -19,16 +21,29 @@ must:
 - visit the canal (Canal Bridge or the Grubby Towpath)
 - avoid the closed road
 - pass through no more than one pigeon hotspot
-- never use the same road twice
 
 **Level 2 — Sunday Trail Run** — a loop out from the Overpriced Car Park and
 back: reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon barn,
 and mind the path closed for lambing.
 
+**Level 3 — Thursday Town Run** — the Observatory and its four northern
+neighbours from level 1, and then everything above them that the social run
+never bothers with. Deliberately the hardest of the three: 7 to 8 km, taking in
+both Aldershot Town Centre and the Wellington Statue at opposite ends of the
+map, past no more than one of the two massive hills, and not down the road
+they have had fenced off since March. Six routes satisfy all of it, against
+twenty-four on level 1.
+
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
-placed from junction types for the same reason. Adding a third level really is
-a new object in `src/data/`.
+placed from junction types for the same reason. A new level really is a new
+object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
+gate and the fixture list all follow from the order of that array.
+
+Note that an objective has to be *failable* to be worth declaring. "Never use
+the same road twice" used to be on every level and could never fail, because
+`selectNode` refuses a road already in the route; it sat there reading "Passed"
+for the whole game. The rule is still enforced, it is just not scored.
 
 ## Progression
 
@@ -104,6 +119,7 @@ src/
   hooks/         reduced motion, playback, music, saved progress
 public/
   audio/         music, served as-is
+  sprites/       the few bitmap landmarks
 ```
 
 The rules in `src/game/` know nothing about React. Route playback writes
