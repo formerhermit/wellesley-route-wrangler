@@ -9,19 +9,25 @@ interface Props {
   level: Level;
   result: GameResult;
   report: IncidentReport;
+  /** The run this one has just opened up, if there is one. */
+  nextLevel?: Level;
   onEdit: () => void;
   onTryAgain: () => void;
   onReset: () => void;
+  onNextLevel: () => void;
 }
 
 export function ResultPanel({
   level,
   result,
   report,
+  nextLevel,
   onEdit,
   onTryAgain,
   onReset,
+  onNextLevel,
 }: Props) {
+  const advancing = result.success && nextLevel !== undefined;
   return (
     <Dialog
       titleId="result-title"
@@ -42,8 +48,29 @@ export function ResultPanel({
 
       <IncidentReportCard report={report} />
 
+      {result.success && (
+        <p className="dialog__unlock">
+          {nextLevel
+            ? `That is this one in the bag. ${nextLevel.title} is now open.`
+            : "That is the whole fixture list run. The committee is speechless."}
+        </p>
+      )}
+
       <div className="dialog__actions">
-        <button type="button" className="button button--primary" onClick={onEdit}>
+        {advancing && (
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={onNextLevel}
+          >
+            Next Run
+          </button>
+        )}
+        <button
+          type="button"
+          className={`button${advancing ? "" : " button--primary"}`}
+          onClick={onEdit}
+        >
           Edit Route
         </button>
         <button type="button" className="button" onClick={onTryAgain}>

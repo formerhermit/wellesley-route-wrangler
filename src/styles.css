@@ -198,42 +198,28 @@ body {
   outline-offset: 2px;
 }
 
-.level-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.level-picker__option {
+/* Opens the fixture list, and says which run you are on while it waits. */
+.level-button {
   padding: 0.45rem 0.9rem;
   border: 2px solid var(--line);
   border-radius: 999px;
   background: var(--card);
-  color: var(--ink-soft);
+  color: var(--club);
   font: inherit;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.9rem;
+  white-space: nowrap;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
-.level-picker__option:hover:not(:disabled) {
-  border-color: var(--club);
-  color: var(--club);
-}
-
-.level-picker__option.is-current {
+.level-button:hover {
   background: var(--club);
   border-color: var(--club);
   color: #fff;
 }
 
-.level-picker__option:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.level-picker__option:focus-visible {
+.level-button:focus-visible {
   outline: 3px solid var(--hi-vis);
   outline-offset: 2px;
 }
@@ -1276,6 +1262,112 @@ body {
 .help__note {
   margin: 0;
   line-height: 1.55;
+}
+
+/* ---------- Fixture list ---------- */
+
+.levels {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.levels__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.levels__item:hover:not(:disabled) {
+  border-color: var(--club);
+}
+
+.levels__item:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
+.levels__item.is-current {
+  border-color: var(--club);
+  background: color-mix(in srgb, var(--club) 8%, var(--card));
+}
+
+/* Locked runs stay legible: they say what opens them, so they must be read. */
+.levels__item:disabled {
+  cursor: not-allowed;
+  background: transparent;
+  border-style: dashed;
+  color: var(--ink-soft);
+}
+
+.levels__number {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--club);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.levels__item.is-locked .levels__number {
+  background: var(--line);
+  color: var(--ink-soft);
+}
+
+.levels__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.levels__title {
+  font-weight: 800;
+}
+
+.levels__note {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.levels__status {
+  flex: none;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.levels__item.is-completed .levels__status {
+  color: var(--pass);
+}
+
+.dialog__unlock {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--club) 10%, transparent);
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 /* ---------- Reduced motion ---------- */

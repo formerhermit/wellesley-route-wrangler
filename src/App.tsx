@@ -6,8 +6,13 @@ import { GameControls } from "./components/GameControls";
 import { ObjectivePanel } from "./components/ObjectivePanel";
 import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
-import { LevelPicker } from "./components/LevelPicker";
+import { LevelDialog } from "./components/LevelDialog";
 import { levels } from "./data/levels";
+import {
+  levelNumber,
+  nextLevel as levelAfter,
+  nextUnlockedLevel,
+} from "./game/progression";
 import { canRunRoute, evaluateRoute } from "./game/routeEvaluation";
 import { buildIncidentReport } from "./game/incidentReport";
 import { selectResult } from "./game/resultSelection";
@@ -20,6 +25,7 @@ import {
 import type { GameResult, Level, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 import { useMusic } from "./hooks/useMusic";
+import { useProgress } from "./hooks/useProgress";
 
 /**
  * The house theme. Levels will bring their own tracks as they arrive; the
@@ -168,12 +174,15 @@ export default function App() {
   const level = state.level;
   const reducedMotion = useReducedMotion();
   const music = useMusic(MAIN_THEME);
+  const progress = useProgress();
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
+  const levelsButtonRef = useRef<HTMLButtonElement>(null);
   // Opens itself on a first visit, and by the ? button after that.
   const [helpOpen, setHelpOpen] = useState(() => !hasSeenHelp());
+  const [levelsOpen, setLevelsOpen] = useState(false);
   const showingResult = state.phase === "result";
-  const modalOpen = showingResult || helpOpen;
+  const modalOpen = showingResult || helpOpen || levelsOpen;
 
   const closeHelp = () => {
     setHelpOpen(false);
@@ -190,6 +199,21 @@ export default function App() {
     [level, state.route, evaluation],
   );
 
+  // A run that met the brief opens the next level, for good. Idempotent, so
+  // re-running a level already completed is harmless.
+  useEffect(() => {
+    if (state.phase === "result" && state.result?.success) {
+      progress.complete(level.id);
+    }
+  }, [state.phase, state.result, level.id, progress]);
+
+  // A win unlocks the next level there and then, so the result panel does not
+  // have to wait for the effect above to land before offering it.
+  const upcoming =
+    showingResult && state.result?.success
+      ? levelAfter(levels, level.id)
+      : nextUnlockedLevel(levels, progress.completed, level.id);
+
   // The rejection wobble is a one-shot; clear it so it can fire again.
   useEffect(() => {
     if (!state.rejectedNodeId) return;
@@ -202,16 +226,27 @@ export default function App() {
 
   // When a dialog closes, hand focus back to whatever it belongs to, rather
   // than dropping it on the body. Never fires on first render.
-  const previousModal = useRef<"result" | "help" | null>(null);
+  const previousModal = useRef<"result" | "help" | "levels" | null>(null);
   useEffect(() => {
-    const current = showingResult ? "result" : helpOpen ? "help" : null;
+    const current = showingResult
+      ? "result"
+      : helpOpen
+        ? "help"
+        : levelsOpen
+          ? "levels"
+          : null;
     const previous = previousModal.current;
     if (previous && !current && document.activeElement === document.body) {
-      const target = previous === "help" ? helpButtonRef : runButtonRef;
+      const target =
+        previous === "help"
+          ? helpButtonRef
+          : previous === "levels"
+            ? levelsButtonRef
+            : runButtonRef;
       target.current?.focus();
     }
     previousModal.current = current;
-  }, [showingResult, helpOpen]);
+  }, [showingResult, helpOpen, levelsOpen]);
 
   return (
     <div className="page">
@@ -219,18 +254,14 @@ export default function App() {
       <div className="layout" inert={modalOpen}>
         <GameHeader
           level={level}
+          levelNumber={levelNumber(levels, level.id)}
           evaluation={evaluation}
           helpButtonRef={helpButtonRef}
+          levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
+          onShowLevels={() => setLevelsOpen(true)}
           onShowHelp={() => setHelpOpen(true)}
-        />
-
-        <LevelPicker
-          levels={levels}
-          currentId={level.id}
-          disabled={state.phase === "running"}
-          onSelect={(next) => dispatch({ type: "select-level", level: next })}
         />
 
         <main className="layout__main">
@@ -271,14 +302,28 @@ export default function App() {
 
       {helpOpen && <HelpDialog level={level} onClose={closeHelp} />}
 
+      {levelsOpen && (
+        <LevelDialog
+          levels={levels}
+          completed={progress.completed}
+          currentId={level.id}
+          onSelect={(next) => dispatch({ type: "select-level", level: next })}
+          onClose={() => setLevelsOpen(false)}
+        />
+      )}
+
       {showingResult && state.result && (
         <ResultPanel
           level={level}
           result={state.result}
           report={report}
+          nextLevel={upcoming}
           onEdit={() => dispatch({ type: "edit" })}
           onTryAgain={() => dispatch({ type: "run" })}
           onReset={() => dispatch({ type: "reset" })}
+          onNextLevel={() =>
+            upcoming && dispatch({ type: "select-level", level: upcoming })
+          }
         />
       )}
     </div>

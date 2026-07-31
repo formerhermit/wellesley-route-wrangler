@@ -9,8 +9,9 @@ no canvas, no external image dependencies in the playable map.
 
 ## The levels
 
-**Thursday Social Run** — twelve junctions, twenty roads, and one closed
-shortcut of questionable legality. A loop, in which a successful route must:
+**Level 1 — Thursday Social Run** — twelve junctions, twenty roads, and one
+closed shortcut of questionable legality. A loop, in which a successful route
+must:
 
 - start at The Observatory
 - finish back at The Observatory
@@ -20,14 +21,31 @@ shortcut of questionable legality. A loop, in which a successful route must:
 - pass through no more than one pigeon hotspot
 - never use the same road twice
 
-**Sunday Trail Run** — a loop out from the Overpriced Car Park and back:
-reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon barn, and
-mind the path closed for lambing.
+**Level 2 — Sunday Trail Run** — a loop out from the Overpriced Car Park and
+back: reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon barn,
+and mind the path closed for lambing.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. Adding a third level really is
 a new object in `src/data/`.
+
+## Progression
+
+Levels run in the order `src/data/levels.ts` declares them. Level 1 is open to
+everybody; every level after that opens when the one before it has been run
+successfully, and once opened it stays open — the **Level _n_** button in the
+header brings up the fixture list to run an old favourite again.
+
+Losing does not cost anything. You can attempt an unlocked run as often as you
+like, and plan a deliberately terrible route without being sent back anywhere;
+you simply do not bank the level until a run meets its brief.
+
+Progress is a list of completed level ids in `localStorage`. `src/game/`
+holds the rules — what is unlocked, what comes next, what is standing in the
+way — as pure functions over the roster, so they are tested without a browser.
+A level completed under an older roster stays unlocked even if the levels are
+later reordered.
 
 The objective checklist updates as you build. Objectives that cannot yet be
 decided — finishing the loop, reaching the canal — stay at "Not yet" rather
@@ -44,6 +62,8 @@ fun.
 - **Run Route** unlocks once the route has at least one road and closes the
   loop back at the Observatory.
 - **Reset Route** clears everything.
+- **Level _n_** in the header opens the fixture list: completed runs, the one
+  you are on, and what it takes to open the rest.
 
 Everything is keyboard reachable: the junctions are real HTML buttons laid over
 the map, so `Tab` and `Enter` work as you would expect, and each announces
@@ -76,8 +96,8 @@ npm run lint     # oxlint, as shipped by the Vite template
 src/
   components/    presentation: map, sprites, panels, controls
   data/          level content only, no behaviour
-  game/          pure rules: graph, evaluation, result selection
-  hooks/         reduced motion, requestAnimationFrame playback, music
+  game/          pure rules: graph, evaluation, result selection, progression
+  hooks/         reduced motion, playback, music, saved progress
 public/
   audio/         music, served as-is
 ```
@@ -94,6 +114,10 @@ canal detection, the closed road, pigeon exposure, repeated roads, undo, the
 Run Route gate, and deterministic result selection — with fixtures for a
 perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
+
+`src/game/progression.test.ts` covers the unlock rules against a stub roster:
+the first level always open, later ones shut until their predecessor is done,
+no skipping ahead, and a completed level staying open through a reorder.
 
 ## Deployment
 

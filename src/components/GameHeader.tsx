@@ -5,19 +5,25 @@ import { MusicButton } from "./MusicButton";
 
 interface Props {
   level: Level;
+  levelNumber: number;
   evaluation: RouteEvaluation;
   helpButtonRef: RefObject<HTMLButtonElement | null>;
+  levelsButtonRef: RefObject<HTMLButtonElement | null>;
   musicOn: boolean;
   onToggleMusic: () => void;
+  onShowLevels: () => void;
   onShowHelp: () => void;
 }
 
 export function GameHeader({
   level,
+  levelNumber,
   evaluation,
   helpButtonRef,
+  levelsButtonRef,
   musicOn,
   onToggleMusic,
+  onShowLevels,
   onShowHelp,
 }: Props) {
   const target = distanceTarget(level);
@@ -33,6 +39,18 @@ export function GameHeader({
       </div>
 
       <div className="game-header__tools">
+        {/* Carries the level number, which has nowhere else to live now that
+            the runs are not all laid out on the page. */}
+        <button
+          type="button"
+          ref={levelsButtonRef}
+          className="level-button"
+          onClick={onShowLevels}
+        >
+          Level {levelNumber}
+          <span className="visually-hidden">: {level.title}. Choose a run</span>
+        </button>
+
         <MusicButton on={musicOn} onToggle={onToggleMusic} />
 
         <button
