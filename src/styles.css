@@ -506,16 +506,6 @@ body {
   opacity: 0.45;
 }
 
-.build-shutter {
-  fill: #c9bfa8;
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.build-wheel {
-  fill: var(--ink);
-}
-
 .hill-body {
   fill: #cbb894;
   stroke: var(--ink);
@@ -544,23 +534,22 @@ body {
   stroke-linecap: round;
 }
 
-.pub-roof {
-  fill: #a2603f;
-  stroke: var(--ink);
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-
-.pub-sign {
-  fill: var(--brand-green);
+.shop-sign {
+  fill: var(--club);
   stroke: var(--ink);
   stroke-width: 2;
 }
 
-.pub-post {
+.shop-door {
+  fill: #c9bfa8;
   stroke: var(--ink);
-  stroke-width: 2.5;
-  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.shop-window {
+  fill: var(--water);
+  stroke: var(--ink);
+  stroke-width: 2;
 }
 
 .hangar-shell {
@@ -582,27 +571,7 @@ body {
   stroke-linecap: round;
 }
 
-.statue-plinth {
-  fill: #cfc6b4;
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.statue-figure {
-  fill: #8a8f7d;
-  stroke: var(--ink);
-  stroke-width: 1.8;
-}
-
-.statue-limb {
-  fill: none;
-  stroke: #8a8f7d;
-  stroke-width: 2.6;
-  stroke-linecap: round;
-}
-
-.junction--statue .junction-dot,
-.junction--pub .junction-dot {
+.junction--shop .junction-dot {
   fill: #cbb894;
 }
 

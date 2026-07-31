@@ -29,21 +29,32 @@ const town = thursdaySocialRun;
 const perfect = routeOf(
   town,
   "observatory",
-  "squirrel-pub",
-  "pigeon-square",
+  "wellesley-rumble",
+  "the-hanger",
   "private-bush",
   "canal-bridge",
   "towpath",
-  "redan-road",
-  "gardens",
+  "medical-centre",
+  "polo-fields",
   "observatory",
+);
+/** Over Hospital Hill, which is where the hills live on this level. */
+const overHospitalHill = routeOf(
+  town,
+  "observatory",
+  "wellesley-rumble",
+  "the-hanger",
+  "private-bush",
+  "big-tesco",
+  "hospital-hill",
+  "medical-centre",
 );
 const throughTheClosure = routeOf(
   town,
   "observatory",
-  "gardens",
+  "polo-fields",
   "back-passage",
-  "redan-road",
+  "medical-centre",
   "towpath",
   "canal-bridge",
 );
@@ -63,7 +74,9 @@ describe("incident report tallies", () => {
   });
 
   it("counts hills and closures", () => {
-    expect(unnecessaryHills(town, perfect)).toBe(2);
+    // The perfect route dodges Hospital Hill entirely.
+    expect(unnecessaryHills(town, perfect)).toBe(0);
+    expect(unnecessaryHills(town, overHospitalHill)).toBe(2);
     expect(closedRoadsIgnored(town, perfect)).toBe(0);
     expect(closedRoadsIgnored(town, throughTheClosure)).toBe(1);
   });

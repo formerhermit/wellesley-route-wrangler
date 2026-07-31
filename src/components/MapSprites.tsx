@@ -63,17 +63,6 @@ export function RoadClosedMarker() {
   );
 }
 
-export function Depot() {
-  return (
-    <g className="sprite sprite--depot" aria-hidden="true">
-      <rect x={-22} y={-14} width={44} height={26} rx={3} className="build-wall" />
-      <rect x={-14} y={-4} width={28} height={16} rx={2} className="build-shutter" />
-      <circle cx={-11} cy={14} r={4} className="build-wheel" />
-      <circle cx={11} cy={14} r={4} className="build-wheel" />
-    </g>
-  );
-}
-
 /** Club kit: Wellesley blue, green and white, so the group reads as a club. */
 const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green"];
 
@@ -106,14 +95,13 @@ export function CarPark() {
   );
 }
 
-export function Pub() {
+export function Superstore() {
   return (
-    <g className="sprite sprite--pub" aria-hidden="true">
-      <rect x={-20} y={-14} width={40} height={28} rx={3} className="build-wall" />
-      <path d="M -24 -14 h 48 l -8 -10 h -32 Z" className="pub-roof" />
-      <rect x={-7} y={0} width={14} height={14} rx={1.5} className="build-shutter" />
-      <line x1={22} y1={-10} x2={22} y2={4} className="pub-post" />
-      <rect x={16} y={0} width={13} height={9} rx={1.5} className="pub-sign" />
+    <g className="sprite sprite--shop" aria-hidden="true">
+      <rect x={-26} y={-10} width={52} height={24} rx={3} className="build-wall" />
+      <rect x={-26} y={-19} width={52} height={9} rx={2} className="shop-sign" />
+      <rect x={-16} y={-2} width={13} height={16} rx={1.5} className="shop-door" />
+      <rect x={2} y={-2} width={20} height={10} rx={1.5} className="shop-window" />
     </g>
   );
 }
@@ -124,22 +112,6 @@ export function Hangar() {
       <path d="M -24 12 v -8 a 24 20 0 0 1 48 0 v 8 Z" className="hangar-shell" />
       <path d="M -9 12 v -13 a 9 9 0 0 1 18 0 v 13 Z" className="hangar-door" />
       <line x1={-24} y1={12} x2={24} y2={12} className="hangar-ground" />
-    </g>
-  );
-}
-
-export function Statue() {
-  return (
-    <g className="sprite sprite--statue" aria-hidden="true">
-      <rect x={-14} y={5} width={28} height={11} rx={2} className="statue-plinth" />
-      {/* A horse, and a man on it. Nobody is looking at either of them. */}
-      <ellipse cx={0} cy={-6} rx={12} ry={5.5} className="statue-figure" />
-      <path d="M -8 -2 v 7 M -3 -2 v 7 M 4 -2 v 7 M 9 -2 v 7" className="statue-limb" />
-      <polygon points="7,-9 12,-11 17,-19 12,-20" className="statue-figure" />
-      <circle cx={15} cy={-21} r={3.2} className="statue-figure" />
-      <path d="M -12 -8 q -7 -1 -6 6" className="statue-limb" />
-      <ellipse cx={-2} cy={-14} rx={3.4} ry={5} className="statue-figure" />
-      <circle cx={-2} cy={-21} r={3.2} className="statue-figure" />
     </g>
   );
 }

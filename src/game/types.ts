@@ -6,12 +6,10 @@ export type MapNodeType =
   | "park"
   | "pigeon"
   | "hill"
-  | "depot"
+  | "shop"
   | "pond"
   | "cow"
   | "carpark"
-  | "statue"
-  | "pub"
   | "hangar";
 
 export type RoadSurface = "road" | "trail";
