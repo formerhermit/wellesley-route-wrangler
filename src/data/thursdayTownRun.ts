@@ -131,9 +131,10 @@ export const thursdayTownRun: Level = {
       type: "shop",
       // Beside the junction rather than above it: the road up to the statue
       // leaves northwards and goes straight through the usual spot. Right is
-      // clear all the way to the edge of the map.
+      // clear all the way to the edge of the map. Lifted clear of the name,
+      // which sits under the junction.
       spriteDx: 52,
-      spriteDy: 8,
+      spriteDy: -6,
     },
     {
       id: "redan-road",
@@ -198,6 +199,11 @@ export const thursdayTownRun: Level = {
       label: "The Ski Slope",
       blurb: "massive hill, and it is made of carpet",
       type: "hill",
+      // Down into the gap between the two roads leaving southwards: the run
+      // along the top from the Cemetery arrives dead level with the marker's
+      // usual spot and was drawn straight over it.
+      spriteDx: -60,
+      spriteDy: 30,
     },
   ],
 

@@ -224,6 +224,10 @@ export const spookyRun: Level = {
       label: "The Ski Slope",
       blurb: "massive hill, and it is made of carpet",
       type: "hill",
+      // As on the Town Run this map is built from: the road along the top
+      // runs dead level with where a hill marker usually sits.
+      spriteDx: -60,
+      spriteDy: 30,
     },
   ],
 
