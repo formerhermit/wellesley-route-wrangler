@@ -6,8 +6,8 @@ the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
-handful of bitmaps (the cow, the Duke, the ghost, the soldiers) live in
-`public/sprites/`, cropped to
+handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose) live
+in `public/sprites/`, cropped to
 their content and sized to a few times the space they are ever drawn in.
 
 ## The levels
@@ -44,6 +44,12 @@ the pond can be reached more than one way, and that is how a group of adults
 ends up somewhere they did not intend to be. The pond itself is drawn from the
 ring of junctions on its bank, the same way the canal on level 1 is drawn from
 its two canal junctions.
+
+Level 4 is also where the goose lives. A level may name a `follower`: something
+that waits by a junction and, when the group runs past it, falls in at the back
+and follows them to the finish, turning to face the way it is going. Plan a
+route that misses the Jetty and it stays exactly where it was. The cows at Cow
+Corner, by contrast, do nothing at all — greeting them is its own reward.
 
 **Level 5 — Loopy** — the Thursday map from the Observatory down, lifted to
 make room for what is underneath it. The signature is the road round the Sports

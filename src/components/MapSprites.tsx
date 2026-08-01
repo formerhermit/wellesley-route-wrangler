@@ -126,12 +126,33 @@ const VESTS = ["vest-blue", "vest-green", "vest-white", "vest-deep", "vest-green
 /** The one drawn sprite that is a bitmap: everything else here is vector. */
 const COW_IMAGE = `${import.meta.env.BASE_URL}sprites/cow.png`;
 
-export function Cow() {
+export function Cow({ flip = false }: { flip?: boolean }) {
   return (
     <g className="sprite sprite--cow" aria-hidden="true">
       {/* Drawn facing left, and left is back towards Cow Field from where it
           stands — so it is looking at the junction, not away off the map. */}
-      <image href={COW_IMAGE} x={-22} y={-13.5} width={44} height={27} />
+      <g transform={flip ? "scale(-1 1)" : undefined}>
+        <image href={COW_IMAGE} x={-22} y={-13.5} width={44} height={27} />
+      </g>
+    </g>
+  );
+}
+
+/**
+ * The goose. Waits by the Jetty, and if the group runs past it, falls in at
+ * the back and follows them home. Drawn standing on its own origin, facing
+ * right, so the run animation can turn it round by the way it is going.
+ */
+export function Goose() {
+  return (
+    <g className="sprite sprite--goose" aria-hidden="true">
+      <image
+        href={`${import.meta.env.BASE_URL}sprites/goose.png`}
+        x={-9.1}
+        y={-22}
+        width={18.2}
+        height={22}
+      />
     </g>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Goose } from "./MapSprites";
 import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
@@ -36,6 +37,7 @@ export function RouteMap({
   const runnersRef = useRef<(SVGGElement | null)[]>(
     Array.from({ length: RUNNER_COUNT }, () => null),
   );
+  const followerRef = useRef<SVGGElement | null>(null);
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
 
   const selectable = useMemo(
@@ -52,11 +54,27 @@ export function RouteMap({
     [level, route],
   );
 
+  // Where the follower waits, and how far along the route it will be passed.
+  // Null when this route never goes that way, which leaves it standing there.
+  const follower = useMemo(() => {
+    if (!level.follower) return undefined;
+    const node = nodeById(level, level.follower.nodeId);
+    const passed = routeMilestones(level, route).find(
+      (milestone) => milestone.nodeId === level.follower?.nodeId,
+    );
+    return {
+      ref: followerRef,
+      home: { x: node.x + level.follower.dx, y: node.y + level.follower.dy },
+      joinFraction: passed?.fraction ?? null,
+    };
+  }, [level, route]);
+
   const { start, cancel } = useRunAnimation({
     pathRef,
     runnersRef,
     reducedMotion,
     milestones,
+    follower,
     onReachHotspot: setAlarmedNodeId,
     onFinish: onRunFinished,
   });
@@ -125,6 +143,18 @@ export function RouteMap({
           locked={running}
           rejectedNodeId={rejectedNodeId}
         />
+
+        {/* Above the junctions, because it ends up running over them. */}
+        {follower && (
+          <g
+            ref={followerRef}
+            aria-hidden="true"
+            transform={`translate(${follower.home.x} ${follower.home.y})`}
+          >
+            <Goose />
+          </g>
+        )}
+
         <RunnerGroup runnersRef={runnersRef} />
       </svg>
 

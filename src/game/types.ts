@@ -161,12 +161,24 @@ export interface Level {
   scatter?: {
     x: number;
     y: number;
-    kind: "tree" | "rock" | "soldier";
+    kind: "tree" | "rock" | "soldier" | "cow";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */
     flip?: boolean;
   }[];
+  /**
+   * Something that waits by a junction and, if the group runs past it, falls
+   * in at the back and follows them to the finish. A route that never goes
+   * that way leaves it standing where it was.
+   */
+  follower?: {
+    kind: "goose";
+    nodeId: string;
+    /** Where it waits, relative to that junction. */
+    dx: number;
+    dy: number;
+  };
   nodes: MapNode[];
   roads: Road[];
   startNodeId: string;

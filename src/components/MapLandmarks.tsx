@@ -241,6 +241,8 @@ export function MapLandmarks({ level }: { level: Level }) {
         >
           {item.kind === "soldier" ? (
             <Soldier index={item.variant ?? 0} flip={item.flip} />
+          ) : item.kind === "cow" ? (
+            <Cow flip={item.flip} />
           ) : item.kind === "rock" ? (
             <Rock />
           ) : (

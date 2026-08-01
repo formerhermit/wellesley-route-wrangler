@@ -120,8 +120,10 @@ export const fleetPondRun: Level = {
       labelSide: "left",
       x: 245,
       y: 215,
-      label: "Reed Corner",
-      blurb: "where the path becomes a suggestion",
+      label: "Cow Corner",
+      blurb: "cows, and where the path becomes a suggestion",
+      // Still a bank junction, whatever the cows think: the pond is drawn
+      // from the ring these five make, and this is one of the five.
       type: "shore",
     },
 
@@ -332,6 +334,18 @@ export const fleetPondRun: Level = {
     message:
       "{km} km of what can only be described as wandering. The committee would like a map, drawn from memory, by Friday.",
   },
+
+  // The herd Cow Corner is named after, on the dry side of the bank and off
+  // the lanes either side of it. Nothing on this level requires visiting them;
+  // they are here to be said hello to.
+  scatter: [
+    { x: 178, y: 248, kind: "cow" },
+    { x: 138, y: 272, kind: "cow", flip: true },
+    { x: 208, y: 292, kind: "cow" },
+  ],
+
+  // The goose waits by the Jetty. Run past it and it falls in at the back.
+  follower: { kind: "goose", nodeId: "east-shore", dx: 44, dy: 46 },
 
   view: { width: 800, height: 560 },
 };

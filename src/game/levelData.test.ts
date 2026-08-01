@@ -113,6 +113,10 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       }
     });
 
+    it("waits for its follower at a junction that exists", () => {
+      if (level.follower) expect(nodeIds).toContain(level.follower.nodeId);
+    });
+
     it("keeps every junction inside the map's viewBox", () => {
       for (const node of level.nodes) {
         expect(node.x, `${node.id}.x`).toBeGreaterThanOrEqual(0);
