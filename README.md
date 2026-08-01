@@ -305,6 +305,59 @@ eight seconds whatever the route; what changes is where the time goes.
 the first level always open, later ones shut until their predecessor is done,
 no skipping ahead, and a completed level staying open through a reorder.
 
+## The club table
+
+Off by default: with no Supabase project configured, `clubTableEnabled` folds
+to `false` at build time, no leaderboard appears, and nothing is ever fetched.
+The game is then exactly what it was before any of it existed — local, private,
+and perfectly playable. A missing key is not an outage.
+
+Either way it costs about 2 kB on the initial load. The Supabase client lives in
+a separate 54 kB chunk behind a dynamic import, fetched the first time somebody
+opens the table or submits a run — which most people never will, and nobody
+does on a first visit. That chunk is built whether or not a project is
+configured; it is simply never asked for.
+
+**Nothing is trusted from the client.** A submission is a level id and a list
+of road ids — there is no score in it to have been edited. The `submit-run`
+edge function replays that route through the game's own `scoreRun` and stores
+what it actually comes to. So the server and the client cannot disagree, and
+rebalancing the scoring rescores everyone's history rather than stranding it.
+
+That sharing of code is the one awkward corner. The app's imports are
+extensionless and Deno insists on extensions, so the function cannot import
+`src/game` directly. `npm run build:club` bundles the shared surface —
+`src/club/gameSurface.ts` — into `supabase/functions/_shared/game.bundle.js`
+with rolldown, which Vite already ships. The bundle is committed and can
+therefore go stale: regenerate it whenever the scoring or the level data
+changes, and guard it in CI before this goes anywhere serious.
+
+Row level security is the whole security model, and it is worth reading
+`supabase/migrations/0001_club_table.sql` for the reasoning. Briefly: everyone
+may read the table; you may write and rename and *delete* your own player row;
+and nobody may write a submission at all, because a points column cannot be
+trusted to its own author. Players are Supabase anonymous users — a real
+`auth.uid()` with no login screen — which is what makes any of that mean
+something, since an id in a column is one anybody could type.
+
+Deleting your own player row cascades your runs away, and `delete-me` also
+removes the anonymous auth user, because that id *is* the device-scoped
+identifier the privacy policy promises to remove.
+
+### Setting it up
+
+1. Create a Supabase project in the EU. Enable the Data API, turn
+   **off** "automatically expose new tables", and turn **on** automatic RLS.
+   The migration grants privileges by hand precisely because of the second one.
+2. Run `supabase/migrations/0001_club_table.sql` against it.
+3. Enable anonymous sign-ins in Authentication → Providers.
+4. `npm run build:club`, then deploy both functions:
+   `supabase functions deploy submit-run delete-me`.
+5. Copy `.env.example` to `.env.local` with the project URL and anon key, and
+   add the same two as repository secrets wired into the build in
+   `deploy.yml`. The service role key stays out of all of this — Supabase sets
+   it in the functions' own environment.
+
 ## Deployment
 
 Hosted on GitHub Pages at **https://runners.sillygame.studio**.

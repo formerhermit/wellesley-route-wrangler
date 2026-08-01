@@ -54,17 +54,32 @@ export function hasRun(records: Records, level: Level, route: Route): boolean {
   return Boolean(records[level.id]?.[routeKey(route)]);
 }
 
-/** Rebuilds the route the record came from, for rescoring. */
-function routeFrom(level: Level, record: RunRecord): Route | undefined {
+/**
+ * Rebuilds the route a list of road ids describes, or undefined if they do not
+ * describe one — a road that is not on this map, or one that does not start
+ * where the last finished.
+ *
+ * Exported because the server does exactly this before rescoring a submitted
+ * run. It is the only thing standing between "a list of strings someone
+ * posted" and "a route", so both sides had better agree on it.
+ */
+export function routeFromRoads(
+  level: Level,
+  roadIds: readonly string[],
+): Route | undefined {
   const nodeIds = [level.startNodeId];
-  for (const roadId of record.roads) {
+  for (const roadId of roadIds) {
     const road = level.roads.find((candidate) => candidate.id === roadId);
     if (!road) return undefined;
     const here = nodeIds[nodeIds.length - 1];
     if (road.from !== here && road.to !== here) return undefined;
     nodeIds.push(road.from === here ? road.to : road.from);
   }
-  return { nodeIds, roadIds: [...record.roads] };
+  return { nodeIds, roadIds: [...roadIds] };
+}
+
+function routeFrom(level: Level, record: RunRecord): Route | undefined {
+  return routeFromRoads(level, record.roads);
 }
 
 /** What one level is worth, scored fresh from the routes stored for it. */

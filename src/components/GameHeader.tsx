@@ -8,6 +8,9 @@ interface Props {
   evaluation: RouteEvaluation;
   /** All-time club points, so the long game is visible without opening a menu. */
   clubPoints: number;
+  /** Whether there is a club table to open at all. */
+  clubEnabled: boolean;
+  onShowClub: () => void;
   helpButtonRef: RefObject<HTMLButtonElement | null>;
   levelsButtonRef: RefObject<HTMLButtonElement | null>;
   musicOn: boolean;
@@ -21,6 +24,8 @@ export function GameHeader({
   levelNumber,
   evaluation,
   clubPoints,
+  clubEnabled,
+  onShowClub,
   helpButtonRef,
   levelsButtonRef,
   musicOn,
@@ -84,6 +89,18 @@ export function GameHeader({
             />
           </svg>
         </button>
+
+        {clubEnabled && (
+          <button
+            type="button"
+            className="icon-button"
+            aria-haspopup="dialog"
+            onClick={onShowClub}
+          >
+            <span aria-hidden="true">🏆</span>
+            <span className="visually-hidden">The club table</span>
+          </button>
+        )}
 
         <MusicButton on={musicOn} onToggle={onToggleMusic} />
 

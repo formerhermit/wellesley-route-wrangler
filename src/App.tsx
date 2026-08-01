@@ -7,6 +7,8 @@ import { ObjectivePanel } from "./components/ObjectivePanel";
 import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
 import { LevelDialog } from "./components/LevelDialog";
+import { PrivacyDialog } from "./components/PrivacyDialog";
+import { ClubTableDialog } from "./components/ClubTableDialog";
 import { levels } from "./data/levels";
 import {
   levelNumber,
@@ -30,6 +32,7 @@ import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
 import { scoreRun, winningRouteCount } from "./game/scoring";
+import { clubTableEnabled } from "./club/enabled";
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -191,8 +194,30 @@ export default function App() {
   // Opens itself on a first visit, and by the ? button after that.
   const [helpOpen, setHelpOpen] = useState(() => !hasSeenHelp());
   const [levelsOpen, setLevelsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [clubOpen, setClubOpen] = useState(false);
+  // The name this device is on the club table under, once we have asked. Left
+  // undefined when there is no table configured, which is the usual case.
+  const [clubName, setClubName] = useState<string>();
   const showingResult = state.phase === "result";
-  const modalOpen = showingResult || helpOpen || levelsOpen;
+  const modalOpen =
+    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen;
+
+  // Asked once, on the first render that has a table to ask.
+  useEffect(() => {
+    if (!clubTableEnabled) return;
+    let live = true;
+    // Fetched, not bundled: this is what keeps the Supabase client out of
+    // the main chunk for everyone who never opens the table.
+    void import("./club/clubTable")
+      .then(({ currentName }) => currentName())
+      .then((name) => {
+        if (live) setClubName(name);
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
 
   const closeHelp = () => {
     setHelpOpen(false);
@@ -295,6 +320,8 @@ export default function App() {
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
+          clubEnabled={clubTableEnabled}
+          onShowClub={() => setClubOpen(true)}
           onShowLevels={() => setLevelsOpen(true)}
           onShowHelp={() => setHelpOpen(true)}
         />
@@ -336,10 +363,20 @@ export default function App() {
           {state.announcement}
         </p>
 
-        <ClubFooter />
+        <ClubFooter onShowPrivacy={() => setPrivacyOpen(true)} />
       </div>
 
       {helpOpen && <HelpDialog level={level} onClose={closeHelp} />}
+
+      {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
+
+      {clubOpen && (
+        <ClubTableDialog
+          name={clubName}
+          onNameChanged={setClubName}
+          onClose={() => setClubOpen(false)}
+        />
+      )}
 
       {levelsOpen && (
         <LevelDialog
@@ -355,6 +392,9 @@ export default function App() {
       {showingResult && state.result && (
         <ResultPanel
           level={level}
+          route={state.route}
+          clubName={clubName}
+          onJoinTable={() => setClubOpen(true)}
           result={state.result}
           report={report}
           score={runScore}

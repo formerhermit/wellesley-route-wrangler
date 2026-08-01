@@ -1,13 +1,18 @@
 import { Dialog } from "./Dialog";
 import { IncidentReportCard } from "./IncidentReport";
 import { ShareButton } from "./ShareButton";
+import { SubmitToTable } from "./SubmitToTable";
 import { buildRunShare } from "../game/shareText";
 import type { IncidentReport } from "../game/incidentReport";
 import type { RunScore } from "../game/scoring";
-import type { GameResult, Level } from "../game/types";
+import type { GameResult, Level, Route } from "../game/types";
 
 interface Props {
   level: Level;
+  /** The route as run, for putting on the club table. */
+  route: Route;
+  clubName?: string;
+  onJoinTable: () => void;
   result: GameResult;
   report: IncidentReport;
   /** What this run was worth, itemised. */
@@ -28,6 +33,9 @@ interface Props {
 
 export function ResultPanel({
   level,
+  route,
+  clubName,
+  onJoinTable,
   result,
   report,
   score,
@@ -117,6 +125,15 @@ export function ResultPanel({
           Try Again
         </button>
       </div>
+
+      {score.won && (
+        <SubmitToTable
+          level={level}
+          route={route}
+          name={clubName}
+          onNeedsName={onJoinTable}
+        />
+      )}
 
       <div className="dialog__actions dialog__actions--secondary">
         <ShareButton
