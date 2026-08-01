@@ -116,9 +116,11 @@ export const hawleyLake: Level = {
       blurb: "start and finish, and the only building with a kettle",
       type: "shore",
       sprite: "sailing",
-      // Beside, not above: the boats moor over the junction and the name has
-      // to go somewhere else.
+      // Beside, not above: the name has to go somewhere the boats are not.
       labelSide: "left",
+      // And the boats moor on the water, which is off to the south-east.
+      spriteDx: 55,
+      spriteDy: 40,
     },
     {
       id: "the-spit",
@@ -199,12 +201,14 @@ export const hawleyLake: Level = {
     },
     {
       id: "mod-gate",
-      labelSide: "left",
+      labelAbove: true,
       x: 715,
       y: 150,
       label: "The MOD Gate",
       blurb: "signs, a barrier, and absolutely no explanation",
       type: "hangar",
+      // High enough to clear its own name, which now sits between the two.
+      spriteDy: -78,
     },
     {
       id: "cricket-hill",
@@ -214,6 +218,9 @@ export const hawleyLake: Level = {
       label: "Cricket Hill",
       blurb: "epic hill, and the view is genuinely worth it",
       type: "hill",
+      // Below the junction: its name is on the left, where a hill marker goes.
+      spriteDx: 0,
+      spriteDy: 40,
     },
     {
       id: "beacon-hill",
@@ -223,6 +230,9 @@ export const hawleyLake: Level = {
       blurb: "epic hill, no view whatsoever",
       type: "hill",
       labelAbove: true,
+      // Dropped clear of the track in from Gorse Corner, which ran through it.
+      spriteDx: -44,
+      spriteDy: 40,
     },
   ],
 
@@ -289,24 +299,21 @@ export const hawleyLake: Level = {
     { x: 180, y: 320, kind: "alpine" },
     { x: 240, y: 280, kind: "bmx" },
 
-    // Heath: heather, gorse, and cows that have got out again.
-    { x: 280, y: 340, kind: "heather" },
-    { x: 620, y: 420, kind: "heather" },
-    { x: 640, y: 520, kind: "heather" },
-    { x: 120, y: 500, kind: "heather" },
+    // Heath: gorse, yellow and purple, and cows that have got out again.
+    { x: 280, y: 340, kind: "gorse", variant: 1 },
+    { x: 620, y: 420, kind: "gorse", variant: 1 },
+    { x: 640, y: 520, kind: "gorse", variant: 1 },
+    { x: 120, y: 500, kind: "gorse", variant: 1 },
     { x: 240, y: 520, kind: "gorse" },
     { x: 440, y: 480, kind: "gorse" },
     { x: 620, y: 500, kind: "gorse" },
     { x: 100, y: 400, kind: "cow" },
     { x: 300, y: 440, kind: "cow", flip: true },
 
-    // Dogs, and for once the people attached to them.
+    // Dogs, off the lead and unaccompanied, as ever.
     { x: 240, y: 400, kind: "dog" },
-    { x: 280, y: 400, kind: "walker" },
     { x: 540, y: 440, kind: "dog", flip: true },
-    { x: 580, y: 440, kind: "walker" },
     { x: 680, y: 480, kind: "dog" },
-    { x: 720, y: 480, kind: "walker" },
 
     // The Ministry: soldiers who were on Caesar's Camp last week, and the
     // signs that explain the road nobody may use.

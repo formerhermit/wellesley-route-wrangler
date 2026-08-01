@@ -193,12 +193,10 @@ export interface Level {
       | "icecream"
       | "alpine"
       | "wellingtonia"
-      | "heather"
       | "gorse"
       | "boat"
       | "island"
       | "warning"
-      | "walker"
       | "bmx";
     /** Which drawing, where a kind has more than one. */
     variant?: number;

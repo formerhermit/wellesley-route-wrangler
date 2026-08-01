@@ -1281,19 +1281,6 @@ body {
   opacity: 0.6;
 }
 
-.heather-stem {
-  fill: none;
-  stroke: #6d7f5c;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-}
-
-.heather-bloom {
-  fill: #9b5fb5;
-  stroke: var(--ink);
-  stroke-width: 1.4;
-}
-
 .gorse-body {
   fill: #4f6d3a;
   stroke: var(--ink);
@@ -1306,6 +1293,11 @@ body {
   stroke: #3d552d;
   stroke-width: 1.4;
   stroke-linecap: round;
+}
+
+/* Purple where the heather has got into it. */
+.sprite--gorse-purple .gorse-flower {
+  fill: #9b5fb5;
 }
 
 .gorse-flower {
@@ -1402,33 +1394,6 @@ body {
 
 .warning-mark-dot {
   fill: var(--ink);
-}
-
-.walker-head {
-  fill: #e8cfae;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-}
-
-.walker-body {
-  fill: none;
-  stroke: #4a6b9c;
-  stroke-width: 4;
-  stroke-linecap: round;
-}
-
-.walker-arms,
-.walker-legs {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-
-.walker-lead {
-  fill: none;
-  stroke: var(--ink-soft);
-  stroke-width: 1.4;
 }
 
 .bmx-jump {

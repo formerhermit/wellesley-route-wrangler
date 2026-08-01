@@ -270,7 +270,7 @@ export function MinleyManor() {
 export function AlpineTree() {
   return (
     <g className="sprite sprite--alpine" aria-hidden="true">
-      <rect x={-2} y={2} width={4} height={10} rx={1} className="tree-trunk" />
+      <rect x={-2} y={-2} width={4} height={14} rx={1} className="tree-trunk" />
       <path d="M 0 -22 l 8 12 h -16 Z" className="alpine-leaf" />
       <path d="M 0 -14 l 10 13 h -20 Z" className="alpine-leaf" />
       <path d="M 0 -6 l 12 10 h -24 Z" className="alpine-leaf" />
@@ -285,29 +285,23 @@ export function AlpineTree() {
 export function Wellingtonia() {
   return (
     <g className="sprite sprite--wellingtonia" aria-hidden="true">
-      <rect x={-3} y={4} width={6} height={12} rx={1.5} className="sequoia-trunk" />
+      <rect x={-3} y={-8} width={6} height={24} rx={1.5} className="sequoia-trunk" />
       <path d="M 0 -34 q 11 20 9 30 q -9 6 -18 0 q -2 -10 9 -30 Z" className="sequoia-leaf" />
       <path d="M -7 -6 q 7 4 14 0 M -8 -16 q 8 4 16 0" className="sequoia-shade" />
     </g>
   );
 }
 
-/** Heather. Purple, springy, and everywhere out here. */
-export function Heather() {
+/**
+ * Gorse: spiky, and always slightly on fire somewhere. Yellow as it comes;
+ * purple where the heather has got into it.
+ */
+export function Gorse({ purple = false }: { purple?: boolean }) {
   return (
-    <g className="sprite sprite--heather" aria-hidden="true">
-      <path d="M -8 8 q -1 -6 1 -9 M 0 8 q 0 -7 0 -11 M 8 8 q 1 -6 -1 -9" className="heather-stem" />
-      <ellipse cx={-7} cy={-2} rx={3.4} ry={4.4} className="heather-bloom" />
-      <ellipse cx={0} cy={-4} rx={3.6} ry={4.8} className="heather-bloom" />
-      <ellipse cx={7} cy={-2} rx={3.4} ry={4.4} className="heather-bloom" />
-    </g>
-  );
-}
-
-/** Gorse: spiky, yellow, and always slightly on fire somewhere. */
-export function Gorse() {
-  return (
-    <g className="sprite sprite--gorse" aria-hidden="true">
+    <g
+      className={`sprite sprite--gorse${purple ? " sprite--gorse-purple" : ""}`}
+      aria-hidden="true"
+    >
       <path
         d="M -14 10 q -4 -12 4 -15 q 3 -8 10 -4 q 8 -4 11 5 q 5 5 -1 14 Z"
         className="gorse-body"
@@ -377,19 +371,6 @@ export function WarningSign() {
       <path d="M 0 -22 l 11 19 h -22 Z" className="warning-plate" />
       <path d="M 0 -16 v 7" className="warning-mark" />
       <circle cx={0} cy={-6} r={1.2} className="warning-mark-dot" />
-    </g>
-  );
-}
-
-/** Somebody's dog, and for once somebody. */
-export function DogWalker() {
-  return (
-    <g className="sprite sprite--walker" aria-hidden="true">
-      <circle cx={0} cy={-14} r={4} className="walker-head" />
-      <path d="M 0 -10 v 9" className="walker-body" />
-      <path d="M 0 -8 l -6 5 M 0 -8 l 6 3" className="walker-arms" />
-      <path d="M 0 -1 l -4 9 M 0 -1 l 5 9" className="walker-legs" />
-      <path d="M 6 -5 q 7 4 9 8" className="walker-lead" />
     </g>
   );
 }
