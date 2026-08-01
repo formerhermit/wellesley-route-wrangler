@@ -29,8 +29,11 @@ export function GameHeader({
   const target = distanceTarget(level);
 
   return (
-    <header className="game-header">
+    <header
+      className={`game-header${level.mood ? ` game-header--${level.mood}` : ""}`}
+    >
       <div className="game-header__identity">
+        {/* The title takes the level's mood: on a dark map it goes with it. */}
         <h1 className="game-header__title">About Five Kilometres</h1>
         <p className="game-header__subtitle">{level.strapline}</p>
       </div>

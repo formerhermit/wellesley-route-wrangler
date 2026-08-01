@@ -113,7 +113,7 @@ export const spookyRun: Level = {
       labelSide: "left",
       x: 170,
       y: 360,
-      label: "Wellesley Rumble",
+      label: "Wellesley Grumble",
       blurb: "nobody agrees what it is, everybody turns up",
     },
     {
@@ -138,7 +138,7 @@ export const spookyRun: Level = {
       id: "hospital-hill",
       x: 500,
       y: 330,
-      label: "Hospital Hill",
+      label: "Haunted Hospital Hill",
       blurb: "crow hotspot, and a hill about it",
       type: "pigeon",
       sprite: "hill",
@@ -224,10 +224,9 @@ export const spookyRun: Level = {
       label: "The Ski Slope",
       blurb: "massive hill, and it is made of carpet",
       type: "hill",
-      // As on the Town Run this map is built from: the road along the top
-      // runs dead level with where a hill marker usually sits.
-      spriteDx: -60,
-      spriteDy: 30,
+      // Back beside its junction, and drawn over the roads rather than under
+      // them: there is nowhere up here that a road does not already cross.
+      spriteOnTop: true,
     },
   ],
 
@@ -361,6 +360,35 @@ export const spookyRun: Level = {
     message:
       "{km} km, and the group has come back changed. The committee is drafting a document with headings and one of the headings is 'The Noise'.",
   },
+
+  // Run the group into Full-Size Bar Street and some of the trick or treaters
+  // come with them. It is a losing route either way; this is what losing looks
+  // like. They wait at the near edge of the crowd the junction already draws,
+  // so at rest the street reads as one lot of them and not two.
+  follower: { kind: "treaters", nodeId: "sweet-street", dx: -84, dy: -30 },
+
+  // A full moon and the bats under it, the graves that would not stay in the
+  // cemetery, pumpkins on the doorsteps, and signposts pointing at nothing.
+  scatter: [
+    { x: 92, y: 96, kind: "moon" },
+    { x: 196, y: 70, kind: "bat" },
+    { x: 246, y: 118, kind: "bat" },
+    { x: 430, y: 58, kind: "bat" },
+    { x: 470, y: 108, kind: "bat" },
+
+    { x: 268, y: 122, kind: "gravestone" },
+    { x: 396, y: 118, kind: "gravestone" },
+    { x: 246, y: 452, kind: "gravestone" },
+
+    { x: 64, y: 236, kind: "pumpkin" },
+    { x: 262, y: 292, kind: "pumpkin" },
+    { x: 592, y: 452, kind: "pumpkin" },
+    { x: 736, y: 296, kind: "pumpkin" },
+
+    { x: 404, y: 268, kind: "signpost" },
+    { x: 706, y: 120, kind: "signpost" },
+    { x: 96, y: 404, kind: "signpost" },
+  ],
 
   view: { width: 800, height: 560 },
 };

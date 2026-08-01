@@ -104,6 +104,17 @@ body {
   color: var(--club);
 }
 
+/* The one night of the year the club's own title goes off. */
+.game-header--dusk .game-header__title {
+  color: #6b3fa0;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+.game-header--dusk .game-header__subtitle {
+  font-style: italic;
+}
+
 .game-header__subtitle {
   margin: 0.15rem 0 0;
   font-size: 0.9rem;
@@ -525,6 +536,178 @@ body {
 .map-svg--dusk .plane-body,
 .map-svg--dusk .van-body {
   fill: #cfcec4;
+}
+
+/*
+ * After dark the scenery turns. Hills go orange, the gardens go sickly, the
+ * town centre goes purple, and the trees in the gardens are drawn bare.
+ */
+.map-svg--dusk .hill-body {
+  fill: #c2793c;
+}
+
+.map-svg--dusk .hill-cap {
+  fill: #f0c08a;
+}
+
+.map-svg--dusk .gardens-ground {
+  fill: #6d7327;
+  opacity: 0.55;
+}
+
+.map-svg--dusk .junction--park .junction-dot {
+  fill: #8a8f33;
+}
+
+.map-svg--dusk .junction--towncentre .junction-dot {
+  fill: #7a4b9c;
+}
+
+/* The clock tower only: the church keeps its own roof. */
+.map-svg--dusk .sprite--towncentre .tower-roof {
+  fill: #7a4b9c;
+}
+
+.dead-trunk,
+.dead-branch {
+  fill: none;
+  stroke: #4a4034;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.dead-branch {
+  stroke-width: 2;
+}
+
+.dead-twig {
+  fill: none;
+  stroke: #4a4034;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.sign-post {
+  fill: none;
+  stroke: #6b5442;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.sign-board {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.pumpkin-body {
+  fill: #e08a1e;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.pumpkin-rib {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  opacity: 0.45;
+}
+
+.pumpkin-stalk {
+  fill: none;
+  stroke: #4f6d59;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.pumpkin-face {
+  fill: var(--ink);
+}
+
+.grave-mark {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.bat-body {
+  fill: #23202b;
+  stroke: #23202b;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.moon-disc {
+  fill: #fdf6df;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.moon-glow {
+  fill: #fdf6df;
+  opacity: 0.16;
+}
+
+.moon-crater {
+  fill: #e6dcbe;
+}
+
+/*
+ * Fog: three soft banks along the bottom, drifting at different speeds. The
+ * blur is what sells it; without it these are three grey eggs.
+ */
+.fog {
+  filter: blur(7px);
+  pointer-events: none;
+}
+
+.fog-bank {
+  fill: #f2f4f8;
+  opacity: 0.5;
+  animation: fog-drift 26s ease-in-out infinite alternate;
+}
+
+.fog-bank--slow {
+  opacity: 0.4;
+  animation-duration: 38s;
+  animation-direction: alternate-reverse;
+}
+
+.fog-bank--fast {
+  opacity: 0.55;
+  animation-duration: 19s;
+}
+
+@keyframes fog-drift {
+  from {
+    transform: translateX(-46px);
+  }
+  to {
+    transform: translateX(46px);
+  }
+}
+
+.sprite--bat {
+  animation: bat-flit 7s ease-in-out infinite alternate;
+}
+
+@keyframes bat-flit {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(14px, -7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fog-bank,
+  .sprite--bat {
+    animation: none;
+  }
 }
 
 /* Landmarks */

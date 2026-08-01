@@ -65,6 +65,11 @@ export interface MapNode {
    */
   spriteDx?: number;
   spriteDy?: number;
+  /**
+   * Draw this landmark over the roads instead of under them. For the one that
+   * has nowhere to stand that a road does not already cross.
+   */
+  spriteOnTop?: boolean;
 }
 
 export interface Road {
@@ -160,7 +165,16 @@ export interface Level {
   scatter?: {
     x: number;
     y: number;
-    kind: "tree" | "rock" | "soldier" | "cow";
+    kind:
+      | "tree"
+      | "rock"
+      | "soldier"
+      | "cow"
+      | "signpost"
+      | "pumpkin"
+      | "gravestone"
+      | "bat"
+      | "moon";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */
@@ -172,7 +186,7 @@ export interface Level {
    * that way leaves it standing where it was.
    */
   follower?: {
-    kind: "goose";
+    kind: "goose" | "treaters";
     nodeId: string;
     /** Where it waits, relative to that junction. */
     dx: number;

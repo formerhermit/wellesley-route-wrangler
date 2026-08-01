@@ -75,10 +75,22 @@ treaters no group of adults gets through. Ten winning routes, six of them over
 Redan Road and four over the ski slope, so which hill you spend is a real
 choice.
 
-Three fields carry the whole of Halloween, and the rules never learn about any
-of them: `mood: "dusk"` takes the light out of the map, `flock: "crow"` decides
-what the birds are, and `music` names the level's own track. Levels without
-them are daylight, pigeons and the house theme.
+A handful of fields carry the whole of Halloween, and the rules never learn
+about any of them: `mood: "dusk"` takes the light out of the map — and with it
+turns the hills orange, the gardens a sickly olive, the town centre purple, the
+gardens' trees bare, and the game's own title italic and violet — `flock:
+"crow"` decides what the birds are, `music` names the level's own track, and
+`scatter` puts the moon, the bats, the pumpkins, the gravestones and the
+signposts where they go. Fog drifts along the bottom of any map at dusk.
+Levels without those fields are daylight, pigeons and the house theme.
+
+The trick or treaters are a `follower` too: run the group into their street and
+some of them come along at the back, exactly as the goose does. Losing has
+never looked better.
+
+One junction on that map sets `spriteOnTop`, which draws its landmark over the
+roads instead of under them. The ski slope has the road along the top of the
+map running through the only place its marker can stand.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is

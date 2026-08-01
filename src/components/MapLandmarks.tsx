@@ -1,5 +1,6 @@
 import {
   Aeroplane,
+  Bat,
   Bin,
   Bridge,
   Bush,
@@ -9,17 +10,22 @@ import {
   CoffeeVan,
   Cow,
   CricketStumps,
+  DeadTree,
   FootballPitch,
   Ghost,
+  Gravestone,
   GolfFlag,
   Hangar,
   HillMarker,
+  Moon,
   Mosque,
   Observatory,
   Portaloo,
+  Pumpkin,
   Pub,
   Railway,
   Rock,
+  Signpost,
   Soldier,
   SportsCentre,
   Statue,
@@ -95,6 +101,31 @@ function waterThrough(bank: MapNode[]): string {
   return `${d} Z`;
 }
 
+type ScatterItem = NonNullable<Level["scatter"]>[number];
+
+/** What each hand-placed scenery kind draws. */
+const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNode> = {
+  tree: () => <Tree />,
+  rock: () => <Rock />,
+  soldier: (item) => <Soldier index={item.variant ?? 0} flip={item.flip} />,
+  cow: (item) => <Cow flip={item.flip} />,
+  signpost: () => <Signpost />,
+  pumpkin: () => <Pumpkin />,
+  gravestone: () => <Gravestone />,
+  bat: () => <Bat />,
+  moon: () => <Moon />,
+};
+
+/**
+ * Fog, drifting along the bottom of a map that has gone dark. Three banks at
+ * different speeds, because one moving at one speed reads as a mistake.
+ */
+const FOG = [
+  { cx: 210, cy: 527, rx: 240, ry: 26, className: "fog-bank" },
+  { cx: 560, cy: 543, rx: 290, ry: 22, className: "fog-bank fog-bank--slow" },
+  { cx: 390, cy: 508, rx: 170, ry: 16, className: "fog-bank fog-bank--fast" },
+];
+
 /** Trees scattered around a park, relative to its junction. */
 const PARK_TREES = [
   { dx: -46, dy: -26 },
@@ -111,7 +142,42 @@ function nodesOfType(level: Level, type: MapNodeType): MapNode[] {
  * the junction types in the level data, so a new level gets its scenery
  * without touching this file.
  */
-export function MapLandmarks({ level }: { level: Level }) {
+export function MapLandmarks({
+  level,
+  onTop = false,
+}: {
+  level: Level;
+  /** The second pass, drawn after the roads: only the junctions that ask. */
+  onTop?: boolean;
+}) {
+  if (onTop) {
+    return (
+      <g aria-hidden="true">
+        {level.nodes
+          .filter((node) => node.spriteOnTop)
+          .map((node) => {
+            const kind = node.sprite ?? node.type;
+            const sprite = kind ? ABOVE_NODE[kind] : undefined;
+            if (!sprite) return null;
+            const dx = node.spriteDx ?? sprite.dx;
+            const dy = node.spriteDy ?? sprite.dy;
+            return (
+              <g
+                key={`over-${node.id}`}
+                transform={`translate(${node.x + dx} ${node.y + dy})`}
+              >
+                {sprite.render()}
+              </g>
+            );
+          })}
+      </g>
+    );
+  }
+
+  return <MapLandmarksUnderRoads level={level} />;
+}
+
+function MapLandmarksUnderRoads({ level }: { level: Level }) {
   // One canal junction is enough to draw a stretch of water through: the
   // Loopy map has a single towpath where the Thursday map has a bridge too.
   const canal = nodesOfType(level, "canal");
@@ -165,7 +231,7 @@ export function MapLandmarks({ level }: { level: Level }) {
               key={index}
               transform={`translate(${park.x + tree.dx} ${park.y + tree.dy})`}
             >
-              <Tree />
+              {level.mood === "dusk" ? <DeadTree /> : <Tree />}
             </g>
           ))}
         </g>
@@ -239,19 +305,27 @@ export function MapLandmarks({ level }: { level: Level }) {
           key={`${item.kind}-${item.x}-${item.y}`}
           transform={`translate(${item.x} ${item.y})`}
         >
-          {item.kind === "soldier" ? (
-            <Soldier index={item.variant ?? 0} flip={item.flip} />
-          ) : item.kind === "cow" ? (
-            <Cow flip={item.flip} />
-          ) : item.kind === "rock" ? (
-            <Rock />
-          ) : (
-            <Tree />
-          )}
+          {SCATTER[item.kind](item)}
         </g>
       ))}
 
+      {level.mood === "dusk" && (
+        <g className="fog">
+          {FOG.map((bank) => (
+            <ellipse
+              key={bank.className + bank.cx}
+              className={bank.className}
+              cx={bank.cx}
+              cy={bank.cy}
+              rx={bank.rx}
+              ry={bank.ry}
+            />
+          ))}
+        </g>
+      )}
+
       {level.nodes.map((node) => {
+        if (node.spriteOnTop) return null;
         const kind = node.sprite ?? node.type;
         const sprite = kind ? ABOVE_NODE[kind] : undefined;
         if (!sprite) return null;

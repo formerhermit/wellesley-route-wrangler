@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Goose } from "./MapSprites";
+import { Goose, Treaters } from "./MapSprites";
 import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
@@ -123,6 +123,9 @@ export function RouteMap({
         />
         <MapLandmarks level={level} />
         <MapRoads level={level} route={route} />
+        {/* The few landmarks that have nowhere to stand a road does not
+            already cross, drawn over the top of it instead. */}
+        <MapLandmarks level={level} onTop />
 
         {pathData && (
           <>
@@ -151,7 +154,15 @@ export function RouteMap({
             aria-hidden="true"
             transform={`translate(${follower.home.x} ${follower.home.y})`}
           >
-            <Goose />
+            {level.follower?.kind === "treaters" ? (
+              // Drawn standing on their junction rather than above it, and
+              // smaller: they are following, not looming.
+              <g transform="scale(0.7) translate(0 -14)">
+                <Treaters />
+              </g>
+            ) : (
+              <Goose />
+            )}
           </g>
         )}
 

@@ -98,6 +98,83 @@ export function Portaloo() {
   );
 }
 
+/** The same tree in October, after whatever happened here happened. */
+export function DeadTree() {
+  return (
+    <g className="sprite sprite--dead-tree" aria-hidden="true">
+      <path d="M 0 12 v -15" className="dead-trunk" />
+      <path
+        d="M 0 -1 l -8 -7 M 0 -3 l 7 -6 M 0 -9 l -5 -7 M 0 -10 l 6 -8"
+        className="dead-branch"
+      />
+      <path
+        d="M -8 -8 l -4 -4 M 7 -9 l 4 -3 M -5 -16 l -2 -5 M 6 -18 l 4 -3"
+        className="dead-twig"
+      />
+    </g>
+  );
+}
+
+/** Points two ways, neither of them helpfully. */
+export function Signpost() {
+  return (
+    <g className="sprite sprite--signpost" aria-hidden="true">
+      <path d="M 0 11 v -20" className="sign-post" />
+      <path d="M -1 -9 h 11 l 3 3 l -3 3 h -11 Z" className="sign-board" />
+      <path d="M 1 -1 h -10 l -3 3 l 3 3 h 10 Z" className="sign-board" />
+    </g>
+  );
+}
+
+export function Pumpkin() {
+  return (
+    <g className="sprite sprite--pumpkin" aria-hidden="true">
+      <ellipse cx={0} cy={2} rx={10} ry={8} className="pumpkin-body" />
+      <path d="M -4 -5 q -2.5 7 0 14 M 4 -5 q 2.5 7 0 14" className="pumpkin-rib" />
+      <path d="M 0 -6 v -4 q 3 -2 5 -1" className="pumpkin-stalk" />
+      <path d="M -6 1 l 3 -4 l 3 4 Z M 0 1 l 3 -4 l 3 4 Z" className="pumpkin-face" />
+      <path d="M -5 5 h 10 l -2 3 h -6 Z" className="pumpkin-face" />
+    </g>
+  );
+}
+
+/** One stone, leaning. The cemetery sprite is a whole row of them. */
+export function Gravestone() {
+  return (
+    <g className="sprite sprite--gravestone" aria-hidden="true">
+      <g transform="rotate(-5)">
+        <path d="M -6 9 v -9 a 6 6 0 0 1 12 0 v 9 Z" className="grave-stone" />
+        <path d="M -3 0 h 6 M 0 -4 v 8" className="grave-mark" />
+      </g>
+      <path d="M -10 10 h 20" className="hangar-ground" />
+    </g>
+  );
+}
+
+export function Bat() {
+  return (
+    <g className="sprite sprite--bat" aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={2.4} ry={3.2} className="bat-body" />
+      <path d="M -1.8 -1 q -5 -4 -9 -1 q 3 0.4 3.6 3 q 2.4 -2 5.4 0.6 Z" className="bat-body" />
+      <path d="M 1.8 -1 q 5 -4 9 -1 q -3 0.4 -3.6 3 q -2.4 -2 -5.4 0.6 Z" className="bat-body" />
+      <path d="M -1.6 -3 l -1 -3 l 2.2 1.4 M 1.6 -3 l 1 -3 l -2.2 1.4" className="bat-body" />
+    </g>
+  );
+}
+
+/** Full, obviously. */
+export function Moon() {
+  return (
+    <g className="sprite sprite--moon" aria-hidden="true">
+      <circle cx={0} cy={0} r={27} className="moon-glow" />
+      <circle cx={0} cy={0} r={18} className="moon-disc" />
+      <circle cx={-6} cy={-5} r={3.6} className="moon-crater" />
+      <circle cx={5} cy={5} r={5} className="moon-crater" />
+      <circle cx={8} cy={-7} r={2.4} className="moon-crater" />
+    </g>
+  );
+}
+
 export function HillMarker() {
   return (
     <g className="sprite sprite--hill" aria-hidden="true">
@@ -422,7 +499,7 @@ const GHOST_IMAGE = `${import.meta.env.BASE_URL}sprites/ghost.png`;
 export function Ghost() {
   return (
     <g className="sprite sprite--ghost" aria-hidden="true">
-      <image href={GHOST_IMAGE} x={-16} y={-16} width={32} height={33} />
+      <image href={GHOST_IMAGE} x={-10.9} y={-12} width={21.8} height={24} />
     </g>
   );
 }
