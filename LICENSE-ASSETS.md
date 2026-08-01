@@ -10,7 +10,7 @@ are not open source, and they are not yours to ship.
 
 - Everything in `public/audio/` — the main theme and the Halloween theme.
 - Everything in `public/sprites/` — the cow, the Duke, the ghost, the four
-  plastic soldiers, the goose.
+  plastic soldiers, the goose, the dog.
 - `public/favicon.svg`.
 - The drawn artwork in `src/components/MapSprites.tsx`: the observatory, the
   church, the pub, the crows and pigeons, the runners, and every other sprite

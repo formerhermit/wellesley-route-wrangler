@@ -113,7 +113,7 @@ const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNod
   lights: () => <TrafficLight />,
   car: (item) => <SuspiciousCar variant={item.variant ?? 0} />,
   bin: () => <Bin />,
-  dog: () => <Dog />,
+  dog: (item) => <Dog flip={item.flip} />,
   bench: () => <Bench />,
   gnome: () => <Gnome />,
   youths: () => <Youths />,

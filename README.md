@@ -6,8 +6,8 @@ the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
-handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose) live
-in `public/sprites/`, cropped to
+handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose, the
+dog) live in `public/sprites/`, cropped to
 their content and sized to a few times the space they are ever drawn in.
 
 ## The levels

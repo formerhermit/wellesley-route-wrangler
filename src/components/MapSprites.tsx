@@ -80,17 +80,18 @@ export function TrafficLight() {
   );
 }
 
-/** Somebody's dog, delighted, and about to be in the way. */
-export function Dog() {
+/**
+ * Somebody's dog, delighted, and about to be in the way. A bitmap, like the
+ * cow and the goose, and drawn facing left as it was given to us.
+ */
+const DOG_IMAGE = `${import.meta.env.BASE_URL}sprites/dog.png`;
+
+export function Dog({ flip = false }: { flip?: boolean }) {
   return (
     <g className="sprite sprite--dog" aria-hidden="true">
-      <path d="M -11 4 q 0 -7 6 -7 h 9 q 5 0 5 6 v 2 h -20 Z" className="dog-body" />
-      <circle cx={13} cy={-5} r={4.4} className="dog-body" />
-      <path d="M 15.5 -8.5 l 4 -1 l -1.4 4" className="dog-body" />
-      <path d="M 10 -6.6 q -3.4 -1 -4.6 -3.4 q 3.4 0.6 5.4 2" className="dog-ear" />
-      <path d="M -8 5 v 5 M -2 5 v 5 M 8 5 v 5 M 13 5 v 5" className="dog-legs" />
-      <path d="M -11 1 q -6 -2 -5 -8" className="dog-tail" />
-      <path d="M -15 10 h 34" className="hangar-ground" />
+      <g transform={flip ? "scale(-1 1)" : undefined}>
+        <image href={DOG_IMAGE} x={-15} y={-12} width={30} height={22} />
+      </g>
     </g>
   );
 }
