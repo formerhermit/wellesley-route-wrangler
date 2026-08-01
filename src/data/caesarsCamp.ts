@@ -31,6 +31,14 @@ export const caesarsCamp: Level = {
     { x: 565, y: 95, kind: "tree" },
     { x: 655, y: 115, kind: "rock" },
     { x: 720, y: 60, kind: "tree" },
+
+    // The soldiers themselves, dug in around their hill and each in one of
+    // the gaps between the paths off it. Small, because they are hiding, and
+    // facing four different ways, because nobody told them which way.
+    { x: 205, y: 228, kind: "soldier", variant: 2 },
+    { x: 232, y: 208, kind: "soldier", variant: 1, flip: true },
+    { x: 350, y: 240, kind: "soldier", variant: 0, flip: true },
+    { x: 318, y: 275, kind: "soldier", variant: 3 },
   ],
 
   objectives: [
@@ -174,7 +182,7 @@ export const caesarsCamp: Level = {
       id: "soldiers",
       x: 285,
       y: 225,
-      label: "Hiding Soldiers",
+      label: "Eeek Soldiers",
       blurb: "allegedly on manoeuvres",
       type: "hill",
       labelAbove: true,

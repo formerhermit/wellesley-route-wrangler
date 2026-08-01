@@ -19,8 +19,9 @@ import {
   Observatory,
   Portaloo,
   Pub,
-  Rock,
   Railway,
+  Rock,
+  Soldier,
   SportsCentre,
   Statue,
   Superstore,
@@ -238,7 +239,13 @@ export function MapLandmarks({ level }: { level: Level }) {
           key={`${item.kind}-${item.x}-${item.y}`}
           transform={`translate(${item.x} ${item.y})`}
         >
-          {item.kind === "rock" ? <Rock /> : <Tree />}
+          {item.kind === "soldier" ? (
+            <Soldier index={item.variant ?? 0} flip={item.flip} />
+          ) : item.kind === "rock" ? (
+            <Rock />
+          ) : (
+            <Tree />
+          )}
         </g>
       ))}
 

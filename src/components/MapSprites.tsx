@@ -41,6 +41,36 @@ export function Tree() {
   );
 }
 
+/**
+ * Plastic army men, bitmaps like the cow and the Duke. Drawn standing on
+ * their own origin so a scatter position reads as where the feet are, and
+ * sized per pose — the kneeling one is not as tall as the rest.
+ */
+const SOLDIERS = [
+  { src: "soldier-1.png", w: 16.6, h: 19.5 },
+  { src: "soldier-2.png", w: 13.2, h: 20 },
+  { src: "soldier-3.png", w: 13.9, h: 13 },
+  { src: "soldier-4.png", w: 14.1, h: 18.6 },
+];
+
+export function Soldier({ index, flip = false }: { index: number; flip?: boolean }) {
+  const { src, w, h } = SOLDIERS[index % SOLDIERS.length];
+  return (
+    <g className="sprite sprite--soldier" aria-hidden="true">
+      {/* They are all drawn facing right, so half of them need turning. */}
+      <g transform={flip ? "scale(-1 1)" : undefined}>
+        <image
+          href={`${import.meta.env.BASE_URL}sprites/${src}`}
+          x={-w / 2}
+          y={-h}
+          width={w}
+          height={h}
+        />
+      </g>
+    </g>
+  );
+}
+
 /** A boulder and its smaller companion. Heath, not mountains. */
 export function Rock() {
   return (

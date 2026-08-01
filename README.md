@@ -6,7 +6,8 @@ the pigeons, and get the group back to the Observatory in one piece.
 
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
-handful of bitmaps (the cow, the Duke, the ghost) live in `public/sprites/`, cropped to
+handful of bitmaps (the cow, the Duke, the ghost, the soldiers) live in
+`public/sprites/`, cropped to
 their content and sized to a few times the space they are ever drawn in.
 
 ## The levels
@@ -77,9 +78,11 @@ placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
-A level may also `scatter` trees and rocks by hand, on top of whatever its
-theme puts down, for the corners no road reaches — the heath along the top of
-Caesar's Camp was reading as blank paper without them.
+A level may also `scatter` scenery by hand, on top of whatever its theme puts
+down, for the corners no road reaches: trees and rocks along the top of
+Caesar's Camp, which was reading as blank paper without them, and the four
+plastic soldiers dug in around the Eeek Soldiers junction, each one facing
+whichever way its `flip` says.
 
 Where a junction needs its landmark or its label somewhere other than where its
 type puts every other one — because a road happens to run through the spot — it

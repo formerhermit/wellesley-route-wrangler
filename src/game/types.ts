@@ -158,7 +158,15 @@ export interface Level {
    * corners of a map that no road reaches and that read as blank paper
    * without it. Decorative only: nothing here is a junction.
    */
-  scatter?: { x: number; y: number; kind: "tree" | "rock" }[];
+  scatter?: {
+    x: number;
+    y: number;
+    kind: "tree" | "rock" | "soldier";
+    /** Which drawing, where a kind has more than one. */
+    variant?: number;
+    /** Turn it round. Everything here is drawn facing right. */
+    flip?: boolean;
+  }[];
   nodes: MapNode[];
   roads: Road[];
   startNodeId: string;
