@@ -34,6 +34,7 @@ export type MapNodeType =
   | "church"
   | "ghost"
   | "portaloo"
+  | "car"
   /** A street of trick or treaters. A group of adults gets no further. */
   | "treaters";
 

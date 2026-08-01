@@ -788,23 +788,50 @@ body {
   fill: var(--club);
 }
 
-.bush-leaf {
+/* The silhouette, drawn under the leaves: one outline, no seams. */
+.bush-outline {
+  fill: var(--ink);
+}
+
+.bush-body {
   fill: var(--grass);
+}
+
+.car-body {
+  fill: #9c5a4d;
   stroke: var(--ink);
   stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.car-window {
+  fill: #33414d;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.car-wheel {
+  fill: #2f3238;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.car-hub {
+  fill: #c9bfa8;
+}
+
+.car-fumes {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  opacity: 0.6;
 }
 
 .bush-highlight {
   fill: #fff;
   opacity: 0.35;
-}
-
-.bush-ground {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 2;
-  stroke-linecap: round;
-  opacity: 0.45;
 }
 
 .hill-body {

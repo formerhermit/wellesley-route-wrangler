@@ -133,6 +133,7 @@ export const caesarsCamp: Level = {
       label: "Suspicious Car",
       blurb: "nobody knows whose it is",
       labelAbove: true,
+      type: "car",
     },
     {
       id: "stile",

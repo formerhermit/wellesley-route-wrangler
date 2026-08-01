@@ -30,6 +30,7 @@ import {
   SportsCentre,
   Statue,
   Superstore,
+  SuspiciousCar,
   TownCentre,
   Treaters,
   Tree,
@@ -69,6 +70,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   // Beside its junction and dropped clear: the name goes above, and a
   // portaloo is tall enough to reach it.
   portaloo: { render: () => <Portaloo />, dy: 4, dx: -48 },
+  // Below its junction: both lanes off it leave to the right, and the name
+  // goes above.
+  car: { render: () => <SuspiciousCar />, dy: 34, dx: -18 },
   ghost: { render: () => <Ghost />, dy: -42, dx: 0 },
   treaters: { render: () => <Treaters />, dy: -44, dx: 0 },
   // Beside the junction rather than over it: an aeroplane sitting on top of

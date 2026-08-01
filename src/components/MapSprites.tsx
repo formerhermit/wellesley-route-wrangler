@@ -14,18 +14,63 @@ export function Observatory() {
   );
 }
 
-/** A discreet bush. The joke is entirely in the place name. */
+/**
+ * A discreet bush. The joke is entirely in the place name.
+ *
+ * Three lobes, but one plant: the outline is the same three shapes drawn
+ * fatter and in ink underneath, so what shows is a single silhouette. Stroking
+ * each lobe instead leaves the lines where they overlap, and it reads as three
+ * circles that happen to be touching.
+ */
+const BUSH_LOBES = [
+  { cx: -11, cy: 4, rx: 12, ry: 10 },
+  { cx: 11, cy: 4, rx: 12, ry: 10 },
+  { cx: 0, cy: -5, rx: 14, ry: 12 },
+];
+
 export function Bush() {
   return (
     <g className="sprite sprite--bush" aria-hidden="true">
-      <ellipse cx={-11} cy={4} rx={12} ry={10} className="bush-leaf" />
-      <ellipse cx={11} cy={4} rx={12} ry={10} className="bush-leaf" />
-      <ellipse cx={0} cy={-5} rx={14} ry={12} className="bush-leaf" />
+      <g className="bush-outline">
+        {BUSH_LOBES.map((lobe, index) => (
+          <ellipse
+            key={index}
+            cx={lobe.cx}
+            cy={lobe.cy}
+            rx={lobe.rx + 1.4}
+            ry={lobe.ry + 1.4}
+          />
+        ))}
+      </g>
+      <g className="bush-body">
+        {BUSH_LOBES.map((lobe, index) => (
+          <ellipse key={index} {...lobe} />
+        ))}
+      </g>
       <ellipse cx={-5} cy={-9} rx={6} ry={5} className="bush-highlight" />
+    </g>
+  );
+}
+
+/** Parked where nobody parks, and nobody will say whose it is. */
+export function SuspiciousCar() {
+  return (
+    <g className="sprite sprite--car" aria-hidden="true">
       <path
-        d="M -18 12 h 36"
-        className="bush-ground"
+        d="M -24 6 L -24 0 Q -24 -3 -20 -4 L -14 -11 Q -12 -13 -8 -13 L 8 -13 Q 12 -13 13 -11 L 19 -4 Q 24 -3 24 0 L 24 6 Z"
+        className="car-body"
       />
+      <path
+        d="M -12 -10 L -3 -10 L -3 -4 L -17 -4 Z M 0 -10 L 9 -10 L 13 -4 L 0 -4 Z"
+        className="car-window"
+      />
+      <circle cx={-13} cy={6} r={4.5} className="car-wheel" />
+      <circle cx={13} cy={6} r={4.5} className="car-wheel" />
+      <circle cx={-13} cy={6} r={1.7} className="car-hub" />
+      <circle cx={13} cy={6} r={1.7} className="car-hub" />
+      {/* The engine is running. It has been running for an hour. */}
+      <path d="M -26 3 q -5 -1 -7 -4" className="car-fumes" />
+      <path d="M -30 10 h 60" className="hangar-ground" />
     </g>
   );
 }
