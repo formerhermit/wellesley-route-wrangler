@@ -373,22 +373,6 @@ export function CricketStumps() {
   );
 }
 
-/** A duck and two ducklings, in the usual formation: behind, and late. */
-export function Ducks() {
-  return (
-    <g className="sprite sprite--ducks" aria-hidden="true">
-      <ellipse cx={6} cy={0} rx={11} ry={7} className="duck-body" />
-      <circle cx={15} cy={-8} r={5} className="duck-head" />
-      <polygon points="19,-9 27,-7 19,-5" className="duck-beak" />
-      <circle cx={16.4} cy={-9.4} r={0.9} className="duck-eye" />
-      <ellipse cx={-12} cy={5} rx={5} ry={3.5} className="duck-body" />
-      <circle cx={-8} cy={1} r={2.8} className="duck-head" />
-      <ellipse cx={-26} cy={8} rx={5} ry={3.5} className="duck-body" />
-      <circle cx={-22} cy={4} r={2.8} className="duck-head" />
-    </g>
-  );
-}
-
 export function Mosque() {
   return (
     <g className="sprite sprite--mosque" aria-hidden="true">

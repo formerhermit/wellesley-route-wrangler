@@ -9,7 +9,6 @@ import {
   CoffeeVan,
   Cow,
   CricketStumps,
-  Ducks,
   FootballPitch,
   Ghost,
   GolfFlag,
@@ -74,10 +73,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   // Higher than the rest: the stumps stand up, and the label goes underneath.
   cricket: { render: () => <CricketStumps />, dy: -58, dx: 0 },
   mosque: { render: () => <Mosque />, dy: -48, dx: 0 },
-  // Both stand in the river rather than beside it: the bridge sits on its own
-  // junction, and the ducks just off it, on the water.
+  // Stands in the river rather than beside it: the bridge sits on its own
+  // junction, over the water and under the roads, where a bridge belongs.
   bridge: { render: () => <Bridge />, dy: 0, dx: 0 },
-  ducks: { render: () => <Ducks />, dy: 12, dx: -40 },
 };
 
 /**
@@ -220,7 +218,9 @@ export function MapLandmarks({ level }: { level: Level }) {
             [610, 70],
             [740, 200],
             [60, 210],
-            [400, 520],
+            // Left of where it was: on the Tilford map it stood on The Sandy
+            // Bit, and a junction you cannot see is a junction you cannot use.
+            [330, 540],
             [700, 505],
             [180, 520],
           ].map(([x, y]) => (

@@ -1016,24 +1016,6 @@ body {
   stroke-width: 1.6;
 }
 
-.duck-body,
-.duck-head {
-  fill: #fffdf7;
-  stroke: var(--ink);
-  stroke-width: 1.8;
-}
-
-.duck-beak {
-  fill: #e8a33d;
-  stroke: var(--ink);
-  stroke-width: 1.2;
-  stroke-linejoin: round;
-}
-
-.duck-eye {
-  fill: var(--ink);
-}
-
 .mosque-dome,
 .mosque-cap {
   fill: var(--club-bright);

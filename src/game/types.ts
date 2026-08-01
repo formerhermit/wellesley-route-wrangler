@@ -29,9 +29,8 @@ export type MapNodeType =
   | "pub"
   | "cricket"
   | "mosque"
-  /** Drawn on the water rather than beside it: both stand in the river. */
+  /** Drawn on the water rather than beside it: it stands in the river. */
   | "bridge"
-  | "ducks"
   | "church"
   | "ghost"
   | "portaloo"

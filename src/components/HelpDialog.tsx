@@ -27,19 +27,19 @@ export function HelpDialog({ level, onClose }: Props) {
         Plan the route, the club runs it and everyone judges you afterwards.
       </p>
 
-      <h3 className="help__subhead">Building a route</h3>
+      <h3 className="help__subhead">Mapping a route</h3>
       <ul className="help__list">
-        <li>Choose a junction joined to the end of your route to run there.</li>
-        <li>Choose the one you came from to undo that step.</li>
-        <li>No road twice — plan a way round, not a way back.</li>
-        <li>Happy with it? Press Run Route and watch it unfold.</li>
+        <li>Tap a junction to run there.</li>
+        <li>Tap the one you came from to undo.</li>
+        <li>You can&rsquo;t run the same road twice.</li>
+        <li>Press Run Route.</li>
       </ul>
 
       <h3 className="help__subhead">What counts</h3>
       <p className="help__note">
-        Each run has run objectives. You&rsquo;re welcome to ignore them and
-        send everyone somewhere daft if you like. But to qualify for the next
-        level you have to follow the rules.
+        Each run has objectives. You&rsquo;re welcome to ignore them and send
+        everyone somewhere daft if you like. But to qualify for the next level
+        you have to follow the rules.
       </p>
 
       <p className="help__today">

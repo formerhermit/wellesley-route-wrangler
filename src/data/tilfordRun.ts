@@ -14,7 +14,7 @@ export const tilfordRun: Level = {
   title: "Tilford",
   strapline: "Round the river, back to the pub.",
   instructions:
-    "Out from the Barley Mow, over the bridge and along to the ducks, then back for last orders. The lanes are quicker and the lanes are cheating.",
+    "Out from the Barley Mow, over the bridge and along to the goose, then back for last orders. The lanes are quicker and the lanes are cheating.",
   theme: "trail",
   startNodeId: "barley-mow",
   finishNodeId: "barley-mow",
@@ -55,13 +55,13 @@ export const tilfordRun: Level = {
       kind: "visit",
       nodeIds: ["paddling-spot"],
       what: "the paddling spot",
-      reportLabel: "Ducks greeted",
-      done: "Ducks counted. There is one fewer than last week.",
-      pending: "The ducks are still waiting.",
+      reportLabel: "Goose greeted",
+      done: "The goose has been greeted. It is coming with you now.",
+      pending: "The goose is still waiting.",
       missed: {
-        title: "The Ducks Were Not Consulted",
+        title: "The Goose Was Not Consulted",
         message:
-          "You went round the far side and left the ducks entirely out of it. They noticed.",
+          "You went round the far side and left the goose entirely out of it. It noticed. It always notices.",
       },
       stranded: {
         title: "Everyone Is In The River",
@@ -92,7 +92,7 @@ export const tilfordRun: Level = {
   success: {
     title: "Textbook Tilford",
     message:
-      "{km} km, over the bridge, past the ducks, not a yard of tarmac. The kitchen is open and the round is somebody else's.",
+      "{km} km, over the bridge, past the goose, not a yard of tarmac. The goose came too. The kitchen is open and the round is somebody else's.",
   },
   emptyRoute: {
     title: "Nobody Got Up",
@@ -159,13 +159,9 @@ export const tilfordRun: Level = {
       x: 610,
       y: 300,
       label: "The Paddling Spot",
-      blurb: "the river, and a duck family with opinions",
+      blurb: "the river, and a goose with opinions",
       type: "canal",
-      sprite: "ducks",
       labelAbove: true,
-      // Upstream of the junction, where the water has no trail beside it.
-      spriteDx: 52,
-      spriteDy: 21,
     },
     {
       id: "river-bridge",
@@ -250,6 +246,19 @@ export const tilfordRun: Level = {
     { id: "shop-cricket", from: "village-shop", to: "cricket-green", distanceKm: 1.2 },
     { id: "pub-bridge", from: "barley-mow", to: "river-bridge", distanceKm: 0.9 },
     { id: "institute-sandy", from: "the-institute", to: "sandy-track", distanceKm: 1.5 },
+  ],
+
+  // The same goose as Fleet Pond's, waiting at the water's edge. Run the
+  // group past it and it comes with them.
+  follower: { kind: "goose", nodeId: "paddling-spot", dx: 50, dy: 44 },
+
+  // The middle of this map is common between the river and the sandy tracks,
+  // and it was reading as empty paper.
+  scatter: [
+    { x: 235, y: 375, kind: "tree" },
+    { x: 300, y: 430, kind: "tree" },
+    { x: 480, y: 420, kind: "tree" },
+    { x: 545, y: 380, kind: "tree" },
   ],
 
   // The Wey, on down the valley and off the map to the west.

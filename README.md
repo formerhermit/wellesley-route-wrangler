@@ -45,11 +45,13 @@ ends up somewhere they did not intend to be. The pond itself is drawn from the
 ring of junctions on its bank, the same way the canal on level 1 is drawn from
 its two canal junctions.
 
-Level 4 is also where the goose lives. A level may name a `follower`: something
-that waits by a junction and, when the group runs past it, falls in at the back
-and follows them to the finish, turning to face the way it is going. Plan a
-route that misses the Jetty and it stays exactly where it was. The cows at Cow
-Corner, by contrast, do nothing at all — greeting them is its own reward.
+Level 4 is where the goose lives, and level 6 is where it turns up again. A
+level may name a `follower`: something that waits by a junction and, when the
+group runs past it, falls in at the back and follows them to the finish,
+turning to face the way it is going. Plan a route that misses the Jetty — or
+the paddling spot on the Tilford map — and it stays exactly where it was. The
+cows at Cow Corner, by contrast, do nothing at all: greeting them is its own
+reward.
 
 **Level 5 — Loopy** — the Thursday map from the Observatory down, lifted to
 make room for what is underneath it. The signature is the road round the Sports
@@ -58,7 +60,7 @@ building, so the pool at the back can only be reached by going round. Sixteen
 winning routes.
 
 **Level 6 — Tilford** — a trail loop from the Barley Mow, and the hardest run
-on the roster: 7.5 to 8 km, over the river bridge, along to the ducks at the
+on the roster: 7.5 to 8 km, over the river bridge, along to the goose at the
 paddling spot, off the village lanes, and not across the stepping stones, which
 are under water. Eight winning routes — four loops, each of which works either
 way round. The Posh Cows are on one of them and compulsory on none of them, and

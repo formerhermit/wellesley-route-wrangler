@@ -122,8 +122,8 @@ describe("Tilford", () => {
     expect(titleFor(sameSide)).toBe("Same Side All Along");
   });
 
-  it("fails a route that misses the ducks", () => {
-    const noDucks = routeOf(
+  it("fails a route that misses the goose", () => {
+    const noGoose = routeOf(
       "barley-mow",
       "the-institute",
       "river-bridge",
@@ -134,7 +134,7 @@ describe("Tilford", () => {
       "cricket-green",
       "barley-mow",
     );
-    expect(titleFor(noDucks)).toBe("The Ducks Were Not Consulted");
+    expect(titleFor(noGoose)).toBe("The Goose Was Not Consulted");
   });
 
   it("fails a route over the stepping stones", () => {
