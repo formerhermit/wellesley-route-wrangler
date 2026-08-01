@@ -4,7 +4,6 @@ import {
   Bat,
   Bench,
   Bin,
-  BmxTrack,
   Bridge,
   Bush,
   Butterfly,
@@ -140,7 +139,6 @@ const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNod
   boat: () => <SailingBoat />,
   island: () => <Island />,
   warning: () => <WarningSign />,
-  bmx: () => <BmxTrack />,
 };
 
 /**

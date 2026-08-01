@@ -113,12 +113,14 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       expect(onATree).toEqual([]);
     });
 
-    it("keeps its scenery off the writing", () => {
-      // A rough box round each name, matching what MapJunctions draws: two
-      // lines over eighteen characters, above or below or beside, and about
-      // six units to the character.
-      const boxes = level.nodes.map((node) => {
-        const lines = node.label.length > 18 ? 2 : 1;
+    /**
+     * A rough box round each name, matching what MapJunctions draws: two
+     * lines over eighteen characters, above or below or beside, and about six
+     * units to the character.
+     */
+    const labelBoxes = () =>
+      level.nodes.map((node) => {
+        const lines = node.label.length > 18 || node.labelWrap ? 2 : 1;
         const longest =
           lines === 1 ? node.label.length : Math.ceil(node.label.length / 2);
         const width = longest * 6.2;
@@ -139,8 +141,9 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         return { left, right: left + width, top, bottom: top + height, node };
       });
 
+    it("keeps its scenery off the writing", () => {
       const onTheWriting = scatter.filter((item) =>
-        boxes.some(
+        labelBoxes().some(
           (box) =>
             item.x > box.left - 10 &&
             item.x < box.right + 10 &&
@@ -149,6 +152,34 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       );
       expect(onTheWriting).toEqual([]);
+    });
+
+    it("puts the theme's own trees somewhere sensible too", () => {
+      if (level.theme !== "trail") return;
+
+      const inTheWay = TRAIL_TREES.filter((tree) => {
+        const onRoad = level.roads.some((road) => {
+          const from = level.nodes.find((node) => node.id === road.from);
+          const to = level.nodes.find((node) => node.id === road.to);
+          if (!from || !to) return false;
+          return (
+            distanceToSegment(tree.x, tree.y, from.x, from.y, to.x, to.y) <
+            ROAD_CLEARANCE
+          );
+        });
+        const onJunction = level.nodes.some(
+          (node) => Math.hypot(tree.x - node.x, tree.y - node.y) < JUNCTION_CLEARANCE,
+        );
+        const onWriting = labelBoxes().some(
+          (box) =>
+            tree.x > box.left - 10 &&
+            tree.x < box.right + 10 &&
+            tree.y > box.top - 12 &&
+            tree.y < box.bottom + 12,
+        );
+        return onRoad || onJunction || onWriting;
+      });
+      expect(inTheWay).toEqual([]);
     });
 
     it("keeps its scenery on the map", () => {

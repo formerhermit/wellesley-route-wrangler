@@ -375,16 +375,6 @@ export function WarningSign() {
   );
 }
 
-/** A BMX track, deep in the woods, built by nobody who will admit to it. */
-export function BmxTrack() {
-  return (
-    <g className="sprite sprite--bmx" aria-hidden="true">
-      <path d="M -22 10 q 6 -12 12 0 q 6 -14 12 0 q 6 -10 12 0" className="bmx-jump" />
-      <path d="M -24 10 h 48" className="bmx-ground" />
-    </g>
-  );
-}
-
 /** A boulder and its smaller companion. Heath, not mountains. */
 export function Rock() {
   return (

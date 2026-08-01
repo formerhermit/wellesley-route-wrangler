@@ -10,8 +10,8 @@ interface Props {
 }
 
 /** Long place names get two lines rather than one that leaves the map. */
-function labelLines(label: string): string[] {
-  if (label.length <= 18) return [label];
+function labelLines(label: string, wrap = false): string[] {
+  if (label.length <= 18 && !wrap) return [label];
   const words = label.split(" ");
   const middle = Math.ceil(words.length / 2);
   return [words.slice(0, middle).join(" "), words.slice(middle).join(" ")];
@@ -85,7 +85,7 @@ export function MapJunctions(props: Props) {
     <g aria-hidden="true">
       {level.nodes.map((node) => {
         const state = states.get(node.id)!;
-        const lines = labelLines(node.label);
+        const lines = labelLines(node.label, node.labelWrap);
         const above = node.labelAbove === true;
         const side = node.labelSide;
         // Beside the marker, the block is centred on the junction instead.

@@ -52,7 +52,7 @@ export const TRAIL_TREES: { x: number; y: number }[] = [
   { x: 610, y: 70 },
   { x: 740, y: 200 },
   { x: 60, y: 210 },
-  { x: 330, y: 540 },
+  { x: 170, y: 530 },
   { x: 700, y: 505 },
   { x: 180, y: 520 },
 ];

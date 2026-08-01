@@ -133,13 +133,19 @@ export const hawleyLake: Level = {
     },
     {
       id: "hecking-sand",
-      labelSide: "right",
       x: 615,
       y: 305,
       label: "Hecking Sand",
       blurb: "sand, in Hampshire, for no reason anybody can give",
       type: "shore",
       sprite: "sand",
+      // Two lines under the junction: on one line, beside it, the name
+      // reached the road the Ministry has shut.
+      labelWrap: true,
+      labelDy: 10,
+      // Which leaves the beach to sit on the shore to the west.
+      spriteDx: -58,
+      spriteDy: 6,
     },
     {
       id: "the-mud-bath",
@@ -149,12 +155,16 @@ export const hawleyLake: Level = {
       blurb: "ankle deep in June, worse in January",
       type: "shore",
       sprite: "mud",
+      // Below its name rather than behind it.
+      spriteDy: 58,
     },
 
     // Everything the circuit hangs off.
     {
       id: "bird-bay",
-      labelSide: "right",
+      // Left: the flock loiters to the right of its hotspot, and one of them
+      // was standing in the name.
+      labelSide: "left",
       x: 585,
       y: 185,
       label: "Bird Bay",
@@ -179,8 +189,12 @@ export const hawleyLake: Level = {
       x: 105,
       y: 290,
       label: "Hawley Woods",
-      blurb: "pines, and a BMX track nobody admits to building",
+      blurb: "pines, and a great many of them",
       type: "woods",
+      // Due west: the lane up to the Manor leaves northwards, through where
+      // the trees were drawn.
+      spriteDx: -55,
+      spriteDy: 0,
     },
     {
       id: "the-portaloos",
@@ -230,9 +244,9 @@ export const hawleyLake: Level = {
       blurb: "epic hill, no view whatsoever",
       type: "hill",
       labelAbove: true,
-      // Dropped clear of the track in from Gorse Corner, which ran through it.
-      spriteDx: -44,
-      spriteDy: 40,
+      // Just clear of the track in from Gorse Corner, which ran through it.
+      spriteDx: -30,
+      spriteDy: 26,
     },
   ],
 
@@ -294,10 +308,8 @@ export const hawleyLake: Level = {
     { x: 500, y: 60, kind: "tree" },
 
     // The woods, and what is in them.
-    { x: 60, y: 260, kind: "alpine" },
     { x: 60, y: 340, kind: "alpine" },
     { x: 180, y: 320, kind: "alpine" },
-    { x: 240, y: 280, kind: "bmx" },
 
     // Heath: gorse, yellow and purple, and cows that have got out again.
     { x: 280, y: 340, kind: "gorse", variant: 1 },
@@ -320,8 +332,18 @@ export const hawleyLake: Level = {
     { x: 620, y: 120, kind: "soldier", variant: 0 },
     { x: 560, y: 140, kind: "soldier", variant: 3 },
     { x: 680, y: 240, kind: "soldier", variant: 2, flip: true },
+    { x: 660, y: 290, kind: "soldier", variant: 1 },
+    { x: 690, y: 340, kind: "soldier", variant: 3, flip: true },
     { x: 760, y: 260, kind: "warning" },
     { x: 760, y: 380, kind: "warning" },
+
+    // Sand and gravel country, so: rocks.
+    { x: 560, y: 60, kind: "rock" },
+    { x: 220, y: 240, kind: "rock" },
+    { x: 260, y: 460, kind: "rock" },
+    { x: 500, y: 400, kind: "rock" },
+    { x: 75, y: 430, kind: "rock" },
+    { x: 740, y: 480, kind: "rock" },
   ],
 
   view: { width: 800, height: 560 },

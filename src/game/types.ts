@@ -64,6 +64,11 @@ export interface MapNode {
   /** Shift the label off wherever its placement put it. Down is positive. */
   labelDy?: number;
   /**
+   * Break a short name onto two lines anyway. For a junction whose label is
+   * wide enough to reach a road but not long enough to wrap on its own.
+   */
+  labelWrap?: boolean;
+  /**
    * Where the landmark sits, when this junction wants it somewhere other than
    * where its type puts every other one. Replaces the type's offset rather
    * than adding to it, so the number reads as a position, not a correction.
@@ -196,8 +201,7 @@ export interface Level {
       | "gorse"
       | "boat"
       | "island"
-      | "warning"
-      | "bmx";
+      | "warning";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */

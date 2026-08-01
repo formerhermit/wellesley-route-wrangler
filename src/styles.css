@@ -1396,21 +1396,6 @@ body {
   fill: var(--ink);
 }
 
-.bmx-jump {
-  fill: none;
-  stroke: #8a6a4a;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.bmx-ground {
-  stroke: var(--ink);
-  stroke-width: 2;
-  stroke-linecap: round;
-  opacity: 0.5;
-}
-
 .duck-body,
 .duck-head {
   fill: #fffdf7;
