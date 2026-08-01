@@ -2048,10 +2048,92 @@ body {
 
 .levels__status {
   flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
   font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+/* The running total of what has been found on each run, and in the club. */
+.levels__score {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--club);
+  font-variant-numeric: tabular-nums;
+}
+
+.levels__total {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.levels__total strong {
+  font-size: 1.15rem;
+  color: var(--club);
+  font-variant-numeric: tabular-nums;
+}
+
+/* What the run was worth, itemised the way the club would do it. */
+.scorecard {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.scorecard__badge {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+.scorecard__lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.scorecard__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ink-soft);
+}
+
+.scorecard__points {
+  font-weight: 800;
+  color: var(--pass);
+  font-variant-numeric: tabular-nums;
+}
+
+.scorecard__total {
+  margin: 0.5rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px dotted var(--line);
+  font-weight: 700;
+}
+
+.scorecard__progress {
+  display: block;
+  margin-top: 0.15rem;
+  font-weight: 400;
+  font-size: 0.85rem;
   color: var(--ink-soft);
 }
 

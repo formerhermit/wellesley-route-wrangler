@@ -27,6 +27,9 @@ import type { GameResult, Level, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 import { useMusic } from "./hooks/useMusic";
 import { useProgress } from "./hooks/useProgress";
+import { useRecords } from "./hooks/useRecords";
+import { tallyAll, tallyLevel } from "./game/records";
+import { scoreRun, winningRouteCount } from "./game/scoring";
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -173,6 +176,7 @@ function reducer(state: GameState, action: Action): GameState {
 
 export default function App() {
   const progress = useProgress();
+  const runBook = useRecords();
   // Only read on the first render: a returning player opens on the run they
   // are up to, rather than being sent back to level one every visit.
   const [state, dispatch] = useReducer(reducer, progress.completed, (saved) =>
@@ -205,14 +209,23 @@ export default function App() {
     [level, state.route, evaluation],
   );
 
+  // What this run was worth, and whether the club had it in the book already.
+  // Read before the effect below logs it, so a first run reads as a first run.
+  const runScore = useMemo(
+    () => scoreRun(level, state.route),
+    [level, state.route],
+  );
   // A run that met the brief opens the next level, for good. Idempotent, so
-  // re-running a level already completed is harmless.
+  // re-running a level already completed is harmless. Every run that finishes
+  // goes in the book, winner or not.
   const recordCompletion = progress.complete;
+  const logRun = runBook.log;
+  const [freshRoute, setFreshRoute] = useState(false);
   useEffect(() => {
-    if (state.phase === "result" && state.result?.success) {
-      recordCompletion(level.id);
-    }
-  }, [state.phase, state.result, level.id, recordCompletion]);
+    if (state.phase !== "result") return;
+    setFreshRoute(logRun(level, state.route));
+    if (state.result?.success) recordCompletion(level.id);
+  }, [state.phase, state.result, state.route, level, recordCompletion, logRun]);
 
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
@@ -313,6 +326,7 @@ export default function App() {
         <LevelDialog
           levels={levels}
           completed={progress.completed}
+          records={runBook.records}
           currentId={level.id}
           onSelect={(next) => dispatch({ type: "select-level", level: next })}
           onClose={() => setLevelsOpen(false)}
@@ -324,6 +338,11 @@ export default function App() {
           level={level}
           result={state.result}
           report={report}
+          score={runScore}
+          newRoute={freshRoute}
+          found={tallyLevel(runBook.records, level).found}
+          toFind={winningRouteCount(level)}
+          clubPoints={tallyAll(runBook.records, levels).points}
           nextLevel={upcoming}
           onEdit={() => dispatch({ type: "edit" })}
           onStartOver={() => dispatch({ type: "reset" })}

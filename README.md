@@ -142,6 +142,30 @@ than showing a premature failure.
 You can knowingly plan a losing route and run it anyway. That is most of the
 fun.
 
+## Scoring
+
+Club points, all-time, and they come from **routes discovered** rather than
+runs completed. Finish a route that meets the brief and it goes in the book
+once, worth 50 for the brief, 10 an objective, 3 a junction taken in beyond
+what was asked, and 5 for each of those that was worth seeing. Run it again
+and it is worth nothing: the panel says so and the total does not move. A run
+that missed the brief scores nothing either, but it is still logged, because
+what you have explored is worth knowing.
+
+That shape is deliberate. Points per *run* would mean the best strategy is to
+run the easiest level forever; points per *discovery* cannot be farmed, and the
+distance window stops the grand tour being a strategy rather than a choice.
+There are 32 winning routes across the seven levels — and 1,881 distinct loops
+— so a completed fixture list is nowhere near a finished game. The fixture
+list shows how much of each map is still out there.
+
+`src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
+**Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
+just lists of road ids — and every total is derived from them on the spot.
+Rebalancing the scoring is therefore a redeploy rather than a migration, and
+when there is a leaderboard, the server can recompute a submitted route rather
+than believing a number the client sent it.
+
 ## Playing
 
 - Select a junction joined to the end of your route to add a road.

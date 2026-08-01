@@ -3,12 +3,20 @@ import { IncidentReportCard } from "./IncidentReport";
 import { ShareButton } from "./ShareButton";
 import { buildRunShare } from "../game/shareText";
 import type { IncidentReport } from "../game/incidentReport";
+import type { RunScore } from "../game/scoring";
 import type { GameResult, Level } from "../game/types";
 
 interface Props {
   level: Level;
   result: GameResult;
   report: IncidentReport;
+  /** What this run was worth, itemised. */
+  score: RunScore;
+  /** Whether the club had this route in the book already. */
+  newRoute: boolean;
+  found: number;
+  toFind: number;
+  clubPoints: number;
   /** The run this one has just opened up, if there is one. */
   nextLevel?: Level;
   /** Back to planning with the route intact, ready to be run again. */
@@ -22,6 +30,11 @@ export function ResultPanel({
   level,
   result,
   report,
+  score,
+  newRoute,
+  found,
+  toFind,
+  clubPoints,
   nextLevel,
   onEdit,
   onStartOver,
@@ -47,6 +60,33 @@ export function ResultPanel({
       </p>
 
       <IncidentReportCard report={report} />
+
+      {score.won && (
+        <div className="scorecard">
+          <p className="scorecard__badge">
+            {newRoute ? "New route for the book" : "Already in the book"}
+          </p>
+          <ul className="scorecard__lines">
+            {score.lines.map((line) => (
+              <li key={line.label}>
+                <span>{line.label}</span>
+                <span className="scorecard__points">
+                  {newRoute ? `+${line.points}` : line.points}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="scorecard__total">
+            {newRoute
+              ? `${score.points} club points banked.`
+              : `Worth ${score.points}, but you have run this one before.`}{" "}
+            <span className="scorecard__progress">
+              {found} of {toFind} route{toFind === 1 ? "" : "s"} found here ·{" "}
+              {clubPoints} points all told.
+            </span>
+          </p>
+        </div>
+      )}
 
       {result.success && (
         <p className="dialog__unlock">
