@@ -226,16 +226,6 @@ export function evaluateRoute(level: Level, route: Route): RouteEvaluation {
   };
 }
 
-/** The level's distance window, for the controls readout. */
-export function distanceTarget(
-  level: Level,
-): { minKm: number; maxKm: number } | undefined {
-  const objective = level.objectives.find((o) => o.kind === "distance");
-  return objective?.kind === "distance"
-    ? { minKm: objective.minKm, maxKm: objective.maxKm }
-    : undefined;
-}
-
 /** The Run Route button is gated on this. */
 export function canRunRoute(level: Level, route: Route): boolean {
   return route.roadIds.length > 0 && currentNodeId(route) === level.finishNodeId;

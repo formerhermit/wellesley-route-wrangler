@@ -209,6 +209,20 @@ export default function App() {
     [level, state.route, evaluation],
   );
 
+  // Where the club stands. Both replay every stored route through the scoring,
+  // so they are worked out when the book changes rather than on every render —
+  // the header and the objective panel now read them all the time, not just
+  // when a result panel happens to be up.
+  const levelTally = useMemo(
+    () => tallyLevel(runBook.records, level),
+    [runBook.records, level],
+  );
+  const clubTally = useMemo(
+    () => tallyAll(runBook.records, levels),
+    [runBook.records],
+  );
+  const toFind = winningRouteCount(level);
+
   // What this run was worth, and whether the club had it in the book already.
   // Read before the effect below logs it, so a first run reads as a first run.
   const runScore = useMemo(
@@ -276,6 +290,7 @@ export default function App() {
           level={level}
           levelNumber={levelNumber(levels, level.id)}
           evaluation={evaluation}
+          clubPoints={clubTally.points}
           helpButtonRef={helpButtonRef}
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
@@ -309,7 +324,11 @@ export default function App() {
           </div>
 
           <div className="layout__side">
-            <ObjectivePanel evaluation={evaluation} />
+            <ObjectivePanel
+              evaluation={evaluation}
+              found={levelTally.found}
+              toFind={toFind}
+            />
           </div>
         </main>
 
@@ -340,9 +359,9 @@ export default function App() {
           report={report}
           score={runScore}
           newRoute={freshRoute}
-          found={tallyLevel(runBook.records, level).found}
-          toFind={winningRouteCount(level)}
-          clubPoints={tallyAll(runBook.records, levels).points}
+          found={levelTally.found}
+          toFind={toFind}
+          clubPoints={clubTally.points}
           nextLevel={upcoming}
           onEdit={() => dispatch({ type: "edit" })}
           onStartOver={() => dispatch({ type: "reset" })}

@@ -120,7 +120,11 @@ export function ResultPanel({
 
       <div className="dialog__actions dialog__actions--secondary">
         <ShareButton
-          payload={buildRunShare(level, result, report)}
+          payload={buildRunShare(level, result, report, {
+            clubPoints,
+            found,
+            toFind,
+          })}
           label="Share this run"
         />
       </div>

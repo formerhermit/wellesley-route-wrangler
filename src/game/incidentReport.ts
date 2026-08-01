@@ -27,6 +27,25 @@ export function pigeonsSighted(level: Level, route: Route): number {
   return fromRoads + countNodeType(level, route, "pigeon") * 6;
 }
 
+/**
+ * What the level's birds are called in the paperwork. Exported because the
+ * share text quotes this line too, and a second copy of the list is exactly
+ * how the shared run came to drop its birds on every level that kept
+ * something other than pigeons.
+ */
+export function flockLabel(level: Level): string {
+  switch (level.flock) {
+    case "crow":
+      return "Unexpected crows";
+    case "duck":
+      return "Unexpected ducks";
+    case "robin":
+      return "Unexpected robins";
+    default:
+      return "Unexpected pigeons";
+  }
+}
+
 export function unnecessaryHills(level: Level, route: Route): number {
   return route.roadIds.filter((id) => roadById(level, id).hill === true).length;
 }
@@ -105,14 +124,7 @@ export function buildIncidentReport(
   });
 
   lines.push({
-    label:
-      level.flock === "crow"
-        ? "Unexpected crows"
-        : level.flock === "duck"
-          ? "Unexpected ducks"
-          : level.flock === "robin"
-            ? "Unexpected robins"
-            : "Unexpected pigeons",
+    label: flockLabel(level),
     value: String(pigeonsSighted(level, route)),
     tone: "neutral",
   });

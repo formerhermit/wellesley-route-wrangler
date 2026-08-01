@@ -166,6 +166,33 @@ body {
   color: var(--ink-soft);
 }
 
+/*
+ * The distance pill carries its own verdict: red until the route is inside the
+ * level's window, green once it is. Both fills clear 5:1 against white, which
+ * the brand colours would not — see the note on --club and --pass at the top.
+ *
+ * The change is eased rather than snapped, because crossing into the window is
+ * the moment the run becomes legal and it is worth feeling.
+ */
+.stat-pill--range {
+  transition: background-color 220ms ease, border-color 220ms ease;
+}
+
+.stat-pill--range .stat-pill__value {
+  color: #fff;
+}
+
+.stat-pill--range.is-out-of-range {
+  background: var(--fail);
+  border-color: color-mix(in srgb, var(--ink) 25%, var(--fail));
+}
+
+.stat-pill--range.is-in-range {
+  background: var(--pass);
+  border-color: color-mix(in srgb, var(--ink) 25%, var(--pass));
+}
+
+
 /* Music and ? travel together, wherever the header decides to put them. */
 .game-header__tools {
   order: 3;
@@ -2168,6 +2195,24 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+
+/*
+ * What this map has left. Quiet by default — it is not an objective and must
+ * not read as one — and picked out only when there is genuinely more here,
+ * which is the one case worth interrupting for.
+ */
+.objectives__found {
+  margin: 0.7rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 2px dotted var(--line);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.objectives__found--more {
+  color: var(--club);
+  font-weight: 700;
 }
 
 .objective {
