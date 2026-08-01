@@ -14,6 +14,17 @@ export const thursdaySocialRun: Level = {
   theme: "town",
   startNodeId: "observatory",
   finishNodeId: "observatory",
+  // The street furniture and the wildlife, sprinkled where no road runs.
+  scatter: [
+    { x: 600, y: 220, kind: "lights" },
+    { x: 740, y: 240, kind: "car", variant: 1 },
+    { x: 240, y: 220, kind: "cat" },
+    { x: 300, y: 260, kind: "bin" },
+    { x: 420, y: 380, kind: "car", variant: 2 },
+    { x: 620, y: 380, kind: "cat" },
+    { x: 520, y: 420, kind: "bin" },
+  ],
+
   view: { width: 800, height: 560 },
 
   // On past the towpath and clean off the western edge, threading the gap

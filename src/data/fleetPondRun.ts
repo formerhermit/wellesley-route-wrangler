@@ -342,6 +342,12 @@ export const fleetPondRun: Level = {
     { x: 178, y: 248, kind: "cow" },
     { x: 138, y: 272, kind: "cow", flip: true },
     { x: 208, y: 292, kind: "cow" },
+
+    // Dogs, and two benches for watching the water do nothing.
+    { x: 200, y: 340, kind: "dog" },
+    { x: 620, y: 460, kind: "dog", flip: true },
+    { x: 620, y: 300, kind: "bench" },
+    { x: 200, y: 480, kind: "bench" },
   ],
 
   // The goose waits by the Jetty. Run past it and it falls in at the back.

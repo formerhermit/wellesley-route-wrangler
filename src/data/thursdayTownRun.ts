@@ -318,5 +318,15 @@ export const thursdayTownRun: Level = {
       "{km} km of something. The committee is drafting a document with headings.",
   },
 
+  // Somebody's front garden, somebody's parking, and the youths.
+  scatter: [
+    { x: 140, y: 140, kind: "gnome" },
+    { x: 240, y: 300, kind: "gnome" },
+    { x: 420, y: 280, kind: "youths" },
+    { x: 260, y: 440, kind: "youths" },
+    { x: 600, y: 260, kind: "car", variant: 1 },
+    { x: 560, y: 300, kind: "car", variant: 3 },
+  ],
+
   view: { width: 800, height: 560 },
 };

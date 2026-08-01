@@ -99,10 +99,11 @@ object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
 A level may also `scatter` scenery by hand, on top of whatever its theme puts
-down, for the corners no road reaches: trees and rocks along the top of
-Caesar's Camp, which was reading as blank paper without them, and the four
-plastic soldiers dug in around the Eeek Soldiers junction, each one facing
-whichever way its `flip` says.
+down, for the corners no road reaches — cats, bins, traffic lights and parked
+cars in the towns, dogs and benches out of them, gnomes and loitering youths,
+flowers and butterflies and an ice cream van at Tilford, the moon and the bats
+after dark, and the four plastic soldiers dug in around the Eeek Soldiers
+junction, each facing whichever way its `flip` says.
 
 Where a junction needs its landmark or its label somewhere other than where its
 type puts every other one — because a road happens to run through the spot — it
@@ -235,6 +236,16 @@ same for levels 2, 6 and 7 against their own maps. The last two end by walking
 every route out of the start and back, so each level is held to exactly its
 winners — eight for Tilford, ten for the Spooky Run, split six and four across
 the two hills. A road whose distance drifts takes the count with it and fails.
+
+`src/game/scenery.test.ts` keeps the hand-placed scenery off the roads, the
+junctions and the writing. Every sprite it checks was positioned by working out
+where the roads went on paper, and the mistakes that made were invisible until
+you zoomed in — it caught a tree standing in the lane down to The Sandy Bit
+that had been shipped two releases earlier.
+
+`src/game/pace.test.ts` covers the hills. The group drops to a little over half
+pace on a climb and makes it up on the flat, so a run still takes the same
+eight seconds whatever the route; what changes is where the time goes.
 
 `src/game/progression.test.ts` covers the unlock rules against a stub roster:
 the first level always open, later ones shut until their predecessor is done,

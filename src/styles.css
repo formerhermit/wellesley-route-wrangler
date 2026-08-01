@@ -804,6 +804,225 @@ body {
   stroke-linejoin: round;
 }
 
+/* Parked cars are not all the same car. */
+.sprite--car-1 .car-body {
+  fill: #4a6b7c;
+}
+
+.sprite--car-2 .car-body {
+  fill: #7d7f86;
+}
+
+.sprite--car-3 .car-body {
+  fill: #6d7f5c;
+}
+
+.cat-body {
+  fill: #6b6560;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.cat-tail {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.cat-face {
+  stroke: #fffdf7;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.lights-post {
+  fill: none;
+  stroke: #4a4f55;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.lights-box {
+  fill: #3b4046;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.lights-stop {
+  fill: var(--fail);
+}
+
+.lights-wait {
+  fill: var(--hi-vis);
+}
+
+.lights-go {
+  fill: var(--pass);
+}
+
+.dog-body {
+  fill: #c9a06a;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.dog-ear {
+  fill: #a8814c;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.dog-legs,
+.dog-tail {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.dog-tail {
+  stroke: #c9a06a;
+  stroke-width: 2.8;
+}
+
+.bench-slat {
+  fill: none;
+  stroke: #8a6a4a;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.bench-frame {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.gnome-coat {
+  fill: #4a6b9c;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.gnome-face {
+  fill: #e8cfae;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.gnome-beard {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.gnome-hat {
+  fill: var(--fail);
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.youth-hoodie {
+  fill: #4b4f57;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.youth-hood {
+  fill: #3a3e45;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.youth-face {
+  fill: #d9c3a5;
+}
+
+.flower-stem {
+  fill: none;
+  stroke: #4f6d59;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.flower-pink {
+  fill: #e08aa8;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.flower-white {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.flower-yellow {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.flower-eye {
+  fill: #e08a1e;
+}
+
+.butterfly-wing {
+  fill: #e8a33d;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.butterfly-body {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.icecream-body {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.icecream-window {
+  fill: var(--water);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.icecream-stripe {
+  fill: none;
+  stroke: #e0728a;
+  stroke-width: 2.4;
+}
+
+.icecream-cone {
+  fill: #d9a45c;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.icecream-scoop {
+  fill: #fbe3ea;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
 .car-window {
   fill: #33414d;
   stroke: var(--ink);

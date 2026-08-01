@@ -39,6 +39,12 @@ export const caesarsCamp: Level = {
     { x: 232, y: 208, kind: "soldier", variant: 1, flip: true },
     { x: 350, y: 240, kind: "soldier", variant: 0, flip: true },
     { x: 318, y: 275, kind: "soldier", variant: 3 },
+
+    // Dogs, off the lead and delighted, and somewhere to sit and watch.
+    { x: 340, y: 460, kind: "dog" },
+    { x: 400, y: 420, kind: "dog", flip: true },
+    { x: 580, y: 380, kind: "bench" },
+    { x: 140, y: 400, kind: "bench" },
   ],
 
   objectives: [

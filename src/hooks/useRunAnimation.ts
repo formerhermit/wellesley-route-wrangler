@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { RefObject } from "react";
+import type { Pace } from "../game/pace";
 
 export const RUNNER_COUNT = 5;
 
@@ -22,6 +23,8 @@ export interface Follower {
 interface Options {
   /** The drawn route; measured with the native SVG geometry API. */
   pathRef: RefObject<SVGPathElement | null>;
+  /** How the group's speed varies over the route. Hills cost time. */
+  pace: Pace;
   runnersRef: RefObject<(SVGGElement | null)[]>;
   reducedMotion: boolean;
   /** Points along the route that should make pigeons react. */
@@ -48,6 +51,7 @@ function homeTransform({ home }: Follower): string {
  */
 export function useRunAnimation({
   pathRef,
+  pace,
   runnersRef,
   reducedMotion,
   milestones,
@@ -61,6 +65,7 @@ export function useRunAnimation({
   const latest = useRef({
     milestones,
     follower,
+    pace,
     onReachHotspot,
     onFinish,
     reducedMotion,
@@ -68,6 +73,7 @@ export function useRunAnimation({
   latest.current = {
     milestones,
     follower,
+    pace,
     onReachHotspot,
     onFinish,
     reducedMotion,
@@ -119,7 +125,9 @@ export function useRunAnimation({
     const step = (now: number) => {
       const elapsed = now - startedAt;
       const progress = Math.min(1, elapsed / duration);
-      const lead = progress * travel;
+      // Time runs evenly; the group does not. On a hill it drops to a little
+      // over half pace and makes it up on the flat.
+      const lead = options.pace.fractionAt(progress) * travel;
 
       for (let i = 0; i < RUNNER_COUNT; i += 1) {
         const runner = runnersRef.current?.[i];

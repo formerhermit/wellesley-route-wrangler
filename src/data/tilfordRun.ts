@@ -255,10 +255,22 @@ export const tilfordRun: Level = {
   // The middle of this map is common between the river and the sandy tracks,
   // and it was reading as empty paper.
   scatter: [
-    { x: 235, y: 375, kind: "tree" },
-    { x: 300, y: 430, kind: "tree" },
+    // Two of these used to stand in the lane down to The Sandy Bit, which is
+    // the sort of thing the scenery test now catches.
+    { x: 420, y: 400, kind: "tree" },
+    { x: 340, y: 420, kind: "tree" },
     { x: 480, y: 420, kind: "tree" },
     { x: 545, y: 380, kind: "tree" },
+
+    // Summer in the village: flowers along the verges, butterflies over
+    // them, a bench by the river, and the van that turns up on a hot day.
+    { x: 440, y: 440, kind: "flowers" },
+    { x: 100, y: 300, kind: "flowers" },
+    { x: 460, y: 180, kind: "butterfly" },
+    { x: 400, y: 220, kind: "butterfly" },
+    { x: 500, y: 340, kind: "bench" },
+    { x: 680, y: 320, kind: "bench" },
+    { x: 200, y: 220, kind: "icecream" },
   ],
 
   // The Wey, on down the valley and off the map to the west.

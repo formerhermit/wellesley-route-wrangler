@@ -175,7 +175,18 @@ export interface Level {
       | "pumpkin"
       | "gravestone"
       | "bat"
-      | "moon";
+      | "moon"
+      | "cat"
+      | "lights"
+      | "car"
+      | "bin"
+      | "dog"
+      | "bench"
+      | "gnome"
+      | "youths"
+      | "flowers"
+      | "butterfly"
+      | "icecream";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */

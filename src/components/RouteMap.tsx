@@ -6,6 +6,7 @@ import { MapRoads } from "./MapRoads";
 import { PigeonGroup } from "./PigeonGroup";
 import { RunnerGroup } from "./RunnerGroup";
 import { RUNNER_COUNT, useRunAnimation } from "../hooks/useRunAnimation";
+import { paceOf } from "../game/pace";
 import {
   nodeById,
   routeMilestones,
@@ -69,8 +70,11 @@ export function RouteMap({
     };
   }, [level, route]);
 
+  const pace = useMemo(() => paceOf(level, route), [level, route]);
+
   const { start, cancel } = useRunAnimation({
     pathRef,
+    pace,
     runnersRef,
     reducedMotion,
     milestones,

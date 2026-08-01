@@ -52,10 +52,134 @@ export function Bush() {
   );
 }
 
-/** Parked where nobody parks, and nobody will say whose it is. */
-export function SuspiciousCar() {
+/** Sitting, tail curled, entirely uninterested in the run. */
+export function Cat() {
   return (
-    <g className="sprite sprite--car" aria-hidden="true">
+    <g className="sprite sprite--cat" aria-hidden="true">
+      <path d="M -5 10 q -4 -8 0 -13 q 5 -4 9 1 q 2 5 1 12 Z" className="cat-body" />
+      <circle cx={5.5} cy={-8} r={4.6} className="cat-body" />
+      <path d="M 1.6 -11 l -0.6 -5 l 4 2.6 M 9.4 -11 l 0.8 -5 l -4 2.6" className="cat-body" />
+      <path d="M -5 9 q -8 1 -6 -7" className="cat-tail" />
+      <path d="M 3.4 -8.4 v 1.6 M 7.6 -8.4 v 1.6" className="cat-face" />
+      <path d="M -8 10 h 20" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Red, amber, green, and a group of runners waiting for none of them. */
+export function TrafficLight() {
+  return (
+    <g className="sprite sprite--lights" aria-hidden="true">
+      <path d="M 0 12 v -14" className="lights-post" />
+      <rect x={-5} y={-24} width={10} height={23} rx={2.5} className="lights-box" />
+      <circle cx={0} cy={-19} r={2.6} className="lights-stop" />
+      <circle cx={0} cy={-12.5} r={2.6} className="lights-wait" />
+      <circle cx={0} cy={-6} r={2.6} className="lights-go" />
+      <path d="M -7 12 h 14" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Somebody's dog, delighted, and about to be in the way. */
+export function Dog() {
+  return (
+    <g className="sprite sprite--dog" aria-hidden="true">
+      <path d="M -11 4 q 0 -7 6 -7 h 9 q 5 0 5 6 v 2 h -20 Z" className="dog-body" />
+      <circle cx={13} cy={-5} r={4.4} className="dog-body" />
+      <path d="M 15.5 -8.5 l 4 -1 l -1.4 4" className="dog-body" />
+      <path d="M 10 -6.6 q -3.4 -1 -4.6 -3.4 q 3.4 0.6 5.4 2" className="dog-ear" />
+      <path d="M -8 5 v 5 M -2 5 v 5 M 8 5 v 5 M 13 5 v 5" className="dog-legs" />
+      <path d="M -11 1 q -6 -2 -5 -8" className="dog-tail" />
+      <path d="M -15 10 h 34" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Somewhere to sit and watch a group of adults argue about a map. */
+export function Bench() {
+  return (
+    <g className="sprite sprite--bench" aria-hidden="true">
+      <path d="M -14 -1 h 28 M -14 -5 h 28 M -14 -9 h 28" className="bench-slat" />
+      <path d="M -11 -1 v 9 M 11 -1 v 9 M -11 -11 v 10 M 11 -11 v 10" className="bench-frame" />
+      <path d="M -17 8 h 34" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Nobody will admit to putting it there. */
+export function Gnome() {
+  return (
+    <g className="sprite sprite--gnome" aria-hidden="true">
+      <path d="M -5 9 q 0 -8 5 -8 q 5 0 5 8 Z" className="gnome-coat" />
+      <circle cx={0} cy={-2} r={3.4} className="gnome-face" />
+      <path d="M -3.4 -1 q 3.4 7 6.8 0 q -1.4 4 -3.4 4 q -2 0 -3.4 -4" className="gnome-beard" />
+      <path d="M -5 -3.5 q 5 -12 10 0 Z" className="gnome-hat" />
+      <path d="M -8 9 h 16" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Youths. Doing nothing, at length, in a way that feels deliberate. */
+export function Youths() {
+  return (
+    <g className="sprite sprite--youths" aria-hidden="true">
+      <path d="M -13 10 v -11 a 5 5 0 0 1 10 0 v 11 Z" className="youth-hoodie" />
+      <path d="M -13.5 -1 q 5.5 -7 11 0 Z" className="youth-hood" />
+      <circle cx={-8} cy={-1.5} r={2.6} className="youth-face" />
+
+      <path d="M 1 10 v -13 a 5 5 0 0 1 10 0 v 13 Z" className="youth-hoodie" />
+      <path d="M 0.5 -3 q 5.5 -7 11 0 Z" className="youth-hood" />
+      <circle cx={6} cy={-3.5} r={2.6} className="youth-face" />
+      <path d="M -17 10 h 32" className="hangar-ground" />
+    </g>
+  );
+}
+
+export function Flowers() {
+  return (
+    <g className="sprite sprite--flowers" aria-hidden="true">
+      <path d="M -7 9 q -1 -7 0 -11 M 0 9 q 1 -8 0 -13 M 7 9 q 1 -6 0 -10" className="flower-stem" />
+      <circle cx={-7} cy={-3} r={3} className="flower-pink" />
+      <circle cx={0} cy={-5} r={3.2} className="flower-white" />
+      <circle cx={7} cy={-2} r={2.8} className="flower-yellow" />
+      <circle cx={-7} cy={-3} r={1} className="flower-eye" />
+      <circle cx={0} cy={-5} r={1} className="flower-eye" />
+      <circle cx={7} cy={-2} r={0.9} className="flower-eye" />
+    </g>
+  );
+}
+
+export function Butterfly() {
+  return (
+    <g className="sprite sprite--butterfly" aria-hidden="true">
+      <path d="M 0 0 q -8 -8 -9 -1 q -1 6 9 1 Z" className="butterfly-wing" />
+      <path d="M 0 0 q 8 -8 9 -1 q 1 6 -9 1 Z" className="butterfly-wing" />
+      <path d="M 0 -3 v 6" className="butterfly-body" />
+      <path d="M -0.5 -3 l -2.5 -3 M 0.5 -3 l 2.5 -3" className="butterfly-body" />
+    </g>
+  );
+}
+
+/** The van the club would stop for, and has. */
+export function IceCreamVan() {
+  return (
+    <g className="sprite sprite--icecream" aria-hidden="true">
+      <path d="M -22 8 v -13 h 25 l 9 8 v 5 Z" className="icecream-body" />
+      <rect x={-19} y={-2} width={12} height={7} rx={1} className="icecream-window" />
+      <path d="M -22 0 h 25" className="icecream-stripe" />
+      <circle cx={-13} cy={9} r={3.5} className="van-wheel" />
+      <circle cx={7} cy={9} r={3.5} className="van-wheel" />
+      {/* The cone on the roof, which is the whole point of an ice cream van. */}
+      <path d="M -5 -5 l 3.5 8 l 3.5 -8 Z" className="icecream-cone" />
+      <circle cx={-1.5} cy={-7} r={3.4} className="icecream-scoop" />
+    </g>
+  );
+}
+
+/** Parked where nobody parks, and nobody will say whose it is. */
+export function SuspiciousCar({ variant = 0 }: { variant?: number }) {
+  return (
+    <g className={`sprite sprite--car sprite--car-${variant}`} aria-hidden="true">
       <path
         d="M -24 6 L -24 0 Q -24 -3 -20 -4 L -14 -11 Q -12 -13 -8 -13 L 8 -13 Q 12 -13 13 -11 L 19 -4 Q 24 -3 24 0 L 24 6 Z"
         className="car-body"

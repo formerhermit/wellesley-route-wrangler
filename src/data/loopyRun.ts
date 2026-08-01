@@ -340,5 +340,17 @@ export const loopyRun: Level = {
     { x: 250, y: -30 },
   ],
 
+  // Town again, so town things: bins out, a cat on a wall, lights nobody
+  // waits at.
+  scatter: [
+    { x: 400, y: 160, kind: "lights" },
+    { x: 660, y: 120, kind: "cat" },
+    { x: 240, y: 300, kind: "bin" },
+    { x: 340, y: 320, kind: "cat" },
+    { x: 440, y: 340, kind: "car", variant: 2 },
+    { x: 700, y: 300, kind: "car", variant: 1 },
+    { x: 200, y: 320, kind: "bin" },
+  ],
+
   view: { width: 800, height: 560 },
 };
