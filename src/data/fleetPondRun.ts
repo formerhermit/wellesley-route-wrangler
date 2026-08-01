@@ -351,7 +351,7 @@ export const fleetPondRun: Level = {
   ],
 
   // The goose waits by the Jetty. Run past it and it falls in at the back.
-  follower: { kind: "goose", nodeId: "east-shore", dx: 34, dy: 36 },
+  followers: [{ kind: "goose", nodeId: "east-shore", dx: 34, dy: 36 }],
 
   view: { width: 800, height: 560 },
 };

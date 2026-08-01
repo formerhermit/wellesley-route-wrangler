@@ -1,4 +1,5 @@
 import { caesarsCamp } from "./caesarsCamp";
+import { christmasRun } from "./christmasRun";
 import { fleetPondRun } from "./fleetPondRun";
 import { hawleyLake } from "./hawleyLake";
 import { loopyRun } from "./loopyRun";
@@ -18,4 +19,5 @@ export const levels: Level[] = [
   tilfordRun,
   spookyRun,
   hawleyLake,
+  christmasRun,
 ];

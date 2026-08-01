@@ -39,6 +39,11 @@ export const LANDMARK_OFFSET: Partial<
   sailing: { dx: 0, dy: -30 },
   sand: { dx: 0, dy: 30 },
   mud: { dx: 0, dy: 30 },
+  cottage: { dx: 0, dy: -46 },
+  // Beside its junction rather than over it: the tree is the tallest thing on
+  // any map, and hanging it above a junction puts the star off the paper.
+  christmastree: { dx: 44, dy: -6 },
+  mulledwine: { dx: 0, dy: -44 },
 };
 
 /**

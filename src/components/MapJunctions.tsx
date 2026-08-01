@@ -19,11 +19,15 @@ function labelLines(label: string, wrap = false): string[] {
 
 function junctionClasses(
   node: MapNode,
+  index: number,
   { visited, isEnd, isSelectable, locked, rejected }: JunctionState,
 ): string {
   return [
     "junction",
     `junction--${node.type ?? "junction"}`,
+    // Every other junction, so a level's own styling has something to
+    // alternate on: the Christmas map hangs them red and green like baubles.
+    index % 2 === 1 ? "junction--alt" : "",
     visited ? "is-visited" : "",
     isEnd ? "is-end" : "",
     isSelectable ? "is-selectable" : "",
@@ -83,7 +87,7 @@ export function MapJunctions(props: Props) {
 
   return (
     <g aria-hidden="true">
-      {level.nodes.map((node) => {
+      {level.nodes.map((node, index) => {
         const state = states.get(node.id)!;
         const lines = labelLines(node.label, node.labelWrap);
         const above = node.labelAbove === true;
@@ -98,7 +102,7 @@ export function MapJunctions(props: Props) {
           // element must never also be positioned by one — the junction would
           // snap to the map's origin for the length of the animation.
           <g key={node.id} transform={`translate(${node.x} ${node.y})`}>
-            <g className={junctionClasses(node, state)}>
+            <g className={junctionClasses(node, index, state)}>
               <circle className="junction-halo" r={16} />
               <circle className="junction-dot" r={9} />
               {state.visited && (

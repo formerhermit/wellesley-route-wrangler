@@ -1,3 +1,5 @@
+import type { Level } from "../game/types";
+
 /**
  * Small, deliberately simple SVG sprites. Each draws around its own origin so
  * callers can place it with a single translate.
@@ -831,11 +833,204 @@ export function Treaters() {
   );
 }
 
-export function Runner({ index }: { index: number }) {
+/**
+ * Carol singers: a lantern, a songbook, and three people who have committed to
+ * this. Drawn to the trick or treaters' proportions, since the two are the same
+ * mechanism — a crowd that joins the back of the run — and the map places both
+ * the same way.
+ */
+export function CarolSingers() {
+  return (
+    <g className="sprite sprite--carollers" aria-hidden="true">
+      {/* The one holding the lantern, and holding it too high. */}
+      <path d="M -22 14 v -12 a 6.5 6.5 0 0 1 13 0 v 12 Z" className="caroller-coat" />
+      <circle cx={-15.5} cy={-4} r={4} className="caroller-face" />
+      <path d="M -20 -7 h 9 l -1.5 -4 h -6 Z" className="caroller-hat" />
+      <path d="M -23 -2 h 5" className="caroller-scarf" />
+      <path d="M -26 2 v -9" className="caroller-pole" />
+      <rect x={-29} y={-14} width={6} height={7} rx={1} className="caroller-lantern" />
+
+      {/* The one who knows the words. */}
+      <path d="M -5 14 v -13 a 6.5 6.5 0 0 1 13 0 v 13 Z" className="caroller-coat-alt" />
+      <circle cx={1.5} cy={-5} r={4} className="caroller-face" />
+      <path d="M -3 -8 h 9 l -1.5 -4 h -6 Z" className="caroller-hat-alt" />
+      <path d="M -2 3 h 7 l 1 6 h -9 Z" className="caroller-book" />
+
+      {/* And the one who does not, mouthing it a beat behind. */}
+      <path d="M 12 14 v -10 a 6 6 0 0 1 12 0 v 10 Z" className="caroller-coat" />
+      <circle cx={18} cy={-2} r={3.6} className="caroller-face" />
+      <path d="M 13.5 -5 h 9 l -1.5 -3.6 h -6 Z" className="caroller-hat-alt" />
+
+      {/* Three notes, going up, which is more than can be said for the singing. */}
+      <path d="M 26 -12 v -6 M 30 -16 v -6 M 34 -20 v -6" className="caroller-note" />
+      <circle cx={25} cy={-12} r={1.6} className="caroller-note-head" />
+      <circle cx={29} cy={-16} r={1.6} className="caroller-note-head" />
+      <circle cx={33} cy={-20} r={1.6} className="caroller-note-head" />
+    </g>
+  );
+}
+
+/**
+ * The town Christmas tree. Wonky, because the council put it up, and lit,
+ * because the council are very proud of that part.
+ */
+export function ChristmasTree() {
+  return (
+    <g className="sprite sprite--christmastree" aria-hidden="true">
+      <path d="M -16 14 l 3 -4 h 26 l 3 4 Z" className="xmas-skirt" />
+      <rect x={-3} y={2} width={6} height={9} rx={1} className="tree-trunk" />
+      <path d="M 1 -6 l 14 16 h -28 Z" className="xmas-branch" />
+      <path d="M 0.5 -18 l 11 13 h -22 Z" className="xmas-branch" />
+      <path d="M 0 -29 l 8 12 h -16 Z" className="xmas-branch" />
+      <path
+        d="M 0 -40 l 1.7 3.5 l 3.9 0.6 l -2.8 2.7 l 0.7 3.9 l -3.5 -1.9 l -3.5 1.9 l 0.7 -3.9 l -2.8 -2.7 l 3.9 -0.6 Z"
+        className="xmas-star"
+      />
+      {/* The lights, which only go round the front. */}
+      <path d="M -9 -21 q 9 4 18 -1 M -12 -9 q 12 5 24 -1" className="xmas-string" />
+      <circle cx={-6} cy={-21} r={1.8} className="xmas-bauble--red" />
+      <circle cx={5} cy={-19} r={1.8} className="xmas-bauble--gold" />
+      <circle cx={-8} cy={-8} r={1.8} className="xmas-bauble--blue" />
+      <circle cx={7} cy={-7} r={1.8} className="xmas-bauble--red" />
+      <circle cx={0} cy={3} r={1.8} className="xmas-bauble--gold" />
+    </g>
+  );
+}
+
+/**
+ * Wellesley Humble: the house that does the whole street's lights on its own,
+ * every year, and has never once been asked to.
+ */
+export function FestiveHouse() {
+  return (
+    <g className="sprite sprite--cottage" aria-hidden="true">
+      <rect x={-20} y={-8} width={40} height={22} rx={2} className="build-wall" />
+      <path d="M -23 -8 h 46 l -11 -11 h -24 Z" className="cottage-roof" />
+      <path d="M -23 -8 h 46" className="cottage-snow" />
+      <rect x={4} y={-30} width={7} height={12} className="cottage-chimney" />
+      {/* Smoke, because somebody is in and has the fire going. */}
+      <path
+        d="M 7.5 -32 q 5 -4 0 -8 q -5 -4 0 -8 M 14 -33 q 5 -4 0 -7"
+        className="cottage-smoke"
+      />
+      <rect x={-14} y={-3} width={9} height={7} rx={1} className="cottage-window" />
+      <rect x={5} y={-3} width={9} height={7} rx={1} className="cottage-window" />
+      <rect x={-5} y={2} width={9} height={12} rx={1} className="cottage-door" />
+      {/* Lights along the eaves, and one string too many down the wall. */}
+      <path d="M -21 -9 q 10 6 21 0 q 10 -6 21 0" className="xmas-string" />
+      <circle cx={-15} cy={-6.2} r={1.5} className="xmas-bauble--red" />
+      <circle cx={-8} cy={-6.6} r={1.5} className="xmas-bauble--gold" />
+      <circle cx={0} cy={-9} r={1.5} className="xmas-bauble--blue" />
+      <circle cx={8} cy={-6.6} r={1.5} className="xmas-bauble--red" />
+      <circle cx={15} cy={-6.2} r={1.5} className="xmas-bauble--gold" />
+    </g>
+  );
+}
+
+/**
+ * The Mulled Wine Stop: a trestle table, an urn, and a queue that forms before
+ * the group has finished stopping. Billed to the club as a hydration station.
+ */
+export function MulledWineStall() {
+  return (
+    <g className="sprite sprite--mulledwine" aria-hidden="true">
+      <path d="M -20 -8 h 40 l -4 9 h -32 Z" className="stall-awning" />
+      <rect x={-16} y={1} width={32} height={13} rx={1} className="stall-body" />
+      <path d="M -16 5 h 32" className="stall-counter" />
+      {/* The urn, its tap, and the steam off it — the whole advertisement. */}
+      <rect x={-8} y={-6} width={14} height={12} rx={1.5} className="stall-urn" />
+      <rect x={-9.5} y={-9} width={17} height={3.5} rx={1.5} className="stall-urn" />
+      <path d="M 6 0 h 3 v 3" className="stall-handle" />
+      <path d="M -4 -11 q 4 -5 0 -9 M 3 -11 q 4 -5 0 -9" className="stall-steam" />
+      <path d="M -22 14 h 44" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Hi-vis, because the club risk assessment covers snowmen too. */
+export function Snowman() {
+  return (
+    <g className="sprite sprite--snowman" aria-hidden="true">
+      <circle cx={0} cy={5} r={9} className="snow-body" />
+      <circle cx={0} cy={-7} r={6} className="snow-body" />
+      <path d="M -9 5 h 18 l 2 8 h -22 Z" className="snow-vest" />
+      <path d="M -9.5 8 h 19" className="snow-vest-band" />
+      <path d="M -6 -1 l -8 -5 M 6 -1 l 8 -5" className="snow-arm" />
+      <path d="M 0 -7 l 7 1.6 l -7 1.6 Z" className="snow-nose" />
+      <circle cx={-2.4} cy={-9} r={0.9} className="snow-coal" />
+      <circle cx={2.4} cy={-9} r={0.9} className="snow-coal" />
+      <path d="M -6 -12 h 12 v 2.5 h -12 Z M -3.5 -18 h 7 v 6 h -7 Z" className="snow-hat" />
+    </g>
+  );
+}
+
+/** One candy cane, planted, and slightly too large to be for eating. */
+export function CandyCane() {
+  return (
+    <g className="sprite sprite--candycane" aria-hidden="true">
+      <path
+        d="M -2 12 v -16 a 5 5 0 0 1 10 0 v 3"
+        className="cane-body"
+      />
+      <path
+        d="M -2 12 v -16 a 5 5 0 0 1 10 0 v 3"
+        className="cane-stripe"
+      />
+    </g>
+  );
+}
+
+/** Presents, left out, which around here is a decision. */
+export function Presents() {
+  return (
+    <g className="sprite sprite--present" aria-hidden="true">
+      <rect x={-11} y={0} width={13} height={12} rx={1} className="gift-box" />
+      <path d="M -4.5 0 v 12 M -11 5 h 13" className="gift-ribbon" />
+      <rect x={2} y={3} width={10} height={9} rx={1} className="gift-box-alt" />
+      <path d="M 7 3 v 9 M 2 7 h 10" className="gift-ribbon" />
+      <path d="M -4.5 0 q -4 -5 -1 -5 q 3 0 1 5 q 4 -5 1 -5 q -3 0 -1 5" className="gift-bow" />
+    </g>
+  );
+}
+
+/**
+ * Holly, laid out the way it is on every card: leaf, berries, leaf. The spikes
+ * are drawn as a zig-zag rather than curves, which is what makes the shape
+ * read as holly and not as a laurel at the size this is ever seen.
+ */
+const HOLLY_LEAF =
+  "M 5 0 L 7 -4.6 L 9.6 -1.8 L 12.4 -5.6 L 15 -1.8 L 17.4 -4 L 19 0 L 17.4 4 L 15 1.8 L 12.4 5.6 L 9.6 1.8 L 7 4.6 Z";
+
+export function Holly() {
+  return (
+    <g className="sprite sprite--holly" aria-hidden="true">
+      <path d={HOLLY_LEAF} className="holly-leaf" />
+      <path d="M 8 0 h 9" className="holly-vein" />
+      <g transform="scale(-1 1)">
+        <path d={HOLLY_LEAF} className="holly-leaf" />
+        <path d="M 8 0 h 9" className="holly-vein" />
+      </g>
+      {/* Between the two, which is the whole arrangement. */}
+      <circle cx={-2.3} cy={-1.6} r={2.2} className="holly-berry" />
+      <circle cx={2.3} cy={-1.6} r={2.2} className="holly-berry" />
+      <circle cx={0} cy={2.4} r={2.2} className="holly-berry" />
+    </g>
+  );
+}
+
+export function Runner({ index, kit }: { index: number; kit?: Level["kit"] }) {
   const vest = VESTS[index % VESTS.length];
   return (
     <g className="sprite sprite--runner" aria-hidden="true">
       <circle cx={0} cy={-11} r={4} className="runner-head" />
+      {/* Club policy is that the hats are optional. Nobody has taken that up. */}
+      {kit === "santa" && (
+        <g className="runner-hat">
+          <path d="M -4.4 -13.6 q 1.6 -6.4 8.4 -4.6 l -3.4 4.6 Z" className="hat-felt" />
+          <rect x={-5} y={-14.6} width={10} height={2.2} rx={1.1} className="hat-brim" />
+          <circle cx={4.6} cy={-18.4} r={1.5} className="hat-brim" />
+        </g>
+      )}
       <path d="M 0 -7 v 8" className="runner-casing" />
       <path d="M 0 -7 v 8" className={`runner-body ${vest}`} />
       <path d="M 0 -5 l -6 4 M 0 -5 l 6 -2" className="runner-arms" />
@@ -878,6 +1073,31 @@ export function Duck({ alarmed = false }: { alarmed?: boolean }) {
       <polygon points="-12,-1 -1,-4 -3,3" className="duck-tail" />
       <path d="M -2 -3 q 7 -6 11 1 q -6 3 -11 -1 Z" className="duck-wing" />
       <path d="M -3 6 v 4 M 3 6 v 4" className="duck-legs" />
+    </g>
+  );
+}
+
+/**
+ * The same bird once more, in December: brown, round, and with the red front
+ * that gets it on every card in the shop. Drawn to the pigeon's proportions
+ * like the rest, so the flock animation lands them all in the same places.
+ */
+export function Robin({ alarmed = false }: { alarmed?: boolean }) {
+  return (
+    <g className={`sprite sprite--robin${alarmed ? " is-alarmed" : ""}`} aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={9} ry={6.5} className="robin-body" />
+      <polygon points="-12,-1 -1,-4 -3,3" className="robin-tail" />
+      <circle cx={7} cy={-6} r={4.2} className="robin-body" />
+      {/* The front, from under the beak to the belly. The wing goes on behind
+          it rather than over it: the red is the entire point of a robin. */}
+      <path
+        d="M 1 -9.5 q 10 0.5 9.5 7 q -0.5 6.5 -7 6.5 q -6.5 -1 -6.5 -7 q 0 -5 4 -6.5 Z"
+        className="robin-breast"
+      />
+      <path d="M -7 -3 q 6 -5 10 1 q -5 3.5 -10 -1 Z" className="robin-wing" />
+      <polygon points="10.5,-6.5 17,-4.5 10.5,-3" className="robin-beak" />
+      <circle cx={8.6} cy={-7.4} r={0.9} className="robin-eye" />
+      <path d="M -3 6 v 4 M 3 6 v 4" className="robin-legs" />
     </g>
   );
 }

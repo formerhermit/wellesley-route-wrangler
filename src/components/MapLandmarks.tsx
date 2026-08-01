@@ -7,15 +7,18 @@ import {
   Bridge,
   Bush,
   Butterfly,
+  CandyCane,
   CarPark,
   Cat,
   Cemetery,
+  ChristmasTree,
   Church,
   CoffeeVan,
   Cow,
   CricketStumps,
   DeadTree,
   Dog,
+  FestiveHouse,
   Flowers,
   FootballPitch,
   Ghost,
@@ -25,14 +28,17 @@ import {
   Gravestone,
   Hangar,
   HillMarker,
+  Holly,
   IceCreamVan,
   Island,
   MinleyManor,
   Moon,
   Mosque,
   Mud,
+  MulledWineStall,
   Observatory,
   Portaloo,
+  Presents,
   Pub,
   Pumpkin,
   Railway,
@@ -40,6 +46,7 @@ import {
   SailingBoat,
   SandPatch,
   Signpost,
+  Snowman,
   Soldier,
   SportsCentre,
   Statue,
@@ -90,6 +97,9 @@ const LANDMARK: Partial<Record<MapNodeType, () => React.ReactNode>> = {
   sailing: () => <SailingBoat />,
   sand: () => <SandPatch />,
   mud: () => <Mud />,
+  cottage: () => <FestiveHouse />,
+  christmastree: () => <ChristmasTree />,
+  mulledwine: () => <MulledWineStall />,
 };
 
 /**
@@ -139,6 +149,17 @@ const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNod
   boat: () => <SailingBoat />,
   island: () => <Island />,
   warning: () => <WarningSign />,
+  snowman: () => <Snowman />,
+  candycane: () => <CandyCane />,
+  present: () => <Presents />,
+  holly: () => <Holly />,
+  // The town tree drawn small, the way the ones in front gardens are: same
+  // drawing, so a map's trees all read as the same council delivery.
+  xmastree: () => (
+    <g transform="scale(0.6)">
+      <ChristmasTree />
+    </g>
+  ),
 };
 
 /**
@@ -149,6 +170,39 @@ const FOG = [
   { cx: 210, cy: 527, rx: 240, ry: 26, className: "fog-bank" },
   { cx: 560, cy: 543, rx: 290, ry: 22, className: "fog-bank fog-bank--slow" },
   { cx: 390, cy: 508, rx: 170, ry: 16, className: "fog-bank fog-bank--fast" },
+];
+
+/**
+ * Snow, as circles that fall and repeat. Laid out from the golden ratio rather
+ * than from a table, so it never reshuffles between renders and never needs
+ * forty hand-written coordinates — and spaced by it rather than at random,
+ * because random snow clumps and reads as spots on the paper.
+ */
+function snowflakes(width: number, height: number) {
+  return Array.from({ length: 48 }, (_, i) => ({
+    x: Math.round(((i * 0.618033988749895) % 1) * width * 10) / 10,
+    y: Math.round(((i * 0.754877666247) % 1) * height * 10) / 10,
+    r: 1.6 + (i % 3) * 0.8,
+    // Staggered, so they do not all cross the map in step.
+    delay: -((i % 9) * 1.4),
+    duration: 11 + (i % 5) * 2.6,
+  }));
+}
+
+/**
+ * Frost, creeping in from each corner. One fern, drawn once and turned four
+ * ways: ice does the same thing at every corner of a window.
+ */
+const FROST_FERN =
+  "M 0 0 L 62 62 M 16 16 l 12 -4 M 16 16 l -4 12 M 30 30 l 16 -6 M 30 30 l -6 16 M 44 44 l 12 -5 M 44 44 l -5 12";
+
+/**
+ * The two rows of terraced houses a town map draws along its edges — one below
+ * the map, one above it, neither of them anywhere near a road.
+ */
+const TERRACES = [
+  { count: 6, x: 186, step: 62, y: 516, width: 46, height: (i: number) => 20 + (i % 3) * 8 },
+  { count: 4, x: 556, step: 58, y: 40, width: 42, height: (i: number) => 26 + (i % 2) * 10 },
 ];
 
 /** Trees scattered around a park, relative to its junction. */
@@ -176,6 +230,7 @@ export function MapLandmarks({
   onTop?: boolean;
 }) {
   if (onTop) {
+    const { width, height } = level.view;
     return (
       <g aria-hidden="true">
         {level.nodes
@@ -196,6 +251,57 @@ export function MapLandmarks({
               </g>
             );
           })}
+
+        {/* Weather comes down in front of the map and behind the writing: it
+            should fall past the houses without ever making a name harder to
+            read. */}
+        {level.mood === "frost" && (
+          <>
+            <g className="frost">
+              <rect
+                className="frost-edge"
+                x={0}
+                y={0}
+                width={width}
+                height={height}
+              />
+              <path className="frost-fern" d={FROST_FERN} />
+              <path
+                className="frost-fern"
+                d={FROST_FERN}
+                transform={`translate(${width} 0) scale(-1 1)`}
+              />
+              <path
+                className="frost-fern"
+                d={FROST_FERN}
+                transform={`translate(0 ${height}) scale(1 -1)`}
+              />
+              <path
+                className="frost-fern"
+                d={FROST_FERN}
+                transform={`translate(${width} ${height}) scale(-1 -1)`}
+              />
+            </g>
+
+            <g className="snow">
+              {snowflakes(width, height).map((flake, index) => (
+                <circle
+                  key={index}
+                  className="snowflake"
+                  cx={flake.x}
+                  cy={flake.y}
+                  r={flake.r}
+                  style={
+                    {
+                      "--fall-delay": `${flake.delay}s`,
+                      "--fall-duration": `${flake.duration}s`,
+                    } as React.CSSProperties
+                  }
+                />
+              ))}
+            </g>
+          </>
+        )}
       </g>
     );
   }
@@ -257,7 +363,9 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
               key={index}
               transform={`translate(${park.x + tree.dx} ${park.y + tree.dy})`}
             >
-              {level.mood === "dusk" ? <DeadTree /> : <Tree />}
+              {/* Bare in any weather that is not daylight: October took the
+                  leaves and December has not given them back. */}
+              {level.mood ? <DeadTree /> : <Tree />}
             </g>
           ))}
         </g>
@@ -275,32 +383,20 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
       ))}
 
       {level.theme === "town" ? (
-        <>
-          <g className="terrace">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
+        TERRACES.map((row, index) => (
+          <g className="terrace" key={index}>
+            {Array.from({ length: row.count }, (_, i) => (
               <rect
                 key={i}
-                x={186 + i * 62}
-                y={516}
-                width={46}
-                height={20 + (i % 3) * 8}
+                x={row.x + i * row.step}
+                y={row.y}
+                width={row.width}
+                height={row.height(i)}
                 rx={3}
               />
             ))}
           </g>
-          <g className="terrace">
-            {[0, 1, 2, 3].map((i) => (
-              <rect
-                key={i}
-                x={556 + i * 58}
-                y={40}
-                width={42}
-                height={26 + (i % 2) * 10}
-                rx={3}
-              />
-            ))}
-          </g>
-        </>
+        ))
       ) : (
         // Open country: a scatter of trees instead of terraced houses.
         <g>

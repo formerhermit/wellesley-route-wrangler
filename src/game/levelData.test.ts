@@ -113,8 +113,15 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       }
     });
 
-    it("waits for its follower at a junction that exists", () => {
-      if (level.follower) expect(nodeIds).toContain(level.follower.nodeId);
+    it("waits for its followers at junctions that exist", () => {
+      for (const follower of level.followers ?? []) {
+        expect(nodeIds, follower.kind).toContain(follower.nodeId);
+      }
+    });
+
+    it("does not put two followers on the same junction", () => {
+      const waiting = (level.followers ?? []).map((one) => one.nodeId);
+      expect(new Set(waiting).size).toBe(waiting.length);
     });
 
     it("keeps every junction inside the map's viewBox", () => {
