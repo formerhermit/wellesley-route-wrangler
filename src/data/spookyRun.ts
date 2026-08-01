@@ -365,7 +365,7 @@ export const spookyRun: Level = {
   // come with them. It is a losing route either way; this is what losing looks
   // like. They wait at the near edge of the crowd the junction already draws,
   // so at rest the street reads as one lot of them and not two.
-  follower: { kind: "treaters", nodeId: "sweet-street", dx: -84, dy: -30 },
+  followers: [{ kind: "treaters", nodeId: "sweet-street", dx: -84, dy: -30 }],
 
   // A full moon and the bats under it, the graves that would not stay in the
   // cemetery, pumpkins on the doorsteps, and signposts pointing at nothing.

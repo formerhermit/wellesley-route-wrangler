@@ -29,7 +29,8 @@ interface Options {
   reducedMotion: boolean;
   /** Points along the route that should make pigeons react. */
   milestones: Milestone[];
-  follower?: Follower;
+  /** Whatever is waiting by the road, in whatever order the level lists them. */
+  followers: Follower[];
   onReachHotspot: (nodeId: string | null) => void;
   onFinish: () => void;
 }
@@ -55,7 +56,7 @@ export function useRunAnimation({
   runnersRef,
   reducedMotion,
   milestones,
-  follower,
+  followers,
   onReachHotspot,
   onFinish,
 }: Options) {
@@ -64,7 +65,7 @@ export function useRunAnimation({
   // Callbacks are read through a ref so a re-render mid-run cannot restart it.
   const latest = useRef({
     milestones,
-    follower,
+    followers,
     pace,
     onReachHotspot,
     onFinish,
@@ -72,7 +73,7 @@ export function useRunAnimation({
   });
   latest.current = {
     milestones,
-    follower,
+    followers,
     pace,
     onReachHotspot,
     onFinish,
@@ -87,10 +88,11 @@ export function useRunAnimation({
     for (const runner of runnersRef.current ?? []) {
       runner?.setAttribute("opacity", "0");
     }
-    // The follower stays on the map between runs, so it goes home rather than
-    // being hidden where the group happened to leave it.
-    const back = latest.current.follower;
-    back?.ref.current?.setAttribute("transform", homeTransform(back));
+    // Followers stay on the map between runs, so they go home rather than
+    // being hidden wherever the group happened to leave them.
+    for (const back of latest.current.followers) {
+      back.ref.current?.setAttribute("transform", homeTransform(back));
+    }
   }, [runnersRef]);
 
   const start = useCallback(() => {
@@ -113,9 +115,15 @@ export function useRunAnimation({
       (a, b) => a.fraction - b.fraction,
     );
     let nextHotspot = 0;
-    // When the group's back marker first drew level with the follower, so the
-    // hop across into the group can be eased rather than teleported.
-    let joinedAt: number | null = null;
+    // Whoever is picked up first tacks onto the back of the group, and the
+    // next one in behind them — so the queue is ordered by where on the route
+    // each was standing, not by the order the level happens to list them.
+    const queue = options.followers
+      .filter((one) => one.joinFraction !== null)
+      .sort((a, b) => (a.joinFraction ?? 0) - (b.joinFraction ?? 0));
+    // When each first drew level with the group, so the hop across can be
+    // eased rather than teleported.
+    const joinedAt = new Map<Follower, number>();
     const startedAt = performance.now();
 
     for (const runner of runnersRef.current ?? []) {
@@ -143,34 +151,35 @@ export function useRunAnimation({
         );
       }
 
-      // The follower runs one place further back than the last runner, and
-      // only once the back of the group has actually reached it.
-      const follow = options.follower;
-      const followEl = follow?.ref.current;
-      if (follow && followEl && follow.joinFraction !== null) {
+      // Each follower runs one place further back than the last, behind the
+      // group, and only once the back of it has actually reached them.
+      queue.forEach((follow, place) => {
+        const followEl = follow.ref.current;
+        if (!followEl || follow.joinFraction === null) return;
         const joinAt = follow.joinFraction * length;
-        const back = lead - RUNNER_COUNT * lag;
+        const back = lead - (RUNNER_COUNT + place) * lag;
         if (back <= joinAt) {
           followEl.setAttribute("transform", homeTransform(follow));
-        } else {
-          if (joinedAt === null) joinedAt = now;
-          const distance = Math.min(back, length);
-          const point = path.getPointAtLength(distance);
-          // Eased across from where it was standing, so it joins the run
-          // rather than appearing in it.
-          const t = options.reducedMotion
-            ? 1
-            : Math.min(1, (now - joinedAt) / JOIN_MS);
-          const x = follow.home.x + (point.x - follow.home.x) * t;
-          const y = follow.home.y + (point.y - follow.home.y) * t;
-          const ahead = path.getPointAtLength(Math.min(distance + 4, length));
-          const turn = ahead.x < point.x ? " scale(-1 1)" : "";
-          followEl.setAttribute(
-            "transform",
-            `translate(${x.toFixed(2)} ${y.toFixed(2)})${turn}`,
-          );
+          joinedAt.delete(follow);
+          return;
         }
-      }
+        if (!joinedAt.has(follow)) joinedAt.set(follow, now);
+        const distance = Math.min(back, length);
+        const point = path.getPointAtLength(distance);
+        // Eased across from where it was standing, so it joins the run
+        // rather than appearing in it.
+        const t = options.reducedMotion
+          ? 1
+          : Math.min(1, (now - (joinedAt.get(follow) ?? now)) / JOIN_MS);
+        const x = follow.home.x + (point.x - follow.home.x) * t;
+        const y = follow.home.y + (point.y - follow.home.y) * t;
+        const ahead = path.getPointAtLength(Math.min(distance + 4, length));
+        const turn = ahead.x < point.x ? " scale(-1 1)" : "";
+        followEl.setAttribute(
+          "transform",
+          `translate(${x.toFixed(2)} ${y.toFixed(2)})${turn}`,
+        );
+      });
 
       const leadFraction = Math.min(1, lead / length);
       while (

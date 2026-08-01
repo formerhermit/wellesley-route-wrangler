@@ -28,7 +28,9 @@ export const thursdaySocialRun: Level = {
   // One of them, at the water's edge, waiting. Run the group past the pond
   // and it comes with them — the same mechanic as the Fleet Pond goose, and a
   // far worse idea, because this one remembers faces.
-  follower: { kind: "goose", nodeId: "geese-pond", dx: -60, dy: 15, scale: 1.3 },
+  followers: [
+    { kind: "goose", nodeId: "geese-pond", dx: -60, dy: 15, scale: 1.3 },
+  ],
 
   view: { width: 800, height: 560 },
 

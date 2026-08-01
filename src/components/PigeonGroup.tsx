@@ -1,4 +1,4 @@
-import { Crow, Duck, Pigeon } from "./MapSprites";
+import { Crow, Duck, Pigeon, Robin } from "./MapSprites";
 import type { Level } from "../game/types";
 
 interface Props {
@@ -23,7 +23,13 @@ export function PigeonGroup({ level, alarmedNodeId, reducedMotion }: Props) {
   // Whatever the level keeps. The hotspot type stays "pigeon" because that is
   // the mechanism's name, not the bird's.
   const Bird =
-    level.flock === "crow" ? Crow : level.flock === "duck" ? Duck : Pigeon;
+    level.flock === "crow"
+      ? Crow
+      : level.flock === "duck"
+        ? Duck
+        : level.flock === "robin"
+          ? Robin
+          : Pigeon;
 
   return (
     <g aria-hidden="true">

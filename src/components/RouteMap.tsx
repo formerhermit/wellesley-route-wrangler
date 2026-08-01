@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Goose, Treaters } from "./MapSprites";
+import type { RefObject } from "react";
+import { CarolSingers, Goose, Treaters } from "./MapSprites";
 import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
@@ -14,6 +15,35 @@ import {
   selectableNodeIds,
 } from "../game/routeGraph";
 import type { Level, Route } from "../game/types";
+
+type FollowerKind = NonNullable<Level["followers"]>[number]["kind"];
+
+/**
+ * What a follower looks like standing by the road. The goose is drawn to its
+ * own scale where the map has room for it; the crowds are drawn on their
+ * junction rather than above it, and smaller, because they are following
+ * rather than looming.
+ */
+function FollowerSprite({
+  kind,
+  scale,
+}: {
+  kind: FollowerKind;
+  scale?: number;
+}) {
+  if (kind === "treaters" || kind === "carollers") {
+    return (
+      <g transform="scale(0.7) translate(0 -14)">
+        {kind === "treaters" ? <Treaters /> : <CarolSingers />}
+      </g>
+    );
+  }
+  return (
+    <g transform={scale ? `scale(${scale})` : undefined}>
+      <Goose />
+    </g>
+  );
+}
 
 interface Props {
   level: Level;
@@ -38,8 +68,16 @@ export function RouteMap({
   const runnersRef = useRef<(SVGGElement | null)[]>(
     Array.from({ length: RUNNER_COUNT }, () => null),
   );
-  const followerRef = useRef<SVGGElement | null>(null);
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
+
+  // One ref per follower the level declares, replaced when the level changes.
+  const followerRefs = useMemo(
+    () =>
+      (level.followers ?? []).map(
+        () => ({ current: null }) as RefObject<SVGGElement | null>,
+      ),
+    [level],
+  );
 
   const selectable = useMemo(
     () => selectableNodeIds(level, route),
@@ -55,20 +93,22 @@ export function RouteMap({
     [level, route],
   );
 
-  // Where the follower waits, and how far along the route it will be passed.
+  // Where each follower waits, and how far along the route it will be passed.
   // Null when this route never goes that way, which leaves it standing there.
-  const follower = useMemo(() => {
-    if (!level.follower) return undefined;
-    const node = nodeById(level, level.follower.nodeId);
-    const passed = routeMilestones(level, route).find(
-      (milestone) => milestone.nodeId === level.follower?.nodeId,
-    );
-    return {
-      ref: followerRef,
-      home: { x: node.x + level.follower.dx, y: node.y + level.follower.dy },
-      joinFraction: passed?.fraction ?? null,
-    };
-  }, [level, route]);
+  const followers = useMemo(() => {
+    const milestones = routeMilestones(level, route);
+    return (level.followers ?? []).map((waiting, index) => {
+      const node = nodeById(level, waiting.nodeId);
+      const passed = milestones.find(
+        (milestone) => milestone.nodeId === waiting.nodeId,
+      );
+      return {
+        ref: followerRefs[index],
+        home: { x: node.x + waiting.dx, y: node.y + waiting.dy },
+        joinFraction: passed?.fraction ?? null,
+      };
+    });
+  }, [level, route, followerRefs]);
 
   const pace = useMemo(() => paceOf(level, route), [level, route]);
 
@@ -78,7 +118,7 @@ export function RouteMap({
     runnersRef,
     reducedMotion,
     milestones,
-    follower,
+    followers,
     onReachHotspot: setAlarmedNodeId,
     onFinish: onRunFinished,
   });
@@ -151,34 +191,19 @@ export function RouteMap({
           rejectedNodeId={rejectedNodeId}
         />
 
-        {/* Above the junctions, because it ends up running over them. */}
-        {follower && (
+        {/* Above the junctions, because they end up running over them. */}
+        {(level.followers ?? []).map((waiting, index) => (
           <g
-            ref={followerRef}
+            key={`${waiting.kind}-${waiting.nodeId}`}
+            ref={followerRefs[index]}
             aria-hidden="true"
-            transform={`translate(${follower.home.x} ${follower.home.y})`}
+            transform={`translate(${followers[index].home.x} ${followers[index].home.y})`}
           >
-            {level.follower?.kind === "treaters" ? (
-              // Drawn standing on their junction rather than above it, and
-              // smaller: they are following, not looming.
-              <g transform="scale(0.7) translate(0 -14)">
-                <Treaters />
-              </g>
-            ) : (
-              <g
-                transform={
-                  level.follower?.scale
-                    ? `scale(${level.follower.scale})`
-                    : undefined
-                }
-              >
-                <Goose />
-              </g>
-            )}
+            <FollowerSprite kind={waiting.kind} scale={waiting.scale} />
           </g>
-        )}
+        ))}
 
-        <RunnerGroup runnersRef={runnersRef} />
+        <RunnerGroup runnersRef={runnersRef} kit={level.kit} />
       </svg>
 
         <JunctionButtons

@@ -290,7 +290,7 @@ export const hawleyLake: Level = {
   finishNodeId: "sailing-centre",
 
   // The goose from the Jetty, the paddling spot and the pond, now here.
-  follower: { kind: "goose", nodeId: "bird-bay", dx: -34, dy: 44 },
+  followers: [{ kind: "goose", nodeId: "bird-bay", dx: -34, dy: 44 }],
 
   scatter: [
     // On the water: two islands nobody has landed on, and the dinghies.

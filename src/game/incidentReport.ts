@@ -110,7 +110,9 @@ export function buildIncidentReport(
         ? "Unexpected crows"
         : level.flock === "duck"
           ? "Unexpected ducks"
-          : "Unexpected pigeons",
+          : level.flock === "robin"
+            ? "Unexpected robins"
+            : "Unexpected pigeons",
     value: String(pigeonsSighted(level, route)),
     tone: "neutral",
   });

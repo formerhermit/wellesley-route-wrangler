@@ -46,12 +46,18 @@ ring of junctions on its bank, the same way the canal on level 1 is drawn from
 its two canal junctions.
 
 Level 4 is where the goose lives, and level 6 is where it turns up again. A
-level may name a `follower`: something that waits by a junction and, when the
-group runs past it, falls in at the back and follows them to the finish,
-turning to face the way it is going. Plan a route that misses the Jetty — or
-the paddling spot on the Tilford map — and it stays exactly where it was. The
-cows at Cow Corner, by contrast, do nothing at all: greeting them is its own
-reward.
+level may list `followers`: things that wait by a junction and, when the group
+runs past them, fall in at the back and follow to the finish, turning to face
+the way they are going. Plan a route that misses the Jetty — or the paddling
+spot on the Tilford map — and it stays exactly where it was. The cows at Cow
+Corner, by contrast, do nothing at all: greeting them is its own reward.
+
+It is a list because a map may have several. The Christmas Run has carol
+singers on three corners as well as the goose, and picking up two of them is a
+different run from picking up none. They queue behind the group in the order
+the route reaches them — whoever is picked up first tacks onto the back, and
+the next one in behind them — so the order is the route's, not the order the
+level happens to list them in.
 
 **Level 5 — Loopy** — the Thursday map from the Observatory down, lifted to
 make room for what is underneath it. The signature is the road round the Sports
@@ -102,6 +108,28 @@ Fleet Pond is, and the islands and dinghies are scattered on top of it.
 Its birds are ducks — `flock: "duck"` — which is the same mechanism as the
 Spooky Run's crows: they loiter, scatter and get counted identically, and only
 the drawing and the paperwork change. The goose is at Bird Bay, and it follows.
+
+**Level 9 — Christmas Run** — the level 1 map in December, with two things
+swapped over. The Back Passage is open, because there is mulled wine on it, and
+the towpath is shut everywhere the lights do not reach: three closed roads
+against level 1's one, leaving the lit stretch from the Canal Bridge to the
+Medical Centre and nothing else. Level 1 gives you the canal two ways; this one
+gives it to you over the bridge or not at all. 7.5 to 11 km, taking in the
+bridge and the town tree, past no more than one lot of robins. Seven winning
+routes, which is second only to level 1 across the whole roster.
+
+The Mulled Wine Stop is deliberately *not* in the brief. Three of the seven
+winners go by way of it and four do not, so it is a real choice rather than a
+waypoint — and the scoring already pays for junctions taken in beyond what was
+asked, which is the right way to reward a detour nobody demanded.
+
+Christmas is declared the same way Halloween is, and the rules learn nothing
+new: `mood: "frost"` is the opposite of dusk — the light stays but arrives
+through ice, so the map goes blue and pale, the pond and the canal set, the
+trees come up bare and the only warm thing left is what is coming out of the
+windows. `flock: "robin"`, `music`, and `kit: "santa"`, which puts the group in
+hats and changes nothing else. Snow falls over any map at frost, and frost
+creeps in from its four corners.
 
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
@@ -167,7 +195,7 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 32 winning routes across the seven levels — and 1,881 distinct loops
+There are 43 winning routes across the nine levels — and 2,126 distinct loops
 — so a completed fixture list is nowhere near a finished game. The fixture
 list shows how much of each map is still out there.
 
@@ -201,10 +229,10 @@ header is pressed. That choice is remembered, but browsers will not autoplay
 audio on a fresh page load, so a returning player's music starts on their next
 click or key press rather than failing silently.
 
-`useMusic` takes the track as an argument, which is how the Spooky Run gets its
-own: the level names a file in `public/audio` and the hook swaps the audio
-without disturbing the on/off preference. Changing level mid-track changes the
-music and keeps playing.
+`useMusic` takes the track as an argument, which is how the Spooky Run and the
+Christmas Run get their own: the level names a file in `public/audio` and the
+hook swaps the audio without disturbing the on/off preference. Changing level
+mid-track changes the music and keeps playing.
 
 ## Development
 
@@ -242,11 +270,20 @@ Run Route gate, and deterministic result selection — with fixtures for a
 perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
 
-`trailLevel.test.ts`, `tilfordLevel.test.ts` and `spookyLevel.test.ts` do the
-same for levels 2, 6 and 7 against their own maps. The last two end by walking
-every route out of the start and back, so each level is held to exactly its
-winners — eight for Tilford, ten for the Spooky Run, split six and four across
-the two hills. A road whose distance drifts takes the count with it and fails.
+`trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
+`hawleyLevel.test.ts` and `christmasLevel.test.ts` do the same for levels 2, 6,
+7, 8 and 9 against their own maps. Most of them end by walking every route out
+of the start and back, so each level is held to exactly its winners — eight for
+Tilford, ten for the Spooky Run split six and four across the two hills, seven
+for the Christmas Run with three of them by way of the mulled wine. A road
+whose distance drifts takes the count with it and fails.
+
+The Christmas Run counts its winners the way the club's book does: by the set
+of roads, so a loop run backwards is the same route. That matters more than it
+sounds. An earlier draft of the level looked like fourteen winners and was
+really two, because twelve of them were one figure-eight relaid in a different
+order — a distinction the walk count cannot see and the fixture list very much
+can.
 
 `src/game/scenery.test.ts` keeps the hand-placed scenery off the roads, the
 junctions and the writing. Every sprite it checks was positioned by working out

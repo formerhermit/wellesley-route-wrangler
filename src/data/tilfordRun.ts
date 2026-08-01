@@ -250,7 +250,7 @@ export const tilfordRun: Level = {
 
   // The same goose as Fleet Pond's, waiting at the water's edge. Run the
   // group past it and it comes with them.
-  follower: { kind: "goose", nodeId: "paddling-spot", dx: 50, dy: 44 },
+  followers: [{ kind: "goose", nodeId: "paddling-spot", dx: 50, dy: 44 }],
 
   // The middle of this map is common between the river and the sandy tracks,
   // and it was reading as empty paper.

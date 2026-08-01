@@ -118,8 +118,9 @@ describe("Hawley Lake", () => {
   });
 
   it("keeps the goose at Bird Bay", () => {
-    expect(level.follower?.kind).toBe("goose");
-    expect(level.follower?.nodeId).toBe("bird-bay");
+    expect(level.followers?.map((one) => [one.kind, one.nodeId])).toEqual([
+      ["goose", "bird-bay"],
+    ]);
   });
 
   it("fails a route down the range road", () => {

@@ -40,7 +40,13 @@ export type MapNodeType =
   | "sand"
   | "mud"
   /** A street of trick or treaters. A group of adults gets no further. */
-  | "treaters";
+  | "treaters"
+  /** A house with rather more lights on it than the neighbours would like. */
+  | "cottage"
+  /** The town tree, wonky, and the council's own fault. */
+  | "christmastree"
+  /** A trestle table, an urn, and the real reason anybody turned up. */
+  | "mulledwine";
 
 export type RoadSurface = "road" | "trail";
 
@@ -157,14 +163,20 @@ export interface Level {
   theme: "town" | "trail";
   /**
    * The light the map is drawn in. Scenery and rules are unaffected — this is
-   * the paper going cold, nothing more. Undefined is daylight.
+   * the paper going cold, nothing more. Undefined is daylight; "dusk" is the
+   * light going, and "frost" is it staying but arriving through ice.
    */
-  mood?: "dusk";
+  mood?: "dusk" | "frost";
   /**
    * What the birds are. They loiter, scatter and get counted identically
    * whichever they are; only the drawing and the paperwork change.
    */
-  flock?: "pigeon" | "crow" | "duck";
+  flock?: "pigeon" | "crow" | "duck" | "robin";
+  /**
+   * What the group is wearing. Club vests as standard; a level may put them in
+   * something seasonal, which changes the drawing and nothing else.
+   */
+  kit?: "santa";
   /** A file in `public/audio`. Without one the level plays the house theme. */
   music?: string;
   /**
@@ -201,26 +213,35 @@ export interface Level {
       | "gorse"
       | "boat"
       | "island"
-      | "warning";
+      | "warning"
+      | "snowman"
+      | "candycane"
+      | "present"
+      | "holly"
+      | "xmastree";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */
     flip?: boolean;
   }[];
   /**
-   * Something that waits by a junction and, if the group runs past it, falls
-   * in at the back and follows them to the finish. A route that never goes
-   * that way leaves it standing where it was.
+   * Things that wait by a junction and, if the group runs past them, fall in
+   * at the back and follow to the finish. A route that never goes that way
+   * leaves one standing where it was.
+   *
+   * A list because a map may have several: the Christmas Run has carol singers
+   * on three corners, and picking up two is a different run from picking up
+   * none. They queue up behind the group in the order the route reaches them.
    */
-  follower?: {
-    kind: "goose" | "treaters";
+  followers?: {
+    kind: "goose" | "treaters" | "carollers";
     nodeId: string;
     /** Where it waits, relative to that junction. */
     dx: number;
     dy: number;
     /** Drawn bigger or smaller than usual, where the map has room. */
     scale?: number;
-  };
+  }[];
   nodes: MapNode[];
   roads: Road[];
   startNodeId: string;

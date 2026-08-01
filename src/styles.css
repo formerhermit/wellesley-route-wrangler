@@ -568,6 +568,80 @@ body {
   fill: #7a4b9c;
 }
 
+/*
+ * Frost. The opposite of dusk: the light stays, but it arrives through ice.
+ * Everything goes a shade bluer and a shade paler, the water sets, and the
+ * only warm thing left on the map is what is coming out of the windows.
+ */
+.map-svg--frost .map-ground {
+  fill: #eaf1f7;
+}
+
+.map-svg--frost .terrace rect {
+  fill: #dfe4ea;
+}
+
+.map-svg--frost .road {
+  stroke: #c3cbd4;
+}
+
+.map-svg--frost .road--hill {
+  stroke: #b7c0cb;
+}
+
+.map-svg--frost .build-wall,
+.map-svg--frost .van-body,
+.map-svg--frost .hangar-shell {
+  fill: #eef2f6;
+}
+
+.map-svg--frost .gardens-ground {
+  fill: #b9cbd3;
+  opacity: 0.5;
+}
+
+.map-svg--frost .hill-body {
+  fill: #9fb2c2;
+}
+
+.map-svg--frost .hill-cap {
+  fill: #fdfefe;
+}
+
+/* Frozen. The shimmer stays: it is the light off the ice now, not the water. */
+.map-svg--frost .pond-water,
+.map-svg--frost .pond-body,
+.map-svg--frost .canal-water {
+  fill: #d6e8f2;
+  stroke: #a8c4d6;
+  opacity: 0.85;
+}
+
+.map-svg--frost .canal-water {
+  fill: none;
+  stroke: #d6e8f2;
+}
+
+.map-svg--frost .canal-shimmer,
+.map-svg--frost .pond-shimmer {
+  stroke: #fbfeff;
+  opacity: 0.9;
+}
+
+/*
+ * The junctions hang red and green, like a string of baubles. This overrides
+ * the per-type colours on purpose — under frost a junction is a decoration,
+ * not a category. Nothing is lost by it: which junction you are standing on
+ * and which you may pick are both drawn on the halo, not the dot.
+ */
+.map-svg--frost .junction .junction-dot {
+  fill: #3f7a55;
+}
+
+.map-svg--frost .junction.junction--alt .junction-dot {
+  fill: #c9433d;
+}
+
 .dead-trunk,
 .dead-branch {
   fill: none;
@@ -2563,6 +2637,404 @@ body {
   line-height: 1.5;
 }
 
+/* ---------- Winter ---------- */
+
+/*
+ * Snow. Circles that fall a fixed distance and start again, each on its own
+ * clock, drifting sideways on the way down so the fall is not a grid coming
+ * at you. The map's own SVG clips them, so they simply arrive and leave.
+ */
+.snow {
+  pointer-events: none;
+}
+
+.snowflake {
+  fill: #fff;
+  opacity: 0.85;
+  animation: snow-fall var(--fall-duration, 13s) linear infinite;
+  animation-delay: var(--fall-delay, 0s);
+}
+
+@keyframes snow-fall {
+  from {
+    transform: translate(0, -60px);
+  }
+  50% {
+    transform: translate(16px, 260px);
+  }
+  to {
+    transform: translate(0, 600px);
+  }
+}
+
+/*
+ * Frost creeping in from the edges: a soft white haze all the way round,
+ * blurred hard so it reads as ice on the glass rather than a border, and a
+ * fern in each corner where real frost always starts.
+ */
+.frost {
+  pointer-events: none;
+}
+
+.frost-edge {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 54;
+  opacity: 0.5;
+  filter: blur(15px);
+}
+
+.frost-fern {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+
+.cottage-smoke,
+.stall-steam {
+  fill: none;
+  stroke: #b9c2cb;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+
+/* ---------- Christmas ---------- */
+
+.xmas-branch {
+  fill: #3f7a55;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.xmas-skirt {
+  fill: #fbfdfe;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.xmas-star {
+  fill: #f0c75e;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.xmas-string {
+  fill: none;
+  stroke: #4a5560;
+  stroke-width: 1.4;
+}
+
+.xmas-bauble--red {
+  fill: #d74a45;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.xmas-bauble--gold {
+  fill: #e7b54a;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.xmas-bauble--blue {
+  fill: var(--brand-blue);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.cottage-roof {
+  fill: #8a5b4a;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.cottage-snow {
+  fill: none;
+  stroke: #fbfdfe;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+
+.cottage-chimney {
+  fill: #8a5b4a;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.cottage-window {
+  fill: #f6d78a;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.cottage-door {
+  fill: #8a5b4a;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.stall-awning {
+  fill: #d94a45;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.stall-body {
+  fill: #f7f7f2;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.stall-counter {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.stall-urn {
+  fill: #8a3d3d;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.stall-handle {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.snow-body {
+  fill: #f7f7f2;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.snow-vest {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.snow-vest-band {
+  fill: none;
+  stroke: #fbfdfe;
+  stroke-width: 2;
+}
+
+.snow-arm {
+  fill: none;
+  stroke: #6b5442;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.snow-nose {
+  fill: #e26a3b;
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.snow-coal,
+.snow-hat {
+  fill: var(--ink);
+}
+
+.cane-body {
+  fill: none;
+  stroke: #f7f7f2;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.cane-stripe {
+  fill: none;
+  stroke: #d74a45;
+  stroke-width: 5.4;
+  /* Butt, not round: round caps add half the stroke width to each end of
+     every dash, which closes the gaps and leaves a plain red stick. */
+  stroke-linecap: butt;
+  stroke-dasharray: 4 5;
+}
+
+.gift-box {
+  fill: #d74a45;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.gift-box-alt {
+  fill: var(--brand-blue);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.gift-ribbon,
+.gift-bow {
+  fill: none;
+  stroke: #e7b54a;
+  stroke-width: 1.8;
+}
+
+.holly-leaf {
+  fill: #3f7a55;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.holly-vein {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.holly-berry {
+  fill: #d74a45;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+/* Carol singers. Wrapped up, and staying until the whole verse is done. */
+.caroller-coat {
+  fill: #35506b;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.caroller-coat-alt {
+  fill: #7a4438;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.caroller-face {
+  fill: #e8cfae;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.caroller-hat {
+  fill: #d74a45;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.caroller-hat-alt {
+  fill: #3f7a55;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.caroller-scarf {
+  fill: none;
+  stroke: #d74a45;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.caroller-pole {
+  fill: none;
+  stroke: #5a6670;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.caroller-lantern {
+  fill: #f6d36a;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.caroller-book {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.caroller-note {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.caroller-note-head {
+  fill: var(--ink);
+}
+
+/* The robin: brown, round, and doing the whole card on its own. */
+.robin-body,
+.robin-tail,
+.robin-wing {
+  fill: #8b684d;
+}
+
+.robin-breast {
+  fill: #c84e3f;
+}
+
+.robin-wing {
+  stroke: #6a4f39;
+  stroke-width: 1.2;
+  /* Same hinge and idle beat as the pigeon's, so a flock reads as a flock. */
+  transform-origin: -2px -3px;
+  animation: wing-idle 2.4s ease-in-out infinite;
+}
+
+.robin-beak {
+  fill: #e3a73b;
+}
+
+.robin-eye {
+  fill: var(--ink);
+}
+
+.robin-legs {
+  stroke: #d2924a;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+/* Optional, in the way that club kit is never optional. */
+.hat-felt {
+  fill: #d74a45;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.hat-brim {
+  fill: #fbfdfe;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+/* The title takes the cold with it, the way it takes the dark. */
+.game-header--frost .game-header__title {
+  color: #2c6f9b;
+}
+
+.game-header--frost .game-header__subtitle {
+  color: #4a7f9e;
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2575,7 +3047,9 @@ body {
   }
 
   .flock-bird,
-  .pigeon-wing {
+  .pigeon-wing,
+  /* Snow that has stopped, rather than snow that has all landed at once. */
+  .snowflake {
     animation: none !important;
   }
 
