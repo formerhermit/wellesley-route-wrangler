@@ -28,7 +28,7 @@ export const thursdaySocialRun: Level = {
   // One of them, at the water's edge, waiting. Run the group past the pond
   // and it comes with them — the same mechanic as the Fleet Pond goose, and a
   // far worse idea, because this one remembers faces.
-  follower: { kind: "goose", nodeId: "geese-pond", dx: -15, dy: 38 },
+  follower: { kind: "goose", nodeId: "geese-pond", dx: -60, dy: 15, scale: 1.3 },
 
   view: { width: 800, height: 560 },
 
@@ -208,6 +208,10 @@ export const thursdaySocialRun: Level = {
       blurb: "pigeon hotspot, and a hill about it",
       type: "pigeon",
       sprite: "hill",
+      // Up and left of the junction: the lane in from the Medical Centre
+      // arrives across where a hill marker usually sits.
+      spriteDx: -65,
+      spriteDy: -30,
     },
     {
       id: "big-tesco",

@@ -45,56 +45,38 @@ import {
   Woods,
   Youths,
 } from "./MapSprites";
+import { LANDMARK_OFFSET } from "../game/landmarks";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
-/** Sprites drawn above their junction, keyed by what the junction is. */
-const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; dy: number; dx: number }>> = {
-  // Both sit below and to one side of their junction. Landmarks are drawn
-  // under the roads, so anything left on one is lost beneath it, and both of
-  // these junctions label upwards, so above is where the writing goes. The
-  // Observatory needs the wider berth: its telescope juts out to the right,
-  // and the road down to the Polo Fields runs past that shoulder.
-  observatory: { render: () => <Observatory />, dy: 42, dx: -52 },
-  bush: { render: () => <Bush />, dy: 30, dx: 45 },
-  shop: { render: () => <Superstore />, dy: -50, dx: 0 },
-  carpark: { render: () => <CarPark />, dy: -50, dx: 0 },
-  // Well clear to the side: the trail out of Cow Field runs north through the
-  // junction, and a cow standing on the path is a cow you cannot see.
-  cow: { render: () => <Cow />, dy: -32, dx: 60 },
-  hill: { render: () => <HillMarker />, dy: 4, dx: -44 },
-  hangar: { render: () => <Hangar />, dy: -46, dx: 2 },
-  statue: { render: () => <Statue />, dy: -48, dx: 0 },
-  towncentre: { render: () => <TownCentre />, dy: -52, dx: 0 },
-  cemetery: { render: () => <Cemetery />, dy: -34, dx: 0 },
-  woods: { render: () => <Woods />, dy: -46, dx: 0 },
-  coffee: { render: () => <CoffeeVan />, dy: -44, dx: 0 },
-  railway: { render: () => <Railway />, dy: -42, dx: 0 },
-  // Both are pushed off to one side: the path down to the pitches and the one
-  // up to the Woods each ran straight through the middle of them.
-  football: { render: () => <FootballPitch />, dy: -48, dx: 40 },
-  golf: { render: () => <GolfFlag />, dy: -26, dx: -48 },
-  sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
-  bin: { render: () => <Bin />, dy: -34, dx: 0 },
-  church: { render: () => <Church />, dy: -52, dx: 0 },
-  // Beside its junction and dropped clear: the name goes above, and a
-  // portaloo is tall enough to reach it.
-  portaloo: { render: () => <Portaloo />, dy: 4, dx: -48 },
-  // Below its junction: both lanes off it leave to the right, and the name
-  // goes above.
-  car: { render: () => <SuspiciousCar />, dy: 34, dx: -18 },
-  ghost: { render: () => <Ghost />, dy: -42, dx: 0 },
-  treaters: { render: () => <Treaters />, dy: -44, dx: 0 },
-  // Beside the junction rather than over it: an aeroplane sitting on top of
-  // the stop reads as a flypast, which Hecking Airport has never managed.
-  airport: { render: () => <Aeroplane />, dy: 2, dx: -92 },
-  // Clear of the label underneath it: the pub's sign stands proud of the roof.
-  pub: { render: () => <Pub />, dy: -60, dx: 0 },
-  // Higher than the rest: the stumps stand up, and the label goes underneath.
-  cricket: { render: () => <CricketStumps />, dy: -58, dx: 0 },
-  mosque: { render: () => <Mosque />, dy: -48, dx: 0 },
-  // Stands in the river rather than beside it: the bridge sits on its own
-  // junction, over the water and under the roads, where a bridge belongs.
-  bridge: { render: () => <Bridge />, dy: 0, dx: 0 },
+/** What each kind of junction draws. Where it goes is in `landmarks.ts`. */
+const LANDMARK: Partial<Record<MapNodeType, () => React.ReactNode>> = {
+  observatory: () => <Observatory />,
+  bush: () => <Bush />,
+  shop: () => <Superstore />,
+  carpark: () => <CarPark />,
+  cow: () => <Cow />,
+  hill: () => <HillMarker />,
+  hangar: () => <Hangar />,
+  statue: () => <Statue />,
+  towncentre: () => <TownCentre />,
+  cemetery: () => <Cemetery />,
+  woods: () => <Woods />,
+  coffee: () => <CoffeeVan />,
+  railway: () => <Railway />,
+  football: () => <FootballPitch />,
+  golf: () => <GolfFlag />,
+  sportscentre: () => <SportsCentre />,
+  bin: () => <Bin />,
+  church: () => <Church />,
+  portaloo: () => <Portaloo />,
+  car: () => <SuspiciousCar />,
+  ghost: () => <Ghost />,
+  treaters: () => <Treaters />,
+  airport: () => <Aeroplane />,
+  pub: () => <Pub />,
+  cricket: () => <CricketStumps />,
+  mosque: () => <Mosque />,
+  bridge: () => <Bridge />,
 };
 
 /**
@@ -181,16 +163,17 @@ export function MapLandmarks({
           .filter((node) => node.spriteOnTop)
           .map((node) => {
             const kind = node.sprite ?? node.type;
-            const sprite = kind ? ABOVE_NODE[kind] : undefined;
-            if (!sprite) return null;
-            const dx = node.spriteDx ?? sprite.dx;
-            const dy = node.spriteDy ?? sprite.dy;
+            const draw = kind ? LANDMARK[kind] : undefined;
+            const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+            if (!draw || !place) return null;
+            const dx = node.spriteDx ?? place.dx;
+            const dy = node.spriteDy ?? place.dy;
             return (
               <g
                 key={`over-${node.id}`}
                 transform={`translate(${node.x + dx} ${node.y + dy})`}
               >
-                {sprite.render()}
+                {draw()}
               </g>
             );
           })}
@@ -351,18 +334,19 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
       {level.nodes.map((node) => {
         if (node.spriteOnTop) return null;
         const kind = node.sprite ?? node.type;
-        const sprite = kind ? ABOVE_NODE[kind] : undefined;
-        if (!sprite) return null;
+        const draw = kind ? LANDMARK[kind] : undefined;
+        const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+        if (!draw || !place) return null;
         // A junction may put its landmark somewhere other than where the type
         // puts every other one, for the roads that happen to run past it.
-        const dx = node.spriteDx ?? sprite.dx;
-        const dy = node.spriteDy ?? sprite.dy;
+        const dx = node.spriteDx ?? place.dx;
+        const dy = node.spriteDy ?? place.dy;
         return (
           <g
             key={`sprite-${node.id}`}
             transform={`translate(${node.x + dx} ${node.y + dy})`}
           >
-            {sprite.render()}
+            {draw()}
           </g>
         );
       })}

@@ -140,7 +140,7 @@ export function Flowers() {
     <g className="sprite sprite--flowers" aria-hidden="true">
       <path d="M -7 9 q -1 -7 0 -11 M 0 9 q 1 -8 0 -13 M 7 9 q 1 -6 0 -10" className="flower-stem" />
       <circle cx={-7} cy={-3} r={3} className="flower-pink" />
-      <circle cx={0} cy={-5} r={3.2} className="flower-white" />
+      <circle cx={0} cy={-5} r={3.2} className="flower-purple" />
       <circle cx={7} cy={-2} r={2.8} className="flower-yellow" />
       <circle cx={-7} cy={-3} r={1} className="flower-eye" />
       <circle cx={0} cy={-5} r={1} className="flower-eye" />

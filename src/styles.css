@@ -956,25 +956,25 @@ body {
 }
 
 .flower-pink {
-  fill: #e08aa8;
+  fill: #e8447f;
   stroke: var(--ink);
   stroke-width: 1.4;
 }
 
-.flower-white {
-  fill: #fffdf7;
+.flower-purple {
+  fill: #8b4fc9;
   stroke: var(--ink);
   stroke-width: 1.4;
 }
 
 .flower-yellow {
-  fill: var(--hi-vis);
+  fill: #f5c518;
   stroke: var(--ink);
   stroke-width: 1.4;
 }
 
 .flower-eye {
-  fill: #e08a1e;
+  fill: #fff4c2;
 }
 
 .butterfly-wing {

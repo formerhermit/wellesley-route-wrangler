@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { levels } from "../data/levels";
+import { LANDMARK_OFFSET } from "./landmarks";
 import type { Level } from "./types";
 
 /**
@@ -37,6 +38,13 @@ const ROAD_CLEARANCE = 14;
 /** And to a junction, whose dot and halo take up sixteen units on their own. */
 const JUNCTION_CLEARANCE = 20;
 
+/**
+ * And to a junction's own landmark. Loose enough that a soldier may tuck in
+ * beside the hill he is hiding on, tight enough to catch a car parked under an
+ * aeroplane.
+ */
+const LANDMARK_CLEARANCE = 26;
+
 /** The moon is scenery in the sky, and the sky is over everything. */
 const OVERHEAD = new Set(["moon", "bat", "butterfly"]);
 
@@ -69,6 +77,30 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       );
       expect(onAJunction).toEqual([]);
+    });
+
+    it("keeps its scenery off the landmarks", () => {
+      // Where every junction's own sprite ends up, which is not the junction:
+      // Hecking Airport's aeroplane parks ninety units to its left, and a car
+      // scattered there sits underneath it.
+      const landmarks = level.nodes
+        .map((node) => {
+          const kind = node.sprite ?? node.type;
+          const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+          if (!place) return undefined;
+          return {
+            x: node.x + (node.spriteDx ?? place.dx),
+            y: node.y + (node.spriteDy ?? place.dy),
+          };
+        })
+        .filter((spot) => spot !== undefined);
+
+      const onALandmark = scatter.filter((item) =>
+        landmarks.some(
+          (spot) => Math.hypot(item.x - spot.x, item.y - spot.y) < LANDMARK_CLEARANCE,
+        ),
+      );
+      expect(onALandmark).toEqual([]);
     });
 
     it("keeps its scenery off the writing", () => {

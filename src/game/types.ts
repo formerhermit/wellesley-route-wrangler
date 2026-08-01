@@ -203,6 +203,8 @@ export interface Level {
     /** Where it waits, relative to that junction. */
     dx: number;
     dy: number;
+    /** Drawn bigger or smaller than usual, where the map has room. */
+    scale?: number;
   };
   nodes: MapNode[];
   roads: Road[];

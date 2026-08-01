@@ -165,7 +165,15 @@ export function RouteMap({
                 <Treaters />
               </g>
             ) : (
-              <Goose />
+              <g
+                transform={
+                  level.follower?.scale
+                    ? `scale(${level.follower.scale})`
+                    : undefined
+                }
+              >
+                <Goose />
+              </g>
             )}
           </g>
         )}
