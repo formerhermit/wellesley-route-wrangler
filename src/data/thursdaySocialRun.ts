@@ -19,11 +19,16 @@ export const thursdaySocialRun: Level = {
     { x: 600, y: 220, kind: "lights" },
     { x: 740, y: 240, kind: "car", variant: 1 },
     { x: 240, y: 220, kind: "cat" },
-    { x: 300, y: 260, kind: "bin" },
+    { x: 340, y: 420, kind: "bin" },
     { x: 420, y: 380, kind: "car", variant: 2 },
     { x: 620, y: 380, kind: "cat" },
     { x: 520, y: 420, kind: "bin" },
   ],
+
+  // One of them, at the water's edge, waiting. Run the group past the pond
+  // and it comes with them — the same mechanic as the Fleet Pond goose, and a
+  // far worse idea, because this one remembers faces.
+  follower: { kind: "goose", nodeId: "geese-pond", dx: -15, dy: 38 },
 
   view: { width: 800, height: 560 },
 
