@@ -41,6 +41,33 @@ export function Tree() {
   );
 }
 
+/** A boulder and its smaller companion. Heath, not mountains. */
+export function Rock() {
+  return (
+    <g className="sprite sprite--rock" aria-hidden="true">
+      <path d="M -14 8 q -2 -11 8 -13 q 11 -2 12 8 l 1 5 Z" className="rock-body" />
+      <path d="M 6 8 q -1 -7 5 -8 q 7 -1 7 8 Z" className="rock-body" />
+      <path d="M -9 0 q 3 -4 8 -3" className="rock-highlight" />
+    </g>
+  );
+}
+
+/**
+ * The Random Portaloos, which are not on any map anybody planned and are
+ * nonetheless the most welcome thing on this one.
+ */
+export function Portaloo() {
+  return (
+    <g className="sprite sprite--portaloo" aria-hidden="true">
+      <rect x={-13} y={-20} width={26} height={40} rx={2} className="loo-body" />
+      <path d="M -14 -20 h 28 l -3 -5 h -22 Z" className="loo-roof" />
+      <rect x={-9} y={-15} width={18} height={31} rx={1.5} className="loo-door" />
+      <path d="M -6 -11 h 12 M -6 -8 h 12 M -6 -5 h 12" className="loo-vent" />
+      <circle cx={6} cy={2} r={1.6} className="loo-handle" />
+    </g>
+  );
+}
+
 export function HillMarker() {
   return (
     <g className="sprite sprite--hill" aria-hidden="true">

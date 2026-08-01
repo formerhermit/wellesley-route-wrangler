@@ -17,7 +17,9 @@ import {
   HillMarker,
   Mosque,
   Observatory,
+  Portaloo,
   Pub,
+  Rock,
   Railway,
   SportsCentre,
   Statue,
@@ -58,6 +60,9 @@ const ABOVE_NODE: Partial<Record<MapNodeType, { render: () => React.ReactNode; d
   sportscentre: { render: () => <SportsCentre />, dy: -52, dx: 0 },
   bin: { render: () => <Bin />, dy: -34, dx: 0 },
   church: { render: () => <Church />, dy: -52, dx: 0 },
+  // Beside its junction and dropped clear: the name goes above, and a
+  // portaloo is tall enough to reach it.
+  portaloo: { render: () => <Portaloo />, dy: 4, dx: -48 },
   ghost: { render: () => <Ghost />, dy: -42, dx: 0 },
   treaters: { render: () => <Treaters />, dy: -44, dx: 0 },
   // Beside the junction rather than over it: an aeroplane sitting on top of
@@ -224,6 +229,18 @@ export function MapLandmarks({ level }: { level: Level }) {
           ))}
         </g>
       )}
+
+      {/* Placed by hand, where the theme's own scatter leaves a map looking
+          empty. Drawn with the scenery, under the roads, like everything
+          else here. */}
+      {(level.scatter ?? []).map((item) => (
+        <g
+          key={`${item.kind}-${item.x}-${item.y}`}
+          transform={`translate(${item.x} ${item.y})`}
+        >
+          {item.kind === "rock" ? <Rock /> : <Tree />}
+        </g>
+      ))}
 
       {level.nodes.map((node) => {
         const kind = node.sprite ?? node.type;

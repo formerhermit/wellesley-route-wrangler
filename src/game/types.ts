@@ -34,6 +34,7 @@ export type MapNodeType =
   | "ducks"
   | "church"
   | "ghost"
+  | "portaloo"
   /** A street of trick or treaters. A group of adults gets no further. */
   | "treaters";
 
@@ -152,6 +153,12 @@ export interface Level {
   flock?: "pigeon" | "crow";
   /** A file in `public/audio`. Without one the level plays the house theme. */
   music?: string;
+  /**
+   * Scenery placed by hand, on top of whatever the theme scatters. For the
+   * corners of a map that no road reaches and that read as blank paper
+   * without it. Decorative only: nothing here is a junction.
+   */
+  scatter?: { x: number; y: number; kind: "tree" | "rock" }[];
   nodes: MapNode[];
   roads: Road[];
   startNodeId: string;

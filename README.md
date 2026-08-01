@@ -22,9 +22,11 @@ must:
 - avoid the closed road
 - pass through no more than one pigeon hotspot
 
-**Level 2 — Sunday Trail Run** — a loop out from the Overpriced Car Park and
-back: reach 10 km, greet the cows, stay off the tarmac, avoid the pigeon barn,
-and mind the path closed for lambing.
+**Level 2 — Caesar's Camp** — a loop out from the Overpriced Car Park and
+back over the heath: reach 10 km, greet the cows, stay off the tarmac, avoid
+the pigeon barn, and mind the path closed for lambing. Its id is still
+`sunday-trail-run`, which is what it was called first: progress is a list of
+ids, so renaming it would take the run off everyone who had already done it.
 
 **Level 3 — Thursday Town Run** — the Observatory and its four northern
 neighbours from level 1, and then everything above them that the social run
@@ -74,6 +76,10 @@ rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
+
+A level may also `scatter` trees and rocks by hand, on top of whatever its
+theme puts down, for the corners no road reaches — the heath along the top of
+Caesar's Camp was reading as blank paper without them.
 
 Where a junction needs its landmark or its label somewhere other than where its
 type puts every other one — because a road happens to run through the spot — it

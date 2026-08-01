@@ -1,13 +1,15 @@
 import type { Level } from "../game/types";
 
 /**
- * The second level, and the proof that the rules are level-agnostic: a
- * point-to-point rather than a loop, judged on staying off tarmac rather than
- * on pigeon hotspots.
+ * Caesar's Camp: heath, sand and an Iron Age hillfort, and the proof that the
+ * rules are level-agnostic — the first level judged on staying off the tarmac
+ * rather than on pigeon hotspots.
  */
-export const sundayTrailRun: Level = {
+export const caesarsCamp: Level = {
+  // Not renamed with the level: progress is a list of these, so changing it
+  // would take a completed run off everybody who has already done it.
   id: "sunday-trail-run",
-  title: "Sunday Trail Run",
+  title: "Caesar's Camp",
   strapline: "There's coffee at the end.",
   instructions:
     "A proper loop from the car park, out on the trails and back before the parking ticket expires. This one is not flat and nobody pretended it was.",
@@ -15,6 +17,21 @@ export const sundayTrailRun: Level = {
   startNodeId: "car-park",
   finishNodeId: "car-park",
   view: { width: 800, height: 560 },
+
+  // The top of this map is heath nobody runs across, and it was reading as
+  // blank paper. Sand, scrub and boulders, kept clear of the labels and the
+  // climb up to the trig point.
+  scatter: [
+    { x: 170, y: 140, kind: "tree" },
+    { x: 255, y: 120, kind: "rock" },
+    { x: 340, y: 90, kind: "tree" },
+    { x: 400, y: 45, kind: "rock" },
+    { x: 450, y: 78, kind: "tree" },
+    { x: 520, y: 45, kind: "rock" },
+    { x: 565, y: 95, kind: "tree" },
+    { x: 655, y: 115, kind: "rock" },
+    { x: 720, y: 60, kind: "tree" },
+  ],
 
   objectives: [
     { kind: "start", detail: "Trail shoes on, ticket bought, optimism high." },
@@ -170,6 +187,10 @@ export const sundayTrailRun: Level = {
       blurb: "obligatory photograph",
       type: "hill",
       labelAbove: true,
+      // Further out than a hill usually sits: the climb up from the soldiers
+      // arrives across the spot the marker was standing in.
+      spriteDx: -70,
+      spriteDy: -18,
     },
     {
       id: "stinky-pond",
@@ -195,6 +216,7 @@ export const sundayTrailRun: Level = {
       label: "Random Portaloos",
       blurb: "unexpectedly welcome",
       labelAbove: true,
+      type: "portaloo",
     },
     {
       id: "gate",

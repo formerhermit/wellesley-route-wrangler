@@ -814,6 +814,53 @@ body {
   stroke-linejoin: round;
 }
 
+.rock-body {
+  fill: #b6ada0;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rock-highlight {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.loo-body {
+  fill: #3d7f9c;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.loo-roof {
+  fill: #2c6076;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.loo-door {
+  fill: #4f9ab8;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.loo-vent {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.loo-handle {
+  fill: #e8dfcb;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
 .church-spire {
   fill: #8d8577;
   stroke: var(--ink);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sundayTrailRun as level } from "../data/sundayTrailRun";
+import { caesarsCamp as level } from "../data/caesarsCamp";
 import { emptyRoute, roadBetween, totalDistanceKm } from "./routeGraph";
 import { canRunRoute, countSurface, evaluateRoute } from "./routeEvaluation";
 import { selectResult } from "./resultSelection";
@@ -48,7 +48,7 @@ const alternative = routeOf(
 const titleFor = (route: Route) =>
   selectResult(level, evaluateRoute(level, route)).title;
 
-describe("Sunday Trail Run", () => {
+describe("Caesar's Camp", () => {
   it("is a loop from the car park", () => {
     expect(level.startNodeId).toBe("car-park");
     expect(level.finishNodeId).toBe("car-park");

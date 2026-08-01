@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { thursdaySocialRun } from "../data/thursdaySocialRun";
-import { sundayTrailRun } from "../data/sundayTrailRun";
+import { caesarsCamp } from "../data/caesarsCamp";
 import { emptyRoute, roadBetween } from "./routeGraph";
 import { evaluateRoute } from "./routeEvaluation";
 import { selectResult } from "./resultSelection";
@@ -113,7 +113,7 @@ describe("incident report lines", () => {
 
   it("reports on whatever the level happens to care about", () => {
     const trailRoute = routeOf(
-      sundayTrailRun,
+      caesarsCamp,
       "car-park",
       "cattlegrid",
       "cow-field",
@@ -127,7 +127,7 @@ describe("incident report lines", () => {
       "stinky-pond",
       "car-park",
     );
-    const labels = reportFor(sundayTrailRun, trailRoute).lines.map(
+    const labels = reportFor(caesarsCamp, trailRoute).lines.map(
       (line) => line.label,
     );
     // The trail level cares about cows and tarmac; the town level does not.
