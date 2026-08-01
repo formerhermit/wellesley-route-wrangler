@@ -35,6 +35,10 @@ export type MapNodeType =
   | "ghost"
   | "portaloo"
   | "car"
+  | "manor"
+  | "sailing"
+  | "sand"
+  | "mud"
   /** A street of trick or treaters. A group of adults gets no further. */
   | "treaters";
 
@@ -155,7 +159,7 @@ export interface Level {
    * What the birds are. They loiter, scatter and get counted identically
    * whichever they are; only the drawing and the paperwork change.
    */
-  flock?: "pigeon" | "crow";
+  flock?: "pigeon" | "crow" | "duck";
   /** A file in `public/audio`. Without one the level plays the house theme. */
   music?: string;
   /**
@@ -186,7 +190,16 @@ export interface Level {
       | "youths"
       | "flowers"
       | "butterfly"
-      | "icecream";
+      | "icecream"
+      | "alpine"
+      | "wellingtonia"
+      | "heather"
+      | "gorse"
+      | "boat"
+      | "island"
+      | "warning"
+      | "walker"
+      | "bmx";
     /** Which drawing, where a kind has more than one. */
     variant?: number;
     /** Turn it round. Everything here is drawn facing right. */

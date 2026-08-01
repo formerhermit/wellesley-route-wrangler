@@ -35,4 +35,24 @@ export const LANDMARK_OFFSET: Partial<
   cricket: { dx: 0, dy: -58 },
   mosque: { dx: 0, dy: -48 },
   bridge: { dx: 0, dy: 0 },
+  manor: { dx: 0, dy: -54 },
+  sailing: { dx: 0, dy: -30 },
+  sand: { dx: 0, dy: 30 },
+  mud: { dx: 0, dy: 30 },
 };
+
+/**
+ * The trees a trail map scatters on its own, before a level places anything by
+ * hand. Here rather than in the component so the scenery test can keep hand
+ * placements from landing on them.
+ */
+export const TRAIL_TREES: { x: number; y: number }[] = [
+  { x: 90, y: 90 },
+  { x: 250, y: 60 },
+  { x: 610, y: 70 },
+  { x: 740, y: 200 },
+  { x: 60, y: 210 },
+  { x: 330, y: 540 },
+  { x: 700, y: 505 },
+  { x: 180, y: 520 },
+];

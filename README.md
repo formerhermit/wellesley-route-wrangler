@@ -92,6 +92,17 @@ One junction on that map sets `spriteOnTop`, which draws its landmark over the
 roads instead of under them. The ski slope has the road along the top of the
 map running through the only place its marker can stand.
 
+**Level 8 — Hawley Lake** — a lap of open water, and the first map built round
+a lake rather than past one. 9 to 11.5 km from the Sailing Centre, taking in
+Minley Manor at the top of its avenue and the birds at Bird Bay, with two epic
+hills you may have one of and a range road the Ministry has shut. Ten winning
+routes. The lake is drawn from the ring of four bank junctions, exactly as
+Fleet Pond is, and the islands and dinghies are scattered on top of it.
+
+Its birds are ducks — `flock: "duck"` — which is the same mechanism as the
+Spooky Run's crows: they loiter, scatter and get counted identically, and only
+the drawing and the paperwork change. The goose is at Bird Bay, and it follows.
+
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. A new level really is a new

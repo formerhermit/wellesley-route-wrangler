@@ -1,10 +1,13 @@
 import {
   Aeroplane,
+  AlpineTree,
   Bat,
   Bench,
   Bin,
+  BmxTrack,
   Bridge,
   Bush,
+  Butterfly,
   CarPark,
   Cat,
   Cemetery,
@@ -14,38 +17,47 @@ import {
   CricketStumps,
   DeadTree,
   Dog,
+  DogWalker,
   Flowers,
   FootballPitch,
   Ghost,
   Gnome,
-  Gravestone,
   GolfFlag,
+  Gorse,
+  Gravestone,
   Hangar,
+  Heather,
   HillMarker,
   IceCreamVan,
+  Island,
+  MinleyManor,
   Moon,
   Mosque,
+  Mud,
   Observatory,
   Portaloo,
-  Pumpkin,
   Pub,
+  Pumpkin,
   Railway,
-  Butterfly,
   Rock,
+  SailingBoat,
+  SandPatch,
   Signpost,
   Soldier,
   SportsCentre,
   Statue,
   Superstore,
   SuspiciousCar,
-  TrafficLight,
   TownCentre,
+  TrafficLight,
   Treaters,
   Tree,
+  WarningSign,
+  Wellingtonia,
   Woods,
   Youths,
 } from "./MapSprites";
-import { LANDMARK_OFFSET } from "../game/landmarks";
+import { LANDMARK_OFFSET, TRAIL_TREES } from "../game/landmarks";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
 /** What each kind of junction draws. Where it goes is in `landmarks.ts`. */
@@ -77,6 +89,10 @@ const LANDMARK: Partial<Record<MapNodeType, () => React.ReactNode>> = {
   cricket: () => <CricketStumps />,
   mosque: () => <Mosque />,
   bridge: () => <Bridge />,
+  manor: () => <MinleyManor />,
+  sailing: () => <SailingBoat />,
+  sand: () => <SandPatch />,
+  mud: () => <Mud />,
 };
 
 /**
@@ -120,6 +136,15 @@ const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNod
   flowers: () => <Flowers />,
   butterfly: () => <Butterfly />,
   icecream: () => <IceCreamVan />,
+  alpine: () => <AlpineTree />,
+  wellingtonia: () => <Wellingtonia />,
+  heather: () => <Heather />,
+  gorse: () => <Gorse />,
+  boat: () => <SailingBoat />,
+  island: () => <Island />,
+  warning: () => <WarningSign />,
+  walker: () => <DogWalker />,
+  bmx: () => <BmxTrack />,
 };
 
 /**
@@ -285,19 +310,11 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
       ) : (
         // Open country: a scatter of trees instead of terraced houses.
         <g>
-          {[
-            [90, 90],
-            [250, 60],
-            [610, 70],
-            [740, 200],
-            [60, 210],
-            // Left of where it was: on the Tilford map it stood on The Sandy
-            // Bit, and a junction you cannot see is a junction you cannot use.
-            [330, 540],
-            [700, 505],
-            [180, 520],
-          ].map(([x, y]) => (
-            <g key={`${x}-${y}`} transform={`translate(${x} ${y})`}>
+          {TRAIL_TREES.map((tree) => (
+            <g
+              key={`${tree.x}-${tree.y}`}
+              transform={`translate(${tree.x} ${tree.y})`}
+            >
               <Tree />
             </g>
           ))}

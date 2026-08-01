@@ -105,7 +105,12 @@ export function buildIncidentReport(
   });
 
   lines.push({
-    label: level.flock === "crow" ? "Unexpected crows" : "Unexpected pigeons",
+    label:
+      level.flock === "crow"
+        ? "Unexpected crows"
+        : level.flock === "duck"
+          ? "Unexpected ducks"
+          : "Unexpected pigeons",
     value: String(pigeonsSighted(level, route)),
     tone: "neutral",
   });

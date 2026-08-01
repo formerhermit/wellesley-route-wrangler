@@ -1216,6 +1216,277 @@ body {
   stroke-linejoin: round;
 }
 
+.manor-wall {
+  fill: #a4614c;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.manor-roof {
+  fill: #4b5560;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.manor-chimney {
+  fill: none;
+  stroke: #8d5343;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.manor-finial {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.manor-window {
+  fill: #f6e6bf;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.manor-door {
+  fill: #5d4130;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+}
+
+.alpine-leaf {
+  fill: #3f6b4a;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.sequoia-trunk {
+  fill: #7a4a34;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.sequoia-leaf {
+  fill: #35603f;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.sequoia-shade {
+  fill: none;
+  stroke: #23472d;
+  stroke-width: 1.4;
+  opacity: 0.6;
+}
+
+.heather-stem {
+  fill: none;
+  stroke: #6d7f5c;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.heather-bloom {
+  fill: #9b5fb5;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.gorse-body {
+  fill: #4f6d3a;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.gorse-spine {
+  fill: none;
+  stroke: #3d552d;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.gorse-flower {
+  fill: #f5c518;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+.mud-pool {
+  fill: #7a5c3e;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.mud-shine {
+  fill: #9a7850;
+  opacity: 0.7;
+}
+
+.mud-rut {
+  fill: none;
+  stroke: #5d4530;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.sand-body {
+  fill: #e2cf9e;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.sand-ripple {
+  fill: none;
+  stroke: #c9b076;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.boat-hull {
+  fill: #b4553f;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.boat-mast {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.boat-sail,
+.boat-jib {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+/* Moored, and never quite still. */
+.sprite--boat {
+  transform-origin: 0 8px;
+  animation: boat-bob 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes boat-bob {
+  from {
+    transform: rotate(-5deg) translateY(0);
+  }
+  to {
+    transform: rotate(5deg) translateY(-2px);
+  }
+}
+
+.island-ground {
+  fill: #8a9d6b;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.warning-plate {
+  fill: #f2d24e;
+  stroke: var(--fail);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.warning-mark {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.warning-mark-dot {
+  fill: var(--ink);
+}
+
+.walker-head {
+  fill: #e8cfae;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.walker-body {
+  fill: none;
+  stroke: #4a6b9c;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.walker-arms,
+.walker-legs {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.walker-lead {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.4;
+}
+
+.bmx-jump {
+  fill: none;
+  stroke: #8a6a4a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bmx-ground {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.duck-body,
+.duck-head {
+  fill: #fffdf7;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.duck-head {
+  fill: #3f6b4a;
+}
+
+.duck-wing {
+  fill: #a8814c;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  transform-origin: -2px -3px;
+  animation: wing-idle 2.4s ease-in-out infinite;
+}
+
+.duck-tail {
+  fill: #a8814c;
+}
+
+.duck-bill {
+  fill: #e8a33d;
+}
+
+.duck-eye {
+  fill: var(--ink);
+}
+
+.duck-legs {
+  stroke: #e8a33d;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.sprite--duck.is-alarmed .duck-wing {
+  animation: wing-flap 0.28s linear infinite;
+}
+
 .rock-body {
   fill: #b6ada0;
   stroke: var(--ink);

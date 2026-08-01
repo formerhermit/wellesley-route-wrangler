@@ -241,6 +241,169 @@ export function Soldier({ index, flip = false }: { index: number; flip?: boolean
   );
 }
 
+/**
+ * Minley Manor: red brick, French château roofs, a round tower with a conical
+ * cap and more chimneys than a house needs. Distinctive enough that the
+ * silhouette alone does the work.
+ */
+export function MinleyManor() {
+  return (
+    <g className="sprite sprite--manor" aria-hidden="true">
+      <rect x={-26} y={-14} width={40} height={26} rx={1.5} className="manor-wall" />
+      <path d="M -28 -14 h 44 l -8 -13 h -28 Z" className="manor-roof" />
+      <path d="M -19 -27 v -7 M -6 -30 v -6 M 6 -28 v -6" className="manor-chimney" />
+
+      {/* The tower, which is the bit everybody remembers. */}
+      <rect x={14} y={-24} width={16} height={36} rx={1.5} className="manor-wall" />
+      <path d="M 12 -24 h 20 l -10 -16 Z" className="manor-roof" />
+      <path d="M 22 -40 v -5" className="manor-finial" />
+
+      <path d="M -21 -8 h 6 v 7 h -6 Z M -10 -8 h 6 v 7 h -6 Z M 1 -8 h 6 v 7 h -6 Z" className="manor-window" />
+      <path d="M 18 -18 h 8 v 8 h -8 Z" className="manor-window" />
+      <path d="M -12 12 v -10 a 5 5 0 0 1 10 0 v 10 Z" className="manor-door" />
+      <path d="M -30 12 h 62" className="hangar-ground" />
+    </g>
+  );
+}
+
+/** Alpine, and planted in rows, which is how you know it is not a wood. */
+export function AlpineTree() {
+  return (
+    <g className="sprite sprite--alpine" aria-hidden="true">
+      <rect x={-2} y={2} width={4} height={10} rx={1} className="tree-trunk" />
+      <path d="M 0 -22 l 8 12 h -16 Z" className="alpine-leaf" />
+      <path d="M 0 -14 l 10 13 h -20 Z" className="alpine-leaf" />
+      <path d="M 0 -6 l 12 10 h -24 Z" className="alpine-leaf" />
+    </g>
+  );
+}
+
+/**
+ * A giant sequoia, which the Victorians planted up drives like this one and
+ * which now dwarfs everything the lime trees were meant to match.
+ */
+export function Wellingtonia() {
+  return (
+    <g className="sprite sprite--wellingtonia" aria-hidden="true">
+      <rect x={-3} y={4} width={6} height={12} rx={1.5} className="sequoia-trunk" />
+      <path d="M 0 -34 q 11 20 9 30 q -9 6 -18 0 q -2 -10 9 -30 Z" className="sequoia-leaf" />
+      <path d="M -7 -6 q 7 4 14 0 M -8 -16 q 8 4 16 0" className="sequoia-shade" />
+    </g>
+  );
+}
+
+/** Heather. Purple, springy, and everywhere out here. */
+export function Heather() {
+  return (
+    <g className="sprite sprite--heather" aria-hidden="true">
+      <path d="M -8 8 q -1 -6 1 -9 M 0 8 q 0 -7 0 -11 M 8 8 q 1 -6 -1 -9" className="heather-stem" />
+      <ellipse cx={-7} cy={-2} rx={3.4} ry={4.4} className="heather-bloom" />
+      <ellipse cx={0} cy={-4} rx={3.6} ry={4.8} className="heather-bloom" />
+      <ellipse cx={7} cy={-2} rx={3.4} ry={4.4} className="heather-bloom" />
+    </g>
+  );
+}
+
+/** Gorse: spiky, yellow, and always slightly on fire somewhere. */
+export function Gorse() {
+  return (
+    <g className="sprite sprite--gorse" aria-hidden="true">
+      <path
+        d="M -14 10 q -4 -12 4 -15 q 3 -8 10 -4 q 8 -4 11 5 q 5 5 -1 14 Z"
+        className="gorse-body"
+      />
+      <path d="M -9 -2 l -3 -4 M -2 -8 l -1 -5 M 5 -6 l 4 -4 M 9 2 l 5 -2" className="gorse-spine" />
+      <circle cx={-6} cy={2} r={2.2} className="gorse-flower" />
+      <circle cx={2} cy={-2} r={2.4} className="gorse-flower" />
+      <circle cx={8} cy={4} r={2} className="gorse-flower" />
+      <circle cx={-1} cy={6} r={2} className="gorse-flower" />
+    </g>
+  );
+}
+
+/** The bit everyone walks round and one person runs straight through. */
+export function Mud() {
+  return (
+    <g className="sprite sprite--mud" aria-hidden="true">
+      <ellipse cx={0} cy={2} rx={22} ry={9} className="mud-pool" />
+      <ellipse cx={-4} cy={0} rx={11} ry={4} className="mud-shine" />
+      <path d="M -16 8 q 8 3 14 0 M 4 9 q 6 2 11 -1" className="mud-rut" />
+    </g>
+  );
+}
+
+/** Hecking Sand, which is exactly as advertised. */
+export function SandPatch() {
+  return (
+    <g className="sprite sprite--sand" aria-hidden="true">
+      <ellipse cx={0} cy={2} rx={24} ry={10} className="sand-body" />
+      <path d="M -15 0 q 7 -3 13 0 M -6 6 q 8 -3 15 0" className="sand-ripple" />
+    </g>
+  );
+}
+
+/** A dinghy, doing what dinghies do, which is very little rather slowly. */
+export function SailingBoat() {
+  return (
+    <g className="sprite sprite--boat" aria-hidden="true">
+      <path d="M -10 6 h 20 l -4 5 h -12 Z" className="boat-hull" />
+      <path d="M 0 5 v -18" className="boat-mast" />
+      <path d="M 1 -12 l 8 15 h -8 Z" className="boat-sail" />
+      <path d="M -1 -11 l -6 13 h 6 Z" className="boat-jib" />
+    </g>
+  );
+}
+
+/** An island, which is a bush that has got itself surrounded. */
+export function Island() {
+  return (
+    <g className="sprite sprite--island" aria-hidden="true">
+      <ellipse cx={0} cy={4} rx={16} ry={6} className="island-ground" />
+      <g transform="translate(-4 -2) scale(0.7)">
+        <AlpineTree />
+      </g>
+      <g transform="translate(8 2) scale(0.5)">
+        <AlpineTree />
+      </g>
+    </g>
+  );
+}
+
+/** Ministry of Defence: the sign, and the assumption you will ignore it. */
+export function WarningSign() {
+  return (
+    <g className="sprite sprite--warning" aria-hidden="true">
+      <path d="M 0 12 v -12" className="sign-post" />
+      <path d="M 0 -22 l 11 19 h -22 Z" className="warning-plate" />
+      <path d="M 0 -16 v 7" className="warning-mark" />
+      <circle cx={0} cy={-6} r={1.2} className="warning-mark-dot" />
+    </g>
+  );
+}
+
+/** Somebody's dog, and for once somebody. */
+export function DogWalker() {
+  return (
+    <g className="sprite sprite--walker" aria-hidden="true">
+      <circle cx={0} cy={-14} r={4} className="walker-head" />
+      <path d="M 0 -10 v 9" className="walker-body" />
+      <path d="M 0 -8 l -6 5 M 0 -8 l 6 3" className="walker-arms" />
+      <path d="M 0 -1 l -4 9 M 0 -1 l 5 9" className="walker-legs" />
+      <path d="M 6 -5 q 7 4 9 8" className="walker-lead" />
+    </g>
+  );
+}
+
+/** A BMX track, deep in the woods, built by nobody who will admit to it. */
+export function BmxTrack() {
+  return (
+    <g className="sprite sprite--bmx" aria-hidden="true">
+      <path d="M -22 10 q 6 -12 12 0 q 6 -14 12 0 q 6 -10 12 0" className="bmx-jump" />
+      <path d="M -24 10 h 48" className="bmx-ground" />
+    </g>
+  );
+}
+
 /** A boulder and its smaller companion. Heath, not mountains. */
 export function Rock() {
   return (
@@ -725,6 +888,25 @@ export function Crow({ alarmed = false }: { alarmed?: boolean }) {
       <polygon points="-13,-2 -1,-4.5 -3,3.5" className="crow-tail" />
       <path d="M -2 -3 q 7 -6.5 12 1 q -6.5 3.5 -12 -1 Z" className="crow-wing" />
       <path d="M -3 6 v 4 M 3 6 v 4" className="crow-legs" />
+    </g>
+  );
+}
+
+/**
+ * The same bird again, on the water: white, brown and green rather than grey,
+ * and drawn to the pigeon's proportions so the flock animation lands them in
+ * the same places whichever species a level keeps.
+ */
+export function Duck({ alarmed = false }: { alarmed?: boolean }) {
+  return (
+    <g className={`sprite sprite--duck${alarmed ? " is-alarmed" : ""}`} aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={9.5} ry={6} className="duck-body" />
+      <circle cx={7} cy={-6.5} r={4.2} className="duck-head" />
+      <polygon points="10,-7 18,-5 10,-3.5" className="duck-bill" />
+      <circle cx={8.4} cy={-7.6} r={0.9} className="duck-eye" />
+      <polygon points="-12,-1 -1,-4 -3,3" className="duck-tail" />
+      <path d="M -2 -3 q 7 -6 11 1 q -6 3 -11 -1 Z" className="duck-wing" />
+      <path d="M -3 6 v 4 M 3 6 v 4" className="duck-legs" />
     </g>
   );
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { levels } from "../data/levels";
-import { LANDMARK_OFFSET } from "./landmarks";
+import { LANDMARK_OFFSET, TRAIL_TREES } from "./landmarks";
 import type { Level } from "./types";
 
 /**
@@ -101,6 +101,16 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       );
       expect(onALandmark).toEqual([]);
+    });
+
+    it("keeps its scenery off the trees the theme already planted", () => {
+      if (level.theme !== "trail") return;
+      const onATree = scatter.filter((item) =>
+        TRAIL_TREES.some(
+          (tree) => Math.hypot(item.x - tree.x, item.y - tree.y) < LANDMARK_CLEARANCE,
+        ),
+      );
+      expect(onATree).toEqual([]);
     });
 
     it("keeps its scenery off the writing", () => {
