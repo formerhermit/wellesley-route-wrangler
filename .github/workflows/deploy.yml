@@ -31,7 +31,18 @@ jobs:
       # A failing test or type error should stop the deploy, not ship.
       - run: npm run test
       - run: npm run lint
+
+      # The club table is compiled in, so the build needs the project's URL and
+      # its publishable anon key. Unset — on a fork, say — the leaderboard is
+      # simply not in the bundle and the game plays exactly as it always has.
+      #
+      # The anon key is public by design: it names the project and authorises
+      # nothing. Row level security is what decides who may read and write. The
+      # service role key is a different thing entirely and must never be here.
       - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5

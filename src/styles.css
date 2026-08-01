@@ -448,6 +448,21 @@ body {
   color: var(--club);
 }
 
+/*
+ * A button that has to sit in a line of text and read as one of its links.
+ * It opens a dialog rather than going anywhere, so it must be a button — but
+ * nobody reading the footer cares about that distinction.
+ */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--club);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ---------- Map ---------- */
 
 .map {
@@ -3078,6 +3093,106 @@ body {
 
 .game-header--frost .game-header__subtitle {
   color: #4a7f9e;
+}
+
+/* ---------- The club table ---------- */
+
+.club-table {
+  margin: 0.8rem 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.club-table__row {
+  display: grid;
+  grid-template-columns: 2ch 1fr auto auto;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 0.9rem;
+}
+
+/* Your own row, picked out the way the current junction is on the map. */
+.club-table__row--you {
+  border-color: var(--club-bright);
+  background: color-mix(in srgb, var(--club) 8%, var(--card));
+}
+
+.club-table__place {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.club-table__name {
+  font-weight: 700;
+  /* Somebody else typed this. It does not get to break the layout. */
+  overflow-wrap: anywhere;
+}
+
+.club-table__routes {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.club-table__points {
+  font-weight: 800;
+  color: var(--club);
+  font-variant-numeric: tabular-nums;
+}
+
+.club-table__error {
+  margin: 0.6rem 0;
+  color: var(--fail);
+  font-size: 0.85rem;
+}
+
+.club-join {
+  margin-top: 0.9rem;
+}
+
+.club-join__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.club-join__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.club-join__input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  font: inherit;
+  color: var(--ink);
+}
+
+.club-join__input:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 1px;
+}
+
+.submit-table {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.submit-table__error {
+  color: var(--fail);
 }
 
 /* ---------- Reduced motion ---------- */

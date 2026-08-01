@@ -27,3 +27,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Supabase CLI link state: which project this checkout is pointed at. Local,
+# per-machine, and nobody else's business.
+supabase/.temp

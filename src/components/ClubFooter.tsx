@@ -8,7 +8,7 @@ const REPO_URL = "https://github.com/formerhermit/wellesley-route-wrangler";
  * The real-world call to action. The actions sit in a row so the sharing
  * button can join the club link without the layout changing.
  */
-export function ClubFooter() {
+export function ClubFooter({ onShowPrivacy }: { onShowPrivacy: () => void }) {
   return (
     <footer className="club-footer">
       <p className="club-footer__text">
@@ -34,7 +34,16 @@ export function ClubFooter() {
         © 2026 Jo Hutchins-Joss / Silly Game Studio ·{" "}
         <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
           Code on GitHub
-        </a>
+        </a>{" "}
+        ·{" "}
+        <button
+          type="button"
+          className="link-button"
+          aria-haspopup="dialog"
+          onClick={onShowPrivacy}
+        >
+          Privacy
+        </button>
       </p>
     </footer>
   );
