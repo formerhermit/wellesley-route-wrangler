@@ -1,5 +1,4 @@
 import type { RefObject } from "react";
-import { distanceTarget } from "../game/routeEvaluation";
 import type { Level, RouteEvaluation } from "../game/types";
 import { MusicButton } from "./MusicButton";
 
@@ -7,6 +6,8 @@ interface Props {
   level: Level;
   levelNumber: number;
   evaluation: RouteEvaluation;
+  /** All-time club points, so the long game is visible without opening a menu. */
+  clubPoints: number;
   helpButtonRef: RefObject<HTMLButtonElement | null>;
   levelsButtonRef: RefObject<HTMLButtonElement | null>;
   musicOn: boolean;
@@ -19,6 +20,7 @@ export function GameHeader({
   level,
   levelNumber,
   evaluation,
+  clubPoints,
   helpButtonRef,
   levelsButtonRef,
   musicOn,
@@ -26,7 +28,17 @@ export function GameHeader({
   onShowLevels,
   onShowHelp,
 }: Props) {
-  const target = distanceTarget(level);
+  // The distance is the one figure that is either right or it is not, so the
+  // pill says which rather than quoting the window back — the window is on the
+  // objective panel, which is where the numbers belong. Read off the evaluated
+  // objective so "right" means exactly what the level's own rule means, too
+  // long included.
+  const distance = evaluation.objectives.find((o) => o.kind === "distance");
+  const range = distance
+    ? distance.state === "passed"
+      ? " stat-pill--range is-in-range"
+      : " stat-pill--range is-out-of-range"
+    : "";
 
   return (
     <header
@@ -87,14 +99,28 @@ export function GameHeader({
       </div>
 
       <div className="game-header__stats">
-        <p className="stat-pill">
+        <p className={`stat-pill${range}`}>
           <span className="stat-pill__value">
             {evaluation.totalDistanceKm.toFixed(2)} km
           </span>
-          <span className="stat-pill__label">
-            {target ? `of ${target.minKm}–${target.maxKm}` : "so far"}
-          </span>
+          {/* Colour is the whole signal here, so it must not be the only one. */}
+          {distance && (
+            <span className="visually-hidden">
+              {distance.state === "passed"
+                ? "Inside the distance for this run."
+                : "Outside the distance for this run."}
+            </span>
+          )}
         </p>
+
+        {/* Only once there is something to show: a nought here on a first
+            visit is a worse advert for the scoring than no pill at all. */}
+        {clubPoints > 0 && (
+          <p className="stat-pill">
+            <span className="stat-pill__value">{clubPoints}</span>
+            <span className="stat-pill__label">club points</span>
+          </p>
+        )}
       </div>
     </header>
   );

@@ -196,8 +196,14 @@ That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
 There are 43 winning routes across the nine levels — and 2,126 distinct loops
-— so a completed fixture list is nowhere near a finished game. The fixture
-list shows how much of each map is still out there.
+— so a completed fixture list is nowhere near a finished game.
+
+How much of a map is still out there is said in three places, because a total
+nobody can see is not a total. The header carries the club's all-time points
+once there are any; the objective panel says how many routes this map has left,
+so a level you have already beaten still shows what it is holding back; and the
+fixture list breaks it down per level. A shared run carries the same two
+figures, which is the only advert the game has until there is a table.
 
 `src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
 **Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
