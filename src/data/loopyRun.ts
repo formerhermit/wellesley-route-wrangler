@@ -161,6 +161,9 @@ export const loopyRun: Level = {
     },
     {
       id: "shoe-lane",
+      // Beside the junction: nothing leaves it to the right, so the name has
+      // that side to itself.
+      labelSide: "right",
       x: 560,
       y: 495,
       label: "Shoe Lane",
@@ -362,6 +365,12 @@ export const loopyRun: Level = {
     { x: 200, y: 320, kind: "bin" },
     // Pulled off the lane between the Observatory and the Back Passage.
     { x: 174, y: 185, kind: "car", variant: 3 },
+
+    // Trees round Shoe Lane. Scattered rather than made a park: it is a lane
+    // with trees on it, and a green patch would claim otherwise.
+    { x: 600, y: 545, kind: "tree" },
+    { x: 670, y: 515, kind: "tree" },
+    { x: 655, y: 450, kind: "tree" },
   ],
 
   view: { width: 800, height: 560 },

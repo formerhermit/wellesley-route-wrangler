@@ -119,6 +119,10 @@ export const tilfordRun: Level = {
     },
     {
       id: "barley-mow",
+      // Both lifted: the name lay along the lane to the cricket green, and
+      // the pub rises with it so the two do not meet in the middle.
+      labelDy: -12,
+      spriteDy: -78,
       x: 300,
       y: 165,
       label: "The Barley Mow",
