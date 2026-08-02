@@ -116,8 +116,14 @@ export const hawleyLake: Level = {
       blurb: "start and finish, and the only building with a kettle",
       type: "shore",
       sprite: "sailing",
-      // Beside, not above: the name has to go somewhere the boats are not.
-      labelSide: "left",
+      // Above, stacked, and lifted. Four tracks leave this junction and only
+      // the top is clear of them — and stacking alone made it worse, because
+      // a taller box reaches further up into the drive from Minley Manor,
+      // which is the very thing it was obscuring. The boats are out of the
+      // way below, on the water.
+      labelAbove: true,
+      labelWrap: true,
+      labelDy: -12,
       // And the boats moor on the water, which is off to the south-east.
       spriteDx: 55,
       spriteDy: 40,

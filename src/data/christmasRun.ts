@@ -132,7 +132,11 @@ export const christmasRun: Level = {
     },
     {
       id: "wellesley-rumble",
+      // The name dropped towards its junction and the house lifted away from
+      // it: the two had ended up within three units of each other.
       labelAbove: true,
+      labelDy: 10,
+      spriteDy: -66,
       x: 150,
       y: 175,
       label: "Wellesley Humble",

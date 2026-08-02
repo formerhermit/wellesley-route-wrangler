@@ -139,7 +139,11 @@ export const thursdayTownRun: Level = {
     {
       id: "redan-road",
       // Not left: the hill marker draws on that side and lands on the text.
+      // Stacked and lifted as well, because one line of it reached across the
+      // lane climbing to the cemetery.
       labelAbove: true,
+      labelWrap: true,
+      labelDy: -20,
       x: 205,
       y: 230,
       label: "Redan Road",
@@ -148,6 +152,12 @@ export const thursdayTownRun: Level = {
     },
     {
       id: "municipal-gardens",
+      // Up and to the right, into the wedge between the lane climbing to the
+      // cemetery and the road east to the town centre — the one quarter of
+      // this junction with no road running through it.
+      labelSide: "right",
+      labelWrap: true,
+      labelDy: -50,
       x: 350,
       y: 215,
       label: "Municipal Gardens",
