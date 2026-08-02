@@ -439,6 +439,25 @@ The bar along the bottom is pinned, for the same reason every other dialog's
 actions are: the screen is taller than a phone, and the way out should not go
 over the fold with the rest of it.
 
+It arrives rather than appears. The card lands, the five rules deal themselves
+out from the picture's side one after another, the pigeon walks on, and the tip
+comes in last — because the tip is the line that is different every time, and
+the last thing to move is the thing you look at. All of it is CSS keyframes, so
+`prefers-reduced-motion` switches the lot off without any of it knowing.
+
+That block now zeroes the animation *delay* as well as the duration. A stagger
+that keeps only its duration is not a stagger that has been turned off: it is a
+row of things popping into existence a tenth of a second apart, which is the
+animation, arrived at by a different road.
+
+The tip is a rotation rather than a draw, in `src/game/tips.ts`. A random pick
+would show the same line twice running often enough to look broken — and the
+whole point of changing it is that somebody notices it changed. So the roll
+only chooses where the rotation starts, and every opening after that steps on
+by one: never a repeat, and a player who opens the screen as many times as
+there are tips has seen all of them. Nothing is stored, so a reload starts
+somewhere new.
+
 Everything is keyboard reachable: the junctions are real HTML buttons laid over
 the map, so `Tab` and `Enter` work as you would expect, and each announces
 whether it is currently selectable. `prefers-reduced-motion` shortens playback
@@ -552,6 +571,10 @@ eight seconds whatever the route; what changes is where the time goes.
 `src/game/progression.test.ts` covers the unlock rules against a stub roster:
 the first level always open, later ones shut until their predecessor is done,
 no skipping ahead, and a completed level staying open through a reorder.
+
+`src/game/tips.test.ts` holds the how-to-play tip to being a rotation: it walks
+a full turn of it and asserts that no tip follows itself and that one turn is
+every tip exactly once. The joke is not testable; that it changes is.
 
 ## The club table
 

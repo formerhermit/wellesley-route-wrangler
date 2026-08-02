@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Dialog } from "./Dialog";
 import {
   EyesIcon,
@@ -9,6 +10,7 @@ import {
   TitleSparks,
   TrophyIcon,
 } from "./RulesIcons";
+import { nextTipIndex, tips } from "../game/tips";
 import type { Level } from "../game/types";
 
 interface Props {
@@ -17,6 +19,21 @@ interface Props {
 }
 
 const PIGEON = `${import.meta.env.BASE_URL}sprites/pigeon-standing.png`;
+
+/**
+ * Which tip the screen shouted last time, so the next one is a different one.
+ *
+ * Module scope rather than state, because the dialog is unmounted between
+ * visits and there is nowhere inside it for a memory to live. Nothing is
+ * stored: a reload starts the rotation somewhere new, which is the point of
+ * the roll. `nextTipIndex` is where the decision actually is, and it is pure.
+ *
+ * Advancing it from a render is not, so StrictMode steps it on twice per
+ * opening in development. Nothing rests on which tip comes up, the shipped
+ * build steps once, and a skipped joke is not a bug worth plumbing state
+ * through App to avoid.
+ */
+let lastTip: number | null = null;
 
 /**
  * The rules, one to a card, in the order somebody meets them: where you start,
@@ -66,8 +83,19 @@ const RULES = [
  * left, the rules on the right. A phone gets the rules and drops the scene to
  * a strip along the top, because on a phone the rules are the whole point and
  * the picture is the part that can afford to shrink.
+ *
+ * It arrives rather than appears (#27): the card lands, the rules deal
+ * themselves out one after another, and the tip is a different one every time.
+ * All of it is CSS, so `prefers-reduced-motion` already switches it off.
  */
 export function HelpDialog({ level, onClose }: Props) {
+  // Once per opening, not once per render — the tip must not change under a
+  // player who is still reading it.
+  const [tip] = useState(() => {
+    lastTip = nextTipIndex(lastTip, Math.random());
+    return tips[lastTip];
+  });
+
   return (
     <Dialog
       titleId="help-title"
@@ -103,8 +131,14 @@ export function HelpDialog({ level, onClose }: Props) {
         <div className="rules__panel">
           <h3 className="rules__heading">The rules</h3>
           <ul className="rules__list">
-            {RULES.map(({ Icon, title, detail }) => (
-              <li key={title} className="rule">
+            {RULES.map(({ Icon, title, detail }, index) => (
+              // Dealt out in order, so the eye is taken down the list rather
+              // than dropped in the middle of five cards at once.
+              <li
+                key={title}
+                className="rule"
+                style={{ "--deal": `${index * 70}ms` } as React.CSSProperties}
+              >
                 <Icon />
                 <span className="rule__words">
                   <span className="rule__title">{title}</span>
@@ -123,7 +157,7 @@ export function HelpDialog({ level, onClose }: Props) {
       <div className="rules__footer">
         <p className="rules__tip">
           <MegaphoneIcon />
-          <span>Nobody has ever agreed on what counts as a hill</span>
+          <span>{tip}</span>
         </p>
 
         <span className="rules__pigeon" aria-hidden="true">

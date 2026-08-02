@@ -3409,6 +3409,10 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    /* The delay goes too, or a staggered entrance still keeps its held-back
+       state for the length of the stagger — which is a row of things popping
+       into existence one after another, which is the animation. */
+    animation-delay: 0.001ms !important;
   }
 
   .flock-bird,
@@ -3961,6 +3965,27 @@ body {
   width: min(1000px, 100%);
   padding: 0;
   overflow: hidden;
+  animation: rules-land 0.42s cubic-bezier(0.22, 1.2, 0.36, 1) backwards;
+}
+
+/*
+ * It arrives rather than appears (#27). The card lands, the rules deal
+ * themselves out after it, and the tip is last, because the tip is the line
+ * that is different every time and the last thing to move is the thing you
+ * look at. Everything here is a CSS animation, so the reduced-motion rule
+ * further up the file switches the lot off without knowing about any of it.
+ *
+ * `backwards` rather than `both` throughout: each of these ends where the
+ * element already lives, so all the fill has to do is hold the offset state
+ * through the delay. Holding it afterwards as well would leave an identity
+ * transform on the card for the rest of its life, and a transform — even that
+ * one — is a containing block nobody asked for.
+ */
+@keyframes rules-land {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
 }
 
 .rules__close {
@@ -4017,6 +4042,9 @@ body {
   flex: 0 0 auto;
   width: clamp(14px, 3vw, 22px);
   height: clamp(20px, 4vw, 30px);
+  /* Opacity only. One of the pair is flipped with a transform, and an
+     animation that touched transform would unflip it. */
+  animation: fade-in 0.5s ease 0.28s backwards;
 }
 
 .rules__spark--flip {
@@ -4087,6 +4115,17 @@ body {
   border: 2px solid color-mix(in srgb, var(--brand-blue) 30%, var(--line));
   border-radius: 12px;
   background: color-mix(in srgb, var(--brand-blue) 5%, var(--card));
+  /* `--deal` is the card's place in the queue, set where the list is built. */
+  animation: rule-deal 0.4s cubic-bezier(0.22, 1.1, 0.36, 1) backwards;
+  animation-delay: calc(0.22s + var(--deal, 0ms));
+}
+
+/* In from the picture's side, which is where the eye already is. */
+@keyframes rule-deal {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
 }
 
 /* One square for both kinds. The SVGs fill it; the two bitmaps are a tall one
@@ -4209,6 +4248,11 @@ body {
   background: var(--paper);
 }
 
+/*
+ * A different one every time (#27), which is the reason it comes in last and
+ * the reason the megaphone then shouts: a line nobody notices has changed may
+ * as well not have.
+ */
 .rules__tip {
   flex: 1 1 14rem;
   display: flex;
@@ -4223,6 +4267,29 @@ body {
   font-size: 0.92rem;
   line-height: 1.25;
   color: var(--ink);
+  animation: tip-arrive 0.45s ease-out 0.62s backwards;
+}
+
+@keyframes tip-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.rules__tip .rule__art {
+  transform-origin: 62% 62%;
+  animation: megaphone-shout 0.5s ease-in-out 1s 2;
+}
+
+@keyframes megaphone-shout {
+  25% {
+    transform: rotate(-9deg);
+  }
+
+  60% {
+    transform: rotate(6deg);
+  }
 }
 
 /* The bird and the line it wandered off along. Ornament, and the first thing
@@ -4231,6 +4298,15 @@ body {
   display: flex;
   align-items: center;
   gap: 0.2rem;
+  /* Walks on from the left, in the direction its own trail is going. */
+  animation: pigeon-stroll 0.6s ease-out 0.72s backwards;
+}
+
+@keyframes pigeon-stroll {
+  from {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
 }
 
 .rules__pigeon img {
