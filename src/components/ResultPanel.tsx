@@ -3,6 +3,9 @@ import { IncidentReportCard } from "./IncidentReport";
 import { ShareButton } from "./ShareButton";
 import { SubmitToTable } from "./SubmitToTable";
 import { buildRunShare } from "../game/shareText";
+import { MysteryBadge } from "./BadgeSprites";
+import { BADGE_ART } from "./badgeArt";
+import type { CabinetEntry } from "../game/achievements";
 import type { IncidentReport } from "../game/incidentReport";
 import type { RunScore } from "../game/scoring";
 import type { GameResult, Level, Route } from "../game/types";
@@ -19,6 +22,8 @@ interface Props {
   score: RunScore;
   /** Whether the club had this route in the book already. */
   newRoute: boolean;
+  /** Badges this run has just put in the cabinet. Usually none. */
+  freshBadges: CabinetEntry[];
   found: number;
   toFind: number;
   clubPoints: number;
@@ -40,6 +45,7 @@ export function ResultPanel({
   report,
   score,
   newRoute,
+  freshBadges,
   found,
   toFind,
   clubPoints,
@@ -66,6 +72,31 @@ export function ResultPanel({
       <p id="result-message" className="dialog__lead">
         {result.message}
       </p>
+
+      {/*
+        The moment. A badge found only by opening a menu has already missed
+        its own arrival, so it is announced here, above the paperwork, and
+        nothing at all appears on the usual run that wins none.
+      */}
+      {freshBadges.length > 0 && (
+        <ul className="fresh-badges">
+          {freshBadges.map((entry) => {
+            const Art = BADGE_ART[entry.id] ?? MysteryBadge;
+            return (
+              <li key={entry.id} className="fresh-badge">
+                <span className="badge__patch badge__patch--won">
+                  <Art />
+                </span>
+                <span className="fresh-badge__words">
+                  <span className="fresh-badge__label">New badge</span>
+                  <span className="fresh-badge__name">{entry.name}</span>
+                  <span className="fresh-badge__blurb">{entry.blurb}</span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <IncidentReportCard report={report} />
 

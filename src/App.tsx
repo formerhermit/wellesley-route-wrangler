@@ -10,6 +10,7 @@ import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
 import { ClubTableDialog } from "./components/ClubTableDialog";
 import { RunBookDialog } from "./components/RunBookDialog";
+import { TrophyCabinetDialog } from "./components/TrophyCabinetDialog";
 import { levels } from "./data/levels";
 import {
   levelNumber,
@@ -32,7 +33,8 @@ import { useMusic } from "./hooks/useMusic";
 import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
-import { scoreRun, winningRouteCount } from "./game/scoring";
+import { cabinetFor, earnedBy, earnedCount } from "./game/achievements";
+import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
 import { clubTableEnabled } from "./club/enabled";
 
 /** The house theme, for every level that does not name one of its own. */
@@ -221,12 +223,19 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
   const [bookOpen, setBookOpen] = useState(false);
+  const [cabinetOpen, setCabinetOpen] = useState(false);
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
   const showingResult = state.phase === "result";
   const modalOpen =
-    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen || bookOpen;
+    showingResult ||
+    helpOpen ||
+    levelsOpen ||
+    privacyOpen ||
+    clubOpen ||
+    bookOpen ||
+    cabinetOpen;
 
   // Asked once, on the first render that has a table to ask.
   useEffect(() => {
@@ -273,6 +282,13 @@ export default function App() {
   );
   const toFind = winningRouteCount(level);
 
+  // What the club has on the wall. Derived from the same routes as everything
+  // else, so it costs a pass over the book rather than anything stored.
+  const badgesWon = useMemo(
+    () => earnedCount(cabinetFor(runBook.records, levels)),
+    [runBook.records],
+  );
+
   // What this run was worth, and whether the club had it in the book already.
   // Read before the effect below logs it, so a first run reads as a first run.
   const runScore = useMemo(
@@ -290,6 +306,18 @@ export default function App() {
     setFreshRoute(logRun(level, state.route));
     if (state.result?.success) recordCompletion(level.id);
   }, [state.phase, state.result, state.route, level, recordCompletion, logRun]);
+
+  // What this run put on the wall. `earnedBy` names the badges that depend on
+  // this route; a run that was not a first discovery announces none of them,
+  // because the club won those the week it first went that way. Declared after
+  // the effect above because it reads what that effect decided.
+  const freshBadges = useMemo(
+    () =>
+      freshRoute
+        ? earnedBy(runBook.records, levels, level, routeKey(state.route))
+        : [],
+    [freshRoute, runBook.records, level, state.route],
+  );
 
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
@@ -381,7 +409,9 @@ export default function App() {
               found={levelTally.found}
               toFind={toFind}
               explored={levelTally.explored}
+              badgesWon={badgesWon}
               onOpenBook={() => setBookOpen(true)}
+              onOpenCabinet={() => setCabinetOpen(true)}
             />
           </div>
         </main>
@@ -406,6 +436,14 @@ export default function App() {
             setBookOpen(false);
           }}
           onClose={() => setBookOpen(false)}
+        />
+      )}
+
+      {cabinetOpen && (
+        <TrophyCabinetDialog
+          levels={levels}
+          records={runBook.records}
+          onClose={() => setCabinetOpen(false)}
         />
       )}
 
@@ -438,6 +476,7 @@ export default function App() {
           report={report}
           score={runScore}
           newRoute={freshRoute}
+          freshBadges={freshBadges}
           found={levelTally.found}
           toFind={toFind}
           clubPoints={clubTally.points}
