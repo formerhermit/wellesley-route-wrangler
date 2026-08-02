@@ -13,7 +13,7 @@ interface Props {
  * Three is plenty to read as a flock; a fourth only found labels to sit on.
  */
 const FLOCK = [
-  { dx: -30, dy: -26, flee: [-24, -30] },
+  { dx: -30, dy: -21, flee: [-24, -30] },
   { dx: 26, dy: -18, flee: [30, -26] },
   { dx: 36, dy: 14, flee: [34, -12] },
 ];

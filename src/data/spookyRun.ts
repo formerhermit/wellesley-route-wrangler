@@ -123,8 +123,13 @@ export const spookyRun: Level = {
       label: "The Spooky Church",
       blurb: "the bell goes on its own",
       type: "church",
-      labelSide: "right",
-      labelDy: 14,
+      // Stacked, and on the other side. Seventeen characters is just short
+      // enough not to wrap on its own, and one line of it lay along the lane
+      // down to Wellesley Grumble — stacking alone made that worse, because a
+      // taller box reaches further into the same lane. Left of the junction
+      // there is nothing to hit.
+      labelSide: "left",
+      labelWrap: true,
     },
     {
       id: "medical-centre",

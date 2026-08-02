@@ -76,7 +76,7 @@ export const hawleyLake: Level = {
       fail: {
         title: "Both Hills. In One Evening.",
         message:
-          "Cricket Hill and Beacon Hill, back to back, on a run sold as a lap of a lake. Two people have sat down on the heather and are refusing to discuss it.",
+          "Not a Hill and Beacon Hill, back to back, on a run sold as a lap of a lake. Two people have sat down on the heather and are refusing to discuss it.",
       },
     },
     {
@@ -203,7 +203,10 @@ export const hawleyLake: Level = {
       label: "The Portaloos",
       blurb: "unexpectedly welcome, again",
       type: "portaloo",
-      labelAbove: true,
+      // The name to the left and the cabins below it: above, the writing lay
+      // along the track in from the woods.
+      labelSide: "left",
+      spriteDy: 40,
     },
     {
       id: "gorse-corner",
@@ -211,7 +214,9 @@ export const hawleyLake: Level = {
       y: 520,
       label: "Gorse Corner",
       blurb: "yellow, spiky, and slightly on fire every August",
-      labelAbove: true,
+      // Below, and lifted clear of the bottom of the paper. Above it, the name
+      // was pinched between the tracks in from the Portaloos and the mud.
+      labelDy: -4,
     },
     {
       id: "mod-gate",
@@ -226,15 +231,16 @@ export const hawleyLake: Level = {
     },
     {
       id: "cricket-hill",
-      labelSide: "left",
       x: 730,
       y: 415,
-      label: "Cricket Hill",
+      label: "Not a Hill",
       blurb: "epic hill, and the view is genuinely worth it",
       type: "hill",
-      // Below the junction: its name is on the left, where a hill marker goes.
-      spriteDx: 0,
-      spriteDy: 40,
+      // Stacked and below; the marker goes to the right, because the track in
+      // from Beacon Hill runs through where a hill marker would otherwise sit.
+      labelWrap: true,
+      spriteDx: 44,
+      spriteDy: 4,
     },
     {
       id: "beacon-hill",
@@ -315,7 +321,7 @@ export const hawleyLake: Level = {
     { x: 280, y: 340, kind: "gorse", variant: 1 },
     { x: 620, y: 420, kind: "gorse", variant: 1 },
     { x: 640, y: 520, kind: "gorse", variant: 1 },
-    { x: 120, y: 500, kind: "gorse", variant: 1 },
+    { x: 70, y: 520, kind: "gorse", variant: 1 },
     { x: 240, y: 520, kind: "gorse" },
     { x: 440, y: 480, kind: "gorse" },
     { x: 620, y: 500, kind: "gorse" },

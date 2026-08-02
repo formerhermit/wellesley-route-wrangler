@@ -325,7 +325,11 @@ export const thursdayTownRun: Level = {
     { x: 420, y: 280, kind: "youths" },
     { x: 260, y: 440, kind: "youths" },
     { x: 600, y: 260, kind: "car", variant: 1 },
-    { x: 560, y: 300, kind: "car", variant: 3 },
+    // Right and down out of the flock: the pigeons draw at fixed offsets from
+    // their hotspot, and this one was parked on the nearest bird.
+    { x: 590, y: 315, kind: "car", variant: 3 },
+    // Somebody has left one on the lane up from the Observatory.
+    { x: 100, y: 300, kind: "car", variant: 2 },
   ],
 
   view: { width: 800, height: 560 },
