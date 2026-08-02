@@ -575,6 +575,8 @@ const christmasRun = {
 		{
 			id: "wellesley-rumble",
 			labelAbove: true,
+			labelDy: 10,
+			spriteDy: -66,
 			x: 150,
 			y: 175,
 			label: "Wellesley Humble",
@@ -896,8 +898,8 @@ const christmasRun = {
 			kind: "holly"
 		},
 		{
-			x: 540,
-			y: 380,
+			x: 560,
+			y: 425,
 			kind: "holly"
 		},
 		{
@@ -1354,7 +1356,7 @@ const hawleyLake = {
 			label: "Take in no more than 1 epic hill",
 			fail: {
 				title: "Both Hills. In One Evening.",
-				message: "Cricket Hill and Beacon Hill, back to back, on a run sold as a lap of a lake. Two people have sat down on the heather and are refusing to discuss it."
+				message: "Not a Hill and Beacon Hill, back to back, on a run sold as a lap of a lake. Two people have sat down on the heather and are refusing to discuss it."
 			}
 		},
 		{
@@ -1386,7 +1388,9 @@ const hawleyLake = {
 			blurb: "start and finish, and the only building with a kettle",
 			type: "shore",
 			sprite: "sailing",
-			labelSide: "left",
+			labelAbove: true,
+			labelWrap: true,
+			labelDy: -12,
 			spriteDx: 55,
 			spriteDy: 40
 		},
@@ -1459,7 +1463,8 @@ const hawleyLake = {
 			label: "The Portaloos",
 			blurb: "unexpectedly welcome, again",
 			type: "portaloo",
-			labelAbove: true
+			labelSide: "left",
+			spriteDy: 40
 		},
 		{
 			id: "gorse-corner",
@@ -1467,7 +1472,7 @@ const hawleyLake = {
 			y: 520,
 			label: "Gorse Corner",
 			blurb: "yellow, spiky, and slightly on fire every August",
-			labelAbove: true
+			labelDy: -4
 		},
 		{
 			id: "mod-gate",
@@ -1481,14 +1486,14 @@ const hawleyLake = {
 		},
 		{
 			id: "cricket-hill",
-			labelSide: "left",
 			x: 730,
 			y: 415,
-			label: "Cricket Hill",
+			label: "Not a Hill",
 			blurb: "epic hill, and the view is genuinely worth it",
 			type: "hill",
-			spriteDx: 0,
-			spriteDy: 40
+			labelWrap: true,
+			spriteDx: 44,
+			spriteDy: 4
 		},
 		{
 			id: "beacon-hill",
@@ -1717,8 +1722,8 @@ const hawleyLake = {
 			variant: 1
 		},
 		{
-			x: 120,
-			y: 500,
+			x: 70,
+			y: 520,
 			kind: "gorse",
 			variant: 1
 		},
@@ -1938,7 +1943,8 @@ const loopyRun = {
 		},
 		{
 			id: "back-passage",
-			labelSide: "right",
+			labelAbove: true,
+			labelDy: -18,
 			x: 285,
 			y: 240,
 			label: "Up The Back Passage",
@@ -1958,7 +1964,7 @@ const loopyRun = {
 		},
 		{
 			id: "private-bush",
-			labelAbove: true,
+			labelSide: "right",
 			x: 645,
 			y: 215,
 			label: "A Private Bush",
@@ -1987,6 +1993,7 @@ const loopyRun = {
 		},
 		{
 			id: "shoe-lane",
+			labelSide: "right",
 			x: 560,
 			y: 495,
 			label: "Shoe Lane",
@@ -2180,8 +2187,8 @@ const loopyRun = {
 			kind: "bin"
 		},
 		{
-			x: 340,
-			y: 320,
+			x: 472,
+			y: 442,
 			kind: "cat"
 		},
 		{
@@ -2200,6 +2207,27 @@ const loopyRun = {
 			x: 200,
 			y: 320,
 			kind: "bin"
+		},
+		{
+			x: 174,
+			y: 185,
+			kind: "car",
+			variant: 3
+		},
+		{
+			x: 600,
+			y: 545,
+			kind: "tree"
+		},
+		{
+			x: 670,
+			y: 515,
+			kind: "tree"
+		},
+		{
+			x: 655,
+			y: 450,
+			kind: "tree"
 		}
 	],
 	view: {
@@ -2329,8 +2357,8 @@ const spookyRun = {
 			label: "The Spooky Church",
 			blurb: "the bell goes on its own",
 			type: "church",
-			labelSide: "right",
-			labelDy: 14
+			labelSide: "left",
+			labelWrap: true
 		},
 		{
 			id: "medical-centre",
@@ -2807,7 +2835,9 @@ const thursdaySocialRun = {
 	nodes: [
 		{
 			id: "observatory",
-			labelAbove: true,
+			labelSide: "left",
+			labelWrap: true,
+			labelDy: -34,
 			x: 130,
 			y: 300,
 			label: "The Observatory",
@@ -2833,7 +2863,7 @@ const thursdaySocialRun = {
 		},
 		{
 			id: "private-bush",
-			labelAbove: true,
+			labelSide: "right",
 			x: 645,
 			y: 445,
 			label: "A Private Bush",
@@ -2891,13 +2921,14 @@ const thursdaySocialRun = {
 		},
 		{
 			id: "hospital-hill",
+			labelAbove: true,
 			x: 495,
 			y: 130,
 			label: "Hospital Hill",
 			blurb: "pigeon hotspot, and a hill about it",
 			type: "pigeon",
 			sprite: "hill",
-			spriteDx: -65,
+			spriteDx: -75,
 			spriteDy: -30
 		},
 		{
@@ -3173,6 +3204,8 @@ const thursdayTownRun = {
 		{
 			id: "redan-road",
 			labelAbove: true,
+			labelWrap: true,
+			labelDy: -20,
 			x: 205,
 			y: 230,
 			label: "Redan Road",
@@ -3181,6 +3214,9 @@ const thursdayTownRun = {
 		},
 		{
 			id: "municipal-gardens",
+			labelSide: "right",
+			labelWrap: true,
+			labelDy: -50,
 			x: 350,
 			y: 215,
 			label: "Municipal Gardens",
@@ -3382,10 +3418,16 @@ const thursdayTownRun = {
 			variant: 1
 		},
 		{
-			x: 560,
-			y: 300,
+			x: 590,
+			y: 315,
 			kind: "car",
 			variant: 3
+		},
+		{
+			x: 100,
+			y: 300,
+			kind: "car",
+			variant: 2
 		}
 	],
 	view: {
@@ -3509,6 +3551,8 @@ const tilfordRun = {
 		},
 		{
 			id: "barley-mow",
+			labelDy: -12,
+			spriteDy: -78,
 			x: 300,
 			y: 165,
 			label: "The Barley Mow",
@@ -3532,7 +3576,8 @@ const tilfordRun = {
 			label: "The Mosque",
 			blurb: "the quiet end of the village",
 			type: "mosque",
-			labelSide: "left"
+			labelAbove: true,
+			spriteDy: -62
 		},
 		{
 			id: "the-institute",
@@ -3540,7 +3585,7 @@ const tilfordRun = {
 			y: 315,
 			label: "The Institute",
 			blurb: "village hall, jumble sale on Saturdays",
-			labelSide: "right"
+			labelSide: "left"
 		},
 		{
 			id: "paddling-spot",
@@ -3573,8 +3618,7 @@ const tilfordRun = {
 			x: 390,
 			y: 500,
 			label: "The Sandy Bit",
-			blurb: "energy-sapping and universally hated",
-			labelAbove: true
+			blurb: "energy-sapping and universally hated"
 		},
 		{
 			id: "posh-cows",
@@ -3776,8 +3820,8 @@ const tilfordRun = {
 			kind: "flowers"
 		},
 		{
-			x: 100,
-			y: 300,
+			x: 90,
+			y: 250,
 			kind: "flowers"
 		},
 		{

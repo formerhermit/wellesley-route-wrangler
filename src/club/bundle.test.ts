@@ -11,9 +11,18 @@ import type { Level, Route } from "../game/types";
  * if it did, the club table would quietly disagree with the game about what a
  * run was worth, with neither side obviously wrong.
  *
- * So compare behaviour rather than bytes. Byte-comparing the bundle would fail
- * on any cosmetic difference between one machine's bundler and another's, and
- * would say nothing about whether the scoring had actually changed.
+ * So compare behaviour rather than bytes. Byte-comparing the bundle here would
+ * fail on any cosmetic difference between one machine's bundler and another's,
+ * and would say nothing about whether the scoring had actually changed. CI does
+ * run the byte check — see `deploy.yml` — but it does it by regenerating on the
+ * spot, which is a different question from "do these two agree".
+ *
+ * The level data is deep-compared rather than sampled. An earlier version of
+ * this file checked road counts and one route's points per level, which is a
+ * proxy, and the bundle drifted straight past it: a batch of label and
+ * coordinate changes never crossed over and nothing went red, because labels
+ * do not score. Nothing here scores either. It is still drift, and the next
+ * one may not be so harmless.
  */
 const bundlePath = new URL(
   "../../supabase/functions/_shared/game.bundle.js",
@@ -84,11 +93,21 @@ describe("the bundle the server scores with", () => {
     }
   });
 
+  it("carries the same level data, down to the last label", async () => {
+    const bundle = await loadBundle();
+    for (const level of levels) {
+      // Deep, not sampled. Levels are plain data — no functions, no dates — so
+      // this is the whole of what the server knows about the map, and the
+      // failure names the level that has moved.
+      expect(bundle.levelById(level.id), `${level.id} has drifted`).toEqual(
+        level,
+      );
+    }
+  });
+
   it("agrees about how much there is to find on every level", async () => {
     const bundle = await loadBundle();
     for (const level of levels) {
-      // Cheap proxy for the level data itself matching: the winning-route count
-      // moves if a single road distance or objective has drifted.
       expect(
         bundle.levelById(level.id)?.roads.length,
         level.id,

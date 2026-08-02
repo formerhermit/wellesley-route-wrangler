@@ -1,0 +1,37 @@
+name: Checks
+
+# The deploy workflow runs the same things, but only once a change is already
+# on main — which is late to hear that a test is red. This runs them on the
+# pull request, where they can still stop something rather than report it.
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test
+      - run: npm run lint
+
+      # See the note in deploy.yml. Worth running here in particular: this is
+      # where a false alarm shows up as a red pull request rather than as a
+      # blocked deploy, which is the difference between a nuisance and an
+      # outage.
+      - name: Check the club bundle is not stale
+        run: |
+          npm run build:club
+          git diff --exit-code -- supabase/functions/_shared/game.bundle.js \
+            || {
+              echo "::error file=supabase/functions/_shared/game.bundle.js::Stale. Run 'npm run build:club' and commit the result."
+              exit 1
+            }
