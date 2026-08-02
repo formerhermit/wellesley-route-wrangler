@@ -93,6 +93,22 @@ describe("the trophy cabinet", () => {
         if (won) break;
       }
 
+      // A book with nothing but winners in it, which is what a player who
+      // never put a foot wrong on a map has. Every other shape tried here is
+      // built from the walk order and so always carries duds, and a badge
+      // about a clean sheet can never be won from one of those.
+      if (!won) {
+        for (const level of levels) {
+          const clean = loops(level)
+            .filter((route) => evaluateRoute(level, route).success)
+            .map((route) => [level, route] as [Level, Route]);
+          if (clean.length > 0 && ids(bookOf(clean)).includes(entry.id)) {
+            won = true;
+            break;
+          }
+        }
+      }
+
       // And then a book spread across the roster, because a real one is. No
       // badge needs this today — every one of them can be won on a single map
       // — but a book drawn from one level is a thin thing to judge "nobody can
@@ -223,6 +239,34 @@ describe("the trophy cabinet", () => {
 
     expect(ids(bookOf([[level, one!]]))).not.toContain("toilet-to-toilet");
     expect(ids(bookOf([[level, both!]]))).toContain("toilet-to-toilet");
+  });
+
+  it("wants a whole map clean for show off, and one dud spoils it", () => {
+    // The Town Run has the fewest routes to find on the roster, so it is the
+    // map somebody would realistically go for a clean sheet on.
+    const level = levels[2];
+    const winners = loops(level).filter((route) => evaluateRoute(level, route).success);
+    const dud = loops(level).find((route) => !evaluateRoute(level, route).success);
+    expect(dud).toBeDefined();
+
+    const clean = bookOf(winners.map((route) => [level, route] as [Level, Route]));
+    expect(ids(clean)).toContain("show-off");
+
+    // The same map, found in full, with one failure also in the book.
+    const spoiled = bookOf([
+      ...winners.map((route) => [level, route] as [Level, Route]),
+      [level, dud!],
+    ]);
+    expect(ids(spoiled)).not.toContain("show-off");
+  });
+
+  it("does not call a half-found map a clean sheet", () => {
+    const level = levels[2];
+    const winners = loops(level).filter((route) => evaluateRoute(level, route).success);
+    expect(winners.length).toBeGreaterThan(1);
+    // No duds, but not everything found either: that is a start, not a sweep.
+    const partial = bookOf([[level, winners[0]] as [Level, Route]]);
+    expect(ids(partial)).not.toContain("show-off");
   });
 
   it("only calls a club a local legend once the first five maps are bare", () => {

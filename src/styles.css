@@ -3907,3 +3907,30 @@ body {
 [role="tabpanel"]:focus {
   outline: none;
 }
+
+/* The rosette, for the map finished without a mark against it. */
+.badge-ribbon {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.badge-rosette {
+  fill: var(--brand-blue);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.badge-pleat {
+  fill: none;
+  stroke: var(--club);
+  stroke-width: 2;
+  opacity: 0.55;
+}
+
+.badge-rosette-centre {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
