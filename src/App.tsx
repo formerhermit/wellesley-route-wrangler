@@ -8,9 +8,8 @@ import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
 import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
-import { ClubTableDialog } from "./components/ClubTableDialog";
+import { ClubDialog } from "./components/ClubDialog";
 import { RunBookDialog } from "./components/RunBookDialog";
-import { TrophyCabinetDialog } from "./components/TrophyCabinetDialog";
 import { levels } from "./data/levels";
 import {
   levelNumber,
@@ -33,7 +32,7 @@ import { useMusic } from "./hooks/useMusic";
 import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
-import { cabinetFor, earnedBy, earnedCount } from "./game/achievements";
+import { earnedBy } from "./game/achievements";
 import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
 import { clubTableEnabled } from "./club/enabled";
 
@@ -223,19 +222,12 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
   const [bookOpen, setBookOpen] = useState(false);
-  const [cabinetOpen, setCabinetOpen] = useState(false);
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
   const showingResult = state.phase === "result";
   const modalOpen =
-    showingResult ||
-    helpOpen ||
-    levelsOpen ||
-    privacyOpen ||
-    clubOpen ||
-    bookOpen ||
-    cabinetOpen;
+    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen || bookOpen;
 
   // Asked once, on the first render that has a table to ask.
   useEffect(() => {
@@ -281,13 +273,6 @@ export default function App() {
     [runBook.records],
   );
   const toFind = winningRouteCount(level);
-
-  // What the club has on the wall. Derived from the same routes as everything
-  // else, so it costs a pass over the book rather than anything stored.
-  const badgesWon = useMemo(
-    () => earnedCount(cabinetFor(runBook.records, levels)),
-    [runBook.records],
-  );
 
   // What this run was worth, and whether the club had it in the book already.
   // Read before the effect below logs it, so a first run reads as a first run.
@@ -373,7 +358,6 @@ export default function App() {
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
-          clubEnabled={clubTableEnabled}
           onShowClub={() => setClubOpen(true)}
           onShowLevels={() => setLevelsOpen(true)}
           onShowHelp={() => setHelpOpen(true)}
@@ -409,9 +393,7 @@ export default function App() {
               found={levelTally.found}
               toFind={toFind}
               explored={levelTally.explored}
-              badgesWon={badgesWon}
               onOpenBook={() => setBookOpen(true)}
-              onOpenCabinet={() => setCabinetOpen(true)}
             />
           </div>
         </main>
@@ -439,16 +421,11 @@ export default function App() {
         />
       )}
 
-      {cabinetOpen && (
-        <TrophyCabinetDialog
+      {clubOpen && (
+        <ClubDialog
           levels={levels}
           records={runBook.records}
-          onClose={() => setCabinetOpen(false)}
-        />
-      )}
-
-      {clubOpen && (
-        <ClubTableDialog
+          tableEnabled={clubTableEnabled}
           name={clubName}
           onNameChanged={setClubName}
           onClose={() => setClubOpen(false)}

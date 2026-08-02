@@ -3853,7 +3853,57 @@ body {
   color: var(--ink-soft);
 }
 
-/* The cabinet door, under the book's. */
-.objectives__cabinet {
-  margin-top: 0.35rem;
+/* ---------- Tabs, for a dialog holding two things ---------- */
+
+/*
+ * Used once, by the club dialog. Drawn as a strip of the paper the game is
+ * printed on with the live one lifted out of it, rather than as buttons —
+ * there are already two kinds of button in a dialog and a third would be
+ * asking the player to work out which does what.
+ */
+.tabs {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0.8rem 0 0.9rem;
+  padding: 0.25rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.tabs__tab {
+  flex: 1 1 0;
+  min-height: 40px;
+  padding: 0.35rem 0.6rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.tabs__tab:hover {
+  color: var(--club);
+}
+
+.tabs__tab--on {
+  background: var(--card);
+  color: var(--club);
+  box-shadow: 0 1px 3px rgb(29 43 54 / 12%);
+}
+
+.tabs__tab:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: -1px;
+}
+
+/* The panel takes focus when a tab is picked; it should not draw a ring for it. */
+[role="tabpanel"]:focus {
+  outline: none;
 }

@@ -1,4 +1,3 @@
-import { Dialog } from "./Dialog";
 import { MysteryBadge } from "./BadgeSprites";
 import { BADGE_ART } from "./badgeArt";
 import { cabinetFor, earnedCount } from "../game/achievements";
@@ -9,10 +8,10 @@ import type { Level } from "../game/types";
 /**
  * One badge on the wall.
  *
- * A patch rather than a medal: a rounded square with a stitched edge, which is
- * the thing a running club actually owns. It reuses the card the rest of the
- * game is built from and distinguishes itself only by the dashed border, so it
- * sits beside the run book without looking imported from another game.
+ * A patch rather than a medal: the thing a running club actually owns. It
+ * reuses the card the rest of the game is built from and distinguishes itself
+ * only by the dashed border, so it sits beside the run book without looking
+ * imported from another game.
  *
  * How much a locked one gives away is the badge's own business — see `reveal`
  * in `achievements.ts`. Some are advertised so there is something to go after,
@@ -34,7 +33,7 @@ function Patch({ entry }: { entry: CabinetEntry }) {
     <li className={`badge${entry.earned ? " badge--earned" : ""}`}>
       <span className="badge__patch">{showArt ? <Art /> : <MysteryBadge />}</span>
       <span className="badge__name" aria-hidden="true">
-        {showName ? entry.name : " "}
+        {showName ? entry.name : " "}
       </span>
       <span className="visually-hidden">{spoken}</span>
     </li>
@@ -42,32 +41,26 @@ function Patch({ entry }: { entry: CabinetEntry }) {
 }
 
 /**
- * The trophy cabinet: what the club has to show for itself.
+ * What the club has to show for itself.
  *
  * Nothing in here is stored. Every badge is worked out from the routes in the
  * book on the spot, the same way the scoring is, so retuning one re-awards
  * everybody's history rather than stranding it.
  */
-export function TrophyCabinetDialog({
+export function TrophyCabinetPanel({
   levels,
   records,
-  onClose,
 }: {
   levels: Level[];
   records: Records;
-  onClose: () => void;
 }) {
   const cabinet = cabinetFor(records, levels);
   const earned = earnedCount(cabinet);
   const total = cabinet.length;
 
   return (
-    <Dialog titleId="cabinet-title" describedBy="cabinet-intro" onClose={onClose}>
-      <p className="dialog__badge">The club</p>
-      <h2 id="cabinet-title" tabIndex={-1}>
-        Trophy Cabinet
-      </h2>
-      <p id="cabinet-intro" className="dialog__lead">
+    <>
+      <p className="dialog__lead">
         {earned === 0
           ? `Nothing in it yet. ${total} badges are out there, and the club is not saying what for.`
           : earned === total
@@ -80,12 +73,6 @@ export function TrophyCabinetDialog({
           <Patch key={entry.id} entry={entry} />
         ))}
       </ul>
-
-      <div className="dialog__actions">
-        <button type="button" className="button button--primary" onClick={onClose}>
-          Back to the map
-        </button>
-      </div>
-    </Dialog>
+    </>
   );
 }

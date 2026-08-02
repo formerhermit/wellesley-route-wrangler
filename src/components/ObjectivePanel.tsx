@@ -31,18 +31,13 @@ export function ObjectivePanel({
   toFind,
   /** Routes run here at all, winners and duds. Nothing to open without one. */
   explored,
-  /** Badges on the wall, across every level. */
-  badgesWon,
   onOpenBook,
-  onOpenCabinet,
 }: {
   evaluation: RouteEvaluation;
   found: number;
   toFind: number;
   explored: number;
-  badgesWon: number;
   onOpenBook: () => void;
-  onOpenCabinet: () => void;
 }) {
   return (
     <section className="objectives" aria-labelledby="objectives-heading">
@@ -86,22 +81,6 @@ export function ObjectivePanel({
           <p className="objectives__found">{routesFound(found, toFind)}</p>
         ))}
 
-      {/* Under the book, in the same quiet register, because it answers the
-          same sort of question: what else is there. Withheld until the club
-          has run something, so a first visit is not a wall of doors. */}
-      {explored > 0 && (
-        <button
-          type="button"
-          className="objectives__found objectives__found--open objectives__cabinet"
-          aria-haspopup="dialog"
-          onClick={onOpenCabinet}
-        >
-          {badgesWon === 0
-            ? "No badges yet."
-            : `${badgesWon} badge${badgesWon === 1 ? "" : "s"} on the wall.`}
-          <span className="objectives__open-hint"> Trophy cabinet</span>
-        </button>
-      )}
     </section>
   );
 }

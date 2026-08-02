@@ -357,11 +357,20 @@ Three settings, per badge, in the `reveal` field:
 - **secret** — nothing at all, for the ones whose whole worth is the surprise.
   *You Didn't Even Try, Did You* is not funny in advance.
 
-The cabinet sits behind a line in the objective panel, directly under the run
-book's, because it answers the same sort of question: what else is there. And a
-badge won is announced in the result panel above the incident report — a badge
-you only find by opening a menu has already missed its own arrival. The usual
-run wins none and shows nothing.
+The cabinet lives behind the trophy button in the header, in a dialog with the
+club table, under two tabs. They belong together: both are about the club
+rather than about the run in front of you, and neither had a home before. The
+cabinet briefly had a line of its own under the objective panel, which was the
+wrong place twice over — that panel is about this run, and a second link under
+the run book's turned the corner into a list of doors. The book stays there,
+because the book really is about this run.
+
+Without a club table configured there is one tab, so there is no tab strip: the
+dialog is the cabinet and nothing else.
+
+A badge won is announced in the result panel above the incident report — a
+badge you only find by opening a menu has already missed its own arrival. The
+usual run wins none and shows nothing.
 
 The drawings are inline SVG in `BadgeSprites.tsx`, in the same flat-fill hand
 as the map, and deliberately simpler: at the size a patch is drawn, anything

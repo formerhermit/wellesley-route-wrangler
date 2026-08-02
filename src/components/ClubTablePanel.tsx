@@ -1,22 +1,30 @@
 import { useEffect, useState } from "react";
-import { Dialog } from "./Dialog";
 import type { Standing } from "../club/clubTable";
 import { NAME_MAX } from "../club/identity";
 
-interface Props {
+/**
+ * The club table, as a panel rather than a dialog of its own.
+ *
+ * Reading it needs nothing at all — no name, no sign-in — so anyone can see
+ * where they would land before deciding to join. Joining is the only thing
+ * that puts anything on a server, which is what lets the privacy policy say
+ * nothing leaves the device unless you ask it to.
+ *
+ * The Supabase client arrives with the import below rather than with the page.
+ * That does not make the tab the thing that fetches it: with a table
+ * configured, `App` asks the same module for this device's name on its first
+ * render, so the chunk is already on its way before anybody opens anything.
+ * What the dynamic import buys is a build with no table configured, where the
+ * chunk is never asked for at all.
+ */
+export function ClubTablePanel({
+  name,
+  onNameChanged,
+}: {
   /** The name this device is already on the table under, if any. */
   name?: string;
   onNameChanged: (name?: string) => void;
-  onClose: () => void;
-}
-
-/**
- * The club table. Reading it needs nothing at all — no name, no sign-in — so
- * anyone can see where they would land before deciding to join. Joining is the
- * only thing that puts anything on a server, which is what lets the privacy
- * policy say nothing leaves the device unless you ask it to.
- */
-export function ClubTableDialog({ name, onNameChanged, onClose }: Props) {
+}) {
   const [rows, setRows] = useState<Standing[] | undefined>();
   const [error, setError] = useState<string>();
   const [typed, setTyped] = useState("");
@@ -24,7 +32,6 @@ export function ClubTableDialog({ name, onNameChanged, onClose }: Props) {
 
   useEffect(() => {
     let live = true;
-    // The Supabase client arrives with this import, not with the page.
     void import("../club/clubTable")
       .then(({ standings }) => standings())
       .then((result) => {
@@ -65,12 +72,8 @@ export function ClubTableDialog({ name, onNameChanged, onClose }: Props) {
   };
 
   return (
-    <Dialog titleId="club-title" describedBy="club-intro" onClose={onClose}>
-      <p className="dialog__badge">Wellesley Runners</p>
-      <h2 id="club-title" tabIndex={-1}>
-        The club table
-      </h2>
-      <p id="club-intro" className="dialog__lead">
+    <>
+      <p className="dialog__lead">
         Points come from routes discovered, so nobody can farm the easy one.
       </p>
 
@@ -81,9 +84,7 @@ export function ClubTableDialog({ name, onNameChanged, onClose }: Props) {
       )}
 
       {rows && rows.length === 0 && (
-        <p className="help__note">
-          Nobody on it yet. Somebody has to go first.
-        </p>
+        <p className="help__note">Nobody on it yet. Somebody has to go first.</p>
       )}
 
       {rows && rows.length > 0 && (
@@ -147,12 +148,6 @@ export function ClubTableDialog({ name, onNameChanged, onClose }: Props) {
           </div>
         </div>
       )}
-
-      <div className="dialog__actions">
-        <button type="button" className="button" onClick={onClose}>
-          Close
-        </button>
-      </div>
-    </Dialog>
+    </>
   );
 }
