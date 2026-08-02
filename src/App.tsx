@@ -9,6 +9,7 @@ import { RouteMap } from "./components/RouteMap";
 import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
 import { ClubTableDialog } from "./components/ClubTableDialog";
+import { RunBookDialog } from "./components/RunBookDialog";
 import { levels } from "./data/levels";
 import {
   levelNumber,
@@ -196,12 +197,13 @@ export default function App() {
   const [levelsOpen, setLevelsOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
+  const [bookOpen, setBookOpen] = useState(false);
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
   const showingResult = state.phase === "result";
   const modalOpen =
-    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen;
+    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen || bookOpen;
 
   // Asked once, on the first render that has a table to ask.
   useEffect(() => {
@@ -355,6 +357,8 @@ export default function App() {
               evaluation={evaluation}
               found={levelTally.found}
               toFind={toFind}
+              explored={levelTally.explored}
+              onOpenBook={() => setBookOpen(true)}
             />
           </div>
         </main>
@@ -369,6 +373,14 @@ export default function App() {
       {helpOpen && <HelpDialog level={level} onClose={closeHelp} />}
 
       {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
+
+      {bookOpen && (
+        <RunBookDialog
+          level={level}
+          records={runBook.records}
+          onClose={() => setBookOpen(false)}
+        />
+      )}
 
       {clubOpen && (
         <ClubTableDialog

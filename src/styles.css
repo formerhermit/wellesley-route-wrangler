@@ -3095,6 +3095,120 @@ body {
   color: #4a7f9e;
 }
 
+/* ---------- The book ---------- */
+
+/*
+ * A route drawn small. The map's own roads go underneath so the shape has
+ * something to be a shape *of* — everything is in the level's own coordinates
+ * and shrunk by the viewBox, which is why these strokes look absurd: at this
+ * size a stroke of 2 would vanish altogether.
+ */
+.route-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #fbf7ec;
+}
+
+.route-thumb__road {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+.route-thumb__line {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 17;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.route-thumb__start {
+  fill: var(--club);
+  stroke: #fff;
+  stroke-width: 6;
+}
+
+.book {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  /* Small enough that a phone gets two columns rather than one card the size
+     of the screen: a book you scroll for a minute is not a book you check. */
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.7rem;
+}
+
+.book__card {
+  padding: 0.45rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+/* A dud is still worth keeping: it is the one you do not want to run twice. */
+.book__card--lost {
+  background: color-mix(in srgb, var(--fail) 5%, var(--card));
+}
+
+.book__card--lost .route-thumb__line {
+  stroke: color-mix(in srgb, var(--fail) 70%, var(--ink-soft));
+}
+
+.book__figures {
+  margin: 0.4rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.4rem;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.book__distance {
+  font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.book__points {
+  font-weight: 700;
+  color: var(--pass);
+}
+
+/* The level's own name for what went wrong, which can be a whole sentence. */
+.book__verdict {
+  flex: 1 0 100%;
+  color: var(--fail);
+  line-height: 1.3;
+}
+
+.book__when {
+  margin-left: auto;
+}
+
+/* The count on the objective panel, once it has a book behind it. */
+.objectives__found--open {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.objectives__open-hint {
+  color: var(--club);
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
 /* ---------- The club table ---------- */
 
 .club-table {

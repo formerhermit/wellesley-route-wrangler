@@ -29,10 +29,15 @@ export function ObjectivePanel({
   evaluation,
   found,
   toFind,
+  /** Routes run here at all, winners and duds. Nothing to open without one. */
+  explored,
+  onOpenBook,
 }: {
   evaluation: RouteEvaluation;
   found: number;
   toFind: number;
+  explored: number;
+  onOpenBook: () => void;
 }) {
   return (
     <section className="objectives" aria-labelledby="objectives-heading">
@@ -55,15 +60,26 @@ export function ObjectivePanel({
         ))}
       </ul>
 
-      {toFind > 0 && (
-        <p
-          className={`objectives__found${
-            found > 0 && found < toFind ? " objectives__found--more" : ""
-          }`}
-        >
-          {routesFound(found, toFind)}
-        </p>
-      )}
+      {/* The count is the door to the book: it is the number people want to
+          interrogate, and it is on screen exactly while they are hunting.
+          Until something has been run there is nothing behind it, so it stays
+          a plain sentence. */}
+      {toFind > 0 &&
+        (explored > 0 ? (
+          <button
+            type="button"
+            className={`objectives__found objectives__found--open${
+              found > 0 && found < toFind ? " objectives__found--more" : ""
+            }`}
+            aria-haspopup="dialog"
+            onClick={onOpenBook}
+          >
+            {routesFound(found, toFind)}
+            <span className="objectives__open-hint"> See the book</span>
+          </button>
+        ) : (
+          <p className="objectives__found">{routesFound(found, toFind)}</p>
+        ))}
     </section>
   );
 }
