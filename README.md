@@ -214,6 +214,22 @@ hunting a map tiring is not knowing which of the routes you tried already
 failed, and the run book had quietly been keeping them all along. A dud even
 says why it was a dud, in the level's own words.
 
+The duds come **nearest miss first**, counted as objectives not satisfied, and
+only the closest twelve are shown. Recency was the obvious order and the wrong
+one: the reason to look a dud up is to change a road and try again, and a route
+that failed on one objective is worth reopening in a way that a route that
+failed on four is not. Ties go to the most recent. It matters most exactly
+where the book is under most strain — Tilford has 1,179 ways to lose, and
+twelve of them chosen well is a hunting aid where twelve chosen by clock is a
+list.
+
+"Not satisfied" rather than "failed" is deliberate, and the distinction is the
+objective panel's. While a route is being planned, an objective that cannot yet
+be decided reads "Not yet" rather than showing a premature failure — so a loop
+that comes home under the distance never reaches "failed" at all, and it is the
+commonest near miss there is. In the book the run is over, and not yet means
+never.
+
 Nothing new is stored for any of it. `src/game/runBook.ts` rebuilds each route
 from its road ids and works the distance, the points, the win and the verdict
 out on the spot — the same rule the scoring follows, so a rebalance rewrites
