@@ -215,6 +215,14 @@ export function RouteMap({
           onSelect={onSelect}
         />
       </div>
+
+      {/*
+        Every map is drawn wider than it is tall, so a phone held upright gives
+        it about half the room a phone turned sideways does. Shown by CSS on a
+        portrait phone and nowhere else — and left in the page for a screen
+        reader either way, where it costs a line and reads as what it is.
+      */}
+      <p className="map-turn-hint">Turn your phone for a bigger map.</p>
     </div>
   );
 }
