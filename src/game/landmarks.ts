@@ -27,6 +27,13 @@ export const LANDMARK_OFFSET: Partial<
   bin: { dx: 0, dy: -34 },
   church: { dx: 0, dy: -52 },
   portaloo: { dx: -48, dy: 4 },
+  /*
+   * Up and to the right, which is the only quarter clear on both maps that
+   * carry one: the Thursday layout has roads leaving at 39, 125, 177 and 349
+   * degrees and the Town layout at 147, 176, 278 and 353, and the label is
+   * above. Far enough out to clear the label as well as the roads.
+   */
+  toilet: { dx: 48, dy: -46 },
   car: { dx: -18, dy: 34 },
   ghost: { dx: 0, dy: -42 },
   treaters: { dx: 0, dy: -44 },

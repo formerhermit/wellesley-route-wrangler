@@ -34,6 +34,8 @@ export type MapNodeType =
   | "church"
   | "ghost"
   | "portaloo"
+  /** A real one, with a door and a cistern. The portaloos are their own type. */
+  | "toilet"
   | "car"
   | "manor"
   | "sailing"

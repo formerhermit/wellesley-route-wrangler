@@ -250,6 +250,23 @@ export function GooseBadge() {
   );
 }
 
+/**
+ * The map's own toilet, for the badge about knowing where they all are.
+ */
+export function ToiletBadge() {
+  return (
+    <Frame>
+      <image
+        href={`${import.meta.env.BASE_URL}sprites/toilet.png`}
+        x={-16}
+        y={-26}
+        width={32}
+        height={52}
+      />
+    </Frame>
+  );
+}
+
 /** A locked badge nobody is being told about. */
 export function MysteryBadge() {
   return (

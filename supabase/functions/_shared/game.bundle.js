@@ -639,7 +639,8 @@ const christmasRun = {
 			x: 320,
 			y: 165,
 			label: "Medical Centre Toilet",
-			blurb: "a quick pitstop, no questions asked"
+			blurb: "a quick pitstop, no questions asked",
+			type: "toilet"
 		},
 		{
 			id: "mulled-wine",
@@ -2366,7 +2367,8 @@ const spookyRun = {
 			x: 330,
 			y: 350,
 			label: "Medical Centre Toilet",
-			blurb: "a quick pitstop, no questions asked"
+			blurb: "a quick pitstop, no questions asked",
+			type: "toilet"
 		},
 		{
 			id: "hospital-hill",
@@ -2909,7 +2911,8 @@ const thursdaySocialRun = {
 			x: 320,
 			y: 165,
 			label: "Medical Centre Toilet",
-			blurb: "a quick pitstop, no questions asked"
+			blurb: "a quick pitstop, no questions asked",
+			type: "toilet"
 		},
 		{
 			id: "back-passage",
@@ -3179,7 +3182,8 @@ const thursdayTownRun = {
 			x: 330,
 			y: 350,
 			label: "Medical Centre Toilet",
-			blurb: "a quick pitstop, no questions asked"
+			blurb: "a quick pitstop, no questions asked",
+			type: "toilet"
 		},
 		{
 			id: "hospital-hill",

@@ -338,11 +338,18 @@ refused to keep.
 The numbers were checked against what the maps can actually produce, which is
 `achievements.test.ts`'s main job: it walks every level looking for a route
 that wins each badge, and fails on any badge nothing can earn. That test is why
-two of them read as they do. A half marathon is 21.1 km and the longest loop on
-the roster is 17.8 km, so The Unexpected Long Run asks for 13. Every road is
+three of them read as they do. A half marathon is 21.1 km and the longest loop
+on the roster is 17.8 km, so The Unexpected Long Run asks for 13. Every road is
 measured to one decimal place, so a total of 4.99 km cannot occur on any map
 however it is run, and the Strava Tax is instead a hundred metres short of
-whatever the level asked for — which is the better joke anyway.
+whatever the level asked for — which is the better joke anyway. And no map
+carries two places to stop, so Toilet to Toilet counts one on each of two
+different maps rather than two in a single route.
+
+That last one needed the test widening as well as the badge changing. It had
+only ever built a book out of one level's routes, which no badge about two
+maps could ever satisfy; it now tries a book spread across the roster too,
+which is what a real one looks like.
 
 A badge nobody can win is worse than no badge at all: it reads as a bug to the
 player and as an achievement to whoever wrote it.

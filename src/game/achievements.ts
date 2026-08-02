@@ -67,6 +67,13 @@ function minimumKm(level: Level): number | undefined {
   return undefined;
 }
 
+/**
+ * Somewhere to stop. Both kinds count: the Medical Centre Toilet is a real one
+ * with a door that locks, and the Random Portaloos are what the heath has, and
+ * a club that has been to one of each has been toilet to toilet.
+ */
+const LOOS: MapNodeType[] = ["toilet", "portaloo"];
+
 /** Where the goose is standing on this map, if it has one. */
 function gooseNodeId(level: Level): string | undefined {
   return level.followers?.find((f) => f.kind === "goose")?.nodeId;
@@ -211,6 +218,26 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     blurb: "You used the portaloos. Nobody is judging. Everybody is judging.",
     reveal: "secret",
     test: some((run) => countType(run, "portaloo") > 0),
+  },
+  {
+    id: "toilet-to-toilet",
+    name: "Toilet to Toilet",
+    blurb:
+      "Stops on two different maps. The club knows where every one of them is, and always has.",
+    reveal: "shape",
+    /*
+     * Two *maps*, not two on one route, which cannot happen: every map on the
+     * roster has at most one place to stop, so the brief as first written —
+     * more than one stop in a single route — was a badge nobody could ever
+     * have won. Going from a toilet on one map to a toilet on another is the
+     * nearest thing that is both earnable and still the same joke.
+     */
+    test: (runs) =>
+      new Set(
+        runs
+          .filter((run) => LOOS.some((type) => countType(run, type) > 0))
+          .map((run) => run.level.id),
+      ).size >= 2,
   },
   {
     id: "goose-botherer",
