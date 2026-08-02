@@ -34,11 +34,11 @@ neighbours from level 1, and then everything above them that the social run
 never bothers with. The hardest of the first three: 7 to 8 km, taking in
 both Aldershot Town Centre and the Wellington Statue at opposite ends of the
 map, past no more than one of the two massive hills, and not down the road
-they have had fenced off since March. Six routes satisfy all of it, against
-twenty-four on level 1.
+they have had fenced off since March. Two routes satisfy all of it, against
+nine on level 1.
 
 **Level 4 — Fleet Pond** — a wheel: the track round the water, the places
-beyond it, and the paths joining the two. Middling difficulty, sixteen winning
+beyond it, and the paths joining the two. Middling difficulty, eight winning
 routes. Nothing on this map is a dead end, which is deliberate — every corner of
 the pond can be reached more than one way, and that is how a group of adults
 ends up somewhere they did not intend to be. The pond itself is drawn from the
@@ -62,24 +62,26 @@ level happens to list them in.
 **Level 5 — Loopy** — the Thursday map from the Observatory down, lifted to
 make room for what is underneath it. The signature is the road round the Sports
 Centre: two roads joining the same two junctions, one either side of the
-building, so the pool at the back can only be reached by going round. Sixteen
-winning routes.
+building, so the pool at the back can only be reached by going round. Three
+winning routes, and the map that most rewards knowing that a route is its
+roads and not the order you laid them in: those three can be run sixteen ways
+between them, more than five journeys per route and the highest ratio on the
+roster.
 
 **Level 6 — Tilford** — a trail loop from the Barley Mow, and the hardest run
 on the roster: 7.5 to 8 km, over the river bridge, along to the goose at the
 paddling spot, off the village lanes, and not across the stepping stones, which
-are under water. Eight winning routes — four loops, each of which works either
-way round. The Posh Cows are on one of them and compulsory on none of them, and
-the Village Shop is reachable only on tarmac, so a legal run can never get to
-it at all.
+are under water. Four winning routes — four loops, each of which works either
+way round, which is the same route twice and banks once. The Posh Cows are on
+one of them and compulsory on none of them, and the Village Shop is reachable
+only on tarmac, so a legal run can never get to it at all.
 
 **Level 7 — Spooky Run** — the Town Run map on the last Thursday in October,
 after dark. The Big Tesco and the Duke are gone and every road off them with
 them; a Spooky Church now stands on the hill road between Wellesley Rumble and
 Redan Road; the pigeons are crows; and the east side is a street of trick or
-treaters no group of adults gets through. Ten winning routes, six of them over
-Redan Road and four over the ski slope, so which hill you spend is a real
-choice.
+treaters no group of adults gets through. Four winning routes, three of them
+over Redan Road and one over the ski slope.
 
 A handful of fields carry the whole of Halloween, and the rules never learn
 about any of them: `mood: "dusk"` takes the light out of the map — and with it
@@ -101,7 +103,7 @@ map running through the only place its marker can stand.
 **Level 8 — Hawley Lake** — a lap of open water, and the first map built round
 a lake rather than past one. 9 to 11.5 km from the Sailing Centre, taking in
 Minley Manor at the top of its avenue and the birds at Bird Bay, with two epic
-hills you may have one of and a range road the Ministry has shut. Ten winning
+hills you may have one of and a range road the Ministry has shut. Four winning
 routes. The lake is drawn from the ring of four bank junctions, exactly as
 Fleet Pond is, and the islands and dinghies are scattered on top of it.
 
@@ -226,6 +228,32 @@ Rebalancing the scoring is therefore a redeploy rather than a migration, and
 when there is a leaderboard, the server can recompute a submitted route rather
 than believing a number the client sent it.
 
+### What counts as one route
+
+**A route is the set of roads it uses.** Run a loop clockwise and then run it
+anticlockwise and the club has been down the same roads twice: it banks once,
+scores once, and appears in the book once. The same goes for the order the
+roads were laid in — an out-and-back round the Sports Centre is the same route
+whichever side you take first.
+
+This is a decision rather than an oversight, and it is worth being clear that
+it cuts against how a runner usually thinks. A Strava segment is directional;
+these are not. The reason is the size of the job it would otherwise be. Under
+directional counting level 1 asks for twenty-four runs rather than nine and the
+Christmas Run asks for thirty-two rather than seven, and most of the extra is
+the same roads in a different direction — which is tedious to grind and, more
+to the point, is not a new discovery. Fewer, realer routes beat a longer list.
+
+`routeKey` in `src/game/scoring.ts` is where this lives: it sorts a route's
+road ids, so direction and order fall out of the identity. Everything
+downstream inherits it — the run book, the "routes to find" count, whether a
+run scores as a discovery, and the `route_key` the server stores. One rule,
+one place. The help dialog puts it to the player in one line, because a rule
+that decides what banks is not one to leave them to infer.
+
+Whether direction should be an option rather than a rule is an open question,
+and issue #81 is where it is being argued.
+
 ## Playing
 
 - Select a junction joined to the end of your route to add a road.
@@ -293,17 +321,26 @@ overrun by pigeons.
 `trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
 `hawleyLevel.test.ts` and `christmasLevel.test.ts` do the same for levels 2, 6,
 7, 8 and 9 against their own maps. Most of them end by walking every route out
-of the start and back, so each level is held to exactly its winners — eight for
-Tilford, ten for the Spooky Run split six and four across the two hills, seven
-for the Christmas Run with three of them by way of the mulled wine. A road
+of the start and back, so each level is held to exactly its winners. A road
 whose distance drifts takes the count with it and fails.
 
-The Christmas Run counts its winners the way the club's book does: by the set
-of roads, so a loop run backwards is the same route. That matters more than it
-sounds. An earlier draft of the level looked like fourteen winners and was
-really two, because twelve of them were one figure-eight relaid in a different
-order — a distinction the walk count cannot see and the fixture list very much
-can.
+Those walks count *journeys* — every way round, in every order — which is a
+larger number than the routes the game counts, and deliberately so: it is the
+stricter check of the two, and a level whose journeys move has certainly
+changed. The number a player actually sees is the deduplicated one, and every
+level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7]`. Both
+are asserted, because a change that moves one and not the other is exactly the
+kind of thing worth being stopped by.
+
+The Christmas Run got there first, and is why the rest now do it. An earlier
+draft of that level looked like fourteen winners and was really two, because
+twelve of them were one figure-eight relaid in a different order — a
+distinction the journey count cannot see and the fixture list very much can.
+Counting by the set of roads, the way the club's book does, is what caught it.
+
+Nothing on the roster is a figure-eight now; that draft was redesigned away.
+The two counts still disagree everywhere, though, because a loop run backwards
+is two journeys and one route, which is why both are worth pinning.
 
 `src/game/scenery.test.ts` keeps the hand-placed scenery off the roads, the
 junctions and the writing. Every sprite it checks was positioned by working out

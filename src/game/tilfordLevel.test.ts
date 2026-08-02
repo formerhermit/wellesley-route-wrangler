@@ -3,6 +3,7 @@ import { tilfordRun as level } from "../data/tilfordRun";
 import { emptyRoute, graphFor, otherEnd, roadBetween, totalDistanceKm } from "./routeGraph";
 import { canRunRoute, countSurface, evaluateRoute } from "./routeEvaluation";
 import { selectResult } from "./resultSelection";
+import { routeKey, winningRouteCount } from "./scoring";
 import type { Route } from "./types";
 
 function routeOf(...nodeIds: string[]): Route {
@@ -170,15 +171,23 @@ describe("Tilford", () => {
     expect(titleFor(short)).toBe("Straight To The Bar");
   });
 
-  it("has eight winning routes and no more", () => {
+  it("has four winning routes, run eight ways", () => {
     // Four loops, each runnable either way. Enumerated over every route that
     // leaves the pub and comes back without repeating a road.
+    //
+    // Both numbers are asserted. The journeys are the stricter check — a road
+    // whose distance drifts moves them — but the routes are what a player is
+    // told there is to find, and the two can move independently.
     const graph = graphFor(level);
+    const shapes = new Set<string>();
     let wins = 0;
     const walk = (route: Route) => {
       const end = route.nodeIds[route.nodeIds.length - 1];
       if (end === level.finishNodeId && route.roadIds.length > 0) {
-        if (evaluateRoute(level, route).success) wins += 1;
+        if (evaluateRoute(level, route).success) {
+          wins += 1;
+          shapes.add(routeKey(route));
+        }
         return;
       }
       for (const road of graph.roadsByNode.get(end) ?? []) {
@@ -191,5 +200,7 @@ describe("Tilford", () => {
     };
     walk(emptyRoute(level));
     expect(wins).toBe(8);
+    expect(shapes.size).toBe(winningRouteCount(level));
+    expect(shapes.size).toBe(4);
   });
 });

@@ -5,6 +5,7 @@ import { emptyRoute, graphFor, otherEnd, roadBetween, totalDistanceKm } from "./
 import { canRunRoute, evaluateRoute } from "./routeEvaluation";
 import { buildIncidentReport } from "./incidentReport";
 import { selectResult } from "./resultSelection";
+import { routeKey, winningRouteCount } from "./scoring";
 import type { Route } from "./types";
 
 function routeOf(...nodeIds: string[]): Route {
@@ -177,13 +178,20 @@ describe("Spooky Run", () => {
     expect(titleFor(short)).toBe("Home Before The Streetlights");
   });
 
-  it("has ten winning routes, over both hills", () => {
+  it("has four winning routes, run ten ways, over both hills", () => {
+    // Both numbers are asserted. The journeys are the stricter check — a road
+    // whose distance drifts moves them — but the routes are what a player is
+    // told there is to find, and the two can move independently.
     const graph = graphFor(level);
     const wins: string[] = [];
+    const routes = new Map<string, string[]>();
     const walk = (route: Route) => {
       const end = route.nodeIds[route.nodeIds.length - 1];
       if (end === level.finishNodeId && route.roadIds.length > 0) {
-        if (evaluateRoute(level, route).success) wins.push(route.nodeIds.join(">"));
+        if (evaluateRoute(level, route).success) {
+          wins.push(route.nodeIds.join(">"));
+          routes.set(routeKey(route), route.nodeIds);
+        }
         return;
       }
       if (route.roadIds.length > 14) return;
@@ -198,8 +206,15 @@ describe("Spooky Run", () => {
     walk(emptyRoute(level));
 
     expect(wins.length).toBe(10);
-    // Neither hill is the only way round: the choice is real.
-    expect(wins.filter((r) => r.includes("redan-road")).length).toBe(6);
-    expect(wins.filter((r) => r.includes("ski-slope")).length).toBe(4);
+    expect(routes.size).toBe(winningRouteCount(level));
+    expect(routes.size).toBe(4);
+
+    // Neither hill is the only way round: the choice is real. Counted over
+    // routes rather than journeys, since that is what the club is hunting —
+    // and it is a thinner split that way, three against one.
+    const over = (hill: string) =>
+      [...routes.values()].filter((nodeIds) => nodeIds.includes(hill)).length;
+    expect(over("redan-road")).toBe(3);
+    expect(over("ski-slope")).toBe(1);
   });
 });
