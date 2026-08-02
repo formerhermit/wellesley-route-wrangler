@@ -205,6 +205,20 @@ so a level you have already beaten still shows what it is holding back; and the
 fixture list breaks it down per level. A shared run carries the same two
 figures, which is the only advert the game has until there is a table.
 
+Behind the objective panel's count is **the book**: every route you have run on
+that level, drawn as a shape over the map's own roads. Winners first, shortest
+to longest, and then the ones that did not work — because the thing that makes
+hunting a map tiring is not knowing which of the routes you tried already
+failed, and the run book had quietly been keeping them all along. A dud even
+says why it was a dud, in the level's own words.
+
+Nothing new is stored for any of it. `src/game/runBook.ts` rebuilds each route
+from its road ids and works the distance, the points, the win and the verdict
+out on the spot — the same rule the scoring follows, so a rebalance rewrites
+the whole book rather than stranding it. The one thing the book will not do is
+show you a route you have not found: the count of what is left is the whole of
+the help on offer.
+
 `src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
 **Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
 just lists of road ids — and every total is derived from them on the spot.
