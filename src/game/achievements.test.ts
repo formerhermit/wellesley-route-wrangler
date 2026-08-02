@@ -1,0 +1,204 @@
+import { describe, expect, it } from "vitest";
+import { levels } from "../data/levels";
+import { thursdaySocialRun } from "../data/thursdaySocialRun";
+import { emptyRecords, recordRun } from "./records";
+import type { Records } from "./records";
+import { cabinetFor, earnedBy, earnedCount } from "./achievements";
+import { evaluateRoute } from "./routeEvaluation";
+import { routeKey } from "./scoring";
+import {
+  currentNodeId,
+  graphFor,
+  otherEnd,
+  totalDistanceKm,
+} from "./routeGraph";
+import type { Level, Route } from "./types";
+
+/** Every closed loop on a map, for finding a route that fits a badge. */
+function loops(level: Level): Route[] {
+  const graph = graphFor(level);
+  const out: Route[] = [];
+  const walk = (route: Route) => {
+    const end = currentNodeId(route);
+    if (end === level.finishNodeId && route.roadIds.length > 0) {
+      out.push(route);
+      return;
+    }
+    for (const road of graph.roadsByNode.get(end) ?? []) {
+      if (route.roadIds.includes(road.id)) continue;
+      walk({
+        nodeIds: [...route.nodeIds, otherEnd(road, end)],
+        roadIds: [...route.roadIds, road.id],
+      });
+    }
+  };
+  walk({ nodeIds: [level.startNodeId], roadIds: [] });
+  return out;
+}
+
+function bookOf(entries: [Level, Route][]): Records {
+  let records: Records = emptyRecords;
+  entries.forEach(([level, route], index) => {
+    records = recordRun(records, level, route, 1000 + index);
+  });
+  return records;
+}
+
+const ids = (records: Records) =>
+  cabinetFor(records, levels)
+    .filter((entry) => entry.earned)
+    .map((entry) => entry.id);
+
+describe("the trophy cabinet", () => {
+  it("hangs every badge, unearned, for a club that has run nothing", () => {
+    const cabinet = cabinetFor(emptyRecords, levels);
+    expect(cabinet.length).toBeGreaterThan(0);
+    expect(earnedCount(cabinet)).toBe(0);
+    expect(cabinet.every((entry) => entry.name && entry.blurb)).toBe(true);
+  });
+
+  it("gives every badge a unique id and a way of being shown", () => {
+    const cabinet = cabinetFor(emptyRecords, levels);
+    expect(new Set(cabinet.map((e) => e.id)).size).toBe(cabinet.length);
+    for (const entry of cabinet) {
+      expect(["teased", "shape", "secret"], entry.id).toContain(entry.reveal);
+      // A teased badge is the only one whose hint is ever read, so it is the
+      // only one that has to have written one.
+      if (entry.reveal === "teased") expect(entry.hint, entry.id).toBeTruthy();
+    }
+  });
+
+  /**
+   * The point of this one. A badge nobody can win is worse than no badge: it
+   * reads as a bug to the player and as an achievement to the developer. Every
+   * one is checked against a route the maps can actually produce.
+   */
+  it("has no badge that the maps cannot produce", () => {
+    const unearnable: string[] = [];
+    const cabinet = cabinetFor(emptyRecords, levels);
+
+    for (const entry of cabinet) {
+      // Local Legend needs a whole roster's worth and is checked on its own.
+      if (entry.id === "local-legend") continue;
+
+      let won = false;
+      for (const level of levels) {
+        const all = loops(level);
+        // Enough of the book to satisfy the counting badges as well.
+        for (let take = 1; take <= all.length && !won; take *= 3) {
+          const records = bookOf(all.slice(0, take).map((r) => [level, r]));
+          if (ids(records).includes(entry.id)) won = true;
+        }
+        if (won) break;
+      }
+      if (!won) unearnable.push(entry.id);
+    }
+
+    expect(unearnable).toEqual([]);
+  });
+
+  it("awards exactly five for a route of exactly five", () => {
+    const level = thursdaySocialRun;
+    const five = loops(level).find((r) => totalDistanceKm(level, r) === 5);
+    expect(five, "the Thursday map should hold a five").toBeDefined();
+    expect(ids(bookOf([[level, five!]]))).toContain("exactly-five");
+  });
+
+  it("does not award exactly five for a route that is merely close", () => {
+    const level = thursdaySocialRun;
+    const near = loops(level).find((r) => {
+      const km = totalDistanceKm(level, r);
+      return km > 5 && km < 5.6;
+    });
+    expect(near).toBeDefined();
+    expect(ids(bookOf([[level, near!]]))).not.toContain("exactly-five");
+  });
+
+  it("awards the closed road badge for going down one, and the second for five", () => {
+    const level = thursdaySocialRun;
+    // By shape, not by walk: the book keys on the set of roads, so five
+    // traversals of two loops would only ever be two entries in it.
+    const byShape = new Map<string, Route>();
+    for (const route of loops(level)) {
+      if (route.roadIds.some((id) => level.roads.find((r) => r.id === id)?.closed)) {
+        byShape.set(routeKey(route), route);
+      }
+    }
+    const closed = [...byShape.values()];
+    expect(closed.length).toBeGreaterThanOrEqual(5);
+
+    const one = ids(bookOf([[level, closed[0]]]));
+    expect(one).toContain("closed-means-closed");
+    expect(one).not.toContain("reading-isnt-your-thing");
+
+    const five = ids(bookOf(closed.slice(0, 5).map((r) => [level, r])));
+    expect(five).toContain("reading-isnt-your-thing");
+  });
+
+  it("credits a badge to the route that accounts for it", () => {
+    const level = thursdaySocialRun;
+    const short = loops(level).find((r) => totalDistanceKm(level, r) < 4);
+    expect(short).toBeDefined();
+
+    const records = bookOf([[level, short!]]);
+    expect(ids(records)).toContain("didnt-even-try");
+    // Take that route out of the book and the badge goes with it, which is
+    // exactly what makes it this route's. Whether the *run* was a first is a
+    // separate question, and one the book answers rather than this.
+    const credited = earnedBy(records, levels, level, routeKey(short!)).map((e) => e.id);
+    expect(credited).toContain("didnt-even-try");
+  });
+
+  it("credits nothing to a route the badge does not depend on", () => {
+    const level = thursdaySocialRun;
+    const short = loops(level).find((r) => totalDistanceKm(level, r) < 4)!;
+    const other = loops(level).find(
+      (r) => totalDistanceKm(level, r) > 6 && routeKey(r) !== routeKey(short),
+    );
+    expect(other).toBeDefined();
+
+    const records = bookOf([
+      [level, short],
+      [level, other!],
+    ]);
+    const credited = earnedBy(records, levels, level, routeKey(other!)).map((e) => e.id);
+    expect(credited).not.toContain("didnt-even-try");
+  });
+
+  it("names what a run has just won and nothing it had already", () => {
+    const level = thursdaySocialRun;
+    const short = loops(level).find((r) => totalDistanceKm(level, r) < 4)!;
+    const noHills = loops(level).find(
+      (r) =>
+        evaluateRoute(level, r).success &&
+        !r.roadIds.some((id) => level.roads.find((rd) => rd.id === id)?.hill),
+    );
+    expect(noHills).toBeDefined();
+
+    const records = bookOf([
+      [level, short],
+      [level, noHills!],
+    ]);
+    const fresh = earnedBy(records, levels, level, routeKey(noHills!));
+    const freshIds = fresh.map((entry) => entry.id);
+
+    expect(freshIds).toContain("no-hills");
+    // Won by the earlier run, so not won again by this one.
+    expect(freshIds).not.toContain("didnt-even-try");
+  });
+
+  it("only calls a club a local legend once the first five maps are bare", () => {
+    // Everything on level 1 and nothing else: not a legend yet.
+    const level = levels[0];
+    const records = bookOf(loops(level).map((r) => [level, r]));
+    expect(ids(records)).not.toContain("local-legend");
+  });
+
+  it("survives a stored route the map has outgrown", () => {
+    const records: Records = {
+      "thursday-social-run": { stale: { roads: ["not-a-road"], at: 1 } },
+    };
+    expect(() => cabinetFor(records, levels)).not.toThrow();
+    expect(earnedCount(cabinetFor(records, levels))).toBe(0);
+  });
+});

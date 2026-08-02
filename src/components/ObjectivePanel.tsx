@@ -80,6 +80,7 @@ export function ObjectivePanel({
         ) : (
           <p className="objectives__found">{routesFound(found, toFind)}</p>
         ))}
+
     </section>
   );
 }

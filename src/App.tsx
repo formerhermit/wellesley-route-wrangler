@@ -8,7 +8,7 @@ import { ResultPanel } from "./components/ResultPanel";
 import { RouteMap } from "./components/RouteMap";
 import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
-import { ClubTableDialog } from "./components/ClubTableDialog";
+import { ClubDialog } from "./components/ClubDialog";
 import { RunBookDialog } from "./components/RunBookDialog";
 import { levels } from "./data/levels";
 import {
@@ -32,7 +32,8 @@ import { useMusic } from "./hooks/useMusic";
 import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
-import { scoreRun, winningRouteCount } from "./game/scoring";
+import { earnedBy } from "./game/achievements";
+import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
 import { clubTableEnabled } from "./club/enabled";
 
 /** The house theme, for every level that does not name one of its own. */
@@ -291,6 +292,18 @@ export default function App() {
     if (state.result?.success) recordCompletion(level.id);
   }, [state.phase, state.result, state.route, level, recordCompletion, logRun]);
 
+  // What this run put on the wall. `earnedBy` names the badges that depend on
+  // this route; a run that was not a first discovery announces none of them,
+  // because the club won those the week it first went that way. Declared after
+  // the effect above because it reads what that effect decided.
+  const freshBadges = useMemo(
+    () =>
+      freshRoute
+        ? earnedBy(runBook.records, levels, level, routeKey(state.route))
+        : [],
+    [freshRoute, runBook.records, level, state.route],
+  );
+
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
   const upcoming =
@@ -345,7 +358,6 @@ export default function App() {
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
-          clubEnabled={clubTableEnabled}
           onShowClub={() => setClubOpen(true)}
           onShowLevels={() => setLevelsOpen(true)}
           onShowHelp={() => setHelpOpen(true)}
@@ -410,7 +422,10 @@ export default function App() {
       )}
 
       {clubOpen && (
-        <ClubTableDialog
+        <ClubDialog
+          levels={levels}
+          records={runBook.records}
+          tableEnabled={clubTableEnabled}
           name={clubName}
           onNameChanged={setClubName}
           onClose={() => setClubOpen(false)}
@@ -438,6 +453,7 @@ export default function App() {
           report={report}
           score={runScore}
           newRoute={freshRoute}
+          freshBadges={freshBadges}
           found={levelTally.found}
           toFind={toFind}
           clubPoints={clubTally.points}

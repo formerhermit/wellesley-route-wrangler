@@ -3587,3 +3587,323 @@ body {
     text-align: center;
   }
 }
+
+/* ---------- The trophy cabinet ---------- */
+
+/*
+ * A patch, not a medal: the thing a running club actually owns. It reuses the
+ * card everything else here is built from and separates itself only by the
+ * dashed edge, which reads as stitching, so the wall sits beside the run book
+ * without looking imported from another game.
+ */
+.cabinet {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
+  gap: 0.7rem;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+}
+
+.badge__patch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px dashed var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+}
+
+.badge--earned .badge__patch,
+.badge__patch--won {
+  border-color: var(--club);
+  background: color-mix(in srgb, var(--brand-blue) 12%, var(--card));
+}
+
+.badge__art {
+  width: 68%;
+  height: 68%;
+  overflow: visible;
+}
+
+.badge__name {
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  /* Two lines, so a long name does not push its neighbours out of line. */
+  min-height: 1.7rem;
+}
+
+.badge--earned .badge__name {
+  color: var(--ink);
+}
+
+/* A locked badge is drawn in the paper's own colours: present, not shouting. */
+.badge:not(.badge--earned) .badge__art {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+/* ---------- Badge drawings ---------- */
+
+.badge-mug-handle,
+.badge-steam,
+.badge-strike,
+.badge-pass,
+.badge-hands,
+.badge-sign-bar,
+.badge-bar-stripe {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.badge-mug {
+  fill: var(--card);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.badge-mug-handle {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.badge-steam {
+  stroke: var(--ink-soft);
+  stroke-width: 2.5;
+}
+
+.badge-strike {
+  stroke: var(--fail);
+  stroke-width: 5;
+}
+
+.badge-pass {
+  stroke: var(--pass);
+  stroke-width: 4;
+}
+
+.badge-ring {
+  fill: none;
+  stroke: var(--hi-vis);
+  stroke-width: 4;
+}
+
+.badge-number {
+  fill: var(--club);
+  font-family: inherit;
+  font-size: 26px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+.badge-number--mystery {
+  fill: var(--line);
+}
+
+.badge-bird {
+  fill: var(--pigeon);
+}
+
+.badge-eye {
+  fill: var(--ink);
+}
+
+.badge-beak {
+  fill: var(--hi-vis);
+}
+
+.badge-post {
+  fill: var(--ink-soft);
+}
+
+.badge-bar {
+  fill: var(--fail);
+}
+
+.badge-bar-stripe {
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.badge-sign {
+  fill: var(--fail);
+}
+
+.badge-sign-bar {
+  stroke: #fff;
+  stroke-width: 5;
+}
+
+.badge-watch {
+  fill: var(--ink-soft);
+}
+
+.badge-watch-face {
+  fill: var(--card);
+}
+
+.badge-hands {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.badge-hill {
+  fill: var(--grass);
+}
+
+.badge-flag {
+  fill: var(--fail);
+}
+
+.badge-star {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.badge-star-small {
+  fill: var(--hi-vis);
+}
+
+.badge-ghost {
+  fill: #f4f1e8;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.badge-tree {
+  fill: var(--pass);
+}
+
+.badge-trunk {
+  fill: #7a5a3a;
+}
+
+/* ---------- A badge, the moment it is won ---------- */
+
+.fresh-badges {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fresh-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.7rem;
+  border: 2px dashed var(--club);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--brand-blue) 10%, var(--card));
+}
+
+.fresh-badge .badge__patch {
+  flex: 0 0 3.1rem;
+  width: 3.1rem;
+  border: 0;
+  background: none;
+}
+
+/* No border to sit inside here, so the drawing may have the whole square. */
+.fresh-badge .badge__art {
+  width: 100%;
+  height: 100%;
+}
+
+.fresh-badge__words {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fresh-badge__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+.fresh-badge__name {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.fresh-badge__blurb {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+/* ---------- Tabs, for a dialog holding two things ---------- */
+
+/*
+ * Used once, by the club dialog. Drawn as a strip of the paper the game is
+ * printed on with the live one lifted out of it, rather than as buttons —
+ * there are already two kinds of button in a dialog and a third would be
+ * asking the player to work out which does what.
+ */
+.tabs {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0.8rem 0 0.9rem;
+  padding: 0.25rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.tabs__tab {
+  flex: 1 1 0;
+  min-height: 40px;
+  padding: 0.35rem 0.6rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.tabs__tab:hover {
+  color: var(--club);
+}
+
+.tabs__tab--on {
+  background: var(--card);
+  color: var(--club);
+  box-shadow: 0 1px 3px rgb(29 43 54 / 12%);
+}
+
+.tabs__tab:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: -1px;
+}
+
+/* The panel takes focus when a tab is picked; it should not draw a ring for it. */
+[role="tabpanel"]:focus {
+  outline: none;
+}

@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:club": "node scripts/build-club-bundle.mjs",
+    "badges": "node scripts/badge-proof-sheet.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",

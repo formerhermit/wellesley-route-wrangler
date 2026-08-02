@@ -320,6 +320,62 @@ that decides what banks is not one to leave them to infer.
 Whether direction should be an option rather than a rule is an open question,
 and issue #81 is where it is being argued.
 
+## The trophy cabinet
+
+Badges, earned by running, and **nothing about them is stored either**.
+`src/game/achievements.ts` asks each one of the routes in the book on the spot,
+the same way the scoring does, so retuning a badge re-awards everybody's
+history rather than stranding it. A patch on the wall is a question with a yes
+in it, not a flag somebody set once.
+
+That rule is also the constraint, and it decides which badges can exist at all.
+`recordRun` is idempotent — running a route already in the book records nothing
+— so the book is a set of discoveries and not a diary. A badge can ask what the
+club has been down and never what it did last Thursday. "Five perfect runs in a
+row" is not a badge this game can have without keeping a log it has always
+refused to keep.
+
+The numbers were checked against what the maps can actually produce, which is
+`achievements.test.ts`'s main job: it walks every level looking for a route
+that wins each badge, and fails on any badge nothing can earn. That test is why
+two of them read as they do. A half marathon is 21.1 km and the longest loop on
+the roster is 17.8 km, so The Unexpected Long Run asks for 13. Every road is
+measured to one decimal place, so a total of 4.99 km cannot occur on any map
+however it is run, and the Strava Tax is instead a hundred metres short of
+whatever the level asked for — which is the better joke anyway.
+
+A badge nobody can win is worse than no badge at all: it reads as a bug to the
+player and as an achievement to whoever wrote it.
+
+### What a locked one gives away
+
+Three settings, per badge, in the `reveal` field:
+
+- **teased** — name and hint on show, so there is something to go after.
+  *Local Legend*, *Hills Pay The Bills*.
+- **shape** — the drawing only. Intriguing, and not a list.
+- **secret** — nothing at all, for the ones whose whole worth is the surprise.
+  *You Didn't Even Try, Did You* is not funny in advance.
+
+The cabinet lives behind the trophy button in the header, in a dialog with the
+club table, under two tabs. They belong together: both are about the club
+rather than about the run in front of you, and neither had a home before. The
+cabinet briefly had a line of its own under the objective panel, which was the
+wrong place twice over — that panel is about this run, and a second link under
+the run book's turned the corner into a list of doors. The book stays there,
+because the book really is about this run.
+
+Without a club table configured there is one tab, so there is no tab strip: the
+dialog is the cabinet and nothing else.
+
+A badge won is announced in the result panel above the incident report — a
+badge you only find by opening a menu has already missed its own arrival. The
+usual run wins none and shows nothing.
+
+The drawings are inline SVG in `BadgeSprites.tsx`, in the same flat-fill hand
+as the map, and deliberately simpler: at the size a patch is drawn, anything
+past three or four shapes turns to mud.
+
 ## Playing
 
 - Select a junction joined to the end of your route to add a road.
