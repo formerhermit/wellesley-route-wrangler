@@ -57,6 +57,7 @@ const meta = {
   HillsBadge: ["Hills Pay The Bills", "A green mountain range with a red flag on the summit.", "teased"],
   IgnoredSignBadge: ["Reading Isn't Your Thing", "A red no-entry sign on a post.", "secret"],
   LongRunBadge: ["The Unexpected Long Run", "The map's own car — the one two of them went home in.", "teased"],
+  ShowOffBadge: ["Show Off", "A prize rosette: pleated disc, hi-vis centre, two ribbons hanging behind.", "teased"],
   LocalLegendBadge: ["Local Legend", "A five-pointed star, filled hi-vis.", "teased"],
   CowBadge: ["Obsessed With Cows", "The map's cow bitmap, the same file the maps use.", "shape"],
   SpookyBadge: ["Spooker", "A ghost with a scalloped hem and two eyes.", "shape"],

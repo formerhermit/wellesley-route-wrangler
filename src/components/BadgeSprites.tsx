@@ -153,6 +153,28 @@ export function LongRunBadge() {
   );
 }
 
+/**
+ * A prize rosette: the thing a village club actually pins on somebody.
+ *
+ * Distinct from Local Legend's star on purpose — they are the only two badges
+ * about finishing something, and two stars would read as one badge twice. The
+ * ribbons are drawn first so they hang behind the disc.
+ */
+export function ShowOffBadge() {
+  return (
+    <Frame>
+      <path d="M -9 0 L -15 27 L -8 22 L -2 28 L -2 2 Z" className="badge-ribbon" />
+      <path d="M 9 0 L 15 27 L 8 22 L 2 28 L 2 2 Z" className="badge-ribbon" />
+      <circle cx={0} cy={-5} r={19} className="badge-rosette" />
+      <path
+        d="M 0 -24 L 0 14 M -19 -5 L 19 -5 M -13.4 -18.4 L 13.4 8.4 M 13.4 -18.4 L -13.4 8.4"
+        className="badge-pleat"
+      />
+      <circle cx={0} cy={-5} r={8} className="badge-rosette-centre" />
+    </Frame>
+  );
+}
+
 /** Every route on the first five maps. */
 export function LocalLegendBadge() {
   return (

@@ -185,6 +185,15 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     test: some((run) => run.distanceKm >= 13),
   },
   {
+    id: "show-off",
+    name: "Show Off",
+    blurb:
+      "A whole map solved, every route on it, and not one wrong turn in the book. Nobody likes this about you.",
+    hint: "Find every route on a map without ever running a bad one.",
+    reveal: "teased",
+    test: (runs, levels) => hasAFlawlessMap(runs, levels),
+  },
+  {
     id: "local-legend",
     name: "Local Legend",
     blurb: "Every route on the first five maps. There is nothing left to find.",
@@ -246,6 +255,24 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     }),
   },
 ];
+
+/**
+ * A map finished without a mark against it: every winning route found, and not
+ * one losing route in the book for it.
+ *
+ * The book keeps failures as well as successes, which is what makes this
+ * answerable at all — "found everything" is Local Legend's question, and this
+ * one also asks what it cost. One dud spoils a map for good, but there are
+ * nine of them to try it on, and two carry only a pair of routes each.
+ */
+function hasAFlawlessMap(runs: Run[], levels: Level[]): boolean {
+  return levels.some((level) => {
+    const here = runs.filter((run) => run.level.id === level.id);
+    if (here.length === 0) return false;
+    const won = here.filter((run) => run.won).length;
+    return won === here.length && won === winningRouteCount(level);
+  });
+}
 
 /** How many maps deep "the first five" goes, for Local Legend. */
 const LOCAL_LEVELS = 5;

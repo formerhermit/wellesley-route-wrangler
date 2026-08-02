@@ -328,12 +328,25 @@ the same way the scoring does, so retuning a badge re-awards everybody's
 history rather than stranding it. A patch on the wall is a question with a yes
 in it, not a flag somebody set once.
 
-That rule is also the constraint, and it decides which badges can exist at all.
-`recordRun` is idempotent — running a route already in the book records nothing
-— so the book is a set of discoveries and not a diary. A badge can ask what the
-club has been down and never what it did last Thursday. "Five perfect runs in a
-row" is not a badge this game can have without keeping a log it has always
-refused to keep.
+That rule shapes what a badge can ask. `recordRun` is idempotent — running a
+route already in the book records nothing — so the book is a set of discoveries
+and not a diary: it knows what the club has been down, and not what it did last
+Thursday and the Thursday before.
+
+Worth being precise about what that does and does not forbid, because it is
+easy to dress a gap up as a principle. What is deliberate is that **nothing
+derived is stored** — no points, no badges, no totals. A log of runs would not
+breach that at all; a road id and a timestamp is the same kind of raw
+observation the book already keeps. Nobody ever ruled one out. It has simply
+never been needed, and it would be the first thing here that could not be
+rebuilt from what is left if it were lost.
+
+Show Off is the badge that ran into this. Asked for as "five perfect runs in a
+row", it wanted a diary. Asked for as **a whole map found without one bad run
+in the book**, it wants nothing new: the book keeps failures as well as
+successes, so it can already say whether a level's page is all winners. It is
+the better badge for it — the literal version could be farmed by running one
+known winner five times over.
 
 The numbers were checked against what the maps can actually produce, which is
 `achievements.test.ts`'s main job: it walks every level looking for a route
@@ -360,7 +373,7 @@ rather than a fact about it.
 Three settings, per badge, in the `reveal` field:
 
 - **teased** — name and hint on show, so there is something to go after.
-  *Local Legend*, *Hills Pay The Bills*.
+  *Local Legend*, *Show Off*, *Hills Pay The Bills*.
 - **shape** — the drawing only. Intriguing, and not a list.
 - **secret** — nothing at all, for the ones whose whole worth is the surprise.
   *You Didn't Even Try, Did You* is not funny in advance.
