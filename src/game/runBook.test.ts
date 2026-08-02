@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { christmasRun } from "../data/christmasRun";
-import { emptyRecords, recordRun } from "./records";
+import { emptyRecords, recordRun, routeFromRoads } from "./records";
 import type { Records } from "./records";
 import { roadBetween } from "./routeGraph";
 import { pageFor } from "./runBook";
@@ -122,6 +122,34 @@ describe("a page of the book", () => {
     expect(page.tried).toEqual([]);
     // And the level still knows how much there is to find.
     expect(page.toFind).toBe(7);
+  });
+
+  it("hands back routes that can be laid straight onto the map", () => {
+    // What the book shows can be tapped back onto the map, so every entry has
+    // to carry a route the editing rules would accept: a walk from the start,
+    // one road between each pair of junctions. The stale record is in here to
+    // make the point that filtering is what guarantees it — a page that showed
+    // everything could not promise this.
+    const records: Records = {
+      "christmas-run": {
+        won: { roads: winner.roadIds, at: 1000 },
+        lost: { roads: tooShort.roadIds, at: 2000 },
+        stale: { roads: ["not-a-road-any-more"], at: 3000 },
+      },
+    };
+    const page = pageFor(records, christmasRun);
+    const entries = [...page.won, ...page.tried];
+    expect(entries).toHaveLength(2);
+
+    for (const entry of entries) {
+      expect(entry.route.nodeIds[0]).toBe(christmasRun.startNodeId);
+      expect(entry.route.roadIds).toHaveLength(entry.route.nodeIds.length - 1);
+      // Rebuilding from the road ids alone lands on the same junctions, which
+      // is the whole of what loading one does.
+      expect(routeFromRoads(christmasRun, entry.route.roadIds)?.nodeIds).toEqual(
+        entry.route.nodeIds,
+      );
+    }
   });
 
   it("never reports more found than there are to find", () => {
