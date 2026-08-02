@@ -68,11 +68,12 @@ function minimumKm(level: Level): number | undefined {
 }
 
 /**
- * Somewhere to stop. Both kinds count: the Medical Centre Toilet is a real one
- * with a door that locks, and the Random Portaloos are what the heath has, and
- * a club that has been to one of each has been toilet to toilet.
+ * Somewhere to stop, and all three count. The Medical Centre Toilet is a real
+ * one with a door that locks, the Random Portaloos are what the heath has, and
+ * A Private Bush is what you get when the map has neither — the joke is
+ * entirely in the place name, and the place name is the point.
  */
-const LOOS: MapNodeType[] = ["toilet", "portaloo"];
+const STOPS: MapNodeType[] = ["toilet", "portaloo", "bush"];
 
 /** Where the goose is standing on this map, if it has one. */
 function gooseNodeId(level: Level): string | undefined {
@@ -223,21 +224,16 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     id: "toilet-to-toilet",
     name: "Toilet to Toilet",
     blurb:
-      "Stops on two different maps. The club knows where every one of them is, and always has.",
+      "Two stops on one run. The club knows where every one of them is, and always has.",
     reveal: "shape",
     /*
-     * Two *maps*, not two on one route, which cannot happen: every map on the
-     * roster has at most one place to stop, so the brief as first written —
-     * more than one stop in a single route — was a badge nobody could ever
-     * have won. Going from a toilet on one map to a toilet on another is the
-     * nearest thing that is both earnable and still the same joke.
+     * Two stops on one route, which the Thursday map can do: the Medical
+     * Centre Toilet and A Private Bush are both on it, and a route can take in
+     * both and still meet the brief. Counting only the plumbed ones made this
+     * look impossible, which it is not — a bush is a toilet stop, and saying
+     * otherwise misreads the map.
      */
-    test: (runs) =>
-      new Set(
-        runs
-          .filter((run) => LOOS.some((type) => countType(run, type) > 0))
-          .map((run) => run.level.id),
-      ).size >= 2,
+    test: some((run) => STOPS.reduce((n, type) => n + countType(run, type), 0) >= 2),
   },
   {
     id: "goose-botherer",
