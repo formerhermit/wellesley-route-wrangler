@@ -2495,6 +2495,10 @@ body {
   line-height: 1.55;
 }
 
+.help__note + .help__note {
+  margin-top: 0.6rem;
+}
+
 /* The one line about this particular run, set apart from the rules. */
 .help__today {
   margin: 1.1rem 0 0;

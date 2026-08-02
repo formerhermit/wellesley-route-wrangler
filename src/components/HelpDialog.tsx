@@ -41,6 +41,9 @@ export function HelpDialog({ level, onClose }: Props) {
         everyone somewhere daft if you like. But to qualify for the next level
         you have to follow the rules.
       </p>
+      <p className="help__note">
+        A loop counts once, whichever way round you run it.
+      </p>
 
       <p className="help__today">
         <strong>Today:</strong> {level.title} — {level.strapline}

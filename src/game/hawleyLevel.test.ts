@@ -4,6 +4,7 @@ import { emptyRoute, graphFor, otherEnd, roadBetween, totalDistanceKm } from "./
 import { canRunRoute, evaluateRoute } from "./routeEvaluation";
 import { buildIncidentReport } from "./incidentReport";
 import { selectResult } from "./resultSelection";
+import { routeKey, winningRouteCount } from "./scoring";
 import type { Route } from "./types";
 
 function routeOf(...nodeIds: string[]): Route {
@@ -177,13 +178,20 @@ describe("Hawley Lake", () => {
     expect(titleFor(short)).toBe("You Saw One End Of It");
   });
 
-  it("has ten winning routes and no more", () => {
+  it("has four winning routes, run ten ways", () => {
+    // Both numbers are asserted. The journeys are the stricter check — a road
+    // whose distance drifts moves them — but the routes are what a player is
+    // told there is to find, and the two can move independently.
     const graph = graphFor(level);
+    const shapes = new Set<string>();
     let wins = 0;
     const walk = (route: Route) => {
       const end = route.nodeIds[route.nodeIds.length - 1];
       if (end === level.finishNodeId && route.roadIds.length > 0) {
-        if (evaluateRoute(level, route).success) wins += 1;
+        if (evaluateRoute(level, route).success) {
+          wins += 1;
+          shapes.add(routeKey(route));
+        }
         return;
       }
       if (route.roadIds.length > 16) return;
@@ -197,5 +205,7 @@ describe("Hawley Lake", () => {
     };
     walk(emptyRoute(level));
     expect(wins).toBe(10);
+    expect(shapes.size).toBe(winningRouteCount(level));
+    expect(shapes.size).toBe(4);
   });
 });
