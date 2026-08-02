@@ -2368,9 +2368,21 @@ body {
   color: var(--club);
 }
 
+/*
+ * No ring on a dialog's heading (#91).
+ *
+ * `Dialog` moves focus here when it opens, so a screen reader announces what
+ * has appeared rather than leaving focus on the page behind. The heading is
+ * `tabIndex={-1}`, so that is the *only* way it is ever focused — nobody can
+ * tab to it — and a focus ring that can never mean "you are here by keyboard"
+ * is just a yellow box round the title on every first visit.
+ *
+ * The focus move stays. It is the announcement; the outline was never the
+ * point of it.
+ */
+.dialog h2:focus,
 .dialog h2:focus-visible {
-  outline: 3px solid var(--hi-vis);
-  outline-offset: 4px;
+  outline: none;
 }
 
 .dialog--failure h2 {
@@ -3933,4 +3945,414 @@ body {
   fill: var(--hi-vis);
   stroke: var(--ink);
   stroke-width: 2;
+}
+
+/* ---------- How to play ---------- */
+
+/*
+ * The rules screen: a wide card with the countryside down one side and the
+ * rules down the other. It sets its own padding, because the picture runs to
+ * the edge of the panel and the dialog's own padding would leave a cream
+ * margin round a photograph.
+ */
+.dialog--rules {
+  /* Positioned so the close button anchors to the card and not the backdrop. */
+  position: relative;
+  width: min(1000px, 100%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.rules__close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.rules__close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.rules__close:hover {
+  color: var(--ink);
+  border-color: var(--club);
+}
+
+.rules__close:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
+.rules__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 1.2rem 3.2rem 0;
+  font-size: clamp(1.9rem, 6vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--club);
+}
+
+.rules__spark {
+  flex: 0 0 auto;
+  width: clamp(14px, 3vw, 22px);
+  height: clamp(20px, 4vw, 30px);
+}
+
+.rules__spark--flip {
+  transform: scaleX(-1);
+}
+
+.rules-spark-line {
+  fill: none;
+  stroke: var(--brand-blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.rules__subtitle {
+  margin: 0.4rem 1.5rem 0;
+  text-align: center;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  color: var(--ink);
+}
+
+.rules__body {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 1fr;
+  margin-top: 0.9rem;
+}
+
+/*
+ * The picture. A background rather than an <img> so it can crop rather than
+ * squash: the signpost is on the right of the artwork, and that is the part
+ * that has to survive whatever shape the panel ends up.
+ */
+.rules__scene {
+  /* WebP, and only WebP. The artwork is a soft painterly landscape, which is
+     the one thing PNG is worst at — 584 kB against 51 kB for no visible
+     difference, on a dialog that opens itself on a first visit. */
+  background: url("/sprites/countryside.webp") right center / cover no-repeat;
+  min-height: 130px;
+}
+
+.rules__panel {
+  padding: 0.9rem 1.1rem 0;
+}
+
+.rules__heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+.rules__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid color-mix(in srgb, var(--brand-blue) 30%, var(--line));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--brand-blue) 5%, var(--card));
+}
+
+.rule__art {
+  flex: 0 0 auto;
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.rule__words {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rule__title {
+  font-weight: 800;
+  font-size: 0.94rem;
+  line-height: 1.25;
+  color: var(--club);
+}
+
+.rule__detail {
+  font-size: 0.86rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+/* ---------- The rule drawings ---------- */
+
+.rules-ring {
+  fill: none;
+  stroke: var(--club);
+  stroke-width: 3;
+}
+
+.rules-ring-inner {
+  fill: none;
+  stroke: var(--brand-blue);
+  stroke-width: 3;
+}
+
+.rules-dot {
+  fill: var(--club);
+}
+
+.rules-hand {
+  fill: var(--card);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rules-cup {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rules-cup-handle {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.rules-hand-crease {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.rules-cup-stem,
+.rules-cup-base {
+  fill: var(--hi-vis);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rules-eye {
+  fill: var(--card);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.rules-pupil {
+  fill: var(--ink);
+}
+
+.rules-pin {
+  fill: var(--brand-blue);
+  stroke: var(--club);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rules-pin-hole {
+  fill: var(--card);
+}
+
+.rules-route-dash {
+  fill: none;
+  stroke: var(--club);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1 5;
+  opacity: 0.7;
+}
+
+.rules-loop {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.rules-loop-head {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rules-horn {
+  fill: var(--brand-blue);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.rules-horn-handle {
+  fill: var(--brand-blue);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.rules-horn-waves {
+  fill: none;
+  stroke: var(--brand-blue);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* ---------- The strip along the bottom ---------- */
+
+/*
+ * Pinned, for the same reason every other dialog's actions are (#87): this one
+ * is taller than a phone and the way out was going over the fold with the rest
+ * of it. It is the last thing in the card, so sticky has somewhere to stick.
+ */
+.rules__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+  padding: 0.8rem 1.1rem;
+  border-top: 2px solid var(--line);
+  background: var(--paper);
+}
+
+.rules__tip {
+  flex: 1 1 14rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+/* The bird and the line it wandered off along. Ornament, and the first thing
+   to go when the strip runs out of room. */
+.rules__pigeon {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.rules__pigeon img {
+  width: auto;
+  height: 3.1rem;
+}
+
+.rules__trail {
+  width: 5rem;
+  height: 1.4rem;
+}
+
+.rules-trail-line,
+.rules-trail-head {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rules-trail-line {
+  stroke-dasharray: 5 5;
+}
+
+.rules__go {
+  flex: 0 1 auto;
+  min-height: 52px;
+  padding-inline: 1.4rem;
+  font-size: 1.05rem;
+}
+
+.rules__today {
+  margin: 0;
+  padding: 0.7rem 1.1rem 0.2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.rules__today strong {
+  color: var(--ink);
+}
+
+/* Two columns once there is room for the picture to be worth having. */
+@media (min-width: 760px) {
+  .rules__body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .rules__scene {
+    min-height: 100%;
+  }
+
+  .rules__panel {
+    padding: 0.2rem 1.2rem 0.6rem 0.9rem;
+  }
+}
+
+/* On a phone the rules are the whole point; the picture keeps the signpost
+   and gives up everything else. */
+@media (max-width: 759px) {
+  .rules__scene {
+    height: 150px;
+    /* Framed on the signpost: the whole post, all five boards, and enough
+       field either side that it does not read as a crop. */
+    background-size: auto 145%;
+    background-position: 72% 22%;
+  }
+
+  .rules__pigeon {
+    display: none;
+  }
+
+  .rules__go {
+    flex: 1 1 100%;
+  }
 }

@@ -7,8 +7,14 @@ the pigeons, and get the group back to the Observatory in one piece.
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
 handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose, the
-dog) live in `public/sprites/`, cropped to
-their content and sized to a few times the space they are ever drawn in.
+dog, the Medical Centre Toilet) live in `public/sprites/`, cropped to their
+content and sized to a few times the space they are ever drawn in.
+
+One asset there is not a PNG. The countryside behind the how-to-play screen is
+a soft painterly landscape, which is the one thing PNG is worst at: 584 kB
+against 51 kB as WebP, for no difference anybody can see, on a dialog that
+opens itself on a first visit. Line art with flat colour stays PNG, where the
+gap runs the other way.
 
 ## The levels
 
@@ -409,6 +415,27 @@ past three or four shapes turns to mud.
   or to edit.
 - **Level _n_** in the header opens the fixture list: completed runs, the one
   you are on, and what it takes to open the rest.
+
+### How to play
+
+The screen a first visit opens on, and the one under the **?** after that. Two
+columns where there is room — the countryside and its signpost on one side, six
+rule cards on the other — and on a phone the rules take the width and the
+picture becomes a strip along the top framed on the signpost, because the rules
+are the point and the picture is the part that can afford to shrink.
+
+Five of the six rules are the ones anybody needs to start. The sixth is there
+because it decides what banks: **a loop counts once, whichever way round you
+run it**, and a player who never reads that will run one backwards and wonder
+why the club shrugged. See "What counts as one route" above.
+
+The line about club points follows what was actually built. A leaderboard is
+only promised on a build that has one configured, because promising one that
+does not exist is a lie the first tap exposes.
+
+The bar along the bottom is pinned, for the same reason every other dialog's
+actions are: the screen is taller than a phone, and the way out should not go
+over the fold with the rest of it.
 
 Everything is keyboard reachable: the junctions are real HTML buttons laid over
 the map, so `Tab` and `Enter` work as you would expect, and each announces
