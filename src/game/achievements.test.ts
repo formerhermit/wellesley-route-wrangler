@@ -9,6 +9,7 @@ import { routeKey } from "./scoring";
 import {
   currentNodeId,
   graphFor,
+  nodeById,
   otherEnd,
   totalDistanceKm,
 } from "./routeGraph";
@@ -91,6 +92,21 @@ describe("the trophy cabinet", () => {
         }
         if (won) break;
       }
+
+      // And then a book spread across the roster, because a real one is. No
+      // badge needs this today — every one of them can be won on a single map
+      // — but a book drawn from one level is a thin thing to judge "nobody can
+      // ever win this" against, and a badge about two maps would slip straight
+      // past it.
+      if (!won) {
+        const spread = levels.flatMap((level) =>
+          loops(level)
+            .slice(0, 4)
+            .map((route) => [level, route] as [Level, Route]),
+        );
+        if (ids(bookOf(spread)).includes(entry.id)) won = true;
+      }
+
       if (!won) unearnable.push(entry.id);
     }
 
@@ -185,6 +201,28 @@ describe("the trophy cabinet", () => {
     expect(freshIds).toContain("no-hills");
     // Won by the earlier run, so not won again by this one.
     expect(freshIds).not.toContain("didnt-even-try");
+  });
+
+  it("wants two stops on one run for toilet to toilet, and counts the bush", () => {
+    // A Private Bush is a toilet stop — the joke is entirely in the place name
+    // — so the Thursday map, which has it as well as the Medical Centre
+    // Toilet, can do this in a single route.
+    const level = thursdaySocialRun;
+    const stops = (route: Route) =>
+      new Set(
+        route.nodeIds.filter((id) => {
+          const type = nodeById(level, id).type;
+          return type === "toilet" || type === "portaloo" || type === "bush";
+        }),
+      ).size;
+
+    const both = loops(level).find((route) => stops(route) >= 2);
+    const one = loops(level).find((route) => stops(route) === 1);
+    expect(both, "the Thursday map holds a toilet and a bush").toBeDefined();
+    expect(one).toBeDefined();
+
+    expect(ids(bookOf([[level, one!]]))).not.toContain("toilet-to-toilet");
+    expect(ids(bookOf([[level, both!]]))).toContain("toilet-to-toilet");
   });
 
   it("only calls a club a local legend once the first five maps are bare", () => {

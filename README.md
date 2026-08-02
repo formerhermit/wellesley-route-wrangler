@@ -347,6 +347,14 @@ whatever the level asked for — which is the better joke anyway.
 A badge nobody can win is worse than no badge at all: it reads as a bug to the
 player and as an achievement to whoever wrote it.
 
+The reverse is a trap of its own. Toilet to Toilet asks for two stops on one
+run and looks impossible, because only one map carries two plumbed ones — but
+**A Private Bush is a toilet stop**, the joke is entirely in the place name,
+and the Thursday map has one of those as well as the Medical Centre Toilet. A
+route can take in both and still meet the brief. Counting only the plumbed ones
+made a perfectly good badge look unwinnable, which is a misreading of the map
+rather than a fact about it.
+
 ### What a locked one gives away
 
 Three settings, per badge, in the `reveal` field:

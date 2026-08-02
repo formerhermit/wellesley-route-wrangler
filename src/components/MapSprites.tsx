@@ -422,6 +422,28 @@ export function Portaloo() {
   );
 }
 
+/**
+ * The Medical Centre Toilet: a real one, with a cistern and a door that locks,
+ * which is why the club plans whole routes around it.
+ *
+ * A bitmap, like the cow and the goose. It is a drawing of a specific object
+ * with a lot of curve in it, and the vector version of that at this size comes
+ * out as a blob with a lid.
+ */
+export function Toilet() {
+  return (
+    <g className="sprite sprite--toilet" aria-hidden="true">
+      <image
+        href={`${import.meta.env.BASE_URL}sprites/toilet.png`}
+        x={-11}
+        y={-19}
+        width={22}
+        height={36}
+      />
+    </g>
+  );
+}
+
 /** The same tree in October, after whatever happened here happened. */
 export function DeadTree() {
   return (

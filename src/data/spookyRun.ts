@@ -138,6 +138,7 @@ export const spookyRun: Level = {
       y: 350,
       label: "Medical Centre Toilet",
       blurb: "a quick pitstop, no questions asked",
+      type: "toilet",
     },
     {
       id: "hospital-hill",

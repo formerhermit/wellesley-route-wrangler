@@ -201,6 +201,7 @@ export const thursdaySocialRun: Level = {
       y: 165,
       label: "Medical Centre Toilet",
       blurb: "a quick pitstop, no questions asked",
+      type: "toilet",
     },
     {
       id: "back-passage",

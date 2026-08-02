@@ -67,6 +67,14 @@ function minimumKm(level: Level): number | undefined {
   return undefined;
 }
 
+/**
+ * Somewhere to stop, and all three count. The Medical Centre Toilet is a real
+ * one with a door that locks, the Random Portaloos are what the heath has, and
+ * A Private Bush is what you get when the map has neither — the joke is
+ * entirely in the place name, and the place name is the point.
+ */
+const STOPS: MapNodeType[] = ["toilet", "portaloo", "bush"];
+
 /** Where the goose is standing on this map, if it has one. */
 function gooseNodeId(level: Level): string | undefined {
   return level.followers?.find((f) => f.kind === "goose")?.nodeId;
@@ -211,6 +219,21 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     blurb: "You used the portaloos. Nobody is judging. Everybody is judging.",
     reveal: "secret",
     test: some((run) => countType(run, "portaloo") > 0),
+  },
+  {
+    id: "toilet-to-toilet",
+    name: "Toilet to Toilet",
+    blurb:
+      "Two stops on one run. The club knows where every one of them is, and always has.",
+    reveal: "shape",
+    /*
+     * Two stops on one route, which the Thursday map can do: the Medical
+     * Centre Toilet and A Private Bush are both on it, and a route can take in
+     * both and still meet the brief. Counting only the plumbed ones made this
+     * look impossible, which it is not — a bush is a toilet stop, and saying
+     * otherwise misreads the map.
+     */
+    test: some((run) => STOPS.reduce((n, type) => n + countType(run, type), 0) >= 2),
   },
   {
     id: "goose-botherer",
