@@ -139,6 +139,43 @@ placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
+### How dense a new map can afford to be
+
+One number is worth watching when drawing a new level, because it is the only
+thing here that costs the player anything: **roads minus junctions**, plus one.
+That is the map's circuit rank — how many independent loops it has — and the
+number of possible routes grows roughly exponentially in it. `winningRouteCount`
+walks every one of them to work out the "N routes to find here" denominator.
+
+| Level | Junctions | Roads | Rank | Loops | Cold walk |
+|---|---:|---:|---:|---:|---:|
+| Tilford | 11 | 21 | 11 | 1,183 | 50 ms |
+| Thursday Social | 12 | 20 | 9 | 194 | 17 ms |
+| Christmas Run | 12 | 20 | 9 | 194 | 13 ms |
+| Spooky Run | 12 | 20 | 9 | 211 | 8 ms |
+| Caesar's Camp | 12 | 19 | 8 | 145 | 4 ms |
+| Town, Fleet Pond, Loopy, Hawley | 11–12 | 17–18 | 7 | 33–72 | 0.6–1.5 ms |
+
+Two extra ranks is thirty times the work. It is memoised per level in a
+`WeakMap`, so it is paid once per level per page load rather than per render,
+and fifty milliseconds on the hardest map on the roster is a price worth
+paying. But a map meaningfully denser than Tilford would not be a little
+slower than Tilford, it would be a lot slower, and it would be found out on
+somebody's phone rather than here. Rank 7 to 9 is where eight of the nine
+levels sit and is the comfortable range; past 11 wants measuring before it
+ships.
+
+The lever, if a map comes out too tangled, is not to delete a road. Splitting a
+busy junction into two that do not join each other sheds a rank and keeps every
+path — two routes crossing without meeting, which on the ground is a footbridge
+over a track or a river with no ford at that point. Subdividing a road does not
+help: it adds a junction and a road, and the rank comes out the same.
+
+The same density is what decides how many *wrong* routes a level has, since
+failures are simply every loop that is not a winner. Tilford has 1,179 of them
+against four winners, which is a hit rate of one in 296; no other level is
+worse than one in 53.
+
 A level may also `scatter` scenery by hand, on top of whatever its theme puts
 down, for the corners no road reaches — cats, bins, traffic lights and parked
 cars in the towns, dogs and benches out of them, gnomes and loitering youths,
@@ -197,7 +234,7 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 43 winning routes across the nine levels — and 2,126 distinct loops
+There are 43 winning routes across the nine levels — and 2,144 distinct loops
 — so a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
