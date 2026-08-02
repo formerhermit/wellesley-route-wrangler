@@ -32,6 +32,24 @@ jobs:
       - run: npm run test
       - run: npm run lint
 
+      # The server's copy of the scoring and the level data is generated and
+      # committed, so it can be forgotten. Regenerate it and insist nothing
+      # moved: a dirty tree here means someone changed the game and did not
+      # run `npm run build:club`, and the club table would have gone on
+      # scoring runs against the old rules.
+      #
+      # `npm test` deep-compares the two on level data and will usually catch
+      # this first. This is the wider net — it covers the scoring internals as
+      # well, which no behavioural test samples exhaustively.
+      - name: Check the club bundle is not stale
+        run: |
+          npm run build:club
+          git diff --exit-code -- supabase/functions/_shared/game.bundle.js \
+            || {
+              echo "::error file=supabase/functions/_shared/game.bundle.js::Stale. Run 'npm run build:club' and commit the result."
+              exit 1
+            }
+
       # The club table is compiled in, so the build needs the project's URL and
       # its publishable anon key. Unset — on a fork, say — the leaderboard is
       # simply not in the bundle and the game plays exactly as it always has.
