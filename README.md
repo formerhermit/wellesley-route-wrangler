@@ -419,19 +419,14 @@ past three or four shapes turns to mud.
 ### How to play
 
 The screen a first visit opens on, and the one under the **?** after that. Two
-columns where there is room — the countryside and its signpost on one side, six
-rule cards on the other — and on a phone the rules take the width and the
+columns where there is room — the countryside and its signpost on one side,
+five rule cards on the other — and on a phone the rules take the width and the
 picture becomes a strip along the top framed on the signpost, because the rules
 are the point and the picture is the part that can afford to shrink.
 
-Five of the six rules are the ones anybody needs to start. The sixth is there
-because it decides what banks: **a loop counts once, whichever way round you
-run it**, and a player who never reads that will run one backwards and wonder
-why the club shrugged. See "What counts as one route" above.
-
-The line about club points follows what was actually built. A leaderboard is
-only promised on a build that has one configured, because promising one that
-does not exist is a lie the first tap exposes.
+Five cards, as drawn. The screen is a designed thing rather than a list to be
+added to: everything else a player needs to know has the whole rest of the game
+to say it in, and the objective panel says most of it while they plan.
 
 The bar along the bottom is pinned, for the same reason every other dialog's
 actions are: the screen is taller than a phone, and the way out should not go

@@ -1,7 +1,6 @@
 import { Dialog } from "./Dialog";
 import {
   EyesIcon,
-  LoopIcon,
   MegaphoneIcon,
   PigeonTrail,
   RoutesIcon,
@@ -10,7 +9,6 @@ import {
   TitleSparks,
   TrophyIcon,
 } from "./RulesIcons";
-import { clubTableEnabled } from "../club/enabled";
 import type { Level } from "../game/types";
 
 interface Props {
@@ -22,12 +20,12 @@ const PIGEON = `${import.meta.env.BASE_URL}sprites/pigeon-standing.png`;
 
 /**
  * The rules, one to a card, in the order somebody meets them: where you start,
- * how you move, what it is worth, what will be held against you, and then the
- * two things that are not obvious from playing — that a level has several
- * answers, and that a loop is one route whichever way round it is run.
+ * how you move, what it is worth, what will be held against you, and that a
+ * level has more than one answer.
  *
- * That last one earns its place. It decides what banks, and a player who never
- * reads it will run a loop backwards and wonder why the club shrugged.
+ * Five of them, as drawn. This is the designed screen and the list is not the
+ * place to be clever — anything else the player needs to know has the whole
+ * rest of the game to say it in.
  */
 const RULES = [
   {
@@ -43,11 +41,7 @@ const RULES = [
   {
     Icon: TrophyIcon,
     title: "Score club points.",
-    // Promising a leaderboard on a build that has none would be a lie the
-    // first tap exposes, so the line follows what was actually configured.
-    detail: clubTableEnabled
-      ? "Win a place on the leaderboard."
-      : "The club keeps a running total.",
+    detail: "Win a place on the leaderboard.",
   },
   {
     Icon: EyesIcon,
@@ -58,11 +52,6 @@ const RULES = [
     Icon: RoutesIcon,
     title: "There are multiple winning routes per level.",
     detail: "But there are loads of ways to lose.",
-  },
-  {
-    Icon: LoopIcon,
-    title: "A loop counts once.",
-    detail: "Whichever way round you run it.",
   },
 ];
 

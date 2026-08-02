@@ -77,16 +77,6 @@ export function RoutesIcon() {
   );
 }
 
-/** Round one way or the other, and it is the same run. */
-export function LoopIcon() {
-  return (
-    <Icon>
-      <path d="M20 8a12 12 0 1 1-11 7" className="rules-loop" />
-      <path d="M4 9l5 7 8-3" className="rules-loop-head" />
-    </Icon>
-  );
-}
-
 /** The club's own voice, saying something unhelpful. */
 export function MegaphoneIcon() {
   return (
