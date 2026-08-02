@@ -3965,7 +3965,7 @@ body {
   width: min(1000px, 100%);
   padding: 0;
   overflow: hidden;
-  animation: rules-land 0.42s cubic-bezier(0.22, 1.2, 0.36, 1) backwards;
+  animation: rules-land 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) 0.2s backwards;
 }
 
 /*
@@ -3974,6 +3974,15 @@ body {
  * that is different every time and the last thing to move is the thing you
  * look at. Everything here is a CSS animation, so the reduced-motion rule
  * further up the file switches the lot off without knowing about any of it.
+ *
+ * Nothing starts on the first frame. On a first visit this screen opens with
+ * the page, and the page is still being painted: an animation that begins
+ * immediately is spent by the time anybody has looked up. The fifth of a
+ * second the card waits is the whole difference between an entrance and a
+ * thing that was already there.
+ *
+ * Everything after it is timed off that, and they travel far enough to be
+ * seen going. Small and fast reads as a flicker, which is the worst of both.
  *
  * `backwards` rather than `both` throughout: each of these ends where the
  * element already lives, so all the fill has to do is hold the offset state
@@ -3984,7 +3993,7 @@ body {
 @keyframes rules-land {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.96);
+    transform: translateY(28px) scale(0.93);
   }
 }
 
@@ -4044,7 +4053,7 @@ body {
   height: clamp(20px, 4vw, 30px);
   /* Opacity only. One of the pair is flipped with a transform, and an
      animation that touched transform would unflip it. */
-  animation: fade-in 0.5s ease 0.28s backwards;
+  animation: fade-in 0.6s ease 0.5s backwards;
 }
 
 .rules__spark--flip {
@@ -4116,15 +4125,15 @@ body {
   border-radius: 12px;
   background: color-mix(in srgb, var(--brand-blue) 5%, var(--card));
   /* `--deal` is the card's place in the queue, set where the list is built. */
-  animation: rule-deal 0.4s cubic-bezier(0.22, 1.1, 0.36, 1) backwards;
-  animation-delay: calc(0.22s + var(--deal, 0ms));
+  animation: rule-deal 0.45s cubic-bezier(0.22, 1.1, 0.36, 1) backwards;
+  animation-delay: calc(0.5s + var(--deal, 0ms));
 }
 
 /* In from the picture's side, which is where the eye already is. */
 @keyframes rule-deal {
   from {
     opacity: 0;
-    transform: translateX(-16px);
+    transform: translateX(-26px);
   }
 }
 
@@ -4267,19 +4276,25 @@ body {
   font-size: 0.92rem;
   line-height: 1.25;
   color: var(--ink);
-  animation: tip-arrive 0.45s ease-out 0.62s backwards;
+  animation: tip-arrive 0.5s ease-out 1.35s backwards;
 }
 
 @keyframes tip-arrive {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(14px);
   }
+}
+
+/* Opacity only: the line wraps to two on a phone, and anything that needed a
+   transform would have to be inline-block, which stops it wrapping at all. */
+.rules__tip-line {
+  animation: fade-in 0.4s ease;
 }
 
 .rules__tip .rule__art {
   transform-origin: 62% 62%;
-  animation: megaphone-shout 0.5s ease-in-out 1s 2;
+  animation: megaphone-shout 0.55s ease-in-out 2.2s 2;
 }
 
 @keyframes megaphone-shout {
@@ -4299,13 +4314,13 @@ body {
   align-items: center;
   gap: 0.2rem;
   /* Walks on from the left, in the direction its own trail is going. */
-  animation: pigeon-stroll 0.6s ease-out 0.72s backwards;
+  animation: pigeon-stroll 0.7s ease-out 1.45s backwards;
 }
 
 @keyframes pigeon-stroll {
   from {
     opacity: 0;
-    transform: translateX(-22px);
+    transform: translateX(-32px);
   }
 }
 

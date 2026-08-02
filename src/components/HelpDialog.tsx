@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "./Dialog";
 import {
   EyesIcon,
@@ -10,6 +10,7 @@ import {
   TitleSparks,
   TrophyIcon,
 } from "./RulesIcons";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 import { nextTipIndex, tips } from "../game/tips";
 import type { Level } from "../game/types";
 
@@ -34,6 +35,16 @@ const PIGEON = `${import.meta.env.BASE_URL}sprites/pigeon-standing.png`;
  * through App to avoid.
  */
 let lastTip: number | null = null;
+
+/**
+ * How long a tip holds the megaphone.
+ *
+ * Long enough to read twice and short enough that a screen nobody reopens
+ * still gets through several: the first version changed the tip only between
+ * visits, which meant a player who opened it once saw exactly one joke and no
+ * rotation at all.
+ */
+const TIP_HOLD_MS = 4500;
 
 /**
  * The rules, one to a card, in the order somebody meets them: where you start,
@@ -85,16 +96,36 @@ const RULES = [
  * the picture is the part that can afford to shrink.
  *
  * It arrives rather than appears (#27): the card lands, the rules deal
- * themselves out one after another, and the tip is a different one every time.
- * All of it is CSS, so `prefers-reduced-motion` already switches it off.
+ * themselves out one after another, and the tip at the bottom keeps turning
+ * over for as long as the screen is up. The arrival is all CSS, so
+ * `prefers-reduced-motion` switches it off without being asked; the tip runs
+ * on a timer, so it has to ask.
  */
 export function HelpDialog({ level, onClose }: Props) {
-  // Once per opening, not once per render — the tip must not change under a
-  // player who is still reading it.
-  const [tip] = useState(() => {
+  const reducedMotion = useReducedMotion();
+
+  // Where the rotation is when the screen opens: on from wherever the last
+  // visit left it, or somewhere random on the first.
+  const [tip, setTip] = useState(() => {
     lastTip = nextTipIndex(lastTip, Math.random());
-    return tips[lastTip];
+    return lastTip;
   });
+
+  /*
+   * And on from there while the screen is up.
+   *
+   * Reduced motion holds it on one, which is the setting that already means
+   * "stop changing things at me" everywhere else in the game — and it is the
+   * way out for anybody who needs the line to stay still long enough to read.
+   */
+  useEffect(() => {
+    if (reducedMotion) return;
+    const turn = setInterval(() => {
+      lastTip = nextTipIndex(lastTip);
+      setTip(lastTip);
+    }, TIP_HOLD_MS);
+    return () => clearInterval(turn);
+  }, [reducedMotion]);
 
   return (
     <Dialog
@@ -137,7 +168,7 @@ export function HelpDialog({ level, onClose }: Props) {
               <li
                 key={title}
                 className="rule"
-                style={{ "--deal": `${index * 70}ms` } as React.CSSProperties}
+                style={{ "--deal": `${index * 90}ms` } as React.CSSProperties}
               >
                 <Icon />
                 <span className="rule__words">
@@ -157,7 +188,11 @@ export function HelpDialog({ level, onClose }: Props) {
       <div className="rules__footer">
         <p className="rules__tip">
           <MegaphoneIcon />
-          <span>{tip}</span>
+          {/* Keyed on the tip so a new one is a new element, and fades in
+              rather than being swapped out from under the last one. */}
+          <span key={tip} className="rules__tip-line">
+            {tips[tip]}
+          </span>
         </p>
 
         <span className="rules__pigeon" aria-hidden="true">

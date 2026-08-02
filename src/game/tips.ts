@@ -16,18 +16,18 @@ export const tips = [
 ];
 
 /**
- * The tip after the last one, given a fresh `roll` in [0, 1).
+ * The tip after the last one.
  *
  * A rotation rather than a draw, which is worth the extra thought: a random
  * pick would show the same line twice running often enough to look broken —
  * and the whole point of changing it is that somebody notices it changed.
- * Stepping on by one never repeats, and a player who opens the screen as many
- * times as there are tips has seen all of them.
+ * Stepping on by one never repeats, and a full turn is every tip once.
  *
  * The roll is only for where the rotation starts, so two people do not get the
- * same first joke, and it is passed in rather than taken so this stays pure.
+ * same first joke; once it is turning, there is nothing left to decide. It is
+ * passed in rather than taken so this stays pure.
  */
-export function nextTipIndex(previous: number | null, roll: number): number {
+export function nextTipIndex(previous: number | null, roll = 0): number {
   if (previous === null) {
     // Clamped rather than trusted: a roll of exactly 1 would index past the end.
     return Math.min(Math.floor(roll * tips.length), tips.length - 1);

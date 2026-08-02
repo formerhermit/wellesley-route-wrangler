@@ -441,9 +441,18 @@ over the fold with the rest of it.
 
 It arrives rather than appears. The card lands, the five rules deal themselves
 out from the picture's side one after another, the pigeon walks on, and the tip
-comes in last — because the tip is the line that is different every time, and
-the last thing to move is the thing you look at. All of it is CSS keyframes, so
-`prefers-reduced-motion` switches the lot off without any of it knowing.
+comes in last, because the last thing to move is the thing you look at. All of
+it is CSS keyframes, so `prefers-reduced-motion` switches the lot off without
+any of it knowing.
+
+Nothing starts on the first frame, and nothing is quick. The first draft was
+over in a second and began the instant the dialog mounted, which on a first
+visit is while the page is still being painted: by the time anybody looked up
+it had already happened, and an entrance nobody sees is just a thing that was
+already there. So the card waits a fifth of a second before it moves, each card
+travels far enough to be seen going, and the whole sequence takes a little over
+two seconds end to end — the shout at the finish included. Small and fast reads
+as a flicker, which is the worst of both.
 
 That block now zeroes the animation *delay* as well as the duration. A stagger
 that keeps only its duration is not a stagger that has been turned off: it is a
@@ -453,10 +462,21 @@ animation, arrived at by a different road.
 The tip is a rotation rather than a draw, in `src/game/tips.ts`. A random pick
 would show the same line twice running often enough to look broken — and the
 whole point of changing it is that somebody notices it changed. So the roll
-only chooses where the rotation starts, and every opening after that steps on
-by one: never a repeat, and a player who opens the screen as many times as
-there are tips has seen all of them. Nothing is stored, so a reload starts
-somewhere new.
+only chooses where the rotation starts and every step after it is on by one:
+never a repeat, and a full turn is every tip exactly once. Nothing is stored,
+so a reload starts somewhere new.
+
+It turns while the screen is up, every four and a half seconds, and not only
+between visits. Between visits was the first attempt and it was the wrong
+answer to the same question: somebody who opens the screen once — which is most
+people, because it opens itself — sat there and watched one joke never change.
+A rotation nobody is around for is not a rotation.
+
+That makes it the one piece of this that a timer drives rather than CSS, so it
+is the one piece that has to ask about `prefers-reduced-motion` itself. It
+does, through the same hook the map uses, and holds on a single tip when the
+answer is yes — which doubles as the way out for anybody who needs the line to
+stay still long enough to read it.
 
 Everything is keyboard reachable: the junctions are real HTML buttons laid over
 the map, so `Tab` and `Enter` work as you would expect, and each announces
