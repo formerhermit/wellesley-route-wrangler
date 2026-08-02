@@ -3484,3 +3484,106 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/* ---------- A phone turned sideways ---------- */
+
+/*
+ * Every map is 800×560, and a phone held upright is the wrong shape for it.
+ * The map is sized by the width of the screen, so in portrait it is stuck at
+ * 336×235 on a 375px phone however much vertical room is going spare — a
+ * taller phone measurably buys it nothing.
+ *
+ * Turned sideways the screen is the map's own shape, and there is room to put
+ * the controls beside it rather than under it. That is what this does: the map
+ * takes the height, the buttons take a narrow column, and the header gives up
+ * everything it can. Roughly double the map area of portrait.
+ *
+ * Scoped by height rather than width so it catches phones and not tablets or
+ * a short desktop window, and stops short of the 900px two-column layout.
+ */
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 899px) {
+  /*
+   * Every pixel above the map comes off the map, because the map is sized from
+   * the height left over. The outer padding and the gap between the header and
+   * the board are worth more to the game than they are to the margins.
+   */
+  .page {
+    padding: 0.45rem;
+  }
+
+  .layout {
+    gap: 0.5rem;
+  }
+
+  .map {
+    padding: 0.2rem;
+  }
+
+  /* What is left for the map once the header and the gaps have had theirs. */
+  .layout__play {
+    --map-chrome: 68px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .layout__play > .map {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /*
+   * Width from height, so the map fits the screen instead of running off the
+   * bottom of it. It has to be the stage that is sized and not the SVG: the
+   * junction buttons are positioned `inset: 0` against the stage, so a stage
+   * wider than the drawing would leave every one of them off its junction.
+   *
+   * 1.4286 is 800/560, which every level on the roster shares. A level with a
+   * different viewBox would want this from its own numbers.
+   */
+  .map-stage {
+    width: min(100%, (100dvh - var(--map-chrome)) * 1.4286);
+    margin-inline: auto;
+  }
+
+  /* A column beside the map rather than a row beneath it. */
+  .controls {
+    flex: 0 0 clamp(7.5rem, 22vw, 10.5rem);
+  }
+
+  .controls__buttons {
+    flex-direction: column;
+  }
+
+  .controls__hint {
+    text-align: left;
+  }
+
+  /* The joke can wait; the map cannot. */
+  .game-header__subtitle {
+    display: none;
+  }
+
+  .game-header__title {
+    font-size: 1.15rem;
+  }
+}
+
+/*
+ * And the nudge towards it. Portrait phones only, one quiet line under the
+ * map — no dismissing, no remembering, because a line this size is cheaper to
+ * ignore than a control to get rid of it.
+ */
+.map-turn-hint {
+  display: none;
+}
+
+@media (orientation: portrait) and (max-width: 520px) {
+  .map-turn-hint {
+    display: block;
+    margin: 0.4rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+}

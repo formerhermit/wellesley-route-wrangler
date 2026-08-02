@@ -338,6 +338,29 @@ the map, so `Tab` and `Enter` work as you would expect, and each announces
 whether it is currently selectable. `prefers-reduced-motion` shortens playback
 and stops the bouncing and flapping.
 
+### On a phone, turn it sideways
+
+Every map is 800×560, and a phone held upright is the wrong shape for one. The
+map is sized by the width of the screen, so in portrait it is stuck at 336×235
+on a 375px phone *however much vertical room is going spare* — measured
+identically on a 667px screen and an 812px one. Tidying the page around it,
+which is worth doing for its own sake, cannot give the map a single pixel.
+
+Turned sideways the screen is the map's own shape, and there is room to put the
+controls beside it rather than under it. That is what a landscape phone gets:
+the map takes the height, the buttons take a narrow column, the header gives up
+its strapline, and the outer padding gives up most of itself. It comes to
+439×307 on a 667×375 screen and 460×322 on an 844×390 one — about 1.7 to 1.9
+times the area of portrait, with the labels legible at last. A quiet line under
+the map in portrait says so.
+
+Two details it is easy to get wrong. The map is sized from the height and the
+aspect ratio, and it has to be the *stage* that is sized rather than the SVG:
+the junction buttons are positioned `inset: 0` against the stage, so a stage
+wider than the drawing leaves every button off its junction. And the rules are
+scoped by height rather than width, so they catch phones without catching a
+tablet in landscape or a short desktop window.
+
 ## Music
 
 The main theme loops behind the game, off until the speaker button in the
