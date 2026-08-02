@@ -292,6 +292,7 @@ body {
   .level-button__hint {
     display: none;
   }
+
 }
 
 .level-button:focus-visible {
@@ -494,10 +495,25 @@ body {
   inset: 0;
 }
 
+/*
+ * The thing a player actually touches, and the only control on the map.
+ *
+ * The floor is 44px because that is the smallest a touch target should be, and
+ * it only ever applies on a phone: 6.6% of a map wider than 667px is already
+ * past it, so a desktop pointer is unaffected. The button is transparent and
+ * centred on the junction, so this grows the reach without moving anything
+ * that is drawn.
+ *
+ * Junctions sit at least 46px apart on eight of the nine maps, so the circles
+ * stay clear of one another. The exception is the Spooky Run, where Wellesley
+ * Grumble and the Spooky Church are 34px apart on a 375px screen and overlap
+ * a little — they overlapped at 36px too, and the fix for that is the map
+ * being bigger rather than the targets being smaller.
+ */
 .junction-button {
   position: absolute;
   width: 6.6%;
-  min-width: 36px;
+  min-width: 44px;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   padding: 0;
@@ -2462,6 +2478,39 @@ body {
   gap: 0.6rem;
 }
 
+/*
+ * Pin the way out to the bottom of a dialog that scrolls.
+ *
+ * A dialog taller than the screen scrolls, and the exit was scrolling with it:
+ * on a 667px phone the how-to-play box hid its own "Right, off we go" by 97px,
+ * the fixture list hid "Back to the map" by 352px and the privacy notice hid
+ * its by 572px. The first of those is the first thing a new player ever sees.
+ *
+ * Only when the actions are the last thing in the dialog, which is every one
+ * of them but the result panel — that ends with a second row and a hint, and
+ * pinning the first row would strand them underneath it. The result panel is
+ * also the one that very nearly fits already.
+ *
+ * Sticky costs nothing when there is nothing to scroll, so a dialog that fits
+ * is unchanged, which is all of them on a desktop.
+ */
+.dialog__actions:last-child {
+  position: sticky;
+  /* Cancels the dialog's own padding so the bar sits on its bottom edge. */
+  bottom: calc(clamp(1rem, 3vw, 1.6rem) * -1);
+  margin-inline: calc(clamp(1rem, 3vw, 1.6rem) * -1);
+  margin-bottom: calc(clamp(1rem, 3vw, 1.6rem) * -1);
+  padding: 0.7rem clamp(1rem, 3vw, 1.6rem) clamp(1rem, 3vw, 1.6rem);
+  background: var(--card);
+  /*
+   * Says there is more underneath. It is painted whether or not the dialog
+   * actually scrolls — CSS cannot ask that question without a scroll timeline
+   * — so on a dialog that fits it reads as a soft divider above the buttons,
+   * which is a fair thing for it to be.
+   */
+  box-shadow: 0 -10px 14px -10px rgb(29 43 54 / 18%);
+}
+
 .dialog__actions--secondary {
   margin-top: 0.6rem;
 }
@@ -3359,5 +3408,79 @@ body {
 
   .flock.is-alarmed .flock-bird {
     transform: translate(var(--flee-x), var(--flee-y));
+  }
+}
+
+/* ---------- Winning back a phone's vertical budget ---------- */
+
+/*
+ * Last in the file on purpose: these override rules defined above them, and
+ * a media query carries no extra specificity of its own.
+ *
+ * The map cannot be the thing that grows. It is locked to the width of the
+ * screen by an 800×560 viewBox, so a taller phone buys it nothing — measured
+ * at 336×235 on both a 667px and an 812px screen. What a small screen can win
+ * back is everything that is not the map, and the two blocks below were 430px
+ * of a 1,387px page between them.
+ */
+@media (max-width: 520px) {
+  /* Still the biggest thing on the page, just not twice the size it needs. */
+  .button--action {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  .controls__hint {
+    margin-top: 0.45rem;
+    font-size: 0.8rem;
+  }
+
+  /*
+   * The club's pitch was 330px — taller than the map above it. Keep the words,
+   * because they are the point of the whole game, and take the room out of the
+   * padding and the buttons, which were stacking to full width because the
+   * call to action refused to wrap.
+   */
+  .club-footer {
+    gap: 0.6rem 0.8rem;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .club-footer__text {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .club-footer__actions {
+    flex: 1 1 100%;
+    gap: 0.5rem;
+  }
+
+  /*
+   * Half the row each, rather than as much as their text asks for. Sized from
+   * their content the call to action wanted 217px of the 202px left over and
+   * took a line of its own; from a zero basis both fit, and the longer label
+   * wraps inside its own button instead of pushing the layout around.
+   */
+  .club-footer__actions > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .club-footer__actions .button {
+    width: 100%;
+    min-height: 44px;
+    padding-inline: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.25;
+  }
+
+  .club-footer__cta {
+    white-space: normal;
+  }
+
+  .club-footer__credit {
+    padding-top: 0.5rem;
+    font-size: 0.75rem;
   }
 }
