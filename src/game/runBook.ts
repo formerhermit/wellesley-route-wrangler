@@ -25,6 +25,20 @@ export interface BookEntry {
   won: boolean;
   /** The level's own name for what went wrong. Absent on a winner. */
   verdict?: string;
+  /**
+   * How many objectives this route did not satisfy. Nought on a winner, and
+   * the measure of how near a miss a dud was: one is a route that wanted a
+   * single road changing, five is a route that went the wrong way out of the
+   * car park. It is what the failures are ordered by.
+   *
+   * Counts everything not *passed*, rather than everything failed. Those are
+   * the same number while a route is being planned and very different once it
+   * has been run: "incomplete" is the objective panel declining to call a
+   * half-built route short, and the commonest near miss of all — a loop that
+   * came home under the distance — never reaches "failed" at all. In the book
+   * the run is over, so not yet means never.
+   */
+  missed: number;
   /** When it was first run. */
   at: number;
 }
@@ -32,7 +46,12 @@ export interface BookEntry {
 export interface BookPage {
   /** The ones that counted, shortest first, so they read as a series. */
   won: BookEntry[];
-  /** The ones that did not, most recent first: those are the useful ones. */
+  /**
+   * The ones that did not, nearest miss first. Recency was the obvious order
+   * and the wrong one: the reason to look a dud up is to change a road and run
+   * it again, and a route that failed on one objective is worth reopening in a
+   * way that a route that failed on four is not. Ties go to the most recent.
+   */
   tried: BookEntry[];
   found: number;
   toFind: number;
@@ -55,15 +74,20 @@ export function pageFor(records: Records, level: Level): BookPage {
     if (!route) continue;
 
     const score = scoreRun(level, route);
+    // Evaluated once, for the verdict and the miss count together, and only
+    // for a route that lost — a winner has nothing to explain and nothing to
+    // rank. That keeps this to the same one call per dud it always made.
+    const evaluation = score.won ? undefined : evaluateRoute(level, route);
+
     entries.push({
       key,
       route,
       distanceKm: totalDistanceKm(level, route),
       points: score.points,
       won: score.won,
-      verdict: score.won
-        ? undefined
-        : selectResult(level, evaluateRoute(level, route)).title,
+      verdict: evaluation && selectResult(level, evaluation).title,
+      missed:
+        evaluation?.objectives.filter((o) => o.state !== "passed").length ?? 0,
       at: record.at,
     });
   }
@@ -73,7 +97,7 @@ export function pageFor(records: Records, level: Level): BookPage {
     .sort((a, b) => a.distanceKm - b.distanceKm);
   const tried = entries
     .filter((entry) => !entry.won)
-    .sort((a, b) => b.at - a.at);
+    .sort((a, b) => a.missed - b.missed || b.at - a.at);
 
   const toFind = winningRouteCount(level);
   return {

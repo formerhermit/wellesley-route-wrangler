@@ -47,6 +47,27 @@ const tooShort = routeOf(
   "observatory",
 );
 
+/**
+ * 9.70 km, and also one objective away, but a different one: everything right
+ * except that it takes the unlit stretch of towpath.
+ */
+const anotherNearMiss = routeOf(
+  christmasRun,
+  "observatory",
+  "wellesley-rumble",
+  "medical-centre",
+  "polo-fields",
+  "geese-pond",
+  "the-hanger",
+  "christmas-tree",
+  "canal-bridge",
+  "towpath",
+  "geese-pond",
+  "mulled-wine",
+  "polo-fields",
+  "observatory",
+);
+
 /** Straight down a road the club has shut. */
 const throughTheClosure = routeOf(
   christmasRun,
@@ -98,16 +119,37 @@ describe("a page of the book", () => {
     expect(verdicts).toContain("Down The Unlit Towpath");
   });
 
-  it("orders winners by distance and failures by most recent", () => {
+  it("orders winners by distance and failures by nearest miss", () => {
     let records: Records = emptyRecords;
-    // Logged out of order on purpose.
+    // Logged out of order on purpose, and the near miss is the older of the
+    // two: recency would put it second, which is the ordering this replaced.
     records = recordRun(records, christmasRun, throughTheClosure, 3000);
     records = recordRun(records, christmasRun, tooShort, 1000);
     records = recordRun(records, christmasRun, winner, 2000);
 
     const page = pageFor(records, christmasRun);
     expect(page.won.every((e) => e.won)).toBe(true);
-    expect(page.tried.map((e) => e.at)).toEqual([3000, 1000]);
+    // tooShort wanted one thing changing; throughTheClosure never even got
+    // home, and wanted five.
+    expect(page.tried.map((e) => e.missed)).toEqual([1, 5]);
+    expect(page.tried.map((e) => e.at)).toEqual([1000, 3000]);
+  });
+
+  it("falls back to the most recent when two duds missed by as much", () => {
+    // Two routes, the same one objective missed. Nothing separates them but
+    // when they were run, and the newer is the one still in mind.
+    let records: Records = emptyRecords;
+    records = recordRun(records, christmasRun, tooShort, 1000);
+    records = recordRun(records, christmasRun, anotherNearMiss, 2000);
+
+    const tried = pageFor(records, christmasRun).tried;
+    expect(tried.map((e) => e.missed)).toEqual([1, 1]);
+    expect(tried.map((e) => e.at)).toEqual([2000, 1000]);
+  });
+
+  it("counts a winner as having missed nothing", () => {
+    const records = recordRun(emptyRecords, christmasRun, winner, 1000);
+    expect(pageFor(records, christmasRun).won[0].missed).toBe(0);
   });
 
   it("drops a route the map no longer describes rather than showing it broken", () => {

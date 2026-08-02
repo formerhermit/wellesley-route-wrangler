@@ -8,9 +8,13 @@ import type { Level, Route } from "../game/types";
 
 /**
  * How many failures are worth showing. Every winner is kept — that is the
- * cabinet, and truncating it would be rude — but a determined player can rack
- * up dozens of duds on a map with a hundred loops in it, and the useful ones
- * are the recent ones.
+ * cabinet, and truncating it would be rude — but Tilford alone has 1,179 ways
+ * to lose, and a determined player can work through a lot of them.
+ *
+ * Twelve is enough because of the order they come in: `pageFor` puts the
+ * nearest misses first, so these are the twelve worth reopening rather than
+ * the twelve most recent. A route that failed on one objective is a road away
+ * from working; one that failed on four is a different route.
  */
 const FAILURES_SHOWN = 12;
 
