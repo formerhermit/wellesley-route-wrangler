@@ -95,8 +95,22 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         })
         .filter((spot) => spot !== undefined);
 
+      // A closed road carries a barrier across its middle, and that barrier is
+      // a good deal wider than the road it bars. Scenery cleared the road and
+      // then sat under the sign, which is how the holly on the Christmas Run
+      // ended up beneath a road closure.
+      const barriers = level.roads
+        .filter((road) => road.closed === true)
+        .map((road) => {
+          const from = level.nodes.find((node) => node.id === road.from);
+          const to = level.nodes.find((node) => node.id === road.to);
+          if (!from || !to) return undefined;
+          return { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
+        })
+        .filter((spot) => spot !== undefined);
+
       const onALandmark = scatter.filter((item) =>
-        landmarks.some(
+        [...landmarks, ...barriers].some(
           (spot) => Math.hypot(item.x - spot.x, item.y - spot.y) < LANDMARK_CLEARANCE,
         ),
       );

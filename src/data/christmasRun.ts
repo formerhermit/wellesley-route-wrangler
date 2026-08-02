@@ -343,7 +343,7 @@ export const christmasRun: Level = {
     { x: 390, y: 375, kind: "candycane" },
 
     { x: 55, y: 395, kind: "holly" },
-    { x: 540, y: 380, kind: "holly" },
+    { x: 560, y: 425, kind: "holly" },
     { x: 700, y: 545, kind: "holly" },
 
     // The one piece of street furniture that is not festive at all: the lights

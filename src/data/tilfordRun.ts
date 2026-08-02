@@ -142,7 +142,11 @@ export const tilfordRun: Level = {
       label: "The Mosque",
       blurb: "the quiet end of the village",
       type: "mosque",
-      labelSide: "left",
+      // Under its own drawing rather than beside it: to the left the writing
+      // lay along the track in from the cricket green. The mosque is lifted a
+      // little to leave the name somewhere to sit.
+      labelAbove: true,
+      spriteDy: -62,
     },
     {
       id: "the-institute",
@@ -150,7 +154,8 @@ export const tilfordRun: Level = {
       y: 315,
       label: "The Institute",
       blurb: "village hall, jumble sale on Saturdays",
-      labelSide: "right",
+      // Left: on the right it sat along the track down to the river bridge.
+      labelSide: "left",
     },
     // The two junctions standing in the river, listed downstream: the water is
     // drawn in from the right edge, so the far one has to come first.
@@ -186,7 +191,6 @@ export const tilfordRun: Level = {
       y: 500,
       label: "The Sandy Bit",
       blurb: "energy-sapping and universally hated",
-      labelAbove: true,
     },
     {
       id: "posh-cows",
@@ -265,7 +269,7 @@ export const tilfordRun: Level = {
     // Summer in the village: flowers along the verges, butterflies over
     // them, a bench by the river, and the van that turns up on a hot day.
     { x: 440, y: 440, kind: "flowers" },
-    { x: 100, y: 300, kind: "flowers" },
+    { x: 90, y: 250, kind: "flowers" },
     { x: 460, y: 180, kind: "butterfly" },
     { x: 400, y: 220, kind: "butterfly" },
     { x: 500, y: 340, kind: "bench" },

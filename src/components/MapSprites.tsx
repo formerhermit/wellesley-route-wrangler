@@ -388,18 +388,36 @@ export function Rock() {
   );
 }
 
+/** One cabin. Smaller than it was, because there are two of them now. */
+function LooCabin() {
+  return (
+    <g>
+      <rect x={-9} y={-14} width={18} height={28} rx={1.5} className="loo-body" />
+      <path d="M -10 -14 h 20 l -2 -4 h -16 Z" className="loo-roof" />
+      <rect x={-6} y={-10} width={12} height={22} rx={1} className="loo-door" />
+      <path d="M -4 -7 h 8 M -4 -4.5 h 8 M -4 -2 h 8" className="loo-vent" />
+      <circle cx={4} cy={2} r={1.2} className="loo-handle" />
+    </g>
+  );
+}
+
 /**
  * The Random Portaloos, which are not on any map anybody planned and are
- * nonetheless the most welcome thing on this one.
+ * nonetheless the most welcome thing on this one. Plural, and always have
+ * been — the name said two and the drawing showed one.
+ *
+ * The second stands a little lower than the first, because they are put down
+ * on heathland by a man in a lorry and not surveyed in.
  */
 export function Portaloo() {
   return (
     <g className="sprite sprite--portaloo" aria-hidden="true">
-      <rect x={-13} y={-20} width={26} height={40} rx={2} className="loo-body" />
-      <path d="M -14 -20 h 28 l -3 -5 h -22 Z" className="loo-roof" />
-      <rect x={-9} y={-15} width={18} height={31} rx={1.5} className="loo-door" />
-      <path d="M -6 -11 h 12 M -6 -8 h 12 M -6 -5 h 12" className="loo-vent" />
-      <circle cx={6} cy={2} r={1.6} className="loo-handle" />
+      <g transform="translate(-11 0)">
+        <LooCabin />
+      </g>
+      <g transform="translate(11 3)">
+        <LooCabin />
+      </g>
     </g>
   );
 }
@@ -1004,16 +1022,21 @@ const HOLLY_LEAF =
 export function Holly() {
   return (
     <g className="sprite sprite--holly" aria-hidden="true">
-      <path d={HOLLY_LEAF} className="holly-leaf" />
-      <path d="M 8 0 h 9" className="holly-vein" />
-      <g transform="scale(-1 1)">
+      {/* Both leaves swept up into a V, meeting at the stem, rather than lying
+          end to end in a straight line — which read as one long leaf with a
+          bulge in the middle rather than as a sprig. */}
+      <g transform="rotate(-32)">
         <path d={HOLLY_LEAF} className="holly-leaf" />
         <path d="M 8 0 h 9" className="holly-vein" />
       </g>
-      {/* Between the two, which is the whole arrangement. */}
-      <circle cx={-2.3} cy={-1.6} r={2.2} className="holly-berry" />
-      <circle cx={2.3} cy={-1.6} r={2.2} className="holly-berry" />
-      <circle cx={0} cy={2.4} r={2.2} className="holly-berry" />
+      <g transform="scale(-1 1) rotate(-32)">
+        <path d={HOLLY_LEAF} className="holly-leaf" />
+        <path d="M 8 0 h 9" className="holly-vein" />
+      </g>
+      {/* In the crook of the V, where the two stems meet. */}
+      <circle cx={-2.4} cy={3.4} r={2.2} className="holly-berry" />
+      <circle cx={2.4} cy={3.4} r={2.2} className="holly-berry" />
+      <circle cx={0} cy={7.2} r={2.2} className="holly-berry" />
     </g>
   );
 }

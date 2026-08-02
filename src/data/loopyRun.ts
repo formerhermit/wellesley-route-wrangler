@@ -99,7 +99,13 @@ export const loopyRun: Level = {
     },
     {
       id: "back-passage",
-      labelSide: "right",
+      // Above, and lifted. Both sides are hopeless here: the lane in from the
+      // Polo Fields and the lane on to The Hanger both leave this junction
+      // almost horizontally, so a name on either side is bisected by one of
+      // them. The lift is to clear the lane down from the Observatory, which
+      // passes just under the first line.
+      labelAbove: true,
+      labelDy: -18,
       x: 285,
       y: 240,
       label: "Up The Back Passage",
@@ -121,7 +127,9 @@ export const loopyRun: Level = {
     },
     {
       id: "private-bush",
-      labelAbove: true,
+      // Beside it rather than above it: above put the writing across the lane
+      // climbing to the towpath, and this side sits it next to its own bush.
+      labelSide: "right",
       x: 645,
       y: 215,
       label: "A Private Bush",
@@ -346,10 +354,14 @@ export const loopyRun: Level = {
     { x: 400, y: 160, kind: "lights" },
     { x: 660, y: 120, kind: "cat" },
     { x: 240, y: 300, kind: "bin" },
-    { x: 340, y: 320, kind: "cat" },
+    // In the middle of the Shoe Lane, Hockey Loop and airport triangle, which
+    // is the biggest piece of blank paper on the map.
+    { x: 472, y: 442, kind: "cat" },
     { x: 380, y: 300, kind: "car", variant: 2 },
     { x: 700, y: 300, kind: "car", variant: 1 },
     { x: 200, y: 320, kind: "bin" },
+    // Pulled off the lane between the Observatory and the Back Passage.
+    { x: 174, y: 185, kind: "car", variant: 3 },
   ],
 
   view: { width: 800, height: 560 },
