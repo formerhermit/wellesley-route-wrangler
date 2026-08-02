@@ -3657,41 +3657,33 @@ body {
 
 /* ---------- Badge drawings ---------- */
 
-.badge-line,
-.badge-line-faint,
-.badge-hill-crossed,
+.badge-mug-handle,
+.badge-steam,
 .badge-strike,
 .badge-pass,
 .badge-hands,
 .badge-sign-bar,
-.badge-bar-stripe,
-.badge-goose-neck,
-.badge-loo-vent,
-.badge-route,
-.badge-progress {
+.badge-bar-stripe {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.badge-line {
-  stroke: var(--ink-soft);
-  stroke-width: 4;
+.badge-mug {
+  fill: var(--card);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
 }
 
-.badge-line-faint {
-  stroke: var(--line);
+.badge-mug-handle {
+  stroke: var(--ink);
   stroke-width: 3;
 }
 
-.badge-progress {
-  stroke: var(--route);
-  stroke-width: 5;
-}
-
-.badge-hill-crossed {
-  stroke: var(--line);
-  stroke-width: 4;
+.badge-steam {
+  stroke: var(--ink-soft);
+  stroke-width: 2.5;
 }
 
 .badge-strike {
@@ -3702,19 +3694,6 @@ body {
 .badge-pass {
   stroke: var(--pass);
   stroke-width: 4;
-}
-
-.badge-route {
-  stroke: var(--route);
-  stroke-width: 5;
-}
-
-.badge-dot {
-  fill: var(--club);
-}
-
-.badge-dot-end {
-  fill: var(--route);
 }
 
 .badge-ring {
@@ -3737,17 +3716,6 @@ body {
 
 .badge-bird {
   fill: var(--pigeon);
-}
-
-.badge-goose {
-  fill: #f4f1e8;
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.badge-goose-neck {
-  stroke: var(--ink);
-  stroke-width: 5;
 }
 
 .badge-eye {
@@ -3811,16 +3779,6 @@ body {
   fill: var(--hi-vis);
 }
 
-.badge-cow {
-  fill: #f4f1e8;
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.badge-cow-patch {
-  fill: var(--ink);
-}
-
 .badge-ghost {
   fill: #f4f1e8;
   stroke: var(--ink);
@@ -3833,21 +3791,6 @@ body {
 
 .badge-trunk {
   fill: #7a5a3a;
-}
-
-.badge-loo {
-  fill: var(--brand-blue);
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.badge-loo-roof {
-  fill: var(--club);
-}
-
-.badge-loo-vent {
-  stroke: var(--card);
-  stroke-width: 2.5;
 }
 
 /* ---------- A badge, the moment it is won ---------- */

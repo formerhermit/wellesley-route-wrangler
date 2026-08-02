@@ -31,3 +31,6 @@ dist-ssr
 # Supabase CLI link state: which project this checkout is pointed at. Local,
 # per-machine, and nobody else's business.
 supabase/.temp
+
+# Built by scripts/badge-proof-sheet.mjs. Something to look at, not to keep.
+badge-proof-sheet.html
