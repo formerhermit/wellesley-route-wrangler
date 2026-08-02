@@ -7,8 +7,9 @@ the pigeons, and get the group back to the Observatory in one piece.
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
 handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose, the
-dog, the Medical Centre Toilet) live in `public/sprites/`, cropped to their
-content and sized to a few times the space they are ever drawn in.
+dog, the Medical Centre Toilet, and two of the how-to-play drawings) live in
+`public/sprites/`, cropped to their content and sized to a few times the space
+they are ever drawn in.
 
 One asset there is not a PNG. The countryside behind the how-to-play screen is
 a soft painterly landscape, which is the one thing PNG is worst at: 584 kB
@@ -427,6 +428,12 @@ are the point and the picture is the part that can afford to shrink.
 Five cards, as drawn. The screen is a designed thing rather than a list to be
 added to: everything else a player needs to know has the whole rest of the game
 to say it in, and the objective panel says most of it while they plan.
+
+Three of the five drawings are inline SVG in `RulesIcons.tsx`, in the same hand
+as the badges. Two — the pointer and the pair of route pins — are drawn art
+instead, and come through the same square with `object-fit: contain`, because
+one of them is tall and the other is wide and neither should be stretched into
+a shape it was not drawn in. A rule does not know which kind it got.
 
 The bar along the bottom is pinned, for the same reason every other dialog's
 actions are: the screen is taller than a phone, and the way out should not go

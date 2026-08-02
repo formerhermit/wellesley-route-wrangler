@@ -3,7 +3,11 @@
  *
  * Same flat-fill hand as the map and the badges, and drawn in a 0..40 box so
  * one rule of CSS sizes all of them. They are decorations for text that
- * already says the thing, so every one is `aria-hidden`.
+ * already says the thing, so none of them is announced.
+ *
+ * Two are drawn art rather than vector work and come through `Art` instead.
+ * They wear the same `rule__art` class and land in the same square, so a rule
+ * does not care which kind it got.
  */
 
 function Icon({ children }: { children: React.ReactNode }) {
@@ -11,6 +15,22 @@ function Icon({ children }: { children: React.ReactNode }) {
     <svg className="rule__art" viewBox="0 0 40 40" aria-hidden="true">
       {children}
     </svg>
+  );
+}
+
+/**
+ * A bitmap in the same square. `alt=""` for the same reason the SVGs are
+ * hidden: the rule beside it already says the thing.
+ */
+function Art({ src, width, height }: { src: string; width: number; height: number }) {
+  return (
+    <img
+      className="rule__art"
+      src={`${import.meta.env.BASE_URL}sprites/${src}`}
+      alt=""
+      width={width}
+      height={height}
+    />
   );
 }
 
@@ -27,15 +47,7 @@ export function StartIcon() {
 
 /** A finger, about to pick somewhere daft. */
 export function TapIcon() {
-  return (
-    <Icon>
-      {/* One finger and a fist. The anatomically fuller hand turned to mud at
-          the size this is drawn. */}
-      <rect x={13} y={19} width={17} height={16} rx={6} className="rules-hand" />
-      <rect x={15.5} y={5} width={7} height={18} rx={3.5} className="rules-hand" />
-      <path d="M19 12v6" className="rules-hand-crease" />
-    </Icon>
-  );
+  return <Art src="rule-pointer.png" width={118} height={160} />;
 }
 
 /** Club points, and what they are for. */
@@ -66,15 +78,7 @@ export function EyesIcon() {
 
 /** More than one way round, and many more ways to get it wrong. */
 export function RoutesIcon() {
-  return (
-    <Icon>
-      <path d="M11 30q9 -6 18 -14" className="rules-route-dash" />
-      <path d="M9 12a5 5 0 0 1 10 0c0 4-5 9-5 9s-5-5-5-9Z" className="rules-pin" />
-      <circle cx={14} cy={12} r={2} className="rules-pin-hole" />
-      <path d="M25 24a5 5 0 0 1 10 0c0 4-5 9-5 9s-5-5-5-9Z" className="rules-pin" />
-      <circle cx={30} cy={24} r={2} className="rules-pin-hole" />
-    </Icon>
-  );
+  return <Art src="rule-route.png" width={160} height={107} />;
 }
 
 /** The club's own voice, saying something unhelpful. */

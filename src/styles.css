@@ -4089,10 +4089,14 @@ body {
   background: color-mix(in srgb, var(--brand-blue) 5%, var(--card));
 }
 
+/* One square for both kinds. The SVGs fill it; the two bitmaps are a tall one
+   and a wide one, so `contain` letterboxes them into it rather than stretching
+   either to a shape it was not drawn in. */
 .rule__art {
   flex: 0 0 auto;
   width: 2.6rem;
   height: 2.6rem;
+  object-fit: contain;
 }
 
 .rule__words {
@@ -4132,13 +4136,6 @@ body {
   fill: var(--club);
 }
 
-.rules-hand {
-  fill: var(--card);
-  stroke: var(--ink);
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-
 .rules-cup {
   fill: var(--hi-vis);
   stroke: var(--ink);
@@ -4151,14 +4148,6 @@ body {
   stroke: var(--ink);
   stroke-width: 2.5;
   stroke-linecap: round;
-}
-
-.rules-hand-crease {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  opacity: 0.5;
 }
 
 .rules-cup-stem,
@@ -4177,26 +4166,6 @@ body {
 
 .rules-pupil {
   fill: var(--ink);
-}
-
-.rules-pin {
-  fill: var(--brand-blue);
-  stroke: var(--club);
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-
-.rules-pin-hole {
-  fill: var(--card);
-}
-
-.rules-route-dash {
-  fill: none;
-  stroke: var(--club);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 1 5;
-  opacity: 0.7;
 }
 
 .rules-horn {
