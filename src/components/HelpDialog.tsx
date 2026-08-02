@@ -1,10 +1,59 @@
 import { Dialog } from "./Dialog";
+import {
+  EyesIcon,
+  MegaphoneIcon,
+  PigeonTrail,
+  RoutesIcon,
+  StartIcon,
+  TapIcon,
+  TitleSparks,
+  TrophyIcon,
+} from "./RulesIcons";
 import type { Level } from "../game/types";
 
 interface Props {
   level: Level;
   onClose: () => void;
 }
+
+const PIGEON = `${import.meta.env.BASE_URL}sprites/pigeon-standing.png`;
+
+/**
+ * The rules, one to a card, in the order somebody meets them: where you start,
+ * how you move, what it is worth, what will be held against you, and that a
+ * level has more than one answer.
+ *
+ * Five of them, as drawn. This is the designed screen and the list is not the
+ * place to be clever — anything else the player needs to know has the whole
+ * rest of the game to say it in.
+ */
+const RULES = [
+  {
+    Icon: StartIcon,
+    title: "Pick a junction to start your route.",
+    detail: "Everyone starts together.",
+  },
+  {
+    Icon: TapIcon,
+    title: "Tap a junction to run there.",
+    detail: "Tap the one you came from to undo.",
+  },
+  {
+    Icon: TrophyIcon,
+    title: "Score club points.",
+    detail: "Win a place on the leaderboard.",
+  },
+  {
+    Icon: EyesIcon,
+    title: "Follow the rules.",
+    detail: "The committee will be watching.",
+  },
+  {
+    Icon: RoutesIcon,
+    title: "There are multiple winning routes per level.",
+    detail: "But there are loads of ways to lose.",
+  },
+];
 
 /**
  * How the game works, not how this week's run works. It opens itself on a
@@ -13,44 +62,76 @@ interface Props {
  * to the objective checklist, which is always on screen and updates as you
  * plan.
  *
- * Kept short enough to fit a phone without scrolling: the first thing a new
- * player sees should not hide its own way out.
+ * Two columns on anything wide enough: the countryside and its signpost on the
+ * left, the rules on the right. A phone gets the rules and drops the scene to
+ * a strip along the top, because on a phone the rules are the whole point and
+ * the picture is the part that can afford to shrink.
  */
 export function HelpDialog({ level, onClose }: Props) {
   return (
-    <Dialog titleId="help-title" describedBy="help-intro" onClose={onClose}>
-      <p className="dialog__badge">How to play</p>
-      <h2 id="help-title" tabIndex={-1}>
-        Plan it, run it, take the blame
+    <Dialog
+      titleId="help-title"
+      describedBy="help-intro"
+      className="dialog--rules"
+      onClose={onClose}
+    >
+      <button
+        type="button"
+        className="rules__close"
+        onClick={onClose}
+        aria-label="Close how to play"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 7l10 10M17 7L7 17" />
+        </svg>
+      </button>
+
+      <h2 id="help-title" className="rules__title" tabIndex={-1}>
+        <TitleSparks />
+        How to play
+        <TitleSparks flip />
       </h2>
-      <p id="help-intro" className="dialog__lead">
-        Plan the route, the club runs it and everyone judges you afterwards.
+      <p id="help-intro" className="rules__subtitle">
+        Plan it, run it, take the blame
       </p>
 
-      <h3 className="help__subhead">Mapping a route</h3>
-      <ul className="help__list">
-        <li>Tap a junction to run there.</li>
-        <li>Tap the one you came from to undo.</li>
-        <li>You can&rsquo;t run the same road twice.</li>
-        <li>Press Run Route.</li>
-      </ul>
+      <div className="rules__body">
+        {/* Decorative: the signpost is drawn into the picture, and every place
+            on it is on the map anyway. */}
+        <div className="rules__scene" role="presentation" />
 
-      <h3 className="help__subhead">What counts</h3>
-      <p className="help__note">
-        Each run has objectives. You&rsquo;re welcome to ignore them and send
-        everyone somewhere daft if you like. But to qualify for the next level
-        you have to follow the rules.
-      </p>
-      <p className="help__note">
-        A loop counts once, whichever way round you run it.
-      </p>
+        <div className="rules__panel">
+          <h3 className="rules__heading">The rules</h3>
+          <ul className="rules__list">
+            {RULES.map(({ Icon, title, detail }) => (
+              <li key={title} className="rule">
+                <Icon />
+                <span className="rule__words">
+                  <span className="rule__title">{title}</span>
+                  <span className="rule__detail">{detail}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
-      <p className="help__today">
+      <p className="rules__today">
         <strong>Today:</strong> {level.title} — {level.strapline}
       </p>
 
-      <div className="dialog__actions">
-        <button type="button" className="button button--primary" onClick={onClose}>
+      <div className="rules__footer">
+        <p className="rules__tip">
+          <MegaphoneIcon />
+          <span>Nobody has ever agreed on what counts as a hill</span>
+        </p>
+
+        <span className="rules__pigeon" aria-hidden="true">
+          <img src={PIGEON} alt="" width={186} height={190} />
+          <PigeonTrail />
+        </span>
+
+        <button type="button" className="button button--primary rules__go" onClick={onClose}>
           Right, off we go
         </button>
       </div>
