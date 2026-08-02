@@ -119,7 +119,13 @@ export const thursdaySocialRun: Level = {
   nodes: [
     {
       id: "observatory",
-      labelAbove: true,
+      // Stacked, and out to the left above the telescope rather than centred
+      // over the junction: the lane up to Wellesley Rumble leaves almost
+      // vertically, so anything centred here is cut in half by it whether it
+      // is stacked or not.
+      labelSide: "left",
+      labelWrap: true,
+      labelDy: -34,
       x: 130,
       y: 300,
       label: "The Observatory",
@@ -145,7 +151,10 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "private-bush",
-      labelAbove: true,
+      // To the right, which puts it directly above the bush. Above the
+      // junction it was crossed by both the lane to the towpath and the road
+      // climbing to the Big Tesco.
+      labelSide: "right",
       x: 645,
       y: 445,
       label: "A Private Bush",
@@ -204,6 +213,9 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "hospital-hill",
+      // Above: below, the name lay along the lane dropping to the towpath.
+      // Nothing at all leaves this junction upwards.
+      labelAbove: true,
       x: 495,
       y: 130,
       label: "Hospital Hill",
@@ -211,8 +223,9 @@ export const thursdaySocialRun: Level = {
       type: "pigeon",
       sprite: "hill",
       // Up and left of the junction: the lane in from the Medical Centre
-      // arrives across where a hill marker usually sits.
-      spriteDx: -65,
+      // arrives across where a hill marker usually sits. Nudged further left
+      // again to leave room for the name, which now sits above.
+      spriteDx: -75,
       spriteDy: -30,
     },
     {
