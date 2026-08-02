@@ -82,6 +82,7 @@ type Action =
   | { type: "run" }
   | { type: "finish" }
   | { type: "edit" }
+  | { type: "load"; route: Route }
   | { type: "select-level"; level: Level };
 
 function initialState(level: Level): GameState {
@@ -172,6 +173,28 @@ function reducer(state: GameState, action: Action): GameState {
 
     case "edit":
       return { ...state, phase: "planning", result: null };
+
+    /**
+     * A route laid back on the map from the book, to run again or to edit into
+     * something near it — which is how you actually hunt a variation on a loop
+     * that nearly worked.
+     *
+     * Whatever was being planned is dropped without asking. The player has
+     * gone into the book and picked a route out of it, which is a clearer
+     * statement of intent than a half-laid route is, and a confirmation on
+     * every load would be in the way of the one gesture this exists for. The
+     * route is on screen and re-tappable if it was a mistake.
+     */
+    case "load":
+      return {
+        ...state,
+        route: action.route,
+        phase: "planning",
+        result: null,
+        rejectedNodeId: null,
+        announcement: describe(level, action.route, "Route laid out from the book."),
+        nonce: state.nonce + 1,
+      };
 
     default:
       return state;
@@ -378,6 +401,10 @@ export default function App() {
         <RunBookDialog
           level={level}
           records={runBook.records}
+          onLoad={(route) => {
+            dispatch({ type: "load", route });
+            setBookOpen(false);
+          }}
           onClose={() => setBookOpen(false)}
         />
       )}

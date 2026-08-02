@@ -4,7 +4,7 @@ import { pageFor } from "../game/runBook";
 import { nodeById } from "../game/routeGraph";
 import type { BookEntry } from "../game/runBook";
 import type { Records } from "../game/records";
-import type { Level } from "../game/types";
+import type { Level, Route } from "../game/types";
 
 /**
  * How many failures are worth showing. Every winner is kept — that is the
@@ -36,20 +36,46 @@ function spellOut(level: Level, entry: BookEntry): string {
   return `${entry.distanceKm.toFixed(2)} km, ${worth}. ${via}.`;
 }
 
-function Card({ level, entry }: { level: Level; entry: BookEntry }) {
+/**
+ * One route in the book, and a way back onto the map.
+ *
+ * The whole card is the button rather than a "load" link tucked in a corner:
+ * the shape is what the player is reading, so the shape is what they should be
+ * able to press.
+ *
+ * Named with `aria-label`, as the junctions are. Left to the subtree, the name
+ * would read the visible figures, then the instruction, then the same figures
+ * again inside the spelled-out route — accurate, and a mouthful. This way it
+ * says what pressing it does before reciting where it goes.
+ */
+function Card({
+  level,
+  entry,
+  onLoad,
+}: {
+  level: Level;
+  entry: BookEntry;
+  onLoad: (route: Route) => void;
+}) {
   return (
     <li className={`book__card${entry.won ? "" : " book__card--lost"}`}>
-      <RouteThumb level={level} route={entry.route} />
-      <p className="book__figures">
-        <span className="book__distance">{entry.distanceKm.toFixed(2)} km</span>
-        {entry.won ? (
-          <span className="book__points">{entry.points} pts</span>
-        ) : (
-          <span className="book__verdict">{entry.verdict}</span>
-        )}
-        <span className="book__when">{whenFound(entry.at)}</span>
-      </p>
-      <span className="visually-hidden">{spellOut(level, entry)}</span>
+      <button
+        type="button"
+        className="book__load"
+        aria-label={`Lay this route back on the map. ${spellOut(level, entry)}`}
+        onClick={() => onLoad(entry.route)}
+      >
+        <RouteThumb level={level} route={entry.route} />
+        <p className="book__figures">
+          <span className="book__distance">{entry.distanceKm.toFixed(2)} km</span>
+          {entry.won ? (
+            <span className="book__points">{entry.points} pts</span>
+          ) : (
+            <span className="book__verdict">{entry.verdict}</span>
+          )}
+          <span className="book__when">{whenFound(entry.at)}</span>
+        </p>
+      </button>
     </li>
   );
 }
@@ -63,14 +89,21 @@ function Card({ level, entry }: { level: Level; entry: BookEntry }) {
  *
  * What it will not do is show you a route you have not found. The count of
  * what is left is the whole of the help on offer.
+ *
+ * Every route here can be tapped back onto the map. `pageFor` has already
+ * dropped anything whose roads no longer describe a walk, so there is no such
+ * thing as an entry that will not load: a route the map has outgrown is not
+ * in the book to be pressed.
  */
 export function RunBookDialog({
   level,
   records,
+  onLoad,
   onClose,
 }: {
   level: Level;
   records: Records;
+  onLoad: (route: Route) => void;
   onClose: () => void;
 }) {
   const page = pageFor(records, level);
@@ -95,7 +128,7 @@ export function RunBookDialog({
           <h3 className="help__subhead">In the book</h3>
           <ul className="book">
             {page.won.map((entry) => (
-              <Card key={entry.key} level={level} entry={entry} />
+              <Card key={entry.key} level={level} entry={entry} onLoad={onLoad} />
             ))}
           </ul>
         </>
@@ -106,7 +139,7 @@ export function RunBookDialog({
           <h3 className="help__subhead">Also tried</h3>
           <ul className="book">
             {page.tried.slice(0, FAILURES_SHOWN).map((entry) => (
-              <Card key={entry.key} level={level} entry={entry} />
+              <Card key={entry.key} level={level} entry={entry} onLoad={onLoad} />
             ))}
           </ul>
           {hiddenFailures > 0 && (

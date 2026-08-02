@@ -3147,15 +3147,41 @@ body {
   gap: 0.7rem;
 }
 
-.book__card {
+/* The card is the button: the shape is what is being read, so the shape is
+   what gets pressed. The li is left as a bare list item and everything that
+   looks like a card lives on the control inside it, so hover and focus have
+   somewhere to land without :has. */
+.book__load {
+  display: block;
+  width: 100%;
   padding: 0.45rem;
   border: 2px solid var(--line);
   border-radius: 12px;
   background: var(--card);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.book__load:hover {
+  border-color: var(--club-bright);
+}
+
+.book__load:active {
+  transform: translateY(1px);
+}
+
+.book__load:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
 }
 
 /* A dud is still worth keeping: it is the one you do not want to run twice. */
-.book__card--lost {
+.book__card--lost .book__load {
   background: color-mix(in srgb, var(--fail) 5%, var(--card));
 }
 

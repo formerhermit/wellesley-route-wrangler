@@ -221,6 +221,19 @@ the whole book rather than stranding it. The one thing the book will not do is
 show you a route you have not found: the count of what is left is the whole of
 the help on offer.
 
+**Tap one and it goes back on the map**, to run again or to edit into something
+near it — which is how you actually hunt a variation on a loop that nearly
+worked, rather than laying the whole thing again a road at a time. Whatever was
+being planned is dropped without a confirmation: going into the book and
+picking a route out of it is a clearer statement of intent than a half-laid
+route is, and if it was a mistake the route is on screen and re-tappable.
+Reset still means empty, not back to what was loaded.
+
+There is no such thing as an entry that will not load. `pageFor` already drops
+any route whose roads have stopped describing a walk — a map edited under it —
+so a route the level has outgrown is not in the book to be pressed in the first
+place, and the loading path has no failure case to report.
+
 `src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
 **Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
 just lists of road ids — and every total is derived from them on the spot.
@@ -262,6 +275,8 @@ and issue #81 is where it is being argued.
 - **Run Route** unlocks once the route has at least one road and closes the
   loop back at the Observatory.
 - **Reset Route** clears everything.
+- Tapping a route in **the book** lays it back on the map, ready to run again
+  or to edit.
 - **Level _n_** in the header opens the fixture list: completed runs, the one
   you are on, and what it takes to open the rest.
 
