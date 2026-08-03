@@ -40,6 +40,9 @@ export const LANDMARK_OFFSET: Partial<
    * toilet always has that name over it.
    */
   toilet: { dx: 0, dy: 42 },
+  /* Below the junction, and wide: eighty units of concrete will not tuck in
+     beside anything. */
+  wall: { dx: 0, dy: 40 },
   car: { dx: -18, dy: 34 },
   ghost: { dx: 0, dy: -42 },
   treaters: { dx: 0, dy: -44 },

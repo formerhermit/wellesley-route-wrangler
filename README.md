@@ -148,6 +148,35 @@ windows. `flock: "robin"`, `music`, and `kit: "santa"`, which puts the group in
 hats and changes nothing else. Snow falls over any map at frost, and frost
 creeps in from its four corners.
 
+**Level 10 — Thursley Common** — the furthest away run yet, and a real
+National Nature Reserve: 350 hectares of heath and peat bog in Surrey with a
+boardwalk laid out over the mire. 8 to 10 km from the Moat Pond car park, out
+over the boardwalk, past the dragonflies at Pudmore, round by the Atlantic
+Wall and home. Six winning routes.
+
+Its flock is `dragonfly`, which is the same mechanism as the crows, ducks and
+robins and the first one the level *sends you towards* rather than round.
+Everywhere else the birds are an obstacle and the brief caps them; here they
+are the reason anybody drove an hour, and the brief makes Pudmore compulsory.
+Capping them was tried first and produced a dragonfly level whose winning
+routes all avoided the dragonflies.
+
+The Atlantic Wall is real too, and is next door on Hankley Common rather than
+on the reserve: a full-size replica of a stretch of the Normandy defences,
+built in 1943 for the Canadians to practise blowing up and never tidied away.
+The club has stretched the geography to take it in, as the club would.
+
+Two junctions on it — Elstead Green and the Three Horseshoes — sit on lanes
+only, and the brief says stay off the lanes, so no legal run can reach either.
+That is the Tilford Village Shop trick again: a village you can see from the
+heath and never get to.
+
+The closed road is the bridleway between Moat Pond and the Mire, which is
+genuinely under 600 mm of water from October. The dog is genuine too — leads
+are compulsory on the reserve from April to September, which is exactly the
+sort of rule somebody's dog has never heard of, so it falls in at the Mire and
+comes with you.
+
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. A new level really is a new
@@ -187,6 +216,7 @@ walks every one of them to work out the "N routes to find here" denominator.
 |---|---:|---:|---:|---:|---:|
 | Tilford | 11 | 21 | 11 | 1,183 | 50 ms |
 | Thursday Social | 12 | 20 | 9 | 194 | 17 ms |
+| Thursley Common | 12 | 20 | 9 | 311 | 13 ms |
 | Christmas Run | 12 | 20 | 9 | 194 | 13 ms |
 | Spooky Run | 12 | 20 | 9 | 211 | 8 ms |
 | Caesar's Camp | 12 | 19 | 8 | 145 | 4 ms |
@@ -197,7 +227,7 @@ Two extra ranks is thirty times the work. It is memoised per level in a
 and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
-somebody's phone rather than here. Rank 7 to 9 is where eight of the nine
+somebody's phone rather than here. Rank 7 to 9 is where nine of the ten
 levels sit and is the comfortable range; past 11 wants measuring before it
 ships.
 
@@ -270,7 +300,7 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 43 winning routes across the nine levels — and 2,144 distinct loops
+There are 49 winning routes across the ten levels — and 2,455 distinct loops
 — so a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
@@ -700,8 +730,8 @@ perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
 
 `trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
-`hawleyLevel.test.ts` and `christmasLevel.test.ts` do the same for levels 2, 6,
-7, 8 and 9 against their own maps. Most of them end by walking every route out
+`hawleyLevel.test.ts`, `christmasLevel.test.ts` and `thursleyLevel.test.ts` do
+the same for levels 2, 6, 7, 8, 9 and 10 against their own maps. Most of them end by walking every route out
 of the start and back, so each level is held to exactly its winners. A road
 whose distance drifts takes the count with it and fails.
 
@@ -709,7 +739,7 @@ Those walks count *journeys* — every way round, in every order — which is a
 larger number than the routes the game counts, and deliberately so: it is the
 stricter check of the two, and a level whose journeys move has certainly
 changed. The number a player actually sees is the deduplicated one, and every
-level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7]`. Both
+level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6]`. Both
 are asserted, because a change that moves one and not the other is exactly the
 kind of thing worth being stopped by.
 

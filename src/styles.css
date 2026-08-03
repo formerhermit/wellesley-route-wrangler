@@ -3213,6 +3213,100 @@ body {
 }
 
 /* The robin: brown, round, and doing the whole card on its own. */
+/* ---------- The Thursley dragonfly ---------- */
+
+/*
+ * Drawn from above, so nothing here is shared with the birds, which are all
+ * profiles. The wings are the recognisable part and get the most care: pale
+ * enough to read as membrane over whatever they are standing on, dark enough
+ * not to disappear into the paper.
+ */
+.dragonfly-wing {
+  fill: #dcecf4;
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  opacity: 0.95;
+}
+
+.dragonfly-vein {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.45;
+  opacity: 0.35;
+}
+
+.dragonfly-abdomen,
+.dragonfly-thorax {
+  fill: #2f8fb8;
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+
+.dragonfly-segment {
+  stroke: var(--ink);
+  stroke-width: 0.6;
+  opacity: 0.45;
+}
+
+.dragonfly-eyes {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 0.8;
+}
+
+.dragonfly-glint {
+  fill: var(--card);
+  opacity: 0.75;
+}
+
+/*
+ * A hover rather than a flap. A dragonfly's wings do not beat through an arc
+ * you could draw — they blur — so the four of them pinch towards the body and
+ * back, which is what fast wings look like when you cannot see them move.
+ */
+.dragonfly-wings {
+  transform-origin: 0 0;
+  animation: dragonfly-hover 1.6s ease-in-out infinite;
+}
+
+.sprite--dragonfly.is-alarmed .dragonfly-wings {
+  animation-duration: 0.22s;
+}
+
+@keyframes dragonfly-hover {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.88);
+  }
+}
+
+/* ---------- The Atlantic Wall ---------- */
+
+.wall-concrete {
+  fill: #b9b4a8;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* The lines the shuttering left, and the grid it was poured in. */
+.wall-course {
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  opacity: 0.35;
+}
+
+.wall-hole {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.1;
+}
+
 .robin-body,
 .robin-tail,
 .robin-wing {

@@ -1147,6 +1147,90 @@ export function Robin({ alarmed = false }: { alarmed?: boolean }) {
   );
 }
 
+/**
+ * The Atlantic Wall on Hankley Common: a full-size concrete replica of a
+ * stretch of the Normandy defences, built in 1943 for the Canadians to
+ * practise blowing up and never tidied away.
+ *
+ * Long and flat-topped rather than a box, because the first draft came out a
+ * shed. What makes it read as this wall and not a wall is the damage — the
+ * bites out of the top, the shelled end, and the two holes — since being blown
+ * up repeatedly is the only thing it was ever for.
+ */
+export function AtlanticWall() {
+  return (
+    <g className="sprite sprite--wall" aria-hidden="true">
+      <path
+        d="M -38 9 L -38 -12 L -19 -12 L -15 -8 L -11 -12 L 12 -12 L 16 -7 L 20 -12 L 31 -12 L 31 -2 L 38 -2 L 38 9 Z"
+        className="wall-concrete"
+      />
+      <path d="M -38 -4 h 69 M -38 2 h 76" className="wall-course" />
+      <path d="M -26 -12 v 21 M -4 -12 v 21 M 9 -12 v 21 M 24 -12 v 21" className="wall-course" />
+      <circle cx={-30} cy={-6} r={2.4} className="wall-hole" />
+      <circle cx={4} cy={4} r={1.8} className="wall-hole" />
+      <path d="M -44 9 h 88" className="hangar-ground" />
+    </g>
+  );
+}
+
+/**
+ * The Thursley dragonfly, which is the reserve's whole identity — the
+ * boardwalk out over the mire is called the Dragonfly Trail.
+ *
+ * Drawn from above, unlike every bird on the map, and that is not an
+ * inconsistency. A bird's iconic silhouette is its profile; a dragonfly's is
+ * the four wings in an X, and side-on it is a stick with a face. Each animal
+ * gets the view it is recognised from.
+ */
+export function Dragonfly({ alarmed = false }: { alarmed?: boolean }) {
+  return (
+    <g
+      className={`sprite sprite--dragonfly${alarmed ? " is-alarmed" : ""}`}
+      aria-hidden="true"
+    >
+      {/* Four blades rather than four ellipses: a wing is narrow where it
+          meets the body and rounded at the tip, and an ellipse is neither, so
+          the first draft came out a flower. */}
+      <g className="dragonfly-wings">
+        <path
+          d="M 2.6 -2.6 C -0.8 -9 -0.4 -15.5 3.8 -17.6 C 7.4 -14.2 6.6 -7.4 5 -2.4 Z"
+          className="dragonfly-wing"
+        />
+        <path
+          d="M 2.6 2.6 C -0.8 9 -0.4 15.5 3.8 17.6 C 7.4 14.2 6.6 7.4 5 2.4 Z"
+          className="dragonfly-wing"
+        />
+        <path
+          d="M -3.2 -2.4 C -7.4 -8 -8 -13.6 -4.6 -16 C -1.4 -12.8 -1.4 -6.8 -1.6 -2.2 Z"
+          className="dragonfly-wing"
+        />
+        <path
+          d="M -3.2 2.4 C -7.4 8 -8 13.6 -4.6 16 C -1.4 12.8 -1.4 6.8 -1.6 2.2 Z"
+          className="dragonfly-wing"
+        />
+        <path
+          d="M 3.4 -3.6 Q 2.4 -10 3.9 -16.4 M 3.4 3.6 Q 2.4 10 3.9 16.4
+             M -2.6 -3.2 Q -4.4 -9 -4.4 -14.6 M -2.6 3.2 Q -4.4 9 -4.4 14.6"
+          className="dragonfly-vein"
+        />
+      </g>
+      <path
+        d="M 3.4 -1.8 C -6 -1.2 -16 -0.7 -23 -0.5 L -23 0.5 C -16 0.7 -6 1.2 3.4 1.8 Z"
+        className="dragonfly-abdomen"
+      />
+      <path
+        d="M -5 -1.35 v 2.7 M -11 -1.1 v 2.2 M -17 -0.85 v 1.7"
+        className="dragonfly-segment"
+      />
+      <ellipse cx={5.6} cy={0} rx={4.3} ry={3.3} className="dragonfly-thorax" />
+      {/* One shape, not two: compound eyes wrap the whole head, and drawing
+          them as a pair of circles read as a lumpy skull. */}
+      <ellipse cx={10.4} cy={0} rx={2.8} ry={3.6} className="dragonfly-eyes" />
+      <circle cx={11} cy={-1.7} r={0.85} className="dragonfly-glint" />
+    </g>
+  );
+}
+
 export function Pigeon({ alarmed = false }: { alarmed?: boolean }) {
   return (
     <g className={`sprite sprite--pigeon${alarmed ? " is-alarmed" : ""}`} aria-hidden="true">

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
-import { CarolSingers, Goose, Treaters } from "./MapSprites";
+import { CarolSingers, Dog, Goose, Treaters } from "./MapSprites";
 import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
@@ -38,6 +38,9 @@ function FollowerSprite({
       </g>
     );
   }
+  // Drawn facing left as it was given to us, so it is turned to face the way
+  // everything else on this map runs.
+  if (kind === "dog") return <Dog flip />;
   return (
     <g transform={scale ? `scale(${scale})` : undefined}>
       <Goose />

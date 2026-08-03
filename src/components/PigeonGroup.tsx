@@ -1,4 +1,4 @@
-import { Crow, Duck, Pigeon, Robin } from "./MapSprites";
+import { Crow, Dragonfly, Duck, Pigeon, Robin } from "./MapSprites";
 import type { Level } from "../game/types";
 
 interface Props {
@@ -29,7 +29,9 @@ export function PigeonGroup({ level, alarmedNodeId, reducedMotion }: Props) {
         ? Duck
         : level.flock === "robin"
           ? Robin
-          : Pigeon;
+          : level.flock === "dragonfly"
+            ? Dragonfly
+            : Pigeon;
 
   return (
     <g aria-hidden="true">

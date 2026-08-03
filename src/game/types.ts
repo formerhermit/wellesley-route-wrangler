@@ -48,7 +48,9 @@ export type MapNodeType =
   /** The town tree, wonky, and the council's own fault. */
   | "christmastree"
   /** A trestle table, an urn, and the real reason anybody turned up. */
-  | "mulledwine";
+  | "mulledwine"
+  /** The Atlantic Wall on Hankley Common. Concrete, shelled, and still there. */
+  | "wall";
 
 export type RoadSurface = "road" | "trail";
 
@@ -173,7 +175,7 @@ export interface Level {
    * What the birds are. They loiter, scatter and get counted identically
    * whichever they are; only the drawing and the paperwork change.
    */
-  flock?: "pigeon" | "crow" | "duck" | "robin";
+  flock?: "pigeon" | "crow" | "duck" | "robin" | "dragonfly";
   /**
    * What the group is wearing. Club vests as standard; a level may put them in
    * something seasonal, which changes the drawing and nothing else.
@@ -236,7 +238,7 @@ export interface Level {
    * none. They queue up behind the group in the order the route reaches them.
    */
   followers?: {
-    kind: "goose" | "treaters" | "carollers";
+    kind: "goose" | "treaters" | "carollers" | "dog";
     nodeId: string;
     /** Where it waits, relative to that junction. */
     dx: number;

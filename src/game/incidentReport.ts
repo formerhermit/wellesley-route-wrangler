@@ -41,6 +41,8 @@ export function flockLabel(level: Level): string {
       return "Unexpected ducks";
     case "robin":
       return "Unexpected robins";
+    case "dragonfly":
+      return "Unexpected dragonflies";
     default:
       return "Unexpected pigeons";
   }
