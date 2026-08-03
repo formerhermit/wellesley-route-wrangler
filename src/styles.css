@@ -14,7 +14,21 @@
   --brand-blue: #4293cf;
   --brand-green: #5db571;
 
-  --club: #1d5c87;
+  /*
+   * --club is that blue taken down until it can hold words (#95). It was
+   * #1d5c87, which is a navy: seven to one against the card, further from the
+   * brand than it needed to be, and the colour most of the game is actually
+   * painted in.
+   *
+   * This is the same hue and saturation as #4293CF with the lightness pulled
+   * down to where it clears AA on the *page*, not just on the card — 4.89:1 on
+   * --paper and 5.53:1 on --card, against the 4.5 a body-sized word needs. The
+   * page is the harder of the two and the one that gets forgotten.
+   *
+   * There is about a tenth of a ratio point of slack before AA, so this is as
+   * close to the brand as text can legally get. Anything lighter is a fill.
+   */
+  --club: #286c9f;
   --club-bright: var(--brand-blue);
   --pass: #2f7d52;
   --fail: #bc4749;
@@ -2204,8 +2218,10 @@ body {
   color: #fff;
 }
 
+/* Down to the old club navy, rather than up towards the brand. Lighter would
+   read as the more obvious hover and would take white text below AA. */
 .button--primary:hover:not(:disabled) {
-  background: #26709f;
+  background: #1d5c87;
 }
 
 .button:disabled {
