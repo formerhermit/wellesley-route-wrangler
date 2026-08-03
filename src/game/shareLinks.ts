@@ -16,8 +16,10 @@ export interface ShareLink {
  * no web share intent — there is no URL that opens a composer, the way there
  * is for the other four — so there is nothing to put in this list. On a phone
  * it is in the native share sheet, which opens instead of this menu; on a
- * desktop the route is Save the picture and then post it, which the menu now
- * says out loud.
+ * desktop the route is Save the picture and then post it. That last part is
+ * left to the player rather than written into the menu — a menu is a list of
+ * things to press, and explaining a platform's limits in one is documentation
+ * in the wrong place.
  */
 export function shareLinksFor(payload: SharePayload): ShareLink[] {
   const { text, url } = payload;

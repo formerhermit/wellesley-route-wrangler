@@ -366,8 +366,13 @@ thin.
 there is no URL that opens a composer, the way there is for WhatsApp, X,
 Facebook and Threads — so there is nothing to link to. On a phone it is in the
 native share sheet, which opens *instead* of the menu, and the picture goes
-with it. On a desktop the route is Save the picture and then post it, which the
-menu now says out loud rather than leaving people to work out.
+with it. On a desktop the route is Save the picture and then post it.
+
+That last part stays unsaid in the interface. A line of explanation under the
+option was tried and taken out again: a menu is a list of things to press, and
+a paragraph about what Instagram will not accept is documentation that has
+wandered into the wrong place. **Save the picture** is a clear enough action to
+stand on its own.
 
 **Facebook only ever gets a link.** Its sharer takes a `u` parameter and
 nothing else, then builds its own preview by fetching that URL. No image from
