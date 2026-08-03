@@ -4399,8 +4399,54 @@ body {
   }
 }
 
-.rules__pigeon img {
+/* ---------- The pigeon, off the map ---------- */
+
+/*
+ * One bird, four homes (#103). The flock on the map is vector and is an
+ * obstacle the rules count; this is the bitmap one, who is furniture. He is
+ * `alt=""` everywhere, so none of this reaches a screen reader.
+ */
+.pigeon {
+  flex: 0 0 auto;
   width: auto;
+  height: 3.1rem;
+}
+
+/* Standing on the club's own paperwork, which is where he belongs. Smaller
+   than the rest: this card turns up after every single run. */
+.pigeon--report {
+  height: 2.4rem;
+}
+
+.pigeon--privacy {
+  height: 3.4rem;
+}
+
+/* Waiting for somebody to go first. */
+.pigeon--table {
+  height: 2.8rem;
+}
+
+/* A row so the heading can wrap without the bird ending up on top of it. */
+.report__masthead,
+.privacy__masthead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.privacy__masthead {
+  align-items: center;
+}
+
+.club-table__empty {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.rules__pigeon img {
   height: 3.1rem;
 }
 

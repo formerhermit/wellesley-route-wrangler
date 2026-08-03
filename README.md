@@ -11,6 +11,14 @@ dog, the Medical Centre Toilet, and two of the how-to-play drawings) live in
 `public/sprites/`, cropped to their content and sized to a few times the space
 they are ever drawn in.
 
+One of them is not on the map at all. The standing pigeon is the game's only
+sprite that turns up on the furniture — the how-to-play strip, the club's
+incident report, the privacy policy, and the club table before anybody has
+joined it. He is not the flock: the birds on the map are vector, they are an
+obstacle, and the rules count them. He is a bystander with opinions, he is
+`alt=""` in all four places, and `Pigeon.tsx` is the one component so that
+adding a fifth is a line rather than a copied path.
+
 One asset there is not a PNG. The countryside behind the how-to-play screen is
 a soft painterly landscape, which is the one thing PNG is worst at: 584 kB
 against 51 kB as WebP, for no difference anybody can see, on a dialog that

@@ -11,6 +11,7 @@ import {
   TrophyIcon,
 } from "./RulesIcons";
 import { useReducedMotion } from "../hooks/useReducedMotion";
+import { Pigeon } from "./Pigeon";
 import { nextTipIndex, tips } from "../game/tips";
 import type { Level } from "../game/types";
 
@@ -18,8 +19,6 @@ interface Props {
   level: Level;
   onClose: () => void;
 }
-
-const PIGEON = `${import.meta.env.BASE_URL}sprites/pigeon-standing.png`;
 
 /**
  * Which tip the screen shouted last time, so the next one is a different one.
@@ -196,7 +195,7 @@ export function HelpDialog({ level, onClose }: Props) {
         </p>
 
         <span className="rules__pigeon" aria-hidden="true">
-          <img src={PIGEON} alt="" width={186} height={190} />
+          <Pigeon />
           <PigeonTrail />
         </span>
 

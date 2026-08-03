@@ -1,4 +1,5 @@
 import { Dialog } from "./Dialog";
+import { Pigeon } from "./Pigeon";
 
 /**
  * Where to send a deletion request. The repo's issue tracker is public, which
@@ -19,10 +20,19 @@ const CONTACT_URL =
 export function PrivacyDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog titleId="privacy-title" describedBy="privacy-intro" onClose={onClose}>
-      <p className="dialog__badge">Privacy</p>
-      <h2 id="privacy-title" tabIndex={-1}>
-        What this game knows about you
-      </h2>
+      {/* The one place the joke and the subject line up: the tips have been
+          claiming these are government drones for a while, and this is the
+          page about what is being collected. */}
+      <div className="privacy__masthead">
+        <div>
+          <p className="dialog__badge">Privacy</p>
+          <h2 id="privacy-title" tabIndex={-1}>
+            What this game knows about you
+          </h2>
+        </div>
+        <Pigeon className="pigeon--privacy" />
+      </div>
+
       <p id="privacy-intro" className="dialog__lead">
         Almost nothing, and none of it leaves your device unless you put
         yourself on the club table.

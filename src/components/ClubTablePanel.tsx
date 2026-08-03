@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Pigeon } from "./Pigeon";
 import type { Standing } from "../club/clubTable";
 import { NAME_MAX } from "../club/identity";
 
@@ -84,7 +85,10 @@ export function ClubTablePanel({
       )}
 
       {rows && rows.length === 0 && (
-        <p className="help__note">Nobody on it yet. Somebody has to go first.</p>
+        <p className="help__note club-table__empty">
+          <Pigeon className="pigeon--table" />
+          Nobody on it yet. Somebody has to go first.
+        </p>
       )}
 
       {rows && rows.length > 0 && (
