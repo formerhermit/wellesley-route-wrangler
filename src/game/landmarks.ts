@@ -28,12 +28,18 @@ export const LANDMARK_OFFSET: Partial<
   church: { dx: 0, dy: -52 },
   portaloo: { dx: -48, dy: 4 },
   /*
-   * Up and to the right, which is the only quarter clear on both maps that
-   * carry one: the Thursday layout has roads leaving at 39, 125, 177 and 349
-   * degrees and the Town layout at 147, 176, 278 and 353, and the label is
-   * above. Far enough out to clear the label as well as the roads.
+   * Straight down (#102). It used to go up and to the right, which cleared the
+   * roads on all four maps that carry one but not the writing: every toilet
+   * junction is a Medical Centre Toilet, twenty-one characters is always two
+   * lines, and every one of them sets `labelAbove` — so the name reached out
+   * to within three units of the cistern and read as one object.
+   *
+   * Below the junction is the quarter the label has vacated by being above it,
+   * and it is clear of the roads on all four. Fixed here rather than four
+   * times over in the data, because the clash is a property of the type: a
+   * toilet always has that name over it.
    */
-  toilet: { dx: 48, dy: -46 },
+  toilet: { dx: 0, dy: 42 },
   car: { dx: -18, dy: 34 },
   ghost: { dx: 0, dy: -42 },
   treaters: { dx: 0, dy: -44 },

@@ -2378,6 +2378,7 @@ const spookyRun = {
 			blurb: "crow hotspot, and a hill about it",
 			type: "pigeon",
 			sprite: "hill",
+			spriteDx: -56,
 			spriteDy: 60
 		},
 		{

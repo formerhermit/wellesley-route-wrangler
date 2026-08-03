@@ -45,6 +45,17 @@ const JUNCTION_CLEARANCE = 20;
  */
 const LANDMARK_CLEARANCE = 26;
 
+/**
+ * How close a junction's own landmark may sit to any name on the map.
+ *
+ * Sixteen, and the number was measured rather than picked. Every landmark on
+ * the roster clears twelve; at sixteen exactly the two real clashes fall out
+ * (#102) and nothing else does; by twenty it is flagging a bush tucked under
+ * its own label on purpose. A landmark is anchored by a point but drawn around
+ * it, which is the whole reason a gap of nothing still reads as a collision.
+ */
+const LABEL_CLEARANCE = 16;
+
 /** The moon is scenery in the sky, and the sky is over everything. */
 const OVERHEAD = new Set(["moon", "bat", "butterfly"]);
 
@@ -166,6 +177,35 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       );
       expect(onTheWriting).toEqual([]);
+    });
+
+    /*
+     * The one above checks scattered scenery. This checks the sprite a
+     * junction brings with it, which nothing was checking at all — which is
+     * how a toilet came to be parked against the word "Toilet" on four maps at
+     * once, and stayed there through everything else this file caught.
+     */
+    it("keeps a junction's own landmark off the writing", () => {
+      const boxes = labelBoxes();
+      const clashes = level.nodes
+        .map((node) => {
+          const kind = node.sprite ?? node.type;
+          const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+          if (!place) return undefined;
+          const x = node.x + (node.spriteDx ?? place.dx);
+          const y = node.y + (node.spriteDy ?? place.dy);
+          const box = boxes.find(
+            (b) =>
+              x > b.left - LABEL_CLEARANCE &&
+              x < b.right + LABEL_CLEARANCE &&
+              y > b.top - LABEL_CLEARANCE &&
+              y < b.bottom + LABEL_CLEARANCE,
+          );
+          return box ? `${kind} of ${node.id} on the name of ${box.node.id}` : undefined;
+        })
+        .filter((clash) => clash !== undefined);
+
+      expect(clashes).toEqual([]);
     });
 
     it("puts the theme's own trees somewhere sensible too", () => {

@@ -149,7 +149,10 @@ export const spookyRun: Level = {
       type: "pigeon",
       sprite: "hill",
       // Below the label rather than beside the junction: the lane west to the
-      // Medical Centre runs through where a hill usually sits.
+      // Medical Centre runs through where a hill usually sits. Twelve further
+      // west than the type's own offset, because "Haunted Hospital Hill" wraps
+      // to two lines and the peak was clipping the corner of the second (#102).
+      spriteDx: -56,
       spriteDy: 60,
     },
     {
