@@ -10,6 +10,17 @@ describe("the tips themselves", () => {
   it("says each one once", () => {
     expect(new Set(tips).size).toBe(tips.length);
   });
+
+  /*
+   * The megaphone's box is two lines high on a phone, which is about sixty
+   * characters at the size it is set. Nothing breaks past that — the strip is
+   * sticky, so the way out stays reachable however tall it gets — but the
+   * strip grows, and it grows into the rules on the screen where vertical room
+   * is tightest. A tip is a shout anyway. Three lines is not a shout.
+   */
+  it("keeps every tip to the two lines the megaphone has", () => {
+    for (const tip of tips) expect(tip.length).toBeLessThanOrEqual(60);
+  });
 });
 
 describe("nextTipIndex", () => {

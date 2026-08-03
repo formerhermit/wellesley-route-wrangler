@@ -472,6 +472,14 @@ answer to the same question: somebody who opens the screen once — which is mos
 people, because it opens itself — sat there and watched one joke never change.
 A rotation nobody is around for is not a rotation.
 
+That is also why there are two dozen of them rather than a handful: at four and
+a half seconds each, a short list comes round in front of anybody who reads the
+rules properly, and a joke you have already seen is worse than no joke. Two
+dozen is nearly two minutes. They are seen in an order nobody controls, so each
+one has to land on its own — none of them may set up another — and each is held
+to sixty characters, which is the two lines the megaphone's box has on a phone
+before the strip starts growing into the rules above it.
+
 That makes it the one piece of this that a timer drives rather than CSS, so it
 is the one piece that has to ask about `prefers-reduced-motion` itself. It
 does, through the same hook the map uses, and holds on a single tip when the
@@ -594,7 +602,9 @@ no skipping ahead, and a completed level staying open through a reorder.
 
 `src/game/tips.test.ts` holds the how-to-play tip to being a rotation: it walks
 a full turn of it and asserts that no tip follows itself and that one turn is
-every tip exactly once. The joke is not testable; that it changes is.
+every tip exactly once. It also holds each one to sixty characters, so a tip
+long enough to grow the strip it lives in fails rather than ships. The joke is
+not testable; that it changes, and that it fits, are.
 
 ## The club table
 
