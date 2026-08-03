@@ -264,13 +264,19 @@ export interface Level {
    */
   canalTail?: { x: number; y: number }[];
   /**
-   * Built-up ground: the grey the town is standing on (#101).
+   * Built-up ground: the grey a place is standing on (#101).
    *
    * A trail map is a field, and `map-ground--trail` tints the whole of it
    * green, which is why those maps read as somewhere. A town map had no
    * equivalent and was one flat beige with things drawn on it, so this is the
    * town's version — except that a town is not uniformly built up, so it is
    * placed rather than applied.
+   *
+   * Not town-only, though it started that way. A trail map is only *mostly* a
+   * field: a raceway apron and a car park out on the heath are hardstanding,
+   * and drawing them as grass is the same mistake in the other direction. The
+   * colour differs by theme — see `ground-patch--trail` — because grey mixed
+   * to sit against cream paper reads as a warm blotch against grass.
    *
    * Drawn under the roads and under everything else, like the gardens. It is
    * ground, so a road crossing it is the point rather than a clash, and

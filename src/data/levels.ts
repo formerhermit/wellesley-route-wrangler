@@ -4,6 +4,7 @@ import { fleetPondRun } from "./fleetPondRun";
 import { hawleyLake } from "./hawleyLake";
 import { loopyRun } from "./loopyRun";
 import { spookyRun } from "./spookyRun";
+import { thursdayNightRun } from "./thursdayNightRun";
 import { thursdaySocialRun } from "./thursdaySocialRun";
 import { thursleyCommon } from "./thursleyCommon";
 import { thursdayTownRun } from "./thursdayTownRun";
@@ -22,4 +23,5 @@ export const levels: Level[] = [
   hawleyLake,
   christmasRun,
   thursleyCommon,
+  thursdayNightRun,
 ];

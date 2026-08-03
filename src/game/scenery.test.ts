@@ -309,7 +309,15 @@ describe.each(levels.map((level) => [level.id, level] as const))(
      * Ground is allowed under anything — roads crossing it is the point — so
      * the only thing it can get wrong is running off the paper, where it would
      * square off against the rounded corner of the map instead of fading into
-     * it. Only town maps have any: a trail map is already a field.
+     * it.
+     *
+     * This used to assert that only town maps had any, on the reasoning that a
+     * trail map is already a field. It is not quite: a trail map is mostly a
+     * field, and the raceway apron and the car park on the Thursday Night Run
+     * are hardstanding wherever they happen to be. The rule that replaced it is
+     * about colour rather than permission — a patch takes its theme's own grey,
+     * because the town's was mixed against cream paper and reads as a warm
+     * blotch on grass.
      */
     it("keeps the built-up ground on the map", () => {
       for (const patch of level.ground ?? []) {
@@ -318,7 +326,26 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         expect(patch.x + patch.width).toBeLessThanOrEqual(level.view.width);
         expect(patch.y + patch.height).toBeLessThanOrEqual(level.view.height);
       }
-      if (level.theme !== "town") expect(level.ground ?? []).toEqual([]);
+    });
+
+    /*
+     * Two patches that overlap merge into one shape with a seam across it,
+     * which is neither of the two areas anybody meant to draw. They may abut;
+     * they may not overlap.
+     */
+    it("does not lay one patch of ground over another", () => {
+      const patches = level.ground ?? [];
+      const overlapping = patches.flatMap((a, i) =>
+        patches.slice(i + 1).flatMap((b) =>
+          a.x < b.x + b.width &&
+          b.x < a.x + a.width &&
+          a.y < b.y + b.height &&
+          b.y < a.y + a.height
+            ? [`${i} over ${patches.indexOf(b)}`]
+            : [],
+        ),
+      );
+      expect(overlapping).toEqual([]);
     });
 
     it("keeps its scenery on the map", () => {

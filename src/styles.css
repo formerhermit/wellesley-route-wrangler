@@ -585,6 +585,20 @@ body {
 }
 
 /*
+ * The same idea out of town, and it needs its own colour rather than the
+ * town's. A trail map's ground is tinted green, and #ebe7dd was mixed to sit a
+ * shade off cream paper — on grass it reads as a pale warm blotch rather than
+ * as hardstanding. This is neutral and a touch darker, so the raceway apron and
+ * the car park read as the concrete they are against the heath around them.
+ *
+ * Lower specificity than the dusk and frost rules on purpose: the light still
+ * wins over the theme.
+ */
+.ground-patch--trail {
+  fill: #dad8d2;
+}
+
+/*
  * The trail run is out in fields, so the whole map is grass rather than a
  * green patch on paper. Kept well short of the woods' own green, so the wood
  * still reads as a wood on top of it.

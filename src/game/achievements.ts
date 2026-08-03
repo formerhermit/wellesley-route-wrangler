@@ -263,7 +263,7 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
  * The book keeps failures as well as successes, which is what makes this
  * answerable at all — "found everything" is Local Legend's question, and this
  * one also asks what it cost. One dud spoils a map for good, but there are
- * nine of them to try it on, and two carry only a pair of routes each.
+ * eleven of them to try it on, and two carry only a pair of routes each.
  */
 function hasAFlawlessMap(runs: Run[], levels: Level[]): boolean {
   return levels.some((level) => {

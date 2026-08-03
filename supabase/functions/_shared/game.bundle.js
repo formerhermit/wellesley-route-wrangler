@@ -2746,6 +2746,499 @@ const spookyRun = {
 };
 
 //#endregion
+//#region src/data/thursdayNightRun.ts
+/**
+* The third Thursday on the roster, and the one that leaves town altogether:
+* out of the garrison and onto the Aldershot military training area.
+*
+* The geography is real and so are the names. Out from the Duke of Wellington
+* on Round Hill, up Claycart Road past Aldershot Raceway — stock cars and
+* bangers, on the flat at Claycart Bottom — north by Rushmoor Arena and Wharf
+* Copse, round Puckridge Hill and its car park, and home across Laffan's
+* Plain, Eelmoor Plain, Long Valley and the pines of Jubilee Plantation. All
+* of it is army land, which is why a red flag matters and why nobody out here
+* is surprised by soldiers.
+*
+* Daylight, pigeons and the house theme, exactly as levels 1, 3 and 5 are: no
+* `mood`, no `flock`, no `music`. Those three fields between them are the
+* Halloween and Christmas kit, and a Thursday is not an occasion.
+* `nightLevel.test.ts` holds it to that, because an early draft went out at
+* dusk with crows and simply read as a second Spooky Run.
+*
+* `theme: "trail"` because the ground is heath, sand and plantation. The town
+* theme would run terraces along the edge of Long Valley.
+*
+* The Basingstoke Canal is genuinely up there, under the road at Wharf Copse,
+* and is not drawn. A canal enters from the right-hand edge at a fixed height
+* and has to be given somewhere to go; on this map the only corridor heading
+* the right way is already occupied by the road from Puckridge Hill, and water
+* running parallel to a road a dozen units away reads as a second road. Better
+* absent than wrong.
+*/
+const thursdayNightRun = {
+	id: "thursday-night-run",
+	title: "Thursday Night Run",
+	strapline: "Mind the flags.",
+	instructions: "Out from the Duke and up Claycart Road past the banger track, round by Puckridge and home through the plantation. It is army land, and the army has opinions about where you run.",
+	theme: "trail",
+	startNodeId: "wellington-statue",
+	finishNodeId: "wellington-statue",
+	view: {
+		width: 800,
+		height: 560
+	},
+	followers: [{
+		kind: "dog",
+		nodeId: "puckridge-car-park",
+		dx: 62,
+		dy: -18
+	}],
+	objectives: [
+		{
+			kind: "start",
+			detail: "Everyone gathers under the horse, as ever."
+		},
+		{
+			kind: "finish",
+			detail: "Route closes the loop."
+		},
+		{
+			kind: "distance",
+			minKm: 8.5,
+			maxKm: 11,
+			tooLong: {
+				title: "Accidental Recce",
+				message: "{km} km of army land on a Thursday. Two people have run out of water and one has begun asking whether the Raceway does teas."
+			},
+			tooShort: {
+				title: "Barely Off The Tarmac",
+				message: "{km} km. The group got as far as the training area, had a look at it, and came home. Nobody's shoes need washing."
+			}
+		},
+		{
+			kind: "visit",
+			nodeIds: ["banger-track"],
+			what: "the Banger Track",
+			reportLabel: "Bangers inspected",
+			done: "Past the track. Gates shut, nothing racing, everyone disappointed.",
+			pending: "Nowhere near the banger track yet.",
+			missed: {
+				title: "You Missed The Bangers",
+				message: "A run round Claycart that never went past the stock car track. That is the one thing out here anybody actually wanted to look at."
+			}
+		},
+		{
+			kind: "visit",
+			nodeIds: ["puckridge-car-park"],
+			what: "Puckridge Car Park",
+			reportLabel: "Puckridge reached",
+			done: "Round the car park, past the one car nobody can account for.",
+			pending: "Puckridge is still a long way off.",
+			missed: {
+				title: "Puckridge Went Unvisited",
+				message: "The whole point of coming up here was the turn at Puckridge. You have instead run a small circle near the road for no reason at all."
+			},
+			stranded: {
+				title: "Nobody Left The Car Park",
+				message: "The group has stopped at Puckridge and is standing in a ring looking at a map on somebody's phone. The phone is at four per cent."
+			}
+		},
+		{
+			kind: "max-node-type",
+			nodeType: "pigeon",
+			limit: 1,
+			what: "pigeon hotspot",
+			fail: {
+				title: "The Whole Heath Went Up",
+				message: "Two hotspots. The Arena flock met the Laffan's Plain flock somewhere over Claycart Bottom, and the group ran the last two kilometres without speaking."
+			}
+		},
+		{
+			kind: "avoid-closed",
+			fail: {
+				title: "The Flags Were Up",
+				message: "Red flags on the Long Valley crossing, which on a range means live firing and on a Thursday means turn round. The warden has taken the club's name and is writing it down slowly."
+			}
+		}
+	],
+	success: {
+		title: "A Proper Thursday",
+		message: "{km} km round the training area, the bangers, Puckridge, and only the one lot of pigeons. Everybody is back and only one person fell over."
+	},
+	emptyRoute: {
+		title: "Nobody Left The Duke",
+		message: "The group stood under the statue arguing about whether the flags were up until it was too late to go anywhere, and then went to the pub."
+	},
+	fallback: {
+		title: "Something Happened Out There",
+		message: "{km} km of something. No two people are telling the same version and the committee has stopped asking."
+	},
+	nodes: [
+		{
+			id: "wellington-statue",
+			x: 670,
+			y: 420,
+			label: "The Wellington Statue",
+			blurb: "start and finish, and he has seen it all before",
+			type: "statue",
+			spriteDx: 58,
+			spriteDy: -20
+		},
+		{
+			id: "claycart-bottom",
+			x: 525,
+			y: 385,
+			label: "Claycart Bottom",
+			blurb: "the dip where all the cold sits",
+			labelAbove: true
+		},
+		{
+			id: "banger-track",
+			x: 390,
+			y: 330,
+			label: "The Banger Track",
+			blurb: "stock cars on a Saturday, silent on a Thursday",
+			type: "car",
+			labelAbove: true
+		},
+		{
+			id: "rushmoor-arena",
+			x: 470,
+			y: 220,
+			label: "Rushmoor Arena",
+			blurb: "pigeon hotspot, and they own the stands",
+			type: "pigeon",
+			sprite: "sportscentre",
+			spriteDx: -34
+		},
+		{
+			id: "wharf-copse",
+			x: 645,
+			y: 265,
+			label: "Wharf Copse",
+			blurb: "a corner of trees, and the only bench out here",
+			type: "woods",
+			labelSide: "right",
+			spriteDx: -62,
+			spriteDy: -42
+		},
+		{
+			id: "puckridge-car-park",
+			x: 690,
+			y: 130,
+			label: "Puckridge Car Park",
+			blurb: "somebody has left their lights on",
+			type: "carpark"
+		},
+		{
+			id: "puckridge-hill",
+			x: 525,
+			y: 105,
+			label: "Puckridge Hill",
+			blurb: "massive hill, and it goes on",
+			type: "hill",
+			labelAbove: true,
+			spriteDx: -66,
+			spriteDy: -10
+		},
+		{
+			id: "laffans-plain",
+			x: 355,
+			y: 145,
+			label: "Laffan's Plain",
+			blurb: "pigeon hotspot, and Cody flew off it in 1908",
+			type: "pigeon",
+			sprite: "hangar",
+			labelAbove: true,
+			spriteDx: 2,
+			spriteDy: -70
+		},
+		{
+			id: "eelmoor-plain",
+			x: 180,
+			y: 240,
+			label: "Eelmoor Plain",
+			blurb: "sand, in your shoes, immediately",
+			type: "sand",
+			labelAbove: true,
+			spriteDx: -36,
+			spriteDy: 30
+		},
+		{
+			id: "long-valley",
+			x: 130,
+			y: 375,
+			label: "Long Valley",
+			blurb: "tank ruts, and every one of them full of water",
+			type: "mud",
+			labelAbove: true
+		},
+		{
+			id: "jubilee-plantation",
+			x: 255,
+			y: 470,
+			label: "Jubilee Plantation",
+			blurb: "pines, needles, and no view whatsoever",
+			type: "woods"
+		},
+		{
+			id: "firs-hill",
+			x: 455,
+			y: 480,
+			label: "Firs Hill",
+			blurb: "the last climb, and everyone knows it is coming",
+			type: "hill",
+			spriteDx: -48,
+			spriteDy: 25
+		}
+	],
+	roads: [
+		{
+			id: "statue-claycart",
+			from: "wellington-statue",
+			to: "claycart-bottom",
+			distanceKm: 1
+		},
+		{
+			id: "claycart-bangers",
+			from: "claycart-bottom",
+			to: "banger-track",
+			distanceKm: .8
+		},
+		{
+			id: "bangers-arena",
+			from: "banger-track",
+			to: "rushmoor-arena",
+			distanceKm: .7,
+			pigeonRisk: .5
+		},
+		{
+			id: "arena-wharf",
+			from: "rushmoor-arena",
+			to: "wharf-copse",
+			distanceKm: 1.1,
+			pigeonRisk: .4
+		},
+		{
+			id: "wharf-puckridge-park",
+			from: "wharf-copse",
+			to: "puckridge-car-park",
+			distanceKm: .9
+		},
+		{
+			id: "puckridge-park-hill",
+			from: "puckridge-car-park",
+			to: "puckridge-hill",
+			distanceKm: .8,
+			hill: true
+		},
+		{
+			id: "puckridge-hill-laffans",
+			from: "puckridge-hill",
+			to: "laffans-plain",
+			distanceKm: 1,
+			surface: "trail",
+			hill: true,
+			pigeonRisk: .5
+		},
+		{
+			id: "laffans-eelmoor",
+			from: "laffans-plain",
+			to: "eelmoor-plain",
+			distanceKm: 1.2,
+			surface: "trail",
+			pigeonRisk: .4
+		},
+		{
+			id: "eelmoor-valley",
+			from: "eelmoor-plain",
+			to: "long-valley",
+			distanceKm: .9,
+			surface: "trail"
+		},
+		{
+			id: "valley-jubilee",
+			from: "long-valley",
+			to: "jubilee-plantation",
+			distanceKm: 1
+		},
+		{
+			id: "jubilee-firs",
+			from: "jubilee-plantation",
+			to: "firs-hill",
+			distanceKm: .7,
+			hill: true
+		},
+		{
+			id: "firs-statue",
+			from: "firs-hill",
+			to: "wellington-statue",
+			distanceKm: 1.4
+		},
+		{
+			id: "claycart-firs",
+			from: "claycart-bottom",
+			to: "firs-hill",
+			distanceKm: 1
+		},
+		{
+			id: "wharf-statue",
+			from: "wharf-copse",
+			to: "wellington-statue",
+			distanceKm: 1.8
+		},
+		{
+			id: "arena-puckridge-hill",
+			from: "rushmoor-arena",
+			to: "puckridge-hill",
+			distanceKm: 1.5,
+			surface: "trail",
+			hill: true,
+			pigeonRisk: .4
+		},
+		{
+			id: "puckridge-hill-wharf",
+			from: "puckridge-hill",
+			to: "wharf-copse",
+			distanceKm: 1.2,
+			surface: "trail",
+			hill: true
+		},
+		{
+			id: "eelmoor-bangers",
+			from: "eelmoor-plain",
+			to: "banger-track",
+			distanceKm: 1.2,
+			surface: "trail"
+		},
+		{
+			id: "bangers-valley",
+			from: "banger-track",
+			to: "long-valley",
+			distanceKm: 1.2,
+			surface: "trail",
+			closed: true
+		}
+	],
+	ground: [
+		{
+			x: 300,
+			y: 280,
+			width: 168,
+			height: 108
+		},
+		{
+			x: 492,
+			y: 342,
+			width: 134,
+			height: 92
+		},
+		{
+			x: 618,
+			y: 74,
+			width: 152,
+			height: 106
+		}
+	],
+	scatter: [
+		{
+			x: 250,
+			y: 240,
+			kind: "soldier",
+			variant: 1
+		},
+		{
+			x: 285,
+			y: 255,
+			kind: "soldier",
+			variant: 3,
+			flip: true
+		},
+		{
+			x: 150,
+			y: 145,
+			kind: "soldier",
+			variant: 0
+		},
+		{
+			x: 300,
+			y: 40,
+			kind: "soldier",
+			variant: 2,
+			flip: true
+		},
+		{
+			x: 60,
+			y: 70,
+			kind: "gorse",
+			variant: 1
+		},
+		{
+			x: 60,
+			y: 470,
+			kind: "gorse",
+			variant: 1
+		},
+		{
+			x: 350,
+			y: 420,
+			kind: "gorse"
+		},
+		{
+			x: 620,
+			y: 350,
+			kind: "gorse",
+			variant: 1
+		},
+		{
+			x: 95,
+			y: 300,
+			kind: "rock"
+		},
+		{
+			x: 440,
+			y: 60,
+			kind: "rock"
+		},
+		{
+			x: 745,
+			y: 340,
+			kind: "tree"
+		},
+		{
+			x: 555,
+			y: 520,
+			kind: "tree"
+		},
+		{
+			x: 620,
+			y: 175,
+			kind: "bench"
+		},
+		{
+			x: 205,
+			y: 105,
+			kind: "signpost"
+		},
+		{
+			x: 330,
+			y: 500,
+			kind: "dog"
+		},
+		{
+			x: 500,
+			y: 300,
+			kind: "butterfly"
+		},
+		{
+			x: 390,
+			y: 230,
+			kind: "warning"
+		}
+	]
+};
+
+//#endregion
 //#region src/data/thursdaySocialRun.ts
 /**
 * Declarative level content only. No game behaviour lives in this file — the
@@ -4433,7 +4926,8 @@ const levels = [
 	spookyRun,
 	hawleyLake,
 	christmasRun,
-	thursleyCommon
+	thursleyCommon,
+	thursdayNightRun
 ];
 
 //#endregion

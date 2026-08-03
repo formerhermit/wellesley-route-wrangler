@@ -177,13 +177,50 @@ are compulsory on the reserve from April to September, which is exactly the
 sort of rule somebody's dog has never heard of, so it falls in at the Mire and
 comes with you.
 
+**Level 11 — Thursday Night Run** — the third Thursday on the roster, and the
+one that leaves town altogether. Out from the Duke of Wellington on Round Hill,
+up Claycart Road past Aldershot Raceway, north by Rushmoor Arena and Wharf
+Copse, round Puckridge Hill and its car park, and home across Laffan's Plain,
+Eelmoor Plain, Long Valley and the pines of Jubilee Plantation. 8.5 to 11 km,
+taking in the banger track and Puckridge, past no more than one pigeon hotspot,
+and not over the Long Valley crossing while the range is live. Five winning
+routes.
+
+Every name on it is real and so is the ground — this is Aldershot military
+training area, which is why a red flag matters and why nobody out there is
+surprised by soldiers. Red flags do go up on Long Valley, and going anyway is
+exactly the decision a group of adults makes when one of them says they are
+sure it is fine.
+
+The squeeze is the hotspots. Both ways north out of the banger track go through
+one — Rushmoor Arena on the near side, Laffan's Plain on the far — so every
+legal run disturbs exactly one, and the cap of one is binding rather than
+decorative. The route the club actually runs takes both in, and fails.
+
+It is a Thursday and it is drawn like one: no `mood`, no `flock`, no `music`,
+exactly as levels 1, 3 and 5. Those three fields between them are the Halloween
+and Christmas kit, and reaching for them makes an ordinary week look like an
+occasion. The first draft went out at dusk with crows and simply read as a
+second Spooky Run, so `nightLevel.test.ts` now asserts all three are unset —
+which is a cheaper way of saying "this is not the seasonal one" than a comment
+is. `theme: "trail"` stays, because the ground really is heath and plantation;
+the town theme would run terraces along the edge of Long Valley.
+
+Two roads were cut before it shipped and neither for the look of the thing.
+Rushmoor Arena to Laffan's Plain enabled no winning route at all and cost 1,760
+wrong ones. The chord from Long Valley to Firs Hill undercut Bourley Road so
+cheaply that the plantation, Long Valley and Firs Hill were on no winning route
+between them — three landmarks with names and nothing to do. Rank 9 and 2,638
+loops came down to rank 7 and 280, with more winners at the end of it than at
+the start, and `nightLevel.test.ts` now holds every junction to being on one.
+
 Objectives are declared per level as data, with their own failure copy, so the
 rules in `src/game/` know nothing about canals, cows or pigeons. Scenery is
 placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
-### What the town is standing on
+### What a place is standing on
 
 A trail map tints its whole ground green, which is why those maps read as
 being somewhere. A town map had no equivalent and was one flat beige with
@@ -204,6 +241,21 @@ cool rather than another beige, so it separates from the paper instead of
 reading as a printing fault, and it goes with the light — blue-grey at dusk,
 paler at frost — so a town stays one place under one sky.
 
+It is no longer town-only, which it was until the Thursday Night Run wanted
+grey round the raceway and the Puckridge car park. "A trail map is already a
+field" turned out to be nearly true rather than true: a trail map is *mostly* a
+field, and an oval of hardstanding with a car park attached is not one. Drawing
+it as grass is the same mistake as flat beige, pointing the other way.
+
+What that did need was a second colour. The town's `#ebe7dd` was mixed to sit a
+shade off cream paper; on grass it reads as a pale warm blotch rather than as
+concrete, so `ground-patch--trail` is neutral and a touch darker. Both sit at
+lower specificity than the dusk and frost rules, so the light still wins over
+the theme. The test that used to forbid ground off a town map now forbids two
+patches overlapping instead — two of them on top of each other merge into a
+single shape with a seam across it, which is neither of the areas anybody
+meant.
+
 ### How dense a new map can afford to be
 
 One number is worth watching when drawing a new level, because it is the only
@@ -220,6 +272,7 @@ walks every one of them to work out the "N routes to find here" denominator.
 | Christmas Run | 12 | 20 | 9 | 194 | 13 ms |
 | Spooky Run | 12 | 20 | 9 | 211 | 8 ms |
 | Caesar's Camp | 12 | 19 | 8 | 145 | 4 ms |
+| Thursday Night | 12 | 18 | 7 | 280 | 1 ms |
 | Town, Fleet Pond, Loopy, Hawley | 11–12 | 17–18 | 7 | 33–72 | 0.6–1.5 ms |
 
 Two extra ranks is thirty times the work. It is memoised per level in a
@@ -227,9 +280,16 @@ Two extra ranks is thirty times the work. It is memoised per level in a
 and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
-somebody's phone rather than here. Rank 7 to 9 is where nine of the ten
+somebody's phone rather than here. Rank 7 to 9 is where ten of the eleven
 levels sit and is the comfortable range; past 11 wants measuring before it
 ships.
+
+Rank is the ceiling rather than the count, though, and the Thursday Night Run
+is the row that says so: rank 7, like four other maps, and four times their
+loops between them. What the other four have is a long way round with few ways
+off it. Spread the same number of roads evenly and every junction becomes a
+decision, which is the thing that actually multiplies. Two maps at the same
+rank can differ by an order of magnitude, so measure rather than assume.
 
 The lever, if a map comes out too tangled, is not to delete a road. Splitting a
 busy junction into two that do not join each other sheds a rank and keeps every
@@ -239,8 +299,9 @@ help: it adds a junction and a road, and the rank comes out the same.
 
 The same density is what decides how many *wrong* routes a level has, since
 failures are simply every loop that is not a winner. Tilford has 1,179 of them
-against four winners, which is a hit rate of one in 296; no other level is
-worse than one in 53.
+against four winners, which is a hit rate of one in 296; the Thursday Night
+Run's 275 against five is one in 56, and no other level is worse than one in
+53.
 
 A level may also `scatter` scenery by hand, on top of whatever its theme puts
 down, for the corners no road reaches — cats, bins, traffic lights and parked
@@ -300,8 +361,8 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 49 winning routes across the ten levels — and 2,455 distinct loops
-— so a completed fixture list is nowhere near a finished game.
+There are 54 winning routes across the eleven levels — and 2,735 distinct
+loops — so a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
 nobody can see is not a total. The header carries the club's all-time points
@@ -730,16 +791,28 @@ perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
 
 `trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
-`hawleyLevel.test.ts`, `christmasLevel.test.ts` and `thursleyLevel.test.ts` do
-the same for levels 2, 6, 7, 8, 9 and 10 against their own maps. Most of them end by walking every route out
-of the start and back, so each level is held to exactly its winners. A road
-whose distance drifts takes the count with it and fails.
+`hawleyLevel.test.ts`, `christmasLevel.test.ts`, `thursleyLevel.test.ts` and
+`nightLevel.test.ts` do the same for levels 2, 6, 7, 8, 9, 10 and 11 against
+their own maps. Most of them end by walking every route out of the start and
+back, so each level is held to exactly its winners. A road whose distance
+drifts takes the count with it and fails.
+
+`nightLevel.test.ts` also walks the map a second time to check that every
+junction on it is on at least one winning route. That is a rule for that map
+rather than for the roster — Tilford's Village Shop and Thursley's Elstead
+Green are deliberately out of reach and better for it — but the Thursday Night
+Run was not meant to have any, and one draft of it had three.
+
+That file also pins the level to daylight: `mood`, `flock` and `music` all
+unset. It is the one assertion here that is about restraint rather than
+correctness, and it is there because the first draft reached for the Halloween
+kit for a level that is simply a Thursday.
 
 Those walks count *journeys* — every way round, in every order — which is a
 larger number than the routes the game counts, and deliberately so: it is the
 stricter check of the two, and a level whose journeys move has certainly
 changed. The number a player actually sees is the deduplicated one, and every
-level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6]`. Both
+level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5]`. Both
 are asserted, because a change that moves one and not the other is exactly the
 kind of thing worth being stopped by.
 

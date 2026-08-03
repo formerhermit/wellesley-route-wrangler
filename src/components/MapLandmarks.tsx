@@ -343,7 +343,7 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
       {(level.ground ?? []).map((patch, index) => (
         <rect
           key={index}
-          className="ground-patch"
+          className={`ground-patch ground-patch--${level.theme}`}
           x={patch.x}
           y={patch.y}
           width={patch.width}
