@@ -11,10 +11,12 @@ const REPO_URL = "https://github.com/formerhermit/wellesley-route-wrangler";
 export function ClubFooter({ onShowPrivacy }: { onShowPrivacy: () => void }) {
   return (
     <footer className="club-footer">
+      {/* One sentence shorter than it was (#98). The claim and the thing that
+          stops people coming are the whole of the job; the button underneath
+          already says what to do about it. */}
       <p className="club-footer__text">
-        <strong>Wellesley Runners are actually a real running group.</strong> If
-        this made you smile, there is an actual Thursday run with actual people,
-        and nobody minds how fast you are.
+        <strong>Wellesley Runners are actually a real running group.</strong>{" "}
+        There is a real Thursday run, and nobody minds how fast you are.
       </p>
 
       <div className="club-footer__actions">
