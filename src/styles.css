@@ -2272,8 +2272,10 @@ body {
   color: var(--ink-soft);
 }
 
-.objectives__found--more {
-  color: var(--club);
+/* Some found, but not all: the count is the thing being emphasised, so it
+   takes the weight rather than the whole row. */
+.objectives__found--more .objectives__count {
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -3314,21 +3316,64 @@ body {
 }
 
 /* The count on the objective panel, once it has a book behind it. */
+/*
+ * The door to the run book (#100).
+ *
+ * It was a sentence with an underlined phrase on the end. The whole row was
+ * always the target — `width: 100%` saw to that — but only the words looked
+ * like one, so on a phone it read as a desktop link and tapped like a guess.
+ * Nothing about the target has changed; it just looks like what it already
+ * was.
+ */
 .objectives__found--open {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
   width: 100%;
+  min-height: 44px;
+  margin-top: 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border: 2px solid color-mix(in srgb, var(--brand-blue) 30%, var(--line));
+  border-top: 2px solid color-mix(in srgb, var(--brand-blue) 30%, var(--line));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--brand-blue) 5%, var(--card));
   text-align: left;
-  border: 0;
-  background: none;
   font: inherit;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
   cursor: pointer;
 }
 
+.objectives__found--open:hover {
+  border-color: var(--club);
+  background: color-mix(in srgb, var(--brand-blue) 12%, var(--card));
+}
+
+.objectives__found--open:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
+/* Right-hand end of the row, and the part that says it opens something. */
 .objectives__open-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 0 0 auto;
   color: var(--club);
   font-weight: 700;
-  text-decoration: underline;
   white-space: nowrap;
+}
+
+.objectives__open-chevron {
+  width: 7px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* ---------- The club table ---------- */

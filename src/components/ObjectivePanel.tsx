@@ -74,8 +74,20 @@ export function ObjectivePanel({
             aria-haspopup="dialog"
             onClick={onOpenBook}
           >
-            {routesFound(found, toFind)}
-            <span className="objectives__open-hint"> See the book</span>
+            <span className="objectives__count">{routesFound(found, toFind)}</span>
+            <span className="objectives__open-hint">
+              See the book
+              {/* Drawn rather than a "›" in the text, which a screen reader
+                  would be free to read out. */}
+              <svg
+                className="objectives__open-chevron"
+                viewBox="0 0 8 12"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M1.5 1 L6.5 6 L1.5 11" />
+              </svg>
+            </span>
           </button>
         ) : (
           <p className="objectives__found">{routesFound(found, toFind)}</p>
