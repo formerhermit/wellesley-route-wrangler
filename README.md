@@ -220,6 +220,39 @@ placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
+**Level 12 — Frensham Great Pond** — the third map on the roster with open
+water on it, and the one that had to not be about the water. Fleet Pond is a
+wheel round it and Hawley is a lap of it; a third drawn the same way would be
+the least distinctive level here. So the Great Pond is lapped in the first
+kilometre and then left behind, and the run is the crossing of Frensham Common
+on Sandy Lane, out to the Little Pond and back over the Devil's Jumps. 9 to
+10.5 km, both ponds, up Stony Jump, and not down the path roped off for the
+nesting. Six winning routes.
+
+All of it is real, including the beach. The Great Pond has a National Trust
+car park at its west end and a genuine sand shore along its north side —
+families, windbreaks and an ice cream queue, in Surrey. The Sailing Club is on
+Pond Lane and the Pond Hotel on Bacon Lane, two minutes from a car park full of
+muddy runners. The King's Ridge is 90 m and Stony Jump, nearest of the three
+Devil's Jumps at Churt, is 120 m. The closure is a real restriction rather than
+a joke: the common is heath, heath has ground-nesting birds on it, and the
+Trust ropes paths off through the season for exactly that reason.
+
+The Great Pond is drawn from four bank junctions the way Fleet Pond and Hawley
+are, and the order they are declared in **is** the order round the water —
+`waterThrough` walks the list, so a bank junction filed in the wrong place
+folds the shape inside out. `frenshamLevel.test.ts` pins that order, because
+nothing else would notice until somebody looked at the map.
+
+Two of its roads are worth the note. The chord from the King's Ridge to the
+Flashes costs 456 wrong loops and enables no extra winner, which is normally
+exactly the profile of a road to cut — and cutting it was wrong. Without it the
+east is a single chain from the Little Pond to Stony Jump, so reaching either
+end means reaching both, and the level's two waypoints can then never fail
+independently. Two objectives that cannot disagree are one objective with two
+ticks. Findability is worth a lot; it is not worth a rule that is quietly
+pretending to be two.
+
 ### What a place is standing on
 
 A trail map tints its whole ground green, which is why those maps read as
@@ -273,6 +306,7 @@ walks every one of them to work out the "N routes to find here" denominator.
 | Spooky Run | 12 | 20 | 9 | 211 | 8 ms |
 | Caesar's Camp | 12 | 19 | 8 | 145 | 4 ms |
 | Thursday Night | 12 | 18 | 7 | 280 | 1 ms |
+| Frensham | 12 | 19 | 8 | 790 | 6 ms |
 | Town, Fleet Pond, Loopy, Hawley | 11–12 | 17–18 | 7 | 33–72 | 0.6–1.5 ms |
 
 Two extra ranks is thirty times the work. It is memoised per level in a
@@ -280,7 +314,7 @@ Two extra ranks is thirty times the work. It is memoised per level in a
 and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
-somebody's phone rather than here. Rank 7 to 9 is where ten of the eleven
+somebody's phone rather than here. Rank 7 to 9 is where eleven of the twelve
 levels sit and is the comfortable range; past 11 wants measuring before it
 ships.
 
@@ -300,8 +334,8 @@ help: it adds a junction and a road, and the rank comes out the same.
 The same density is what decides how many *wrong* routes a level has, since
 failures are simply every loop that is not a winner. Tilford has 1,179 of them
 against four winners, which is a hit rate of one in 296; the Thursday Night
-Run's 275 against five is one in 56, and no other level is worse than one in
-53.
+Run's 275 against five is one in 56, Frensham's 784 against six is one in 132,
+and no other level is worse than one in 53.
 
 A level may also `scatter` scenery by hand, on top of whatever its theme puts
 down, for the corners no road reaches — cats, bins, traffic lights and parked
@@ -361,7 +395,7 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 54 winning routes across the eleven levels — and 2,735 distinct
+There are 60 winning routes across the twelve levels — and 3,525 distinct
 loops — so a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
@@ -792,14 +826,14 @@ overrun by pigeons.
 
 `trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
 `hawleyLevel.test.ts`, `christmasLevel.test.ts`, `thursleyLevel.test.ts` and
-`nightLevel.test.ts` do the same for levels 2, 6, 7, 8, 9, 10 and 11 against
-their own maps. Most of them end by walking every route out of the start and
+`nightLevel.test.ts` and `frenshamLevel.test.ts` do the same for levels 2, 6,
+7, 8, 9, 10, 11 and 12 against their own maps. Most of them end by walking every route out of the start and
 back, so each level is held to exactly its winners. A road whose distance
 drifts takes the count with it and fails.
 
-`nightLevel.test.ts` also walks the map a second time to check that every
-junction on it is on at least one winning route. That is a rule for that map
-rather than for the roster — Tilford's Village Shop and Thursley's Elstead
+`nightLevel.test.ts` and `frenshamLevel.test.ts` each walk their map a second
+time to check that every junction on it is on at least one winning route. That
+is a rule for those two maps rather than for the roster — Tilford's Village Shop and Thursley's Elstead
 Green are deliberately out of reach and better for it — but the Thursday Night
 Run was not meant to have any, and one draft of it had three.
 
@@ -812,7 +846,7 @@ Those walks count *journeys* — every way round, in every order — which is a
 larger number than the routes the game counts, and deliberately so: it is the
 stricter check of the two, and a level whose journeys move has certainly
 changed. The number a player actually sees is the deduplicated one, and every
-level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5]`. Both
+level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5, 6]`. Both
 are asserted, because a change that moves one and not the other is exactly the
 kind of thing worth being stopped by.
 
