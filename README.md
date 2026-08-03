@@ -323,6 +323,40 @@ any route whose roads have stopped describing a walk — a map edited under it �
 so a route the level has outgrown is not in the book to be pressed in the first
 place, and the loading path has no failure case to report.
 
+## Sharing a run
+
+Every finished run offers a picture of itself: the map, the route drawn over
+it, what the club made of it, and the three figures worth boasting about.
+
+It is **built rather than screenshotted**, and that is the whole design.
+Serialising the map on screen looks like the obvious move and produces a page
+of unstyled paths with broken image links — a detached SVG has no stylesheet,
+and a canvas will not fetch what a `<image href>` points at. Worse, one
+external reference taints the canvas and `toBlob` throws instead of returning a
+picture, so the failure is a share with no image and nothing in the console.
+
+So `src/game/shareCard.ts` writes the SVG from scratch, every colour spelled
+out as an attribute, nothing pointing anywhere. It is pure, so the test can
+read it: `shareCard.test.ts` walks a real loop on every level and checks the
+card has no `<image>`, no `url(`, no external `href`, and no `class` — the four
+ways this quietly stops working. That is worth more than checking it looks
+right, because looking right is not the failure mode.
+
+It is also why the scenery is missing. The cow, the goose and the Duke are all
+PNGs. The route, the roads it was run on, and the verdict are the parts worth
+looking at anyway, which is the same call the run book's thumbnails make.
+
+Rasterising is the twenty browser-only lines in `components/shareImage.ts`, and
+all of it is best-effort: no canvas, no blob, a share sheet that refuses files
+— any of them falls back to sharing the words, which is what the button did
+before. `navigator.canShare({ files })` is the guard, because plenty of share
+sheets take text and refuse a PNG.
+
+Desktops never see a share sheet at all — the button opens the game's own menu
+there, for the reasons in `ShareButton.tsx` — so the menu grew a **Save the
+picture** entry. Without it the best part of the feature would exist only on
+phones.
+
 `src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
 **Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
 just lists of road ids — and every total is derived from them on the spot.

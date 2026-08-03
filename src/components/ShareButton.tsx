@@ -1,12 +1,22 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { payloadToClipboard } from "../game/shareText";
 import { shareLinksFor } from "../game/shareLinks";
+import { downloadShareImage } from "./shareImage";
 import type { SharePayload } from "../game/shareText";
 
 interface Props {
   payload: SharePayload;
   label: string;
   className?: string;
+  /**
+   * The picture of the run, built on demand (#33).
+   *
+   * A function rather than a `File`, because rasterising costs a canvas and
+   * most of the shares that could carry one never happen. The footer's share
+   * button has no run behind it and passes nothing, which is what makes this
+   * optional rather than empty.
+   */
+  imageFor?: () => Promise<File | undefined>;
 }
 
 /**
@@ -24,7 +34,7 @@ function prefersNativeShare(): boolean {
   return window.matchMedia("(pointer: coarse)").matches;
 }
 
-export function ShareButton({ payload, label, className = "" }: Props) {
+export function ShareButton({ payload, label, className = "", imageFor }: Props) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -77,7 +87,15 @@ export function ShareButton({ payload, label, className = "" }: Props) {
   const onShareClick = async () => {
     if (prefersNativeShare()) {
       try {
-        await navigator.share(payload);
+        // Files are the narrower half of the API: plenty of share sheets take
+        // text and refuse a PNG, so the picture is asked for and then asked
+        // about, and the words go either way.
+        const file = await imageFor?.();
+        const withImage =
+          file && navigator.canShare?.({ files: [file] })
+            ? { ...payload, files: [file] }
+            : payload;
+        await navigator.share(withImage);
         return;
       } catch (error) {
         // A cancelled share sheet is not a failure worth reporting.
@@ -85,6 +103,15 @@ export function ShareButton({ payload, label, className = "" }: Props) {
       }
     }
     setOpen((wasOpen) => !wasOpen);
+  };
+
+  /* Every desktop lands here, because the native sheet is not worth opening on
+     one — so without this the picture would exist only on phones. */
+  const savePicture = async () => {
+    setOpen(false);
+    buttonRef.current?.focus();
+    const file = await imageFor?.();
+    if (file) downloadShareImage(file);
   };
 
   return (
@@ -115,6 +142,15 @@ export function ShareButton({ payload, label, className = "" }: Props) {
               {link.label}
             </a>
           ))}
+          {imageFor && (
+            <button
+              type="button"
+              className="share__option"
+              onClick={() => void savePicture()}
+            >
+              Save the picture
+            </button>
+          )}
           <button
             type="button"
             className="share__option share__option--copy"

@@ -2,6 +2,7 @@ import { Dialog } from "./Dialog";
 import { IncidentReportCard } from "./IncidentReport";
 import { ShareButton } from "./ShareButton";
 import { SubmitToTable } from "./SubmitToTable";
+import { renderShareImage } from "./shareImage";
 import { buildRunShare } from "../game/shareText";
 import { MysteryBadge } from "./BadgeSprites";
 import { BADGE_ART } from "./badgeArt";
@@ -175,6 +176,7 @@ export function ResultPanel({
             toFind,
           })}
           label="Share this run"
+          imageFor={() => renderShareImage(level, route, result, report)}
         />
       </div>
       <p className="dialog__actions-hint">
