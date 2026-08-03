@@ -12,9 +12,12 @@ export interface ShareLink {
  * and that sheet has carried no social networks since Apple dropped built-in
  * Facebook and Twitter integration.
  *
- * Instagram is absent on purpose: it has no web intent at all. It is reachable
- * only through the native share sheet on a phone, and properly only with an
- * image — see issue #33.
+ * Instagram is absent on purpose, and it is the one people ask after. It has
+ * no web share intent — there is no URL that opens a composer, the way there
+ * is for the other four — so there is nothing to put in this list. On a phone
+ * it is in the native share sheet, which opens instead of this menu; on a
+ * desktop the route is Save the picture and then post it, which the menu now
+ * says out loud.
  */
 export function shareLinksFor(payload: SharePayload): ShareLink[] {
   const { text, url } = payload;

@@ -14,6 +14,53 @@
       name="copyright"
       content="© 2026 Jo Hutchins-Joss / Silly Game Studio. Code MIT; music and artwork all rights reserved."
     />
+
+    <!--
+      What a link to this game looks like when somebody pastes it somewhere.
+
+      Without these there is nothing for a crawler to build a card from, and
+      every share — Facebook, Slack, iMessage, LinkedIn, WhatsApp previews —
+      renders as a bare blue link. Facebook's sharer in particular can only
+      ever take a URL, so this is the *only* picture it will ever show; the
+      per-run card the game draws goes to share sheets on phones and never
+      reaches it.
+
+      Absolute URLs on purpose: crawlers do not resolve relative ones, and
+      og:image is the one that most often silently fails for it.
+
+      The picture is built by scripts/build-og-card.mjs and committed.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="About Five Kilometres" />
+    <meta property="og:title" content="About Five Kilometres" />
+    <meta
+      property="og:description"
+      content="A route-planning puzzle for Wellesley Runners. Plan the Thursday social run, dodge the pigeons, and get everyone home before the committee finds out."
+    />
+    <meta property="og:url" content="https://runners.sillygame.studio/" />
+    <meta
+      property="og:image"
+      content="https://runners.sillygame.studio/og-card.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="A running route drawn across a hand-drawn map of Wellesley."
+    />
+    <meta property="og:locale" content="en_GB" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="About Five Kilometres" />
+    <meta
+      name="twitter:description"
+      content="A route-planning puzzle for Wellesley Runners. Plan the Thursday social run, dodge the pigeons, and get everyone home before the committee finds out."
+    />
+    <meta
+      name="twitter:image"
+      content="https://runners.sillygame.studio/og-card.png"
+    />
+
     <title>About Five Kilometres</title>
   </head>
   <body>

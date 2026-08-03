@@ -34,3 +34,6 @@ supabase/.temp
 
 # Built by scripts/badge-proof-sheet.mjs. Something to look at, not to keep.
 badge-proof-sheet.html
+
+# Built by scripts/build-og-card.mjs on the way to public/og-card.png.
+og-card.svg

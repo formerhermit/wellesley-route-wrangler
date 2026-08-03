@@ -433,6 +433,15 @@ body {
   color: var(--club);
 }
 
+/* Not an option, and styled so nobody tries to press it. */
+.share__note {
+  margin: 0.1rem 0.55rem 0.35rem;
+  max-width: 17rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
 .share__option:focus-visible {
   outline: 3px solid var(--club);
   outline-offset: -2px;

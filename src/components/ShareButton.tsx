@@ -143,13 +143,19 @@ export function ShareButton({ payload, label, className = "", imageFor }: Props)
             </a>
           ))}
           {imageFor && (
-            <button
-              type="button"
-              className="share__option"
-              onClick={() => void savePicture()}
-            >
-              Save the picture
-            </button>
+            <>
+              <button
+                type="button"
+                className="share__option"
+                onClick={() => void savePicture()}
+              >
+                Save the picture
+              </button>
+              {/* Instagram cannot be a link in this list — it has no web share
+                  intent at all — and it is the one place people ask for. This
+                  says where the door actually is. */}
+              <p className="share__note">Instagram needs the picture, not a link.</p>
+            </>
           )}
           <button
             type="button"

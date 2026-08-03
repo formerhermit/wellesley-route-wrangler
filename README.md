@@ -357,6 +357,47 @@ there, for the reasons in `ShareButton.tsx` — so the menu grew a **Save the
 picture** entry. Without it the best part of the feature would exist only on
 phones.
 
+### Where the picture cannot go
+
+Two places, and both are worth knowing before wondering why a share looked
+thin.
+
+**Instagram is not in the menu and cannot be.** It has no web share intent —
+there is no URL that opens a composer, the way there is for WhatsApp, X,
+Facebook and Threads — so there is nothing to link to. On a phone it is in the
+native share sheet, which opens *instead* of the menu, and the picture goes
+with it. On a desktop the route is Save the picture and then post it, which the
+menu now says out loud rather than leaving people to work out.
+
+**Facebook only ever gets a link.** Its sharer takes a `u` parameter and
+nothing else, then builds its own preview by fetching that URL. No image from
+the browser can reach it, on any device. That is not a limitation of the share
+card; it is what Facebook's sharer is.
+
+### The link preview
+
+Which is what `og:` in `index.html` is for, and it had none — so every share of
+the URL, anywhere, rendered as a bare blue link with nothing to look at. That
+is the thing people actually saw.
+
+There is now a proper set of Open Graph and Twitter tags, and a 1200×630 cover
+at `/og-card.png`, drawn by `scripts/build-og-card.mjs` in the game's own
+colours and committed. The URLs in those tags are absolute, because crawlers do
+not resolve relative ones and `og:image` is the one that most often fails
+silently for it.
+
+It is a picture of *the game*, not of your run, and it cannot be otherwise: a
+crawler fetches it from the site long after the run is over, and the site is
+static, so there is nowhere to generate a per-run one. The two pictures do
+different jobs — the share card is handed to a share sheet by the browser, the
+cover is fetched by somebody else's server — which is why there are two of
+them.
+
+Rasterising is `sips`, macOS's own converter, so CI cannot rebuild the PNG and
+does not try. `qlmanage` is the more obvious shortcut and drops every `<text>`
+element on the floor, which on a picture that is mostly the game's name is not
+a small defect.
+
 `src/game/scoring.ts` is pure, like the rest of `src/game/`, and versioned.
 **Nothing anywhere stores a score.** `src/game/records.ts` keeps the routes —
 just lists of road ids — and every total is derived from them on the spot.
