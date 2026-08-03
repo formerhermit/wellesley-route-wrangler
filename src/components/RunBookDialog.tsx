@@ -115,7 +115,12 @@ export function RunBookDialog({
   const nothingYet = page.won.length === 0 && page.tried.length === 0;
 
   return (
-    <Dialog titleId="book-title" describedBy="book-intro" onClose={onClose}>
+    <Dialog
+      titleId="book-title"
+      describedBy="book-intro"
+      closeLabel="the book"
+      onClose={onClose}
+    >
       <p className="dialog__badge">The book</p>
       <h2 id="book-title" tabIndex={-1}>
         {level.title}

@@ -2389,6 +2389,7 @@ body {
 }
 
 .dialog {
+  position: relative;
   width: min(560px, 100%);
   max-height: 90vh;
   overflow-y: auto;
@@ -2397,6 +2398,58 @@ body {
   border-radius: 18px;
   box-shadow: 0 24px 60px rgb(0 0 0 / 30%);
   padding: clamp(1rem, 3vw, 1.6rem);
+}
+
+/*
+ * The X, on every dialog (#96). Sticky rather than absolute, in a row of no
+ * height, so it floats over the top-right corner and stays there while the
+ * content behind it scrolls.
+ */
+.dialog__close-row {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: flex-end;
+  height: 0;
+}
+
+.dialog__close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.dialog__close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.dialog__close:hover {
+  color: var(--ink);
+  border-color: var(--club);
+}
+
+.dialog__close:focus-visible {
+  outline: 3px solid var(--hi-vis);
+  outline-offset: 2px;
+}
+
+/* Room for it, so a long title does not run underneath. */
+.dialog h2,
+.dialog__badge {
+  padding-right: 2.6rem;
 }
 
 .dialog--failure {
@@ -4057,11 +4110,16 @@ body {
  * margin round a photograph.
  */
 .dialog--rules {
-  /* Positioned so the close button anchors to the card and not the backdrop. */
-  position: relative;
   width: min(1000px, 100%);
   padding: 0;
-  overflow: hidden;
+  /*
+   * Only sideways. This was `overflow: hidden` to keep the countryside inside
+   * the rounded corner, and it took the vertical scroll with it — so on a
+   * short screen the card was simply cut off and the fifth rule could not be
+   * reached at all. The corner is still clipped; the page can now be read.
+   */
+  overflow-x: hidden;
+  overflow-y: auto;
   animation: rules-land 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) 0.2s backwards;
 }
 
@@ -4094,40 +4152,15 @@ body {
   }
 }
 
-.rules__close {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 2px solid var(--line);
-  border-radius: 50%;
-  background: var(--card);
-  color: var(--ink-soft);
-  cursor: pointer;
+.rules__title,
+.dialog--rules .dialog__badge {
+  padding-right: 0;
 }
 
-.rules__close svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-
-.rules__close:hover {
-  color: var(--ink);
-  border-color: var(--club);
-}
-
-.rules__close:focus-visible {
-  outline: 3px solid var(--hi-vis);
-  outline-offset: 2px;
+/* This card sets its own padding to nothing, so the corner the X normally
+   inherits from the dialog is not there to inherit. */
+.dialog--rules .dialog__close-row {
+  padding: 0.7rem 0.7rem 0 0;
 }
 
 .rules__title {
@@ -4441,7 +4474,7 @@ body {
 }
 
 .pigeon--privacy {
-  height: 3.4rem;
+  height: 2.9rem;
 }
 
 /* Waiting for somebody to go first. */
@@ -4460,6 +4493,15 @@ body {
 
 .privacy__masthead {
   align-items: center;
+  /* The bird stands beside the X rather than under it: the button is 40px and
+     sits flush to the content edge, so this has to clear it and then some, or
+     the tail goes through the circle. */
+  padding-right: 3.6rem;
+}
+
+.privacy__masthead h2,
+.privacy__masthead .dialog__badge {
+  padding-right: 0;
 }
 
 .club-table__empty {

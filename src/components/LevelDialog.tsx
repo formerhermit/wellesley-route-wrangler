@@ -35,7 +35,7 @@ export function LevelDialog({
 }: Props) {
   const club = tallyAll(records, levels);
   return (
-    <Dialog titleId="levels-title" onClose={onClose}>
+    <Dialog titleId="levels-title" closeLabel="the fixture list" onClose={onClose}>
       <p className="dialog__badge">Fixture list</p>
       <h2 id="levels-title" tabIndex={-1}>
         Choose a run
@@ -97,11 +97,6 @@ export function LevelDialog({
         })}
       </ul>
 
-      <div className="dialog__actions">
-        <button type="button" className="button button--primary" onClick={onClose}>
-          Close
-        </button>
-      </div>
     </Dialog>
   );
 }

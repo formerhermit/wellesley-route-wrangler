@@ -58,7 +58,7 @@ export function ClubDialog({
   };
 
   return (
-    <Dialog titleId="club-title" onClose={onClose}>
+    <Dialog titleId="club-title" closeLabel="the club" onClose={onClose}>
       <p className="dialog__badge">Wellesley Runners</p>
       <h2 id="club-title" tabIndex={-1}>
         The club

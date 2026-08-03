@@ -61,6 +61,7 @@ export function ResultPanel({
       describedBy="result-message"
       role="alertdialog"
       className={result.success ? "dialog--success" : "dialog--failure"}
+      closeLabel="the debrief"
       onClose={onEdit}
     >
       <p className="dialog__badge">

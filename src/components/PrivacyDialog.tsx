@@ -19,7 +19,12 @@ const CONTACT_URL =
  */
 export function PrivacyDialog({ onClose }: { onClose: () => void }) {
   return (
-    <Dialog titleId="privacy-title" describedBy="privacy-intro" onClose={onClose}>
+    <Dialog
+      titleId="privacy-title"
+      describedBy="privacy-intro"
+      closeLabel="the privacy notice"
+      onClose={onClose}
+    >
       {/* The one place the joke and the subject line up: the tips have been
           claiming these are government drones for a while, and this is the
           page about what is being collected. */}

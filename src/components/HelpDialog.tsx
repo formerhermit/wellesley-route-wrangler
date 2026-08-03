@@ -131,19 +131,9 @@ export function HelpDialog({ level, onClose }: Props) {
       titleId="help-title"
       describedBy="help-intro"
       className="dialog--rules"
+      closeLabel="how to play"
       onClose={onClose}
     >
-      <button
-        type="button"
-        className="rules__close"
-        onClick={onClose}
-        aria-label="Close how to play"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M7 7l10 10M17 7L7 17" />
-        </svg>
-      </button>
-
       <h2 id="help-title" className="rules__title" tabIndex={-1}>
         <TitleSparks />
         How to play

@@ -468,6 +468,34 @@ The bar along the bottom is pinned, for the same reason every other dialog's
 actions are: the screen is taller than a phone, and the way out should not go
 over the fold with the rest of it.
 
+### The X, and where it lives
+
+Every dialog has one, and `Dialog.tsx` is why: the shell draws it, so a dialog
+gets a way out by existing rather than by remembering to grow one. It started
+as this screen's own button, which is how the other five came to have no way
+out but an action at the bottom of a page you might have to scroll to reach.
+
+It is **sticky in a row of no height**, not absolutely positioned. A dialog is
+its own scrolling box, so absolute would pin the X to the top of the *content*
+and let it scroll away — on the privacy policy, which is nearly twice the
+height of a phone, that is precisely where somebody would go looking for it.
+Zero height keeps it out of the flow, so it floats over the corner as drawn.
+
+`closeLabel` is required rather than defaulted to "Close", because six buttons
+all called Close have named none of them: a screen reader hears "Close the
+book", "Close the fixture list", "Close how to play".
+
+Only one bottom button was made redundant by it — the fixture list's, which
+said "Close" and nothing else. The rest say something ("Back to the map",
+"Fair enough", "Right, off we go"), and a sentence is not the same offer as a
+corner X, so they stay.
+
+Doing this turned up a bug in the rules screen itself. It set `overflow:
+hidden` to keep the countryside inside the rounded corner, which took the
+vertical scroll with it — so on a short screen the card was simply cut off and
+the fifth rule could not be reached at all. It is `overflow-x` now. The corner
+is still clipped; the page can be read.
+
 It arrives rather than appears. The card lands, the five rules deal themselves
 out from the picture's side one after another, the pigeon walks on, and the tip
 comes in last, because the last thing to move is the thing you look at. All of
