@@ -2206,10 +2206,16 @@ body {
   outline-offset: 2px;
 }
 
+/*
+ * Bigger than the rest, because it is the thing you came to press — but 58px
+ * and 1.05rem was bigger than "primary" needs (#99), and a phone was already
+ * being handed 48px further down the file to make it bearable. The default is
+ * most of the way to that now, so the two are a trim apart rather than a
+ * different button.
+ */
 .button--action {
-  min-height: 58px;
+  min-height: 50px;
   border-radius: 14px;
-  font-size: 1.05rem;
   box-shadow: var(--shadow);
 }
 
@@ -3459,7 +3465,6 @@ body {
   /* Still the biggest thing on the page, just not twice the size it needs. */
   .button--action {
     min-height: 48px;
-    font-size: 1rem;
   }
 
   .controls__hint {
