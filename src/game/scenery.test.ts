@@ -56,8 +56,16 @@ const LANDMARK_CLEARANCE = 26;
  */
 const LABEL_CLEARANCE = 16;
 
-/** The moon is scenery in the sky, and the sky is over everything. */
-const OVERHEAD = new Set(["moon", "bat", "butterfly"]);
+/**
+ * The moon is scenery in the sky, and the sky is over everything.
+ *
+ * A butterfly used to be on this list and should not have been. It is drawn at
+ * ground level on a daylight map like everything else, and the exemption was
+ * quietly letting one sit on a road at Thursley. Nothing else on the roster
+ * was relying on it — Tilford's two are forty-five and seventy-three units
+ * from the nearest road.
+ */
+const OVERHEAD = new Set(["moon", "bat"]);
 
 describe.each(levels.map((level) => [level.id, level] as const))(
   "%s scenery",

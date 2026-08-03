@@ -185,16 +185,25 @@ export const thursleyCommon: Level = {
     },
     {
       id: "atlantic-wall",
+      labelSide: "left",
       x: 640,
       y: 430,
       label: "The Atlantic Wall",
       blurb: "concrete, shelled, and still standing",
       type: "wall",
-      /* Eighty units of concrete will not tuck in anywhere. Below reaches into
-         the Hankley Sands label, and straight above lies across the dam track
-         from Hammer Pond, so it goes up and to the east of both. */
-      spriteDx: 20,
-      spriteDy: -20,
+      /*
+        * Ninety units of concrete, which is wider than anything else on the
+        * roster and will not tuck in anywhere. Above lies across the dam track
+        * from Hammer Pond and under the junction itself; below reaches into
+        * the Hankley Sands label. South-east of both is the only clear ground,
+        * with the name beside it rather than under it.
+        *
+        * A building may sit under its own junction — the Hanger and the town
+        * centre both do, and the junction reads as its door. A wall may not:
+        * nothing stands on a wall, so a dot on top of one is a mistake.
+        */
+      spriteDx: 30,
+      spriteDy: 30,
     },
     {
       id: "hankley-sands",
@@ -227,11 +236,11 @@ export const thursleyCommon: Level = {
       blurb: "the pub in Thursley, and the run's real finish line",
       type: "pub",
       /* A pub hangs sixty units above its junction, and this one is sixty from
-         the top of the map, so it was drawn off the paper altogether. West of
-         it instead, which also keeps the label clear of the tree the trail
-         theme plants at (610, 70). */
-      spriteDx: -20,
-      spriteDy: -20,
+         the top of the map, so it was drawn off the paper altogether. Well to
+         the west instead: it is seventy wide with the sign on a post, so
+         twenty was still half on top of the junction. */
+      spriteDx: -50,
+      spriteDy: 0,
     },
     {
       id: "elstead-green",
@@ -438,7 +447,7 @@ export const thursleyCommon: Level = {
     { x: 250, y: 520, kind: "rock" },
     { x: 60, y: 520, kind: "bench" },
     { x: 720, y: 350, kind: "butterfly" },
-    { x: 200, y: 220, kind: "butterfly" },
+    { x: 92, y: 158, kind: "butterfly" },
     { x: 610, y: 520, kind: "warning" },
     { x: 430, y: 90, kind: "tree" },
     { x: 760, y: 480, kind: "tree" },

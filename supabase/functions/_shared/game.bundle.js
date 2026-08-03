@@ -3322,13 +3322,14 @@ const thursleyCommon = {
 		},
 		{
 			id: "atlantic-wall",
+			labelSide: "left",
 			x: 640,
 			y: 430,
 			label: "The Atlantic Wall",
 			blurb: "concrete, shelled, and still standing",
 			type: "wall",
-			spriteDx: 20,
-			spriteDy: -20
+			spriteDx: 30,
+			spriteDy: 30
 		},
 		{
 			id: "hankley-sands",
@@ -3358,8 +3359,8 @@ const thursleyCommon = {
 			label: "The Three Horseshoes",
 			blurb: "the pub in Thursley, and the run's real finish line",
 			type: "pub",
-			spriteDx: -20,
-			spriteDy: -20
+			spriteDx: -50,
+			spriteDy: 0
 		},
 		{
 			id: "elstead-green",
@@ -3581,8 +3582,8 @@ const thursleyCommon = {
 			kind: "butterfly"
 		},
 		{
-			x: 200,
-			y: 220,
+			x: 92,
+			y: 158,
 			kind: "butterfly"
 		},
 		{
