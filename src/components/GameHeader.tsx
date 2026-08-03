@@ -89,14 +89,60 @@ export function GameHeader({
         </button>
 
         {/* Always here: the trophy cabinet is behind it whether or not a club
-            table has been configured. */}
+            table has been configured.
+
+            Drawn rather than the 🏆 character it used to be (#97): an emoji is
+            whatever the operating system feels like, which on this page meant
+            the one thing on it not in the game's own hand. Same 24 box and
+            same currentColor as the speaker beside it, so both take the
+            button's hover with them. */}
         <button
           type="button"
           className="icon-button"
           aria-haspopup="dialog"
           onClick={onShowClub}
         >
-          <span aria-hidden="true">🏆</span>
+          <svg
+            className="icon-button__glyph"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinejoin="round"
+            />
+            <g
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            >
+              <path d="M7.5 5H5a2.75 2.75 0 0 0 2.5 3.6" />
+              <path d="M16.5 5H19a2.75 2.75 0 0 1-2.5 3.6" />
+            </g>
+            <path
+              d="M11 13.5h2v3h-2z"
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+            <rect
+              x={7.5}
+              y={16.5}
+              width={9}
+              height={2.5}
+              rx={1}
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+          </svg>
           <span className="visually-hidden">The club</span>
         </button>
 
