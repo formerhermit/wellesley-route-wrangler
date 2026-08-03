@@ -137,13 +137,12 @@ export const thursleyCommon: Level = {
       y: 250,
       label: "The Boardwalk",
       blurb: "the Dragonfly Trail, single file, no overtaking",
-      type: "bridge",
-      /* A bridge's own offset is nothing at all, because at Tilford it stands
-         in the river and the water is drawn under it. There is no water here,
-         so at the junction it is simply buried under the dot. Below and a
-         little east, where the boards actually run. */
-      spriteDx: -10,
-      spriteDy: 30,
+      /*
+       * No landmark. It had the bridge from Tilford, and a bridge only reads
+       * as one with water drawn under it — over a bog it was a grey hump on
+       * the grass. The boards are what the roads either side of this junction
+       * already are, so the name does the work.
+       */
     },
     {
       id: "pudmore",

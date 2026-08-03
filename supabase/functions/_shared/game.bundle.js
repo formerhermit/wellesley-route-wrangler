@@ -3279,10 +3279,7 @@ const thursleyCommon = {
 			x: 350,
 			y: 250,
 			label: "The Boardwalk",
-			blurb: "the Dragonfly Trail, single file, no overtaking",
-			type: "bridge",
-			spriteDx: -10,
-			spriteDy: 30
+			blurb: "the Dragonfly Trail, single file, no overtaking"
 		},
 		{
 			id: "pudmore",
