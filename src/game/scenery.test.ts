@@ -208,6 +208,67 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       expect(clashes).toEqual([]);
     });
 
+    /*
+     * And off the roads, which nothing was checking either — a landmark could
+     * sit squarely across a track and only a person looking at the map would
+     * know. Thursley shipped five of them at once: a coffee van under a lane,
+     * a pub off the top of the paper, a hill marker lying along a track, the
+     * Atlantic Wall across the dam, and a bridge buried under its own
+     * junction.
+     *
+     * Eighteen, measured the same way the label clearance was. Everything on
+     * the roster clears it but three, and all three are deliberate: a bridge
+     * stands *in* the road by definition, the road round the Sports Centre is
+     * the whole point of that junction, and the ski slope marks itself
+     * `spriteOnTop` because there is nowhere on that map it can stand that a
+     * road does not already cross.
+     */
+    it("keeps a junction's own landmark out of the roads", () => {
+      const exempt = new Set(["bridge", "sportscentre"]);
+      const across = level.nodes
+        .map((node) => {
+          const kind = node.sprite ?? node.type;
+          const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+          if (!place || !kind || exempt.has(kind) || node.spriteOnTop) return undefined;
+          const x = node.x + (node.spriteDx ?? place.dx);
+          const y = node.y + (node.spriteDy ?? place.dy);
+          const tooClose = level.roads.some((road) => {
+            const from = level.nodes.find((n) => n.id === road.from);
+            const to = level.nodes.find((n) => n.id === road.to);
+            if (!from || !to) return false;
+            return distanceToSegment(x, y, from.x, from.y, to.x, to.y) < 18;
+          });
+          return tooClose ? `${kind} of ${node.id}` : undefined;
+        })
+        .filter((clash) => clash !== undefined);
+
+      expect(across).toEqual([]);
+    });
+
+    /*
+     * And on the paper at all. A pub hangs sixty units above its junction, and
+     * on a junction sixty from the top of the map that drew it off the paper
+     * entirely.
+     *
+     * Twenty, not thirty: this is a point test and the sprites have their own
+     * widths, so it can only catch a landmark that has plainly left the map.
+     * Hawley's Not a Hill sits at 774 of 800 and is fine — the marker is
+     * sixteen wide and ends at 790 — and a stricter line would fail it.
+     */
+    it("keeps a junction's own landmark on the map", () => {
+      for (const node of level.nodes) {
+        const kind = node.sprite ?? node.type;
+        const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+        if (!place) continue;
+        const x = node.x + (node.spriteDx ?? place.dx);
+        const y = node.y + (node.spriteDy ?? place.dy);
+        expect(x, `${kind} of ${node.id} x`).toBeGreaterThanOrEqual(20);
+        expect(x, `${kind} of ${node.id} x`).toBeLessThanOrEqual(level.view.width - 20);
+        expect(y, `${kind} of ${node.id} y`).toBeGreaterThanOrEqual(20);
+        expect(y, `${kind} of ${node.id} y`).toBeLessThanOrEqual(level.view.height - 20);
+      }
+    });
+
     it("puts the theme's own trees somewhere sensible too", () => {
       if (level.theme !== "trail") return;
 

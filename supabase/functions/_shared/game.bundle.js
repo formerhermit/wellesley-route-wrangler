@@ -3280,7 +3280,9 @@ const thursleyCommon = {
 			y: 250,
 			label: "The Boardwalk",
 			blurb: "the Dragonfly Trail, single file, no overtaking",
-			type: "bridge"
+			type: "bridge",
+			spriteDx: -10,
+			spriteDy: 30
 		},
 		{
 			id: "pudmore",
@@ -3297,7 +3299,9 @@ const thursleyCommon = {
 			y: 355,
 			label: "The Mire",
 			blurb: "and the bridleway to it is under water",
-			type: "mud"
+			type: "mud",
+			spriteDx: -10,
+			spriteDy: 26
 		},
 		{
 			id: "pine-island",
@@ -3323,7 +3327,8 @@ const thursleyCommon = {
 			label: "The Atlantic Wall",
 			blurb: "concrete, shelled, and still standing",
 			type: "wall",
-			spriteDy: -50
+			spriteDx: 20,
+			spriteDy: -20
 		},
 		{
 			id: "hankley-sands",
@@ -3336,12 +3341,14 @@ const thursleyCommon = {
 		},
 		{
 			id: "gibbet-view",
-			labelAbove: true,
+			labelSide: "right",
 			x: 700,
 			y: 150,
 			label: "Gibbet View",
 			blurb: "massive hill, and you can see London on a good day",
-			type: "hill"
+			type: "hill",
+			spriteDx: 10,
+			spriteDy: 30
 		},
 		{
 			id: "three-horseshoes",
@@ -3350,7 +3357,9 @@ const thursleyCommon = {
 			y: 60,
 			label: "The Three Horseshoes",
 			blurb: "the pub in Thursley, and the run's real finish line",
-			type: "pub"
+			type: "pub",
+			spriteDx: -20,
+			spriteDy: -20
 		},
 		{
 			id: "elstead-green",
@@ -3360,7 +3369,8 @@ const thursleyCommon = {
 			label: "Elstead Green",
 			blurb: "the village, the café, and a queue for both",
 			type: "coffee",
-			spriteDy: 44
+			spriteDx: -20,
+			spriteDy: 20
 		}
 	],
 	roads: [

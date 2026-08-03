@@ -138,6 +138,12 @@ export const thursleyCommon: Level = {
       label: "The Boardwalk",
       blurb: "the Dragonfly Trail, single file, no overtaking",
       type: "bridge",
+      /* A bridge's own offset is nothing at all, because at Tilford it stands
+         in the river and the water is drawn under it. There is no water here,
+         so at the junction it is simply buried under the dot. Below and a
+         little east, where the boards actually run. */
+      spriteDx: -10,
+      spriteDy: 30,
     },
     {
       id: "pudmore",
@@ -155,6 +161,10 @@ export const thursleyCommon: Level = {
       label: "The Mire",
       blurb: "and the bridleway to it is under water",
       type: "mud",
+      // Just west of straight down: the track to the sands leaves to the
+      // south-east and the default offset lay along it.
+      spriteDx: -10,
+      spriteDy: 26,
     },
     {
       id: "pine-island",
@@ -180,9 +190,11 @@ export const thursleyCommon: Level = {
       label: "The Atlantic Wall",
       blurb: "concrete, shelled, and still standing",
       type: "wall",
-      // Above rather than below: eighty units of concrete under the junction
-      // reaches into the Hankley Sands label next door.
-      spriteDy: -50,
+      /* Eighty units of concrete will not tuck in anywhere. Below reaches into
+         the Hankley Sands label, and straight above lies across the dam track
+         from Hammer Pond, so it goes up and to the east of both. */
+      spriteDx: 20,
+      spriteDy: -20,
     },
     {
       id: "hankley-sands",
@@ -195,12 +207,16 @@ export const thursleyCommon: Level = {
     },
     {
       id: "gibbet-view",
-      labelAbove: true,
+      labelSide: "right",
       x: 700,
       y: 150,
       label: "Gibbet View",
       blurb: "massive hill, and you can see London on a good day",
       type: "hill",
+      /* Beside rather than above: above lays the name along the track down
+         from Pudmore, and below puts it on the tree at (740, 200). */
+      spriteDx: 10,
+      spriteDy: 30,
     },
     {
       id: "three-horseshoes",
@@ -210,6 +226,12 @@ export const thursleyCommon: Level = {
       label: "The Three Horseshoes",
       blurb: "the pub in Thursley, and the run's real finish line",
       type: "pub",
+      /* A pub hangs sixty units above its junction, and this one is sixty from
+         the top of the map, so it was drawn off the paper altogether. West of
+         it instead, which also keeps the label clear of the tree the trail
+         theme plants at (610, 70). */
+      spriteDx: -20,
+      spriteDy: -20,
     },
     {
       id: "elstead-green",
@@ -219,7 +241,8 @@ export const thursleyCommon: Level = {
       label: "Elstead Green",
       blurb: "the village, the café, and a queue for both",
       type: "coffee",
-      spriteDy: 44,
+      spriteDx: -20,
+      spriteDy: 20,
     },
   ],
 
