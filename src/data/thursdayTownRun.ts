@@ -343,5 +343,16 @@ export const thursdayTownRun: Level = {
     { x: 100, y: 300, kind: "car", variant: 2 },
   ],
 
+  /*
+   * The built-up bits (#101). This is the town map, so it has more of them
+   * than anywhere: the centre itself, the Tesco and its car park, and the
+   * terrace along the bottom. The hills and the gardens stay paper.
+   */
+  ground: [
+    { x: 424, y: 128, width: 196, height: 150 },
+    { x: 596, y: 288, width: 184, height: 132 },
+    { x: 168, y: 486, width: 456, height: 66 },
+  ],
+
   view: { width: 800, height: 560 },
 };

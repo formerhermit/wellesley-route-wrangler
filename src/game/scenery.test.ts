@@ -236,6 +236,22 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       expect(inTheWay).toEqual([]);
     });
 
+    /*
+     * Ground is allowed under anything — roads crossing it is the point — so
+     * the only thing it can get wrong is running off the paper, where it would
+     * square off against the rounded corner of the map instead of fading into
+     * it. Only town maps have any: a trail map is already a field.
+     */
+    it("keeps the built-up ground on the map", () => {
+      for (const patch of level.ground ?? []) {
+        expect(patch.x).toBeGreaterThanOrEqual(0);
+        expect(patch.y).toBeGreaterThanOrEqual(0);
+        expect(patch.x + patch.width).toBeLessThanOrEqual(level.view.width);
+        expect(patch.y + patch.height).toBeLessThanOrEqual(level.view.height);
+      }
+      if (level.theme !== "town") expect(level.ground ?? []).toEqual([]);
+    });
+
     it("keeps its scenery on the map", () => {
       for (const item of level.scatter ?? []) {
         expect(item.x, `${item.kind}.x`).toBeGreaterThanOrEqual(0);

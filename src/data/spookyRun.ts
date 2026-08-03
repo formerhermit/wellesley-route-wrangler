@@ -399,5 +399,17 @@ export const spookyRun: Level = {
     { x: 96, y: 404, kind: "signpost" },
   ],
 
+  /*
+   * The built-up bits (#101), which are the Town Run's, because this is that
+   * map after dark: the centre, the street the trick or treaters have taken
+   * over, and the terrace along the bottom. At dusk they go the colour the
+   * terraces go, so the town stays one place under one light.
+   */
+  ground: [
+    { x: 424, y: 128, width: 196, height: 150 },
+    { x: 596, y: 288, width: 184, height: 132 },
+    { x: 168, y: 486, width: 456, height: 66 },
+  ],
+
   view: { width: 800, height: 560 },
 };

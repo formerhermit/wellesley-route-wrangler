@@ -154,6 +154,27 @@ placed from junction types for the same reason. A new level really is a new
 object in `src/data/` plus a line in `levels.ts` — the numbering, the unlock
 gate and the fixture list all follow from the order of that array.
 
+### What the town is standing on
+
+A trail map tints its whole ground green, which is why those maps read as
+being somewhere. A town map had no equivalent and was one flat beige with
+things drawn on it, which is what issue #101 was about.
+
+The fix is not the same trick in grey. A field really is uniformly a field; a
+town is not uniformly built up, and tinting the lot would swap one flat colour
+for another. So `ground` is a list of rectangles per level — the retail park,
+the terrace, the airport apron, the sports centre car park — and everything
+between them stays paper. Two or three to a map is enough; the point is the
+contrast, not the coverage.
+
+It is drawn first of everything, under the water and the gardens and the
+roads. That is what makes it ground: a road crossing it is the point rather
+than a clash, and the only thing it can get wrong is running off the paper,
+which `scenery.test.ts` checks along with everything else it checks. Grey and
+cool rather than another beige, so it separates from the paper instead of
+reading as a printing fault, and it goes with the light — blue-grey at dusk,
+paler at frost — so a town stays one place under one sky.
+
 ### How dense a new map can afford to be
 
 One number is worth watching when drawing a new level, because it is the only

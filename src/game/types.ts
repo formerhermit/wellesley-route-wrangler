@@ -261,6 +261,20 @@ export interface Level {
    * mistake, because it is one.
    */
   canalTail?: { x: number; y: number }[];
+  /**
+   * Built-up ground: the grey the town is standing on (#101).
+   *
+   * A trail map is a field, and `map-ground--trail` tints the whole of it
+   * green, which is why those maps read as somewhere. A town map had no
+   * equivalent and was one flat beige with things drawn on it, so this is the
+   * town's version — except that a town is not uniformly built up, so it is
+   * placed rather than applied.
+   *
+   * Drawn under the roads and under everything else, like the gardens. It is
+   * ground, so a road crossing it is the point rather than a clash, and
+   * nothing here is a junction or affects a single rule.
+   */
+  ground?: { x: number; y: number; width: number; height: number; rx?: number }[];
   /** viewBox of the map SVG. */
   view: { width: number; height: number };
 }

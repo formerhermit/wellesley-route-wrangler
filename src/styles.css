@@ -571,6 +571,20 @@ body {
 }
 
 /*
+ * Built-up ground (#101). A town map used to be one flat beige with things
+ * drawn on it, where a trail map has the whole ground tinted green and reads
+ * as somewhere because of it.
+ *
+ * Grey rather than another beige, and cool rather than warm, so it separates
+ * from the paper instead of looking like a printing fault. Barely: this is the
+ * thing everything else is drawn on, and a ground that competes with the roads
+ * has stopped being ground.
+ */
+.ground-patch {
+  fill: #ebe7dd;
+}
+
+/*
  * The trail run is out in fields, so the whole map is grass rather than a
  * green patch on paper. Kept well short of the woods' own green, so the wood
  * still reads as a wood on top of it.
@@ -590,6 +604,10 @@ body {
 
 .map-svg--dusk .terrace rect {
   fill: #adb1bd;
+}
+
+.map-svg--dusk .ground-patch {
+  fill: #b8bcc6;
 }
 
 .map-svg--dusk .tree-leaf {
@@ -660,6 +678,10 @@ body {
 
 .map-svg--frost .terrace rect {
   fill: #dfe4ea;
+}
+
+.map-svg--frost .ground-patch {
+  fill: #d8e1eb;
 }
 
 .map-svg--frost .road {

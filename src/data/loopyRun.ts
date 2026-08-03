@@ -373,5 +373,16 @@ export const loopyRun: Level = {
     { x: 655, y: 450, kind: "tree" },
   ],
 
+  /*
+   * The built-up bits (#101). The airport apron, which is the largest area of
+   * tarmac on the roster, and the sports centre with the car park it shares
+   * with the pool round the back.
+   */
+  ground: [
+    { x: 452, y: 292, width: 216, height: 168 },
+    { x: 42, y: 316, width: 208, height: 148 },
+    { x: 168, y: 486, width: 456, height: 66 },
+  ],
+
   view: { width: 800, height: 560 },
 };

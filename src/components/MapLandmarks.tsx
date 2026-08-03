@@ -336,6 +336,20 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
 
   return (
     <g aria-hidden="true">
+      {/* First of everything, because it is the ground (#101): the water, the
+          gardens, the roads and the whole map are laid on top of it. */}
+      {(level.ground ?? []).map((patch, index) => (
+        <rect
+          key={index}
+          className="ground-patch"
+          x={patch.x}
+          y={patch.y}
+          width={patch.width}
+          height={patch.height}
+          rx={patch.rx ?? 22}
+        />
+      ))}
+
       {pondPath && (
         <>
           <path className="pond-body" d={pondPath} />

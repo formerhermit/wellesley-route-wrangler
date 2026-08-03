@@ -32,6 +32,20 @@ export const thursdaySocialRun: Level = {
     { kind: "goose", nodeId: "geese-pond", dx: -60, dy: 15, scale: 1.3 },
   ],
 
+  /*
+   * The built-up bits (#101). The retail park in the top right, which is the
+   * Tesco and the houses behind it; the terrace along the bottom; and the
+   * Medical Centre, which is the only other thing here with a car park.
+   *
+   * Everything between them is deliberately still paper: a town map that is
+   * grey all over has only swapped one flat colour for another.
+   */
+  ground: [
+    { x: 528, y: 16, width: 252, height: 178 },
+    { x: 162, y: 488, width: 462, height: 64 },
+    { x: 252, y: 100, width: 152, height: 128 },
+  ],
+
   view: { width: 800, height: 560 },
 
   // On past the towpath and clean off the western edge, threading the gap
