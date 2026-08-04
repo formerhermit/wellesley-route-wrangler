@@ -102,9 +102,14 @@ const atLeast =
  * Every badge, in the order the cabinet hangs them.
  *
  * The numbers were picked against what the maps can actually produce rather
- * than what sounds good: a half marathon is 21.1 km and the longest loop on
- * the roster is 17.8 km, and every road is measured to one decimal place, so
- * a total of 4.99 km cannot happen on any map however it is run.
+ * than what sounds good. Every road is measured to one decimal place, so a
+ * total of 4.99 km cannot happen on any map however it is run.
+ *
+ * The Unexpected Long Run asks for thirteen because when it was written the
+ * longest loop on the roster was 17.8 km and a half marathon was out of
+ * reach. The Farnborough Winter Half has since put 21.1 km on the board, so
+ * the number is now generous rather than impossible — left alone deliberately,
+ * because retuning it would take the badge off everybody who has it.
  */
 const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
   {
@@ -221,6 +226,17 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     blurb: "The Christmas Run, in the hats, in the cold.",
     reveal: "shape",
     test: some((run) => run.won && run.level.id === "christmas-run"),
+  },
+  {
+    id: "thirteen-point-one",
+    name: "Thirteen Point One",
+    blurb:
+      "The Farnborough Winter Half. Twenty-one point one kilometres, in February, on purpose.",
+    hint: "Run a race rather than a run.",
+    reveal: "teased",
+    // The only badge that asks for a whole level and means it: Farnborough is
+    // the one map on the roster that is not a club run.
+    test: some((run) => run.won && run.level.id === "farnborough-half"),
   },
   {
     id: "brave-little-soldier",

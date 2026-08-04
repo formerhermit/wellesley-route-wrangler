@@ -1,5 +1,6 @@
 import { caesarsCamp } from "./caesarsCamp";
 import { christmasRun } from "./christmasRun";
+import { farnboroughHalf } from "./farnboroughHalf";
 import { fleetPondRun } from "./fleetPondRun";
 import { frenshamPonds } from "./frenshamPonds";
 import { hawleyLake } from "./hawleyLake";
@@ -26,4 +27,5 @@ export const levels: Level[] = [
   thursleyCommon,
   thursdayNightRun,
   frenshamPonds,
+  farnboroughHalf,
 ];

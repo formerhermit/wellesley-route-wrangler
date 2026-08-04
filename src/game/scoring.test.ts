@@ -153,6 +153,6 @@ describe("how much there is to find", () => {
     const counts = levels.map((each) => winningRouteCount(each));
     expect(counts.every((count) => count > 0)).toBe(true);
     // Pinned so a level edit that quietly changes the puzzle is noticed.
-    expect(counts).toEqual([9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5, 6]);
+    expect(counts).toEqual([9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5, 6, 4]);
   });
 });

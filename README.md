@@ -253,6 +253,43 @@ independently. Two objectives that cannot disagree are one objective with two
 ticks. Findability is worth a lot; it is not worth a rule that is quietly
 pretending to be two.
 
+**Level 13 — Farnborough Winter Half** — the first level on the roster that is
+not a club run. The Farnborough Winter Half Marathon is a real race on a real
+Sunday in February: one anti-clockwise lap of Farnborough Airport and Cody
+Technology Park, starting and finishing under the airship hangars at
+Farnborough Business Park, and 21.1 km because that is what a half marathon
+is. Elles Road, Ively Road, Pyestock Wood, Miles Hill, the Aerospace Centre,
+Danger Hill and Cockadobby Hill are all real and all called that. Four winning
+routes.
+
+Everywhere else the club picks a route and argues about it. Here somebody else
+has already measured one and put cones on it, and the brief is 21.0 to 21.3
+rather than a comfortable window because a race is measured — a route half a
+kilometre out is not a slightly different race, it is a wrong one.
+
+The best part is what that leaves. There is more than one legal way round —
+through the station and Cove Green rather than straight along the top, round
+Southwood rather than down Elles Road — and **every one of the four comes to
+exactly 21.1 km**, because that is what having a course measured actually buys
+you. The nearest thing that is not a winner is 19.5 km one side and 22.5 km the
+other. You are on the course or you are not.
+
+It carries the only three closures on the roster that are shut *for* a race
+rather than in spite of one, and they are closed because of what happened when
+they were not. Two of them cut a corner off the airfield, which is short, and a
+lap of the town is long, so the two cancel: an early draft had four winners and
+three of them cut a corner and then made the distance back up through Cove
+Green. Arithmetically fine and entirely against the point. Coning them off is
+also what happens on the day.
+
+`mood: "frost"` because it is the Winter Half and it is February — the
+Christmas Run's treatment on a level that is not Christmas, which is a
+deliberate widening. Frost is weather, and February in Hampshire has it.
+`flock` and `music` stay unset.
+
+Finishing it is worth a badge of its own, **Thirteen Point One**, which is the
+only badge that asks for a whole level and means it.
+
 ### What a place is standing on
 
 A trail map tints its whole ground green, which is why those maps read as
@@ -307,6 +344,7 @@ walks every one of them to work out the "N routes to find here" denominator.
 | Caesar's Camp | 12 | 19 | 8 | 145 | 4 ms |
 | Thursday Night | 12 | 18 | 7 | 280 | 1 ms |
 | Frensham | 12 | 19 | 8 | 790 | 6 ms |
+| Farnborough | 12 | 18 | 7 | 192 | 2 ms |
 | Town, Fleet Pond, Loopy, Hawley | 11–12 | 17–18 | 7 | 33–72 | 0.6–1.5 ms |
 
 Two extra ranks is thirty times the work. It is memoised per level in a
@@ -314,7 +352,7 @@ Two extra ranks is thirty times the work. It is memoised per level in a
 and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
-somebody's phone rather than here. Rank 7 to 9 is where eleven of the twelve
+somebody's phone rather than here. Rank 7 to 9 is where twelve of the thirteen
 levels sit and is the comfortable range; past 11 wants measuring before it
 ships.
 
@@ -401,7 +439,7 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 60 winning routes across the twelve levels — and 3,525 distinct
+There are 64 winning routes across the thirteen levels — and 3,717 distinct
 loops — so a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
@@ -903,17 +941,24 @@ perfect route, one too short, one too long, one through the closure, and one
 overrun by pigeons.
 
 `trailLevel.test.ts`, `tilfordLevel.test.ts`, `spookyLevel.test.ts`,
-`hawleyLevel.test.ts`, `christmasLevel.test.ts`, `thursleyLevel.test.ts` and
-`nightLevel.test.ts` and `frenshamLevel.test.ts` do the same for levels 2, 6,
-7, 8, 9, 10, 11 and 12 against their own maps. Most of them end by walking every route out of the start and
-back, so each level is held to exactly its winners. A road whose distance
-drifts takes the count with it and fails.
+`hawleyLevel.test.ts`, `christmasLevel.test.ts`, `thursleyLevel.test.ts`,
+`nightLevel.test.ts`, `frenshamLevel.test.ts` and `farnboroughLevel.test.ts` do
+the same for levels 2, 6, 7, 8, 9, 10, 11, 12 and 13 against their own maps.
+Most of them end by walking every route out of the start and back, so each
+level is held to exactly its winners. A road whose distance drifts takes the
+count with it and fails.
 
-`nightLevel.test.ts` and `frenshamLevel.test.ts` each walk their map a second
+`nightLevel.test.ts`, `frenshamLevel.test.ts` and `farnboroughLevel.test.ts`
+each walk their map a second
 time to check that every junction on it is on at least one winning route. That
 is a rule for those two maps rather than for the roster — Tilford's Village Shop and Thursley's Elstead
 Green are deliberately out of reach and better for it — but the Thursday Night
 Run was not meant to have any, and one draft of it had three.
+
+`farnboroughLevel.test.ts` also covers the badge that comes with it, and the
+case worth covering is the one a level badge fails at: a run that missed the
+brief is logged in the book exactly like a winner, so the test asks whether the
+race was *won* rather than whether it happened.
 
 That file also pins the level to daylight: `mood`, `flock` and `music` all
 unset. It is the one assertion here that is about restraint rather than
@@ -924,7 +969,7 @@ Those walks count *journeys* — every way round, in every order — which is a
 larger number than the routes the game counts, and deliberately so: it is the
 stricter check of the two, and a level whose journeys move has certainly
 changed. The number a player actually sees is the deduplicated one, and every
-level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5, 6]`. Both
+level's is pinned in `scoring.test.ts` as `[9, 2, 2, 8, 3, 4, 4, 4, 7, 6, 5, 6, 4]`. Both
 are asserted, because a change that moves one and not the other is exactly the
 kind of thing worth being stopped by.
 
