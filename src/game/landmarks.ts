@@ -1,4 +1,4 @@
-import type { MapNodeType } from "./types";
+import type { MapNode, MapNodeType } from "./types";
 
 /**
  * Where each kind of landmark sits relative to its junction. Data, not
@@ -77,3 +77,39 @@ export const TRAIL_TREES: { x: number; y: number }[] = [
   { x: 700, y: 505 },
   { x: 180, y: 520 },
 ];
+
+/**
+ * A rough box round a junction's name, matching what `MapJunctions` draws: two
+ * lines over eighteen characters, above or below or beside, and about six units
+ * to the character.
+ *
+ * Here rather than in either caller because two things need it and they must
+ * not drift apart — `scenery.test.ts` uses it to keep hand-placed scenery off
+ * the writing, and `eggs.ts` uses it to find somewhere the gnome can stand.
+ */
+export function labelBox(node: MapNode): {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+} {
+  const lines = node.label.length > 18 || node.labelWrap ? 2 : 1;
+  const longest =
+    lines === 1 ? node.label.length : Math.ceil(node.label.length / 2);
+  const width = longest * 6.2;
+  const height = lines * 13 + 6;
+  const side = node.labelSide;
+  const top =
+    (side
+      ? node.y + 4 - (lines - 1) * 6.5 - 11
+      : node.labelAbove
+        ? node.y - 30 - (lines - 1) * 13 - 11
+        : node.y + 32 - 11) + (node.labelDy ?? 0);
+  const left =
+    side === "left"
+      ? node.x - 24 - width
+      : side === "right"
+        ? node.x + 24
+        : node.x - width / 2;
+  return { left, right: left + width, top, bottom: top + height };
+}

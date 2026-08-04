@@ -33,6 +33,8 @@ import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
 import { earnedBy } from "./game/achievements";
+import { nextGnomeHome } from "./game/eggs";
+import type { GnomeHome } from "./game/eggs";
 import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
 import { clubTableEnabled } from "./club/enabled";
 
@@ -311,6 +313,32 @@ export default function App() {
       ? levelAfter(levels, level.id)
       : nextUnlockedLevel(levels, progress.completed, level.id);
 
+  /*
+   * The one gnome in the game (#104). He lives up here rather than in the map
+   * because he moves between levels, and a thing that moves between levels
+   * cannot be owned by the one that happens to be on screen.
+   *
+   * He starts wherever the first roll puts him and goes somewhere else every
+   * time he is pressed. Not persisted: like every other egg he is worth
+   * nothing, and a gnome remembered across visits is a save file for a joke.
+   */
+  const [gnome, setGnome] = useState<GnomeHome | undefined>(() =>
+    nextGnomeHome(levels, progress.completed, undefined, Math.random()),
+  );
+  const moveGnome = () => {
+    setGnome((here) => {
+      const next = nextGnomeHome(
+        levels,
+        progress.completed,
+        here?.levelId,
+        Math.random(),
+      );
+      // Nowhere to go — one map open and he is on it — so he stays put rather
+      // than vanishing.
+      return next ?? here;
+    });
+  };
+
   // The rejection wobble is a one-shot; clear it so it can fire again.
   useEffect(() => {
     if (!state.rejectedNodeId) return;
@@ -374,6 +402,8 @@ export default function App() {
               reducedMotion={reducedMotion}
               onSelect={(nodeId) => dispatch({ type: "select", nodeId })}
               onRunFinished={() => dispatch({ type: "finish" })}
+              gnome={gnome}
+              onGnomePressed={moveGnome}
             />
 
             <GameControls

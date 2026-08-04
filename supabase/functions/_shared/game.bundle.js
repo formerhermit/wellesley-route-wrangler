@@ -2674,9 +2674,9 @@ const loopyRun = {
 			kind: "cat"
 		},
 		{
-			x: 240,
+			x: 220,
 			y: 300,
-			kind: "bin"
+			kind: "track"
 		},
 		{
 			x: 472,
@@ -2694,11 +2694,6 @@ const loopyRun = {
 			y: 300,
 			kind: "car",
 			variant: 1
-		},
-		{
-			x: 200,
-			y: 320,
-			kind: "bin"
 		},
 		{
 			x: 174,
@@ -4889,16 +4884,6 @@ const thursdayTownRun = {
 		message: "{km} km of something. The committee is drafting a document with headings."
 	},
 	scatter: [
-		{
-			x: 140,
-			y: 140,
-			kind: "gnome"
-		},
-		{
-			x: 240,
-			y: 300,
-			kind: "gnome"
-		},
 		{
 			x: 420,
 			y: 280,

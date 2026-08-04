@@ -44,6 +44,7 @@ import {
   Pumpkin,
   Railway,
   Rock,
+  RunningTrack,
   SailingBoat,
   SandPatch,
   Signpost,
@@ -63,6 +64,13 @@ import {
   Woods,
   Youths,
 } from "./MapSprites";
+import {
+  EGG_LANDMARKS,
+  EGG_SCATTER,
+  eggResponds,
+  landmarkEggId,
+  scatterEggId,
+} from "../game/eggs";
 import { LANDMARK_OFFSET, TRAIL_TREES } from "../game/landmarks";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
@@ -132,6 +140,7 @@ const SCATTER: Record<ScatterItem["kind"], (item: ScatterItem) => React.ReactNod
   soldier: (item) => <Soldier index={item.variant ?? 0} flip={item.flip} />,
   cow: (item) => <Cow flip={item.flip} />,
   signpost: () => <Signpost />,
+  track: () => <RunningTrack />,
   pumpkin: () => <Pumpkin />,
   gravestone: () => <Gravestone />,
   bat: () => <Bat />,
@@ -220,18 +229,73 @@ function nodesOfType(level: Level, type: MapNodeType): MapNode[] {
   return level.nodes.filter((node) => node.type === type);
 }
 
+/** What the map hands back when something is pressed. */
+export interface EggHandlers {
+  /** How many presses this egg has already had on this level. */
+  pressed: (id: string) => number;
+  press: (id: string, kind: string) => void;
+}
+
 /**
- * Decoration only: nothing here responds to input. Everything is placed from
- * the junction types in the level data, so a new level gets its scenery
- * without touching this file.
+ * The wrapper that makes one piece of scenery pressable.
+ *
+ * Everything an egg needs is here and nothing else has to know: whether it can
+ * still be pressed, how many presses it has had, and the `is-hatched` class the
+ * stylesheet hangs each animation off. The sprite inside is untouched — a cat
+ * is the same cat whether or not this map lets you press it.
+ *
+ * `data-pressed` carries the count for the one egg that answers more than once.
+ * The `key` on the inner group is what makes a repeated press replay rather
+ * than sit there already finished: a CSS animation does not restart because a
+ * class it already has was set again.
+ */
+function EggShell({
+  id,
+  kind,
+  eggs,
+  egg,
+  children,
+}: {
+  id: string;
+  kind: string;
+  eggs?: EggHandlers;
+  egg: boolean;
+  children: React.ReactNode;
+}) {
+  if (!egg || !eggs) return <>{children}</>;
+  const pressed = eggs.pressed(id);
+  const live = eggResponds(kind, pressed);
+  return (
+    <g
+      className={`egg${pressed > 0 ? " is-hatched" : ""}`}
+      data-pressed={pressed}
+      onClick={live ? () => eggs.press(id, kind) : undefined}
+      style={live ? undefined : { cursor: "default" }}
+    >
+      <g key={pressed}>{children}</g>
+    </g>
+  );
+}
+
+/**
+ * Placed from the junction types in the level data, so a new level gets its
+ * scenery without touching this file.
+ *
+ * Almost all of it is decoration that ignores input. The exception is the
+ * easter eggs, which take a press and hand it to `eggs.press` — and even those
+ * are still `aria-hidden`, still score nothing, and still leave the map exactly
+ * as they found it.
  */
 export function MapLandmarks({
   level,
   onTop = false,
+  eggs,
 }: {
   level: Level;
   /** The second pass, drawn after the roads: only the junctions that ask. */
   onTop?: boolean;
+  /** Absent on a map with nothing to press, which is most of the furniture. */
+  eggs?: EggHandlers;
 }) {
   if (onTop) {
     const { width, height } = level.view;
@@ -310,10 +374,16 @@ export function MapLandmarks({
     );
   }
 
-  return <MapLandmarksUnderRoads level={level} />;
+  return <MapLandmarksUnderRoads level={level} eggs={eggs} />;
 }
 
-function MapLandmarksUnderRoads({ level }: { level: Level }) {
+function MapLandmarksUnderRoads({
+  level,
+  eggs,
+}: {
+  level: Level;
+  eggs?: EggHandlers;
+}) {
   // One canal junction is enough to draw a stretch of water through: the
   // Loopy map has a single towpath where the Thursday map has a bridge too.
   const canal = nodesOfType(level, "canal");
@@ -432,14 +502,14 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
       {/* Placed by hand, where the theme's own scatter leaves a map looking
           empty. Drawn with the scenery, under the roads, like everything
           else here. */}
-      {(level.scatter ?? []).map((item) => (
-        <g
-          key={`${item.kind}-${item.x}-${item.y}`}
-          transform={`translate(${item.x} ${item.y})`}
-        >
-          {SCATTER[item.kind](item)}
-        </g>
-      ))}
+      {(level.scatter ?? []).map((item) => {
+        const id = scatterEggId(item);
+        return (
+          <EggShell key={id} id={id} kind={item.kind} eggs={eggs} egg={EGG_SCATTER.has(item.kind)}>
+            <g transform={`translate(${item.x} ${item.y})`}>{SCATTER[item.kind](item)}</g>
+          </EggShell>
+        );
+      })}
 
       {level.mood === "dusk" && (
         <g className="fog">
@@ -461,18 +531,21 @@ function MapLandmarksUnderRoads({ level }: { level: Level }) {
         const kind = node.sprite ?? node.type;
         const draw = kind ? LANDMARK[kind] : undefined;
         const place = kind ? LANDMARK_OFFSET[kind] : undefined;
-        if (!draw || !place) return null;
+        if (!kind || !draw || !place) return null;
         // A junction may put its landmark somewhere other than where the type
         // puts every other one, for the roads that happen to run past it.
         const dx = node.spriteDx ?? place.dx;
         const dy = node.spriteDy ?? place.dy;
         return (
-          <g
+          <EggShell
             key={`sprite-${node.id}`}
-            transform={`translate(${node.x + dx} ${node.y + dy})`}
+            id={landmarkEggId(node)}
+            kind={kind}
+            eggs={eggs}
+            egg={EGG_LANDMARKS.has(kind)}
           >
-            {draw()}
-          </g>
+            <g transform={`translate(${node.x + dx} ${node.y + dy})`}>{draw()}</g>
+          </EggShell>
         );
       })}
     </g>

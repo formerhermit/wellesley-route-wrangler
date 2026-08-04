@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { levels } from "../data/levels";
-import { LANDMARK_OFFSET, TRAIL_TREES } from "./landmarks";
+import { LANDMARK_OFFSET, TRAIL_TREES, labelBox } from "./landmarks";
 import type { Level } from "./types";
 
 /**
@@ -146,33 +146,13 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       expect(onATree).toEqual([]);
     });
 
-    /**
-     * A rough box round each name, matching what MapJunctions draws: two
-     * lines over eighteen characters, above or below or beside, and about six
-     * units to the character.
+    /*
+     * A rough box round each name. The maths lives in `landmarks.ts` because
+     * the gnome needs it too — he teleports to a clear patch of map, and "clear"
+     * has to mean the same thing here as it does there.
      */
     const labelBoxes = () =>
-      level.nodes.map((node) => {
-        const lines = node.label.length > 18 || node.labelWrap ? 2 : 1;
-        const longest =
-          lines === 1 ? node.label.length : Math.ceil(node.label.length / 2);
-        const width = longest * 6.2;
-        const height = lines * 13 + 6;
-        const side = node.labelSide;
-        const top =
-          (side
-            ? node.y + 4 - (lines - 1) * 6.5 - 11
-            : node.labelAbove
-              ? node.y - 30 - (lines - 1) * 13 - 11
-              : node.y + 32 - 11) + (node.labelDy ?? 0);
-        const left =
-          side === "left"
-            ? node.x - 24 - width
-            : side === "right"
-              ? node.x + 24
-              : node.x - width / 2;
-        return { left, right: left + width, top, bottom: top + height, node };
-      });
+      level.nodes.map((node) => ({ ...labelBox(node), node }));
 
     it("keeps its scenery off the writing", () => {
       const onTheWriting = scatter.filter((item) =>

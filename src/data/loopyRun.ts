@@ -351,18 +351,23 @@ export const loopyRun: Level = {
     { x: 250, y: -30 },
   ],
 
-  // Town again, so town things: bins out, a cat on a wall, lights nobody
-  // waits at.
+  // Town again, so town things: a cat on a wall, lights nobody waits at, and
+  // the track the sports centre keeps behind its car park.
   scatter: [
     { x: 400, y: 160, kind: "lights" },
     { x: 660, y: 120, kind: "cat" },
-    { x: 240, y: 300, kind: "bin" },
+    /*
+     * Where two wheely bins used to be, one of them half on the car park. A
+     * track is a much bigger drawing than a bin, so it replaces the pair
+     * rather than one of them, and it sits square on the top edge of the
+     * sports centre's ground so the two read as one set of premises.
+     */
+    { x: 220, y: 300, kind: "track" },
     // In the middle of the Shoe Lane, Hockey Loop and airport triangle, which
     // is the biggest piece of blank paper on the map.
     { x: 472, y: 442, kind: "cat" },
     { x: 380, y: 300, kind: "car", variant: 2 },
     { x: 700, y: 300, kind: "car", variant: 1 },
-    { x: 200, y: 320, kind: "bin" },
     // Pulled off the lane between the Observatory and the Back Passage.
     { x: 174, y: 185, kind: "car", variant: 3 },
 

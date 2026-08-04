@@ -513,9 +513,15 @@ body {
  * Real buttons sitting over the map. Percentages track the SVG viewBox, so
  * they stay on their junctions at any width.
  */
+/*
+ * The layer itself takes no clicks — only the buttons on it do. It covers the
+ * whole map, so without this it swallows every press that lands between two
+ * junctions, and the scenery underneath could never be pressed at all (#104).
+ */
 .junction-buttons {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 /*
@@ -534,6 +540,7 @@ body {
  * being bigger rather than the targets being smaller.
  */
 .junction-button {
+  pointer-events: auto;
   position: absolute;
   width: 6.6%;
   min-width: 44px;
@@ -1378,6 +1385,469 @@ body {
   stroke-width: 1.8;
 }
 
+/*
+ * Scenery that does something when pressed (#104). A pointer only: these are
+ * mouse and touch, they are `aria-hidden` like all the other scenery, and
+ * nothing in the game depends on finding one.
+ */
+.egg {
+  cursor: pointer;
+}
+
+/*
+ * The shout that goes up with the rival runners.
+ *
+ * One animation across the whole run, and the run's own length is handed in as
+ * `--shout-duration` by the component: it pops in as they set off, holds while
+ * they lap, and swells away as they finish. Writing the milliseconds in here
+ * instead would come apart the first time anybody retimed a lap.
+ */
+.egg-shout {
+  animation: egg-shout-run var(--shout-duration, 7200ms) ease-out forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.egg-shout__word {
+  font-size: 26px;
+  font-weight: 900;
+  text-anchor: middle;
+  fill: var(--route);
+  /* The same trick the pigeons' alarm uses: stroke behind the fill, so the
+     word stays legible over roads, ground and grass alike. */
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 4.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: egg-shout-wobble 900ms ease-in-out infinite;
+}
+
+@keyframes egg-shout-run {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  7% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+
+  13% {
+    transform: scale(1);
+  }
+
+  86% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes egg-shout-wobble {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+/*
+ * What each egg does when it is pressed (#104).
+ *
+ * All of it hangs off `.egg.is-hatched`, which the map puts on as soon as
+ * something has been pressed, and the sprite's own class picks the animation.
+ * `forwards` where the thing is meant to stay changed — a cat that has left has
+ * left — and no fill where it goes back to how it was.
+ *
+ * The whole block is one-shot decoration: nothing here changes a rule, a route
+ * or a score, and a reload puts every one of them back.
+ */
+
+/* Had enough of this, and leaves. */
+.egg.is-hatched .sprite--cat {
+  animation: egg-cat 1.7s ease-in forwards;
+}
+
+@keyframes egg-cat {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  18% {
+    transform: translate(-3px, -2px);
+  }
+
+  100% {
+    transform: translate(52px, -2px);
+    opacity: 0;
+  }
+}
+
+/* Runs away, which is the most a cow will commit to. */
+.egg.is-hatched .sprite--cow {
+  animation: egg-cow 2.1s ease-in forwards;
+}
+
+@keyframes egg-cow {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  14% {
+    transform: translate(6px, -3px);
+  }
+
+  100% {
+    transform: translate(-70px, -6px);
+    opacity: 0;
+  }
+}
+
+/* Takes off, at last. */
+.egg.is-hatched .sprite--airport {
+  animation: egg-plane 2.4s ease-in forwards;
+}
+
+@keyframes egg-plane {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(22px, -2px) rotate(-4deg);
+  }
+
+  100% {
+    transform: translate(150px, -76px) rotate(-16deg);
+    opacity: 0;
+  }
+}
+
+/* One of them falls over. He was doing his best. */
+.egg.is-hatched .sprite--soldier {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: egg-soldier 1.4s cubic-bezier(0.6, 0, 0.7, 1.4) forwards;
+}
+
+@keyframes egg-soldier {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  30% {
+    transform: rotate(-6deg);
+  }
+
+  100% {
+    transform: rotate(84deg);
+  }
+}
+
+/* Wiggles his arms. Both of them, badly. */
+.egg.is-hatched .snow-arm {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: egg-snowman 400ms ease-in-out 5;
+}
+
+@keyframes egg-snowman {
+  0%,
+  100% {
+    transform: rotate(-9deg);
+  }
+
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+/*
+ * Cycles, slowly, while the group waits. Red, red and amber, green, amber,
+ * back to red — which is the actual sequence, and the reason this is worth
+ * pressing at all.
+ */
+.egg.is-hatched .lights-stop {
+  animation: egg-lamp-stop 4.4s steps(1, end) forwards;
+}
+
+.egg.is-hatched .lights-wait {
+  animation: egg-lamp-wait 4.4s steps(1, end) forwards;
+}
+
+.egg.is-hatched .lights-go {
+  animation: egg-lamp-go 4.4s steps(1, end) forwards;
+}
+
+@keyframes egg-lamp-stop {
+  0%,
+  25% {
+    opacity: 1;
+  }
+
+  45%,
+  85% {
+    opacity: 0.15;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes egg-lamp-wait {
+  0%,
+  20% {
+    opacity: 0.15;
+  }
+
+  25%,
+  40% {
+    opacity: 1;
+  }
+
+  45%,
+  70% {
+    opacity: 0.15;
+  }
+
+  75%,
+  95% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes egg-lamp-go {
+  0%,
+  40% {
+    opacity: 0.15;
+  }
+
+  45%,
+  70% {
+    opacity: 1;
+  }
+
+  75%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+/* The scoop leaves the cone, as scoops do. */
+.egg.is-hatched .icecream-scoop {
+  animation: egg-scoop 1.5s cubic-bezier(0.4, 0, 0.9, 0.6) forwards;
+}
+
+@keyframes egg-scoop {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  20% {
+    transform: translate(2px, -5px);
+  }
+
+  100% {
+    transform: translate(9px, 22px);
+  }
+}
+
+/*
+ * The four that needed something drawing that was not there before: a lid for
+ * the moon, a pigeon in the bush, somebody in the portaloo, and a notch out of
+ * the wall. All of them sit at nought opacity until the egg is pressed, so
+ * every one of these sprites still looks exactly like itself.
+ */
+
+/* The crater is the eye, so the lid is all that had to be added. */
+.moon-lid {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.egg.is-hatched .moon-lid {
+  animation: egg-wink 1.5s ease-in-out;
+}
+
+@keyframes egg-wink {
+  0%,
+  20% {
+    opacity: 0;
+  }
+
+  30%,
+  55% {
+    opacity: 1;
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Rustles, and something comes out of it. */
+.bush-lurker {
+  opacity: 0;
+}
+
+.egg.is-hatched .bush-lurker {
+  animation: egg-flushed 2s ease-out forwards;
+}
+
+.egg.is-hatched .sprite--bush .bush-body,
+.egg.is-hatched .sprite--bush .bush-outline {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: egg-rustle 280ms ease-in-out 3;
+}
+
+@keyframes egg-rustle {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes egg-flushed {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  25% {
+    opacity: 1;
+    transform: translate(4px, -6px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(46px, -42px);
+  }
+}
+
+/* Somebody was in there, and now everybody knows. */
+.loo-occupant {
+  opacity: 0;
+}
+
+.egg.is-hatched .loo-occupant {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: egg-occupant 1.8s cubic-bezier(0.5, 0, 0.75, 1.2) forwards;
+}
+
+@keyframes egg-occupant {
+  0% {
+    opacity: 0;
+    transform: translate(-11px, 0) rotate(0deg);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(-14px, 0) rotate(-14deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-26px, 6px) rotate(-84deg);
+  }
+}
+
+/* Dust on every press, and on the third one it is a chunk short. */
+.wall-dust {
+  fill: #cfc7b6;
+  opacity: 0;
+}
+
+.egg.is-hatched .wall-dust {
+  animation: egg-dust 1.1s ease-out;
+}
+
+@keyframes egg-dust {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+
+  25% {
+    opacity: 0.85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(6px, -14px) scale(1.5);
+  }
+}
+
+/*
+ * The ground showing through where the concrete went. Thursley is a trail map,
+ * so this is that theme's own green — the wall is on exactly one level and
+ * matching its ground is what makes the notch read as a hole rather than as a
+ * grey shape somebody has stuck on.
+ */
+.wall-notch {
+  fill: color-mix(in srgb, var(--grass) 14%, #fbf7ec);
+  opacity: 0;
+}
+
+.egg[data-pressed="3"] .wall-notch {
+  animation: egg-notch 700ms ease-out forwards;
+}
+
+@keyframes egg-notch {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------- The running track ---------- */
+
+/*
+ * Terracotta rather than the route's own orange, which is a good deal hotter:
+ * the route line is the thing the player is drawing and nothing on the paper
+ * underneath it should compete for that colour.
+ */
+.track-surface {
+  fill: #c4704f;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.track-lane {
+  stroke: #fffdf7;
+  stroke-width: 1.3;
+}
+
+.track-infield {
+  fill: var(--grass);
+}
+
 .golf-green {
   fill: var(--grass);
   stroke: var(--ink);
@@ -2093,6 +2563,19 @@ body {
 }
 .vest-deep {
   stroke: var(--club);
+}
+
+/*
+ * Somebody else's club (#104). Deliberately nothing like the Wellesley blue
+ * and green: the point of the running track egg is that a group goes past who
+ * are visibly not you.
+ */
+.vest-red {
+  stroke: #d1332e;
+}
+
+.vest-emerald {
+  stroke: #04a06a;
 }
 
 .runner-arms,
@@ -3677,8 +4160,27 @@ body {
   .flock-bird,
   .pigeon-wing,
   /* Snow that has stopped, rather than snow that has all landed at once. */
-  .snowflake {
+  .snowflake,
+  /* Off rather than snapped: this one animates to nothing, and the global
+     rule above would land it there instantly and never show the word. */
+  .egg-shout,
+  .egg-shout__word {
     animation: none !important;
+  }
+
+  /*
+   * Same problem, different egg (#104). Snapping an animation to its end state
+   * is right for most of these — a cat that has left has left — but the pigeon
+   * ends its flight off the top of the bush at nought opacity, so snapping it
+   * means nothing ever comes out. It stays put and stays visible instead.
+   *
+   * The moon is not in here on purpose. A wink is motion and nothing else, so
+   * with motion turned off the honest outcome is that it does not wink.
+   */
+  .egg.is-hatched .bush-lurker {
+    animation: none !important;
+    opacity: 1;
+    transform: translate(14px, -20px);
   }
 
   .flock.is-alarmed .flock-bird {

@@ -197,6 +197,7 @@ export interface Level {
       | "soldier"
       | "cow"
       | "signpost"
+      | "track"
       | "pumpkin"
       | "gravestone"
       | "bat"

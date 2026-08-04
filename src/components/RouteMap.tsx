@@ -5,8 +5,12 @@ import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
 import { PigeonGroup } from "./PigeonGroup";
+import { RivalRunners } from "./RivalRunners";
+import { WanderingGnome } from "./WanderingGnome";
 import { RunnerGroup } from "./RunnerGroup";
 import { RUNNER_COUNT, useRunAnimation } from "../hooks/useRunAnimation";
+import { eggResponds, hasTrackEgg } from "../game/eggs";
+import type { GnomeHome } from "../game/eggs";
 import { paceOf } from "../game/pace";
 import {
   nodeById,
@@ -56,6 +60,9 @@ interface Props {
   reducedMotion: boolean;
   onSelect: (nodeId: string) => void;
   onRunFinished: () => void;
+  /** Where the one gnome is, if he is on this map at all (#104). */
+  gnome: GnomeHome | undefined;
+  onGnomePressed: () => void;
 }
 
 export function RouteMap({
@@ -66,12 +73,51 @@ export function RouteMap({
   reducedMotion,
   onSelect,
   onRunFinished,
+  gnome,
+  onGnomePressed,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const runnersRef = useRef<(SVGGElement | null)[]>(
     Array.from({ length: RUNNER_COUNT }, () => null),
   );
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
+
+  /*
+   * The easter eggs (#104). How many presses each one has had, keyed by level
+   * and then by the egg's own id, so the same sprite in two places on one map
+   * is two eggs and coming back to a map does not reset what you found.
+   *
+   * Deliberately not persisted and deliberately nowhere near `records`. An egg
+   * is worth nothing, and the moment it were stored next to the run book
+   * somebody would have to explain why it does not score.
+   */
+  const [pressed, setPressed] = useState<Record<string, number>>({});
+  const [rivalsRunning, setRivalsRunning] = useState(false);
+
+  const eggs = useMemo(
+    () => ({
+      pressed: (id: string) => pressed[`${level.id}|${id}`] ?? 0,
+      press: (id: string, kind: string) => {
+        setPressed((current) => {
+          const key = `${level.id}|${id}`;
+          const had = current[key] ?? 0;
+          /*
+           * Clamped here as well as in the handler that is only attached while
+           * an egg is live. Two presses inside one React flush both see the old
+           * count, and the Atlantic Wall's notch is drawn by an exact match on
+           * three — so an overshoot to four does not merely waste a press, it
+           * puts the missing chunk back.
+           */
+          if (!eggResponds(kind, had)) return current;
+          return { ...current, [key]: had + 1 };
+        });
+        // The one egg that is more than an animation: it sends a rival club
+        // round the Hockey Loop, which needs a path and a clock of its own.
+        if (kind === "track" && hasTrackEgg(level)) setRivalsRunning(true);
+      },
+    }),
+    [level, pressed],
+  );
 
   // One ref per follower the level declares, replaced when the level changes.
   const followerRefs = useMemo(
@@ -126,6 +172,12 @@ export function RouteMap({
     onFinish: onRunFinished,
   });
 
+  // Changing map takes the rivals with it: their circuit is this level's roads,
+  // and a lap half-run on Loopy means nothing on Fleet Pond.
+  useEffect(() => {
+    setRivalsRunning(false);
+  }, [level]);
+
   useEffect(() => {
     if (!running) return;
     start();
@@ -168,11 +220,12 @@ export function RouteMap({
           height={level.view.height}
           className={`map-ground map-ground--${level.theme}`}
         />
-        <MapLandmarks level={level} />
+        <MapLandmarks level={level} eggs={eggs} />
         <MapRoads level={level} route={route} />
         {/* The few landmarks that have nowhere to stand a road does not
             already cross, drawn over the top of it instead. */}
         <MapLandmarks level={level} onTop />
+        <WanderingGnome level={level} home={gnome} onPress={onGnomePressed} />
 
         {pathData && (
           <>
@@ -206,7 +259,15 @@ export function RouteMap({
           </g>
         ))}
 
+        {/* Above the club's own runners, because they are quicker and the
+            whole joke is that they go past. */}
         <RunnerGroup runnersRef={runnersRef} kit={level.kit} />
+        <RivalRunners
+          level={level}
+          running={rivalsRunning}
+          reducedMotion={reducedMotion}
+          onFinish={() => setRivalsRunning(false)}
+        />
       </svg>
 
         <JunctionButtons

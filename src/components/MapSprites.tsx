@@ -50,6 +50,16 @@ export function Bush() {
         ))}
       </g>
       <ellipse cx={-5} cy={-9} rx={6} ry={5} className="bush-highlight" />
+      {/*
+       * What is in the bush (#104). Tucked behind the leaves at nothing like
+       * full size and invisible until the egg is pressed, so the bush is still
+       * a bush right up until it is not.
+       */}
+      <g className="bush-lurker">
+        <g transform="scale(0.62)">
+          <Pigeon />
+        </g>
+      </g>
     </g>
   );
 }
@@ -418,6 +428,13 @@ export function Portaloo() {
       <g transform="translate(11 3)">
         <LooCabin />
       </g>
+      {/*
+       * Who is in it (#104). Behind the left-hand cabin and invisible until
+       * the egg is pressed, at which point he comes out of it sideways.
+       */}
+      <g className="loo-occupant">
+        <Soldier index={1} />
+      </g>
     </g>
   );
 }
@@ -517,6 +534,13 @@ export function Moon() {
       <circle cx={-6} cy={-5} r={3.6} className="moon-crater" />
       <circle cx={5} cy={5} r={5} className="moon-crater" />
       <circle cx={8} cy={-7} r={2.4} className="moon-crater" />
+      {/*
+       * The wink (#104). No face is drawn on the moon and none is added: the
+       * crater at -6, -5 is already the right size and in the right place to
+       * read as an eye, so the lid simply closes over it. Invisible until the
+       * egg is pressed, which is why the moon still looks like a moon.
+       */}
+      <path d="M -10 -5 q 4 4 8 0" className="moon-lid" />
     </g>
   );
 }
@@ -701,6 +725,52 @@ export function Railway() {
         d="M -18 -9 v 8 M -6 -9 v 8 M 6 -9 v 8 M 18 -9 v 8"
         className="sleeper"
       />
+    </g>
+  );
+}
+
+/**
+ * The track by the sports centre, six lanes and a bit of infield.
+ *
+ * A stadium shape rather than an ellipse, because that is what a track is —
+ * two straights and two bends — and an ellipse with lines drawn on it reads as
+ * a pond somebody has scribbled over. Rounded rectangles with `rx` at exactly
+ * half the height give the bends for nothing.
+ *
+ * Three lanes, which takes two lines: a line is a boundary, so n of them
+ * divide the ring into n + 1. They are inset by an equal step on both axes so
+ * every lane comes out the same width on the bends as on the straights —
+ * insetting x and y by different amounts is what makes nested stadium shapes
+ * go lumpy at the corners.
+ *
+ * Three is about the ceiling here. A real track has six or eight and an
+ * infield big enough for a football pitch, and at 72 by 42 there is not room
+ * for both: every lane added comes out of the green in the middle, and past
+ * this the whole thing greys out into a solid ring.
+ */
+const TRACK_LANES = [
+  { x: 32, y: 17 },
+  { x: 28, y: 13 },
+];
+export function RunningTrack() {
+  return (
+    <g className="sprite sprite--track" aria-hidden="true">
+      <rect x={-36} y={-21} width={72} height={42} rx={21} className="track-surface" />
+      {TRACK_LANES.map((lane) => (
+        <rect
+          key={lane.x}
+          x={-lane.x}
+          y={-lane.y}
+          width={lane.x * 2}
+          height={lane.y * 2}
+          rx={lane.y}
+          className="track-lane"
+          fill="none"
+        />
+      ))}
+      <rect x={-24} y={-9} width={48} height={18} rx={9} className="track-infield" />
+      {/* The start line, across the outside lane on the top straight. */}
+      <line x1={12} y1={-21} x2={12} y2={-17} className="track-lane" />
     </g>
   );
 }
@@ -1063,8 +1133,17 @@ export function Holly() {
   );
 }
 
-export function Runner({ index, kit }: { index: number; kit?: Level["kit"] }) {
-  const vest = VESTS[index % VESTS.length];
+export function Runner({
+  index,
+  kit,
+  vest: override,
+}: {
+  index: number;
+  kit?: Level["kit"];
+  /** Overrides the club vest. For runners who are not in the club (#104). */
+  vest?: string;
+}) {
+  const vest = override ?? VESTS[index % VESTS.length];
   return (
     <g className="sprite sprite--runner" aria-hidden="true">
       <circle cx={0} cy={-11} r={4} className="runner-head" />
@@ -1169,6 +1248,19 @@ export function AtlanticWall() {
       <circle cx={-30} cy={-6} r={2.4} className="wall-hole" />
       <circle cx={4} cy={4} r={1.8} className="wall-hole" />
       <path d="M -44 9 h 88" className="hangar-ground" />
+      {/*
+       * Three presses' worth (#104). The notch has to be the hole rather than
+       * a chunk drawn over the top: the concrete is one path, so a piece
+       * painted in its own colour and then taken away would leave exactly what
+       * was there before. This is the ground showing through instead, hidden
+       * until the third press. The dust goes up on every one.
+       */}
+      <g className="wall-dust">
+        <circle cx={22} cy={-12} r={4} />
+        <circle cx={30} cy={-15} r={2.8} />
+        <circle cx={15} cy={-16} r={2.2} />
+      </g>
+      <path d="M 19 -12.8 L 31.8 -12.8 L 31.8 -1 L 25 -3.6 Z" className="wall-notch" />
     </g>
   );
 }

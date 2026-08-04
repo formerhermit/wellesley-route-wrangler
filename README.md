@@ -341,8 +341,14 @@ A level may also `scatter` scenery by hand, on top of whatever its theme puts
 down, for the corners no road reaches — cats, bins, traffic lights and parked
 cars in the towns, dogs and benches out of them, gnomes and loitering youths,
 flowers and butterflies and an ice cream van at Tilford, the moon and the bats
-after dark, and the four plastic soldiers dug in around the Eeek Soldiers
-junction, each facing whichever way its `flip` says.
+after dark, the running track behind the Sports Centre's car park on Loopy, and
+the four plastic soldiers dug in around the Eeek Soldiers junction, each facing
+whichever way its `flip` says.
+
+The track is drawn as a stadium — two straights and two bends, `rx` at exactly
+half the height — rather than as an ellipse, because an ellipse with lines on
+it reads as a pond somebody has scribbled over. Its lanes are one inner outline
+and not six: at the size scenery sits on the map, six of them turn to mud.
 
 Where a junction needs its landmark or its label somewhere other than where its
 type puts every other one — because a road happens to run through the spot — it
@@ -775,6 +781,78 @@ the junction buttons are positioned `inset: 0` against the stage, so a stage
 wider than the drawing leaves every button off its junction. And the rules are
 scoped by height rather than width, so they catch phones without catching a
 tablet in landscape or a short desktop window.
+
+## Things you can press
+
+Some of the scenery answers back (#104). Press A Private Bush and a pigeon
+comes out of it; press the aeroplane at Hecking Airport and it finally takes
+off; press the cat and it has had enough and leaves. Twelve of them, across
+nine maps.
+
+Two rules hold the whole idea up, and both are the issue's own. Each one fires
+**once**, so the pleasure is in finding one rather than in poking it — the
+Atlantic Wall is the single exception, taking three presses, a puff of dust
+each time and a chunk out of it on the last. And **none of them score**.
+Nothing in `src/game/eggs.ts` touches the route, the run book or the scoring,
+and it has to stay that way: an egg that moved the total would turn a joke into
+a mechanic, and the mechanic would be "press the scenery a lot".
+
+The count is per sprite rather than per kind, which matters on the maps that
+have two of something — pressing one of Loopy's two cats leaves the other
+exactly where it was. It is held in `RouteMap`, keyed by level and then by the
+egg's own id, and it is deliberately not persisted. A gnome remembered across
+visits is a save file for a joke.
+
+Almost all of it is one CSS animation hung off `.egg.is-hatched`, with the
+sprite's own class picking which. Four needed something drawing that was not
+there before, and all four sit at nought opacity until pressed so the sprite
+still looks like itself: a lid for the moon, a pigeon behind the bush, somebody
+in the portaloo, and a notch out of the wall. The notch has to *be* the hole
+rather than a chunk drawn over the top — the concrete is one path, so a piece
+painted in its own colour and taken away again would leave precisely what was
+there before.
+
+### The two that are not just an animation
+
+**The running track** on Loopy sends three runners from somebody else's club —
+red, white and emerald green — round the Hockey Loop circuit three times, with
+a shout of AFD! beside the track for as long as they are out. They run on a
+path of their own built from the map's own roads, and the shout is one CSS
+animation whose duration the component hands to the stylesheet as a custom
+property, so retiming a lap cannot leave the word hanging about after they have
+gone.
+
+**The gnome** is the only egg that does not stay where it is put. There is
+exactly one in the game, he is in no level's `scatter`, and every press sends
+him to a different unlocked map — which is why he is state rather than data. A
+gnome written into a level would be a gnome on every level at once.
+
+Where he lands is the interesting part. `gnomeSpots` walks a map on a
+twelve-unit grid and rejects anywhere within reach of a road, a junction, a
+junction's landmark, another piece of scenery, the theme's own trees or any
+name on the paper — the issue asks for "never on the roads or behind other
+SVGs" and that is the whole rule. The label maths it needs is the same maths
+`scenery.test.ts` uses to keep hand-placed scenery off the writing, so it moved
+into `landmarks.ts` where both can share it rather than drifting apart.
+
+`nextGnomeHome` takes a roll in [0, 1) rather than calling `Math.random`
+itself, which keeps it pure and lets `eggs.test.ts` say exactly where he ends
+up. That test walks every map and asserts every candidate spot is clear.
+
+### What they are not
+
+They are a pointer affordance and nothing else: mouse and touch, `aria-hidden`
+like the rest of the furniture, and absent from the tab order. That is only
+defensible because nothing depends on finding one — there is no badge for it
+and no score in it. The egg hunt in the issue's trophy-cabinet note is
+deliberately not built: the moment an egg is worth something, a keyboard player
+is locked out of it and the whole approach needs rethinking.
+
+One thing did have to change to let any of this work. `.junction-buttons` is a
+layer over the whole map, so it was swallowing every press that landed between
+two junctions. It is `pointer-events: none` now, with the buttons themselves
+put back to `auto` — nothing in the SVG had ever needed a press before, so it
+had never shown.
 
 ## Music
 
