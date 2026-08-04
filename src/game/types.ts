@@ -90,6 +90,14 @@ export interface MapNode {
    * has nowhere to stand that a road does not already cross.
    */
   spriteOnTop?: boolean;
+  /**
+   * Keep the green and drop the three trees a `park` junction scatters round
+   * itself. For a green with something on it already — Cove Green has a race
+   * going past and a crowd watching it, and the trees were standing in front
+   * of both. Nothing else reads a park's trees, so this only changes the
+   * drawing.
+   */
+  noTrees?: boolean;
 }
 
 export interface Road {
@@ -183,6 +191,17 @@ export interface Level {
   kit?: "santa";
   /** A file in `public/audio`. Without one the level plays the house theme. */
   music?: string;
+  /**
+   * How many other runners are on the road, for a level that is a race rather
+   * than a club run (#111). They run the player's own route, spread up and
+   * down it and off the racing line, in vests that are nobody's here.
+   *
+   * Setting this also puts the club's own five into one vest: in a field of
+   * strangers the point of a club vest is that you can pick your own lot out,
+   * and five different blues and greens cannot do that. Decorative from end to
+   * end — the field is not in the way, cannot be run into, and scores nothing.
+   */
+  field?: number;
   /**
    * Scenery placed by hand, on top of whatever the theme scatters. For the
    * corners of a map that no road reaches and that read as blank paper

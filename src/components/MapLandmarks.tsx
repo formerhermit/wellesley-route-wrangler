@@ -452,7 +452,7 @@ function MapLandmarksUnderRoads({
             height={124}
             rx={26}
           />
-          {PARK_TREES.map((tree, index) => (
+          {(park.noTrees ? [] : PARK_TREES).map((tree, index) => (
             <g
               key={index}
               transform={`translate(${park.x + tree.dx} ${park.y + tree.dy})`}

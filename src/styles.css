@@ -2716,6 +2716,40 @@ body {
   stroke: #04a06a;
 }
 
+/*
+ * And the rest of a race field (#111). Eight is enough that a pack of thirty
+ * does not read as a pattern, and none of them is within reach of the club's
+ * blue or green: the whole job of the field is to be the thing your own five
+ * are picked out of.
+ */
+.vest-amber {
+  stroke: #e2960f;
+}
+
+.vest-violet {
+  stroke: #7d55c7;
+}
+
+.vest-slate {
+  stroke: #566374;
+}
+
+.vest-pink {
+  stroke: #dd5595;
+}
+
+/* Where a sky blue was, and could not stay: at #23a3d4 it was a shade off the
+   club's own #4293cf, so the field contained the thing it is there to
+   contrast with. High-vis is the other reason — half a real field is wearing
+   it. */
+.vest-gold {
+  stroke: #edb800;
+}
+
+.vest-lime {
+  stroke: #86b833;
+}
+
 .runner-arms,
 .runner-legs {
   fill: none;

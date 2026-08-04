@@ -113,6 +113,57 @@ describe.each(levels.map((level) => [level.id, level] as const))(
       }
     });
 
+    /*
+     * An objective has to name the thing the map calls it (#106). "Visit the
+     * Devil's Jumps" over a junction labelled Stony Jump is correct, local, and
+     * useless: both are real names for that hill and only one of them is
+     * written on the paper. The two are allowed to differ — "the cows" for Cow
+     * Field, "Cody Technology Park" for Cody Tech Park — as long as a word
+     * survives the trip, which is what a player matches on.
+     */
+    it("names its waypoints something their labels also say", () => {
+      /*
+       * Proper nouns only. The common words are where the two are allowed to
+       * drift — "the cows" for Cow Field, "the dragonflies at Pudmore Pond" for
+       * Pudmore Pond — because a player scans the map for the name, not for the
+       * sentence. It is the capitalised word that has to be findable, and
+       * checking any-word-in-common would not do: Stony Jump and the Devil's
+       * Jumps share "Jump", which is exactly how #106 shipped.
+       */
+      const tidy = (word: string) =>
+        word.replace(/['’]/g, "").replace(/s$/, "").toLowerCase();
+      const properNouns = (text: string) =>
+        text
+          // Not a sentence, so nothing is capitalised merely for starting one:
+          // every `what` opens with either a lower-case "the" or the name.
+          .split(/[^A-Za-z'’]+/)
+          .filter((word) => /^[A-Z]/.test(word))
+          .map(tidy);
+      const labelWords = (text: string) =>
+        text.split(/[^A-Za-z'’]+/).filter(Boolean).map(tidy);
+      // Abbreviated on the map and spelt out in the objective, or the other way
+      // about: Cody Technology Park is labelled Cody Tech Park.
+      const same = (a: string, b: string) =>
+        a === b ||
+        // Four characters before a prefix counts, or "Bay" matches "Banger".
+        ((a.startsWith(b) || b.startsWith(a)) &&
+          Math.min(a.length, b.length) >= 4);
+
+      for (const objective of level.objectives) {
+        if (objective.kind !== "visit") continue;
+        const labelled = objective.nodeIds.flatMap((id) =>
+          labelWords(level.nodes.find((node) => node.id === id)?.label ?? ""),
+        );
+        const missing = properNouns(objective.what).filter(
+          (name) => !labelled.some((word) => same(word, name)),
+        );
+        expect(
+          missing,
+          `"${objective.what}" names something ${objective.nodeIds.join(", ")} does not`,
+        ).toEqual([]);
+      }
+    });
+
     it("waits for its followers at junctions that exist", () => {
       for (const follower of level.followers ?? []) {
         expect(nodeIds, follower.kind).toContain(follower.nodeId);

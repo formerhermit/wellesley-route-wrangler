@@ -89,7 +89,7 @@ export const frenshamPonds: Level = {
       nodeIds: ["stony-jump"],
       what: "the Devil's Jumps",
       reportLabel: "Jumps climbed",
-      done: "Up Stony Jump. A hundred and twenty metres of it.",
+      done: "Up the Devil's Jumps. A hundred and twenty metres of it.",
       pending: "The Jumps are still out there to the east.",
       missed: {
         title: "The Devil Was Not Troubled",
@@ -226,8 +226,15 @@ export const frenshamPonds: Level = {
       id: "stony-jump",
       x: 705,
       y: 455,
-      label: "Stony Jump",
-      blurb: "120 m, and the first of the three",
+      /*
+       * Named for the three, not for the one you actually climb (#106). The
+       * junction is Stony Jump and the id still says so, but the objective, the
+       * strapline and the instructions all say Devil's Jumps, and a player
+       * without Churt in their legs had no way of knowing those were the same
+       * hill. The specific name moves to the blurb, where it explains itself.
+       */
+      label: "Devil's Jumps",
+      blurb: "Stony Jump: 120 m, and the first of the three",
       type: "hill",
       // Above, for the same reason: the theme's tree at 700, 505 sits exactly
       // where this name would otherwise go.

@@ -39,6 +39,14 @@ export const farnboroughHalf: Level = {
   theme: "town",
   mood: "frost",
   music: "race-theme.mp3",
+  /*
+   * The only level with anybody else on the road (#111). The real field is well
+   * over a thousand; thirty is what an 800-unit map can carry before the road
+   * disappears under it, and it is enough that pressing Run looks like a start
+   * rather than like five people setting off on a Thursday. Setting this also
+   * puts the club's own five into one vest — see `Level.field`.
+   */
+  field: 30,
   startNodeId: "airship-hangars",
   finishNodeId: "airship-hangars",
   view: { width: 800, height: 560 },
@@ -149,6 +157,11 @@ export const farnboroughHalf: Level = {
       blurb: "a green, and a shortcut you are not taking",
       type: "park",
       labelAbove: true,
+      // The green stays, the trees go (#111). Three bare trees round a junction
+      // that already has a crowd on it and a race going through it were the
+      // busiest corner of the map, and one of them was standing in front of the
+      // supporters.
+      noTrees: true,
     },
     {
       id: "southwood",

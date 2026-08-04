@@ -976,6 +976,7 @@ const farnboroughHalf = {
 	theme: "town",
 	mood: "frost",
 	music: "race-theme.mp3",
+	field: 30,
 	startNodeId: "airship-hangars",
 	finishNodeId: "airship-hangars",
 	view: {
@@ -1077,7 +1078,8 @@ const farnboroughHalf = {
 			label: "Cove Green",
 			blurb: "a green, and a shortcut you are not taking",
 			type: "park",
-			labelAbove: true
+			labelAbove: true,
+			noTrees: true
 		},
 		{
 			id: "southwood",
@@ -1837,7 +1839,7 @@ const frenshamPonds = {
 			nodeIds: ["stony-jump"],
 			what: "the Devil's Jumps",
 			reportLabel: "Jumps climbed",
-			done: "Up Stony Jump. A hundred and twenty metres of it.",
+			done: "Up the Devil's Jumps. A hundred and twenty metres of it.",
 			pending: "The Jumps are still out there to the east.",
 			missed: {
 				title: "The Devil Was Not Troubled",
@@ -1951,8 +1953,8 @@ const frenshamPonds = {
 			id: "stony-jump",
 			x: 705,
 			y: 455,
-			label: "Stony Jump",
-			blurb: "120 m, and the first of the three",
+			label: "Devil's Jumps",
+			blurb: "Stony Jump: 120 m, and the first of the three",
 			type: "hill",
 			labelAbove: true,
 			spriteDx: -60,

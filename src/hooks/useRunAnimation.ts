@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { RefObject } from "react";
 import type { Pace } from "../game/pace";
+import type { FieldPlace } from "../game/raceField";
 
 export const RUNNER_COUNT = 5;
 
@@ -26,6 +27,9 @@ interface Options {
   /** How the group's speed varies over the route. Hills cost time. */
   pace: Pace;
   runnersRef: RefObject<(SVGGElement | null)[]>;
+  /** The rest of the field, where the level is a race. Empty where it is not. */
+  field: FieldPlace[];
+  fieldRef: RefObject<(SVGGElement | null)[]>;
   reducedMotion: boolean;
   /** Points along the route that should make pigeons react. */
   milestones: Milestone[];
@@ -54,6 +58,8 @@ export function useRunAnimation({
   pathRef,
   pace,
   runnersRef,
+  field,
+  fieldRef,
   reducedMotion,
   milestones,
   followers,
@@ -66,6 +72,7 @@ export function useRunAnimation({
   const latest = useRef({
     milestones,
     followers,
+    field,
     pace,
     onReachHotspot,
     onFinish,
@@ -74,6 +81,7 @@ export function useRunAnimation({
   latest.current = {
     milestones,
     followers,
+    field,
     pace,
     onReachHotspot,
     onFinish,
@@ -88,12 +96,15 @@ export function useRunAnimation({
     for (const runner of runnersRef.current ?? []) {
       runner?.setAttribute("opacity", "0");
     }
+    for (const runner of fieldRef.current ?? []) {
+      runner?.setAttribute("opacity", "0");
+    }
     // Followers stay on the map between runs, so they go home rather than
     // being hidden wherever the group happened to leave them.
     for (const back of latest.current.followers) {
       back.ref.current?.setAttribute("transform", homeTransform(back));
     }
-  }, [runnersRef]);
+  }, [runnersRef, fieldRef]);
 
   const start = useCallback(() => {
     cancel();
@@ -129,6 +140,37 @@ export function useRunAnimation({
     for (const runner of runnersRef.current ?? []) {
       runner?.setAttribute("opacity", "1");
     }
+    for (const runner of fieldRef.current ?? []) {
+      runner?.setAttribute("opacity", "1");
+    }
+
+    /*
+     * Which way the road is going at a given point, and the right angle to it.
+     * The field is placed off the racing line rather than on it, and "off the
+     * line" only means anything relative to the line's own direction: the same
+     * runner has to sit above the road on a westbound leg and below it on an
+     * eastbound one, or the pack turns itself inside out at every corner.
+     */
+    const sideStep = (distance: number, across: number) => {
+      const point = path.getPointAtLength(distance);
+      if (across === 0) return point;
+      const ahead = path.getPointAtLength(Math.min(distance + 3, length));
+      let dx = ahead.x - point.x;
+      let dy = ahead.y - point.y;
+      // At the very end there is nothing ahead to measure against, so measure
+      // backwards instead. A zero-length tangent would put the whole field on
+      // the finish line in a heap.
+      if (Math.hypot(dx, dy) < 0.01) {
+        const behind = path.getPointAtLength(Math.max(distance - 3, 0));
+        dx = point.x - behind.x;
+        dy = point.y - behind.y;
+      }
+      const span = Math.hypot(dx, dy) || 1;
+      return {
+        x: point.x + (-dy / span) * across,
+        y: point.y + (dx / span) * across,
+      };
+    };
 
     const step = (now: number) => {
       const elapsed = now - startedAt;
@@ -150,6 +192,23 @@ export function useRunAnimation({
           `translate(${point.x.toFixed(2)} ${(point.y + bounce).toFixed(2)})`,
         );
       }
+
+      // Everybody else in the race, placed off the club rather than off the
+      // clock: the field runs at the group's pace because it is the group's
+      // pace that the hills are already in.
+      options.field.forEach((place, index) => {
+        const runner = fieldRef.current?.[index];
+        if (!runner) return;
+        const distance = Math.min(Math.max(lead - place.along, 0), length);
+        const point = sideStep(distance, place.across);
+        const bounce = options.reducedMotion
+          ? 0
+          : Math.sin(elapsed / 80 + index * 0.7) * 2.2;
+        runner.setAttribute(
+          "transform",
+          `translate(${point.x.toFixed(2)} ${(point.y + bounce).toFixed(2)})`,
+        );
+      });
 
       // Each follower runs one place further back than the last, behind the
       // group, and only once the back of it has actually reached them.
@@ -203,7 +262,7 @@ export function useRunAnimation({
     };
 
     frameRef.current = requestAnimationFrame(step);
-  }, [cancel, pathRef, runnersRef]);
+  }, [cancel, pathRef, runnersRef, fieldRef]);
 
   useEffect(() => cancel, [cancel]);
 

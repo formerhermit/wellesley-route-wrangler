@@ -5,6 +5,7 @@ import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
 import { PigeonGroup } from "./PigeonGroup";
+import { RaceField } from "./RaceField";
 import { RivalRunners } from "./RivalRunners";
 import { WanderingGnome } from "./WanderingGnome";
 import { RunnerGroup } from "./RunnerGroup";
@@ -12,6 +13,7 @@ import { RUNNER_COUNT, useRunAnimation } from "../hooks/useRunAnimation";
 import { eggResponds, hasTrackEgg } from "../game/eggs";
 import type { GnomeHome } from "../game/eggs";
 import { paceOf } from "../game/pace";
+import { raceField } from "../game/raceField";
 import {
   nodeById,
   routeMilestones,
@@ -81,6 +83,14 @@ export function RouteMap({
     Array.from({ length: RUNNER_COUNT }, () => null),
   );
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
+
+  // The rest of the race, where there is one (#111). An empty list on every
+  // other map, which costs a component that draws nothing.
+  const field = useMemo(() => raceField(level.field ?? 0), [level]);
+  const fieldRef = useRef<(SVGGElement | null)[]>([]);
+  if (fieldRef.current.length !== field.length) {
+    fieldRef.current = Array.from({ length: field.length }, () => null);
+  }
 
   /*
    * The easter eggs (#104). How many presses each one has had, keyed by level
@@ -165,6 +175,8 @@ export function RouteMap({
     pathRef,
     pace,
     runnersRef,
+    field,
+    fieldRef,
     reducedMotion,
     milestones,
     followers,
@@ -265,9 +277,19 @@ export function RouteMap({
           </g>
         ))}
 
+        {/* Under the club, so that whatever the pack is doing the five blue
+            vests stay findable in it. */}
+        <RaceField field={field} fieldRef={fieldRef} />
+
         {/* Above the club's own runners, because they are quicker and the
             whole joke is that they go past. */}
-        <RunnerGroup runnersRef={runnersRef} kit={level.kit} />
+        <RunnerGroup
+          runnersRef={runnersRef}
+          kit={level.kit}
+          /* One colour, and only in a race: five club shades are a club on an
+             empty road and five strangers in a field of thirty. */
+          vest={level.field ? "vest-blue" : undefined}
+        />
         <RivalRunners
           level={level}
           running={rivalsRunning}

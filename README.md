@@ -226,7 +226,7 @@ wheel round it and Hawley is a lap of it; a third drawn the same way would be
 the least distinctive level here. So the Great Pond is lapped in the first
 kilometre and then left behind, and the run is the crossing of Frensham Common
 on Sandy Lane, out to the Little Pond and back over the Devil's Jumps. 9 to
-10.5 km, both ponds, up Stony Jump, and not down the path roped off for the
+10.5 km, both ponds, up the Jumps, and not down the path roped off for the
 nesting. Six winning routes.
 
 All of it is real, including the beach. The Great Pond has a National Trust
@@ -234,7 +234,14 @@ car park at its west end and a genuine sand shore along its north side —
 families, windbreaks and an ice cream queue, in Surrey. The Sailing Club is on
 Pond Lane and the Pond Hotel on Bacon Lane, two minutes from a car park full of
 muddy runners. The King's Ridge is 90 m and Stony Jump, nearest of the three
-Devil's Jumps at Churt, is 120 m. The closure is a real restriction rather than
+Devil's Jumps at Churt, is 120 m — and the junction is labelled for the three
+rather than the one, because the objective, the strapline and the instructions
+all say Devil's Jumps and only a local would know those were the same hill
+(#106). The specific name is in the blurb, where it can explain itself.
+`levelData.test.ts` now checks the class of mistake across every level: a
+waypoint's proper nouns have to appear on the junction it points at. Any word
+in common would not have caught this one, since both names contain "Jump".
+The closure is a real restriction rather than
 a joke: the common is heath, heath has ground-nesting birds on it, and the
 Trust ropes paths off through the season for exactly that reason.
 
@@ -301,7 +308,31 @@ like one before you have read a word of the brief: a start line under the arch,
 with the word on it, supporters wherever a supporter can actually park, and
 penguins, which are not native to Farnborough and are not going to explain
 themselves. There were water stations too, briefly. A trestle table with a cup
-on it is four marks at this size and reads as a bin, so they went.
+on it is four marks at this size and reads as a bin, so they went. Cove Green
+lost its trees, too: a `park` junction scatters three round itself, and three
+trees on the one corner that already has a crowd and a race going through it
+was the busiest place on the map. `noTrees` keeps the green and drops them.
+
+The other thing a race has is everybody else (#111). `field: 30` puts thirty
+strangers on the road, running the player's own route because that is the only
+line the map has, in eight vests that are nobody's here. They are placed by two
+numbers each — how far up or down the road from the club's lead runner, and how
+far off the racing line — and the second one is what stops it reading as a
+queue, because thirty runners on a single path in single file is a conga.
+
+Three things about it were wrong first time and are worth writing down.
+Scattering the length and the width independently draws two runners in the same
+stride as one runner with four legs, so the field is laid out in two files,
+odds one side and evens the other, which has the side effect of looking like a
+road race. The field started four units off the line and was elbow to elbow
+with the club, so five blue vests could not be found in thirty — the one thing
+the field exists to make possible — and it now leaves nine units clear, which
+is the racing line and the club is on it. And one of the eight vests was a sky
+blue at `#23a3d4`, a shade off the club's own `#4293cf`: the field contained
+the very thing it is there to contrast with. It is high-vis gold now.
+
+Setting `field` also puts the club's own five into one vest. Blue, green and
+white read as a club on an empty road and as five strangers in a crowd.
 
 Finishing it is worth a badge of its own, **Thirteen Point One**, which is the
 only badge that asks for a whole level and means it.
