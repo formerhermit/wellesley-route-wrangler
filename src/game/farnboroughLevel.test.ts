@@ -88,13 +88,14 @@ describe("the Farnborough Winter Half", () => {
 
   /*
    * The Winter Half is in February, so this is the one level that wears the
-   * Christmas Run's frost without being Christmas. `flock` and `music` stay
-   * unset: the birds are pigeons and the theme is the house one.
+   * Christmas Run's frost without being Christmas, and the only one outside
+   * the seasonal editions with a track of its own. `flock` stays unset: the
+   * birds are pigeons like anywhere else.
    */
-  it("is frosty, because it is February", () => {
+  it("is frosty and has its own music, because it is a race", () => {
     expect(level.mood).toBe("frost");
+    expect(level.music).toBe("race-theme.mp3");
     expect(level.flock).toBeUndefined();
-    expect(level.music).toBeUndefined();
   });
 
   it("measures 21.1 km, because that is what a half marathon is", () => {

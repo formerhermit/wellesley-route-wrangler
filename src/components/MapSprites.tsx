@@ -775,6 +775,91 @@ export function RunningTrack() {
   );
 }
 
+/**
+ * The start and finish, which is the same arch twice on a lapped course.
+ *
+ * A gantry and a strip of chequer, because a race needs one thing on the map
+ * that says "race" before you have read a word of the brief. The chequers are
+ * generated rather than written out: eight hand-placed four-unit squares is
+ * eight chances to fat-finger a coordinate.
+ */
+const START_CHEQUERS = Array.from({ length: 10 }, (_, i) => ({
+  x: -25 + i * 5,
+  dark: i % 2 === 0,
+}));
+
+export function StartLine() {
+  return (
+    <g className="sprite sprite--startline" aria-hidden="true">
+      {START_CHEQUERS.map((square) => (
+        <rect
+          key={square.x}
+          x={square.x}
+          y={7}
+          width={5}
+          height={5}
+          className={square.dark ? "start-chequer-dark" : "start-chequer-light"}
+        />
+      ))}
+      <path d="M -25 12 h 50" className="start-edge" />
+      <path d="M -23 7 v -22 M 23 7 v -22" className="start-post" />
+      <rect x={-28} y={-25} width={56} height={11} rx={2} className="start-banner" />
+      <text x={0} y={-16.4} className="start-banner-word">
+        START
+      </text>
+    </g>
+  );
+}
+
+/**
+ * The people who came out in February to stand still for two hours and shout.
+ *
+ * Three of them, one with a placard, drawn small: a supporter is not a landmark
+ * and should read as a knot of people rather than as portraiture.
+ */
+export function Supporters() {
+  return (
+    <g className="sprite sprite--supporters" aria-hidden="true">
+      <path d="M -11 9 v -8 a 4 4 0 0 1 8 0 v 8 Z" className="supporter-coat" />
+      <circle cx={-7} cy={-2} r={3} className="supporter-face" />
+      <path d="M -11 0 l -4 -6" className="supporter-arm" />
+
+      <path d="M -1 9 v -9 a 4 4 0 0 1 8 0 v 9 Z" className="supporter-coat-two" />
+      <circle cx={3} cy={-3} r={3} className="supporter-face" />
+      <path d="M 7 -1 l 4 -5" className="supporter-arm" />
+
+      <path d="M 9 9 v -7 a 3.4 3.4 0 0 1 7 0 v 7 Z" className="supporter-coat" />
+      <circle cx={12.5} cy={-1} r={2.8} className="supporter-face" />
+      {/* The placard, which says something nobody can read at running pace. */}
+      <path d="M 16 2 v -14" className="supporter-stick" />
+      <rect x={13} y={-20} width={13} height={8} rx={1} className="supporter-sign" />
+      <path d="M -16 9 h 44" className="hangar-ground" />
+    </g>
+  );
+}
+
+/**
+ * A penguin, which is not native to Farnborough and is not going to explain
+ * itself. There is one in every February field.
+ */
+export function Penguin() {
+  return (
+    <g className="sprite sprite--penguin" aria-hidden="true">
+      <ellipse cx={0} cy={0} rx={7.5} ry={10} className="penguin-back" />
+      <ellipse cx={0} cy={1.5} rx={5} ry={7.5} className="penguin-front" />
+      <circle cx={0} cy={-9} r={5.5} className="penguin-back" />
+      {/* Both of them, facing out. A mascot looks at you. */}
+      <circle cx={-2.2} cy={-10.2} r={1.5} className="penguin-eye" />
+      <circle cx={2.2} cy={-10.2} r={1.5} className="penguin-eye" />
+      <circle cx={-2.2} cy={-10} r={0.7} className="penguin-pupil" />
+      <circle cx={2.2} cy={-10} r={0.7} className="penguin-pupil" />
+      <path d="M -2.4 -7.4 h 4.8 L 0 -4 Z" className="penguin-beak" />
+      <path d="M -7.2 -1 q -4.5 5 -1.4 9 M 7.2 -1 q 4.5 5 1.4 9" className="penguin-flipper" />
+      <path d="M -4.5 9.5 l -2 4.5 h 5 Z M 4.5 9.5 l 2 4.5 h -5 Z" className="penguin-foot" />
+    </g>
+  );
+}
+
 export function FootballPitch() {
   return (
     <g className="sprite sprite--football" aria-hidden="true">

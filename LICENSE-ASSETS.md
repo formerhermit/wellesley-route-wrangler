@@ -8,8 +8,8 @@ are not open source, and they are not yours to ship.
 
 ## What this covers
 
-- Everything in `public/audio/` — the main theme, the Halloween theme and the
-  Christmas theme.
+- Everything in `public/audio/` — the main theme, the Halloween theme, the
+  Christmas theme and the race theme.
 - Everything in `public/sprites/` — the cow, the Duke, the ghost, the four
   plastic soldiers, the goose, the dog.
 - `public/favicon.svg`.

@@ -1826,6 +1826,144 @@ body {
   }
 }
 
+/*
+ * Race furniture (level 13). None of it is a junction and none of it is an
+ * egg: a race looks like a race because of the things standing beside it, and
+ * the Farnborough map is the only one that has any.
+ */
+
+.start-chequer-dark {
+  fill: var(--ink);
+}
+
+.start-chequer-light {
+  fill: #fffdf7;
+}
+
+.start-edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.start-post {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.4;
+}
+
+.start-banner {
+  fill: var(--club);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+/*
+ * The word on the banner. Small, but a banner that says nothing is a blue
+ * rectangle, and the one thing this map needs saying is that it is a race.
+ */
+.start-banner-word {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-anchor: middle;
+  fill: #fffdf7;
+}
+
+.supporter-coat {
+  fill: #c8563f;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.supporter-coat-two {
+  fill: #3f6ea8;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.supporter-face {
+  fill: #f0d3b4;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+.supporter-arm {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.supporter-stick {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.supporter-sign {
+  fill: #f5e06a;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.penguin-back {
+  fill: #2c3742;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.penguin-front {
+  fill: #fbfdfe;
+  stroke: none;
+}
+
+.penguin-beak {
+  fill: #e8a33d;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+.penguin-eye {
+  fill: #fbfdfe;
+}
+
+.penguin-pupil {
+  fill: var(--ink);
+}
+
+.penguin-flipper {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.penguin-foot {
+  fill: #e8a33d;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+/*
+ * Farnborough is a race, not Christmas.
+ *
+ * `mood: "frost"` hangs every junction red and green like a string of baubles,
+ * which is exactly right in December and reads as the wrong festival entirely
+ * on a February road race. This takes the club's own blue and the route orange
+ * instead, alternating on the same `junction--alt` the baubles use.
+ *
+ * Same specificity as the frost rule, so it wins on source order alone: it has
+ * to stay below it in this file.
+ */
+.map-svg--farnborough-half .junction .junction-dot {
+  fill: var(--club);
+}
+
+.map-svg--farnborough-half .junction.junction--alt .junction-dot {
+  fill: var(--route);
+}
+
 /* ---------- The running track ---------- */
 
 /*

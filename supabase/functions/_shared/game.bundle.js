@@ -956,11 +956,12 @@ const christmasRun = {
 * purpose: a race is measured, and a route that is half a kilometre out is not
 * a slightly different race, it is a wrong one.
 *
-* `mood: "frost"` because it is the Winter Half and it is February. That is
-* the Christmas Run's treatment used on a level that is not Christmas, which
-* is a deliberate widening: frost is weather, and February in Hampshire has
-* it. `flock` and `music` stay unset — the birds are pigeons and the theme is
-* the house one, as on any ordinary level.
+* `mood: "frost"` because it is the Winter Half and it is February, which is
+* the Christmas Run's treatment used on a level that is not Christmas — a
+* deliberate widening, because frost is weather and February in Hampshire has
+* it. It gets its own `music` for the same reason: the house theme is a
+* Thursday evening and this is a start pen. `flock` stays unset; the birds are
+* pigeons like anywhere else.
 *
 * Every name is real: Elles Road and Ively Road round the airfield, Cody
 * Technology Park and Ball Hill to the west, Pyestock Wood and Miles Hill in
@@ -974,6 +975,7 @@ const farnboroughHalf = {
 	instructions: "One lap of the airfield, anti-clockwise, from under the airship hangars. It is measured and it is chip-timed, so the shortcuts through town are somebody else's morning.",
 	theme: "town",
 	mood: "frost",
+	music: "race-theme.mp3",
 	startNodeId: "airship-hangars",
 	finishNodeId: "airship-hangars",
 	view: {
@@ -1118,7 +1120,8 @@ const farnboroughHalf = {
 			blurb: "the quietest kilometre of the whole race",
 			type: "woods",
 			labelSide: "right",
-			spriteDx: -5
+			spriteDx: -20,
+			spriteDy: -55
 		},
 		{
 			id: "miles-hill",
@@ -1138,8 +1141,8 @@ const farnboroughHalf = {
 			blurb: "water station, jelly babies, a man with a megaphone",
 			type: "airport",
 			labelAbove: true,
-			spriteDx: -70,
-			spriteDy: -34
+			spriteDx: -90,
+			spriteDy: -20
 		},
 		{
 			id: "danger-hill",
@@ -1302,8 +1305,48 @@ const farnboroughHalf = {
 	scatter: [
 		{
 			x: 620,
+			y: 220,
+			kind: "startline"
+		},
+		{
+			x: 225,
+			y: 255,
+			kind: "supporters"
+		},
+		{
+			x: 390,
+			y: 485,
+			kind: "supporters"
+		},
+		{
+			x: 640,
+			y: 290,
+			kind: "supporters"
+		},
+		{
+			x: 445,
+			y: 75,
+			kind: "supporters"
+		},
+		{
+			x: 115,
+			y: 355,
+			kind: "penguin"
+		},
+		{
+			x: 540,
+			y: 445,
+			kind: "penguin"
+		},
+		{
+			x: 340,
+			y: 340,
+			kind: "penguin"
+		},
+		{
+			x: 722,
 			y: 300,
-			kind: "lights"
+			kind: "penguin"
 		},
 		{
 			x: 388,
@@ -1312,19 +1355,13 @@ const farnboroughHalf = {
 			variant: 1
 		},
 		{
-			x: 200,
-			y: 190,
-			kind: "car",
-			variant: 3
-		},
-		{
 			x: 760,
 			y: 250,
 			kind: "cat"
 		},
 		{
 			x: 60,
-			y: 180,
+			y: 100,
 			kind: "tree"
 		},
 		{
@@ -1333,19 +1370,9 @@ const farnboroughHalf = {
 			kind: "tree"
 		},
 		{
-			x: 400,
-			y: 545,
-			kind: "tree"
-		},
-		{
 			x: 60,
-			y: 545,
+			y: 500,
 			kind: "bench"
-		},
-		{
-			x: 690,
-			y: 545,
-			kind: "bin"
 		}
 	]
 };

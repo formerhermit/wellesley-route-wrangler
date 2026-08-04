@@ -18,11 +18,12 @@ import type { Level } from "../game/types";
  * purpose: a race is measured, and a route that is half a kilometre out is not
  * a slightly different race, it is a wrong one.
  *
- * `mood: "frost"` because it is the Winter Half and it is February. That is
- * the Christmas Run's treatment used on a level that is not Christmas, which
- * is a deliberate widening: frost is weather, and February in Hampshire has
- * it. `flock` and `music` stay unset — the birds are pigeons and the theme is
- * the house one, as on any ordinary level.
+ * `mood: "frost"` because it is the Winter Half and it is February, which is
+ * the Christmas Run's treatment used on a level that is not Christmas — a
+ * deliberate widening, because frost is weather and February in Hampshire has
+ * it. It gets its own `music` for the same reason: the house theme is a
+ * Thursday evening and this is a start pen. `flock` stays unset; the birds are
+ * pigeons like anywhere else.
  *
  * Every name is real: Elles Road and Ively Road round the airfield, Cody
  * Technology Park and Ball Hill to the west, Pyestock Wood and Miles Hill in
@@ -37,6 +38,7 @@ export const farnboroughHalf: Level = {
     "One lap of the airfield, anti-clockwise, from under the airship hangars. It is measured and it is chip-timed, so the shortcuts through town are somebody else's morning.",
   theme: "town",
   mood: "frost",
+  music: "race-theme.mp3",
   startNodeId: "airship-hangars",
   finishNodeId: "airship-hangars",
   view: { width: 800, height: 560 },
@@ -190,8 +192,11 @@ export const farnboroughHalf: Level = {
       blurb: "the quietest kilometre of the whole race",
       type: "woods",
       labelSide: "right",
-      // A nudge left, off the road down from Cody.
-      spriteDx: -5,
+      // Up rather than left. A nudge sideways cleared the lane from Cody by
+      // the twenty units the test asks for and by nothing at all by eye: a
+      // wood is several trees wide.
+      spriteDx: -20,
+      spriteDy: -55,
     },
     {
       id: "miles-hill",
@@ -213,11 +218,11 @@ export const farnboroughHalf: Level = {
       blurb: "water station, jelly babies, a man with a megaphone",
       type: "airport",
       labelAbove: true,
-      // The aeroplane parks ninety units left of its junction, which on this
-      // map is the middle of the airfield — which is, to be fair, where an
-      // aeroplane belongs.
-      spriteDx: -70,
-      spriteDy: -34,
+      // Further out into the middle of the airfield, which is where an
+      // aeroplane belongs anyway. At -70 the anchor cleared the name by four
+      // units and the drawing — which is forty-eight across — did not.
+      spriteDx: -90,
+      spriteDy: -20,
     },
     {
       id: "danger-hill",
@@ -391,15 +396,46 @@ export const farnboroughHalf: Level = {
     { x: 60, y: 286, width: 140, height: 118 },
   ],
 
+  /*
+   * The furniture that makes it a race rather than a Sunday: the start line by
+   * the arch where the gun goes, and the supporters at the kerb round the lap
+   * — close enough to the road to be watching it rather than standing in a
+   * field near it.
+   *
+   * And penguins, which are not native to Farnborough and are not going to
+   * explain themselves. There is one in every February field.
+   */
   scatter: [
-    { x: 620, y: 300, kind: "lights" },
+    { x: 620, y: 220, kind: "startline" },
+
+    /*
+     * Kerbside: the anchor within reach of a road so they read as watching the
+     * race, and every corner of the drawing standing off the tarmac.
+     *
+     * That second half is the bit worth writing down. The scenery test asks
+     * for fourteen units from the anchor, and this sprite runs to twenty-six
+     * on its right — so two of these passed it while sitting squarely under
+     * the road. The Cove Green pair were also behind one of the trees a `park`
+     * junction scatters round itself, which nothing checks at all.
+     */
+    { x: 225, y: 255, kind: "supporters" },
+    { x: 390, y: 485, kind: "supporters" },
+    { x: 640, y: 290, kind: "supporters" },
+    { x: 445, y: 75, kind: "supporters" },
+
+    /*
+     * The mascot, so two of them stand at the kerb with the supporters and the
+     * other two are off doing whatever a penguin does at a road race.
+     */
+    { x: 115, y: 355, kind: "penguin" },
+    { x: 540, y: 445, kind: "penguin" },
+    { x: 340, y: 340, kind: "penguin" },
+    { x: 722, y: 300, kind: "penguin" },
+
     { x: 388, y: 128, kind: "car", variant: 1 },
-    { x: 200, y: 190, kind: "car", variant: 3 },
     { x: 760, y: 250, kind: "cat" },
-    { x: 60, y: 180, kind: "tree" },
+    { x: 60, y: 100, kind: "tree" },
     { x: 170, y: 105, kind: "tree" },
-    { x: 400, y: 545, kind: "tree" },
-    { x: 60, y: 545, kind: "bench" },
-    { x: 690, y: 545, kind: "bin" },
+    { x: 60, y: 500, kind: "bench" },
   ],
 };

@@ -284,8 +284,24 @@ also what happens on the day.
 
 `mood: "frost"` because it is the Winter Half and it is February — the
 Christmas Run's treatment on a level that is not Christmas, which is a
-deliberate widening. Frost is weather, and February in Hampshire has it.
-`flock` and `music` stay unset.
+deliberate widening. Frost is weather, and February in Hampshire has it. It has
+a track of its own too, which makes it the only level outside the Halloween and
+Christmas editions with one: the house theme is a Thursday evening and this is
+a start pen. `flock` stays unset.
+
+Frost brought a problem with it. The junctions go red and green at frost, which
+was written when frost meant Christmas and nothing else, and a red and green
+bauble on a February start line is a decoration nobody hung. So the map SVG now
+carries a `map-svg--{level.id}` class alongside its mood, and Farnborough uses
+it to put the junctions back in club blue and club orange. The mood is the
+weather; the tinsel is the occasion, and they are no longer the same class.
+
+It is also the only map with race furniture on it, because a race has to look
+like one before you have read a word of the brief: a start line under the arch,
+with the word on it, supporters wherever a supporter can actually park, and
+penguins, which are not native to Farnborough and are not going to explain
+themselves. There were water stations too, briefly. A trestle table with a cup
+on it is four marks at this size and reads as a bin, so they went.
 
 Finishing it is worth a badge of its own, **Thirteen Point One**, which is the
 only badge that asks for a whole level and means it.
@@ -379,9 +395,10 @@ A level may also `scatter` scenery by hand, on top of whatever its theme puts
 down, for the corners no road reaches — cats, bins, traffic lights and parked
 cars in the towns, dogs and benches out of them, gnomes and loitering youths,
 flowers and butterflies and an ice cream van at Tilford, the moon and the bats
-after dark, the running track behind the Sports Centre's car park on Loopy, and
-the four plastic soldiers dug in around the Eeek Soldiers junction, each facing
-whichever way its `flip` says.
+after dark, the running track behind the Sports Centre's car park on Loopy, the
+start line and supporters and penguins at Farnborough, and the four plastic
+soldiers dug in around the Eeek Soldiers junction, each facing whichever way its
+`flip` says.
 
 The track is drawn as a stadium — two straights and two bends, `rx` at exactly
 half the height — rather than as an ellipse, because an ellipse with lines on

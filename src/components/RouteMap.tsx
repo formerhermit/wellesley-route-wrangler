@@ -203,9 +203,15 @@ export function RouteMap({
       <div className="map-stage">
       <svg
         viewBox={`0 0 ${level.view.width} ${level.view.height}`}
-        className={`map-svg${level.mood ? ` map-svg--${level.mood}` : ""}${
-          running ? " is-running" : ""
-        }`}
+        /*
+         * The level's own id goes on as a class so a map can overrule
+         * something the mood decided for it. Frost hangs the junctions like
+         * baubles, which is right for the Christmas Run and wrong for a
+         * February road race — and there was no hook for a map to say so.
+         */
+        className={`map-svg map-svg--${level.id}${
+          level.mood ? ` map-svg--${level.mood}` : ""
+        }${running ? " is-running" : ""}`}
         role="img"
         aria-labelledby="map-title map-description"
       >
