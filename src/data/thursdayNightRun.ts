@@ -187,9 +187,11 @@ export const thursdayNightRun: Level = {
       blurb: "a corner of trees, and the only bench out here",
       type: "woods",
       labelSide: "right",
-      // Up and left, into the wedge between the two roads climbing north.
-      spriteDx: -62,
-      spriteDy: -42,
+      /* Down and left instead of up and left. The wedge between the two roads
+         climbing north is not as wide as a copse: the lane ran ten units into
+         the drawing, which a point test could never see (#110). */
+      spriteDx: -38,
+      spriteDy: 22,
     },
     {
       id: "puckridge-car-park",

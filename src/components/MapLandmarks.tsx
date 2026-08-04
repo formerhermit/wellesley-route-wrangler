@@ -74,7 +74,7 @@ import {
   landmarkEggId,
   scatterEggId,
 } from "../game/eggs";
-import { LANDMARK_OFFSET, TRAIL_TREES } from "../game/landmarks";
+import { LANDMARK_OFFSET, PARK_TREES, TRAIL_TREES } from "../game/landmarks";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
 /** What each kind of junction draws. Where it goes is in `landmarks.ts`. */
@@ -222,13 +222,6 @@ const FROST_FERN =
 const TERRACES = [
   { count: 6, x: 186, step: 62, y: 516, width: 46, height: (i: number) => 20 + (i % 3) * 8 },
   { count: 4, x: 556, step: 58, y: 40, width: 42, height: (i: number) => 26 + (i % 2) * 10 },
-];
-
-/** Trees scattered around a park, relative to its junction. */
-const PARK_TREES = [
-  { dx: -46, dy: -26 },
-  { dx: 40, dy: 12 },
-  { dx: -30, dy: 34 },
 ];
 
 function nodesOfType(level: Level, type: MapNodeType): MapNode[] {

@@ -114,8 +114,14 @@ export const tilfordRun: Level = {
       blurb: "shuts when it feels like it",
       type: "shop",
       labelAbove: true,
-      // Higher than a shop usually sits: the label goes in underneath it.
-      spriteDy: -62,
+      /*
+       * Left of the junction rather than above it. Raising it was the old fix
+       * for the label, and it walked the shop straight onto the theme's tree
+       * at 90,90 — twenty units deep, which is most of a shop (#110). Out to
+       * the side it clears the tree and still sits under its own name.
+       */
+      spriteDx: -34,
+      spriteDy: -2,
     },
     {
       id: "barley-mow",

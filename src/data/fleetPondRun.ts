@@ -173,6 +173,12 @@ export const fleetPondRun: Level = {
       label: "The Woods",
       blurb: "roots, mud, and a genuine sense of peril",
       type: "woods",
+      // Up and to the right, off the tree the trail theme plants at 90,90.
+      // The default put a sixty-wide wood squarely on top of it, seventeen
+      // units deep, and nothing noticed until the scenery test learned how
+      // big things are drawn (#110).
+      spriteDx: 22,
+      spriteDy: -26,
     },
     {
       id: "golf-club",

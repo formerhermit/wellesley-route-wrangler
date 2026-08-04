@@ -63,6 +63,156 @@ export const LANDMARK_OFFSET: Partial<
 };
 
 /**
+ * How big each drawing actually is, as `[left, right, top, bottom]` around its
+ * own anchor (#110).
+ *
+ * A sprite is placed by a point and drawn around it, and for a long time that
+ * point was the only thing anything checked. Seven landmarks shipped sitting on
+ * a road or under a label while clearing every threshold in `scenery.test.ts`
+ * by a comfortable margin — Pyestock Wood cleared the road by 20.5 against a
+ * limit of 18 and lay across it, because a wood is sixty units wide.
+ *
+ * Measured rather than guessed. `atlas.tsx` rendered one junction of every type
+ * and one of every scatter kind through the app's own tables and read
+ * `getBoundingClientRect` off each; these are those numbers, rounded out. That
+ * matters more than it sounds: a table of eyeballed half-widths would be wrong
+ * in exactly the cases that caused the bug, since the sprites nobody thinks of
+ * as big are the ones that are.
+ *
+ * Boxes are given as drawn, facing right. `flip` mirrors a sprite about its
+ * anchor, so anything a level may flip is squared off to the wider side before
+ * it is used — see `boxOf`.
+ */
+export type SpriteBox = readonly [
+  left: number,
+  right: number,
+  top: number,
+  bottom: number,
+];
+
+export const LANDMARK_BOX: Partial<Record<MapNodeType, SpriteBox>> = {
+  observatory: [-22, 26, -28, 20],
+  bush: [-24, 24, -18, 15],
+  shop: [-26, 26, -19, 14],
+  carpark: [-20, 20, -16, 16],
+  cow: [-22, 22, -13, 14],
+  hill: [-16, 16, -12, 10],
+  hangar: [-24, 24, -16, 12],
+  statue: [-16, 16, -20, 19],
+  towncentre: [-26, 32, -38, 12],
+  cemetery: [-22, 22, -6, 10],
+  woods: [-29, 30, -25, 16],
+  coffee: [-22, 13, -16, 13],
+  railway: [-24, 24, -9, 5],
+  football: [-26, 26, -15, 15],
+  golf: [-20, 20, -16, 17],
+  sportscentre: [-23, 23, -21, 13],
+  bin: [-13, 13, -14, 17],
+  church: [-26, 30, -46, 14],
+  portaloo: [-21, 21, -20, 17],
+  toilet: [-11, 11, -19, 17],
+  wall: [-44, 44, -18, 9],
+  car: [-33, 30, -13, 11],
+  ghost: [-11, 11, -12, 12],
+  treaters: [-23, 30, -16, 14],
+  airport: [-28, 24, -14, 16],
+  pub: [-32, 36, -19, 12],
+  cricket: [-24, 26, -9, 11],
+  mosque: [-24, 28, -27, 14],
+  bridge: [-34, 34, -13, 14],
+  manor: [-30, 32, -45, 12],
+  sailing: [-10, 10, -13, 11],
+  sand: [-24, 24, -8, 12],
+  mud: [-22, 22, -7, 11],
+  cottage: [-23, 23, -48, 14],
+  christmastree: [-16, 16, -40, 14],
+  mulledwine: [-22, 22, -20, 14],
+  /* The water, which is all a pond junction draws. Well off to one side. */
+  pond: [-70, -10, 11, 41],
+};
+
+/**
+ * And the same for hand-placed scenery. `moon` is the sky and `bat` is in it;
+ * both are still measured, and the test exempts them by kind rather than by
+ * pretending they are small.
+ */
+export const SCATTER_BOX: Record<string, SpriteBox> = {
+  tree: [-13, 14, -17, 12],
+  rock: [-14, 18, -5, 8],
+  soldier: [-8, 8, -19, 0],
+  cow: [-22, 22, -13, 14],
+  signpost: [-12, 13, -9, 11],
+  track: [-36, 36, -21, 21],
+  startline: [-28, 48, -31, 12],
+  supporters: [-16, 28, -20, 9],
+  penguin: [-10, 10, -14, 14],
+  pumpkin: [-10, 10, -11, 10],
+  gravestone: [-10, 10, -6, 10],
+  bat: [-11, 11, -6, 3],
+  moon: [-27, 27, -27, 27],
+  cat: [-11, 12, -16, 10],
+  lights: [-7, 7, -24, 12],
+  car: [-33, 30, -13, 11],
+  bin: [-13, 13, -14, 17],
+  dog: [-15, 15, -12, 10],
+  bench: [-17, 17, -11, 8],
+  gnome: [-8, 8, -9, 9],
+  youths: [-17, 15, -8, 10],
+  flowers: [-10, 10, -8, 9],
+  butterfly: [-9, 9, -6, 3],
+  icecream: [-22, 12, -10, 13],
+  alpine: [-12, 12, -22, 12],
+  wellingtonia: [-9, 9, -34, 16],
+  gorse: [-15, 14, -13, 10],
+  boat: [-10, 10, -13, 11],
+  island: [-16, 16, -17, 10],
+  warning: [-11, 11, -22, 12],
+  snowman: [-14, 14, -18, 14],
+  candycane: [-2, 8, -9, 12],
+  present: [-11, 12, -5, 12],
+  holly: [-19, 19, -15, 9],
+  xmastree: [-10, 10, -24, 8],
+};
+
+/** Anything not in the tables: big enough to be worth flagging, no more. */
+export const DEFAULT_BOX: SpriteBox = [-16, 16, -16, 16];
+
+/**
+ * A sprite's box in map units, placed at `x, y`. `flip` is squared off rather
+ * than mirrored, because a level may flip a sprite and the same entry has to
+ * hold either way round.
+ */
+export function boxOf(
+  box: SpriteBox | undefined,
+  x: number,
+  y: number,
+  flip = false,
+): { left: number; right: number; top: number; bottom: number } {
+  const [l, r, t, b] = box ?? DEFAULT_BOX;
+  const reach = flip ? Math.max(Math.abs(l), Math.abs(r)) : 0;
+  return {
+    left: x + (flip ? -reach : l),
+    right: x + (flip ? reach : r),
+    top: y + t,
+    bottom: y + b,
+  };
+}
+
+/**
+ * The three trees a `park` junction scatters round itself, which until #110
+ * nothing checked at all — the scenery test knew about `TRAIL_TREES` and had
+ * never heard of these, so the supporters at Cove Green were placed squarely
+ * behind one and the suite was happy. Seven levels have a park.
+ *
+ * Here rather than in `MapLandmarks` for the same reason the trail trees are.
+ */
+export const PARK_TREES: { dx: number; dy: number }[] = [
+  { dx: -46, dy: -26 },
+  { dx: 40, dy: 12 },
+  { dx: -30, dy: 34 },
+];
+
+/**
  * The trees a trail map scatters on its own, before a level places anything by
  * hand. Here rather than in the component so the scenery test can keep hand
  * placements from landing on them.

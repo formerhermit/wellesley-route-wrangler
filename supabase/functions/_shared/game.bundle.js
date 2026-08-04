@@ -1973,7 +1973,9 @@ const fleetPondRun = {
 			y: 120,
 			label: "The Woods",
 			blurb: "roots, mud, and a genuine sense of peril",
-			type: "woods"
+			type: "woods",
+			spriteDx: 22,
+			spriteDy: -26
 		},
 		{
 			id: "golf-club",
@@ -4263,8 +4265,8 @@ const thursdayNightRun = {
 			blurb: "a corner of trees, and the only bench out here",
 			type: "woods",
 			labelSide: "right",
-			spriteDx: -62,
-			spriteDy: -42
+			spriteDx: -38,
+			spriteDy: 22
 		},
 		{
 			id: "puckridge-car-park",
@@ -5193,8 +5195,8 @@ const thursleyCommon = {
 			label: "The Three Horseshoes",
 			blurb: "the pub in Thursley, and the run's real finish line",
 			type: "pub",
-			spriteDx: -50,
-			spriteDy: 0
+			spriteDx: -10,
+			spriteDy: -22
 		},
 		{
 			id: "elstead-green",
@@ -5928,7 +5930,8 @@ const tilfordRun = {
 			blurb: "shuts when it feels like it",
 			type: "shop",
 			labelAbove: true,
-			spriteDy: -62
+			spriteDx: -34,
+			spriteDy: -2
 		},
 		{
 			id: "barley-mow",

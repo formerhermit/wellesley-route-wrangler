@@ -1090,6 +1090,50 @@ where the roads went on paper, and the mistakes that made were invisible until
 you zoomed in — it caught a tree standing in the lane down to The Sandy Bit
 that had been shipped two releases earlier.
 
+For a long time it measured the wrong thing, which is issue #110. A sprite is
+placed by a point and drawn *around* it, and the point was all anything
+checked — so a landmark could clear every threshold in the file by a
+comfortable margin and still be sitting squarely on a road. Pyestock Wood
+cleared by 20.5 against a limit of 18 and lay along the tarmac, because a wood
+is sixty units wide. Seven of those shipped, one at a time, each found by
+somebody looking at the map.
+
+Two things fixed it. **`LANDMARK_BOX` and `SCATTER_BOX`** in `landmarks.ts`
+give every drawing its real extent, and those numbers were *measured* rather
+than estimated: a throwaway page rendered one junction of every type and one of
+every scatter kind through the app's own lookup tables, and `getBoundingClientRect`
+was read off each. That mattered more than it sounds — a table of eyeballed
+half-widths would have been wrong in exactly the cases that caused the bug,
+because the sprites nobody thinks of as big are the ones that are.
+
+The second is **what gets measured**. Asking how far a box sits from a road
+flags a third of the roster, because a box is a crude stand-in for a triangle
+or a cottage and its corners are mostly empty paper. Asking how far the road
+gets *inside* the box does not, and it matches what a person actually sees: a
+road grazing a corner is fine and is everywhere, a road running through the
+middle of a sprite is wrong and is rare. The three thresholds were then read
+off a ranking of every drawing on the roster, and each sits in a gap in it —
+the deepest graze anybody shipped on purpose is 2.8 and the shallowest real
+clash is 7.2.
+
+The rewrite found four more instances immediately, all of them shipped and all
+of them invisible to the old file: the Village Shop at Tilford drawn twenty
+units into one of the theme's own trees, The Woods at Fleet Pond and the Three
+Horseshoes at Thursley doing the same, and a lane running ten units through
+Wharf Copse on the Thursday Night Run.
+
+It also closed the other half of #110. A `park` junction scatters three trees
+around itself and **nothing checked them at all** — the test knew about
+`TRAIL_TREES` and had never heard of `PARK_TREES`, across the seven levels that
+have a park. That is how the supporters at Cove Green came to be placed
+squarely behind one with the suite perfectly happy. Both lists now live in
+`landmarks.ts` and the drawing imports them from there, so they cannot drift.
+
+The gnome had the same hole and now does not: `gnomeSpots` knew about the
+theme's trees and not a park's, so he could be sent to stand behind one on any
+of those seven maps. He still gets a point test rather than a box, and that is
+deliberate — he is eight units across, so for him a point *is* the drawing.
+
 `src/game/pace.test.ts` covers the hills. The group drops to a little over half
 pace on a climb and makes it up on the flat, so a run still takes the same
 eight seconds whatever the route; what changes is where the time goes.

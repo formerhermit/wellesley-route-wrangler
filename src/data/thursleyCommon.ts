@@ -238,8 +238,10 @@ export const thursleyCommon: Level = {
          the top of the map, so it was drawn off the paper altogether. Well to
          the west instead: it is seventy wide with the sign on a post, so
          twenty was still half on top of the junction. */
-      spriteDx: -50,
-      spriteDy: 0,
+      /* And up, off the tree at 610,70, which the westward move had put it
+         sixteen units into. */
+      spriteDx: -10,
+      spriteDy: -22,
     },
     {
       id: "elstead-green",

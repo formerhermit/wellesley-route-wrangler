@@ -1,4 +1,4 @@
-import { LANDMARK_OFFSET, TRAIL_TREES, labelBox } from "./landmarks";
+import { LANDMARK_OFFSET, PARK_TREES, TRAIL_TREES, labelBox } from "./landmarks";
 import { isUnlocked } from "./progression";
 import { roadBetween } from "./routeGraph";
 import type { Completed } from "./progression";
@@ -208,7 +208,21 @@ function landmarkSpots(level: Level): { x: number; y: number }[] {
 export function gnomeSpots(level: Level): { x: number; y: number }[] {
   const landmarks = landmarkSpots(level);
   const boxes = level.nodes.map(labelBox);
-  const trees = level.theme === "trail" ? TRAIL_TREES : [];
+  /*
+   * Both kinds, and the second was the other half of #110. A park scatters
+   * three trees round itself and nothing on this map knew it, so the gnome
+   * could be sent to stand behind one on any of the seven levels with a green.
+   * Small enough that a point still does for him — he is eight units across —
+   * but he has to know the trees are there.
+   */
+  const trees = [
+    ...(level.theme === "trail" ? TRAIL_TREES : []),
+    ...level.nodes
+      .filter((node) => node.type === "park" && !node.noTrees)
+      .flatMap((node) =>
+        PARK_TREES.map((tree) => ({ x: node.x + tree.dx, y: node.y + tree.dy })),
+      ),
+  ];
   const spots: { x: number; y: number }[] = [];
 
   for (let x = GNOME_EDGE; x <= level.view.width - GNOME_EDGE; x += 12) {
