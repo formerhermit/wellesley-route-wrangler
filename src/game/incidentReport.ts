@@ -48,7 +48,13 @@ export function flockLabel(level: Level): string {
   }
 }
 
-export function unnecessaryHills(level: Level, route: Route): number {
+/**
+ * Hill roads on the route. Named for what it counts rather than for what the
+ * report calls it, because what the report calls it now depends on the level:
+ * on a Thursday a hill is a thing you needlessly ran up, and on Crooksbury it
+ * is the entire reason anybody drove there.
+ */
+export function hillsTaken(level: Level, route: Route): number {
   return route.roadIds.filter((id) => roadById(level, id).hill === true).length;
 }
 
@@ -131,8 +137,17 @@ export function buildIncidentReport(
     tone: "neutral",
   });
 
-  const hills = unnecessaryHills(level, route);
-  if (hills > 0) {
+  const climbing = level.objectives.find((o) => o.kind === "climb");
+  const hills = hillsTaken(level, route);
+  if (climbing?.kind === "climb") {
+    // Asked for, so counted whether or not there were any, and marked against
+    // the number the level wanted rather than left as a neutral tally.
+    lines.push({
+      label: "Hills climbed",
+      value: `${hills} of ${climbing.minHills}`,
+      tone: tick(hills >= climbing.minHills),
+    });
+  } else if (hills > 0) {
     lines.push({
       label: "Unnecessary hills",
       value: String(hills),

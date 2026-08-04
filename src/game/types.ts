@@ -162,6 +162,14 @@ export type LevelObjective =
       label?: string;
       fail: ResultCopy;
     }
+  /**
+   * Take at least this many roads marked `hill`. The one objective that asks
+   * for something rather than forbidding it: everything else here is an avoid,
+   * a visit or a distance, and a level whose whole point is the climbing had
+   * no way to say so. Counts roads and not summits, so a flat lane to the top
+   * of a hill does not satisfy it.
+   */
+  | { kind: "climb"; minHills: number; fail: ResultCopy }
   | { kind: "no-repeat"; fail: ResultCopy };
 
 export type ObjectiveKind = LevelObjective["kind"];

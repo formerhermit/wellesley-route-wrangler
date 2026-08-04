@@ -19,6 +19,10 @@ const FAILURE_PRIORITY: FailureSlot[] = [
   "max-node-type",
   "avoid-surface",
   "visit",
+  // Below the summits it is named for. Missing Crooksbury Hill and being two
+  // climbs short are the same mistake, and the one with a place in it says
+  // more about what went wrong than a number does.
+  "climb",
   // Stopping at the canal outranks any quibble about the distance.
   "stranded",
   "distance",

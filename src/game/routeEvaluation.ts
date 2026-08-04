@@ -49,6 +49,11 @@ export function countSurface(
   ).length;
 }
 
+/** Roads marked `hill` on the route. Every time, so a road taken twice counts twice. */
+export function countHills(level: Level, route: Route): number {
+  return route.roadIds.filter((id) => roadById(level, id).hill === true).length;
+}
+
 export function hasRepeatedRoad(route: Route): boolean {
   return new Set(route.roadIds).size !== route.roadIds.length;
 }
@@ -162,6 +167,28 @@ function evaluateObjective(
         state: count > objective.limit ? "failed" : "passed",
         fail: fillCopy(objective.fail, totalKm),
         stat: { label: objective.what, value: String(count) },
+      };
+    }
+
+    case "climb": {
+      const climbed = countHills(level, route);
+      const done = climbed >= objective.minHills;
+      return {
+        kind: objective.kind,
+        label: `Climb at least ${objective.minHills} hills`,
+        /*
+         * Incomplete rather than failed while it is short, exactly as an
+         * unreached waypoint is: there may be more road to come, and a
+         * checklist that goes red on the first leg of every route is telling
+         * the player off for not having finished yet. `resultSelection` turns
+         * it into a failure once the run has actually been run.
+         */
+        detail: done
+          ? `${climbed} climbed. That will do it.`
+          : `${climbed} so far. ${objective.minHills - climbed} to go.`,
+        state: done ? "passed" : "incomplete",
+        fail: fillCopy(objective.fail, totalKm),
+        stat: { label: "Hills climbed", value: String(climbed) },
       };
     }
 

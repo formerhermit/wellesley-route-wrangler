@@ -337,6 +337,39 @@ white read as a club on an empty road and as five strangers in a crowd.
 Finishing it is worth a badge of its own, **Thirteen Point One**, which is the
 only badge that asks for a whole level and means it.
 
+**Level 14 — Crooksbury Hill** — the away day that is entirely about the
+climbing. Crooksbury Hill is 162 m with a trig point on top, the 21st highest
+hill in Surrey, and Hindhead is visible from it on a good day. Round it, on the
+Greensand Ridge between Farnham and Guildford: Soldier's Ring on its own
+hillside, Hillbury — an Iron Age hillfort and a scheduled monument — over
+Cutmill Pond, Botany Hill above The Sands, and the Hog's Back with Seale at the
+foot of the scarp. General's Pond was dug by hand to feed Puttenham Priory,
+Farnham Golf Club really is at The Sands, and The Good Intent really is in
+Puttenham. 12 to 14 km, the trig point, the hillfort, and seven climbs. Four
+winning routes, all of them 13.3 to 13.8 km.
+
+The design problem was not the geography. `paceOf` drops the group to 55% of
+its speed on a road marked `hill`, but the run always takes the same eight
+seconds, so a climb costs the *flat* legs their time rather than making the run
+longer. Mark every road as a hill and `totalCost` scales by the same factor
+everywhere, `fractionAt(effort)` collapses back to `effort`, and the level
+animates exactly like a flat one. **A map where everything is a hill has no
+hills at all.** So eleven of the nineteen roads climb and eight do not, and the
+eight flat ones are what make the eleven mean anything — which is also true of
+the actual place, where the lanes along the bottom are the only flat ground for
+miles. `crooksburyLevel.test.ts` pins both halves: the horseshoe's pace curve
+bends off the straight line, and a route of nothing but climbs is a straight
+line to ten decimal places.
+
+Two things worth knowing if you retune it. The distance *floor* cannot fire:
+seven climbs cost more than twelve kilometres before you have run a step of
+anything flat, so the "too short" copy is unreachable by construction, and
+there is a test saying so rather than a comment hoping so. And the estate track
+from Hampton onto the common exists for one reason — without it every route
+that reaches Hillbury is forced on to Crooksbury, since the hillfort's only
+other neighbours are the two ponds and both lead back the way you came, so the
+two waypoints could never fail apart. Frensham learned that the same way.
+
 ### What a place is standing on
 
 A trail map tints its whole ground green, which is why those maps read as
@@ -399,9 +432,9 @@ Two extra ranks is thirty times the work. It is memoised per level in a
 and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
-somebody's phone rather than here. Rank 7 to 9 is where twelve of the thirteen
-levels sit and is the comfortable range; past 11 wants measuring before it
-ships.
+somebody's phone rather than here. Rank 7 to 9 is where thirteen of the
+fourteen levels sit and is the comfortable range; past 11 wants measuring
+before it ships. Tilford, at 11, is the one that is not.
 
 Rank is the ceiling rather than the count, though, and the Thursday Night Run
 is the row that says so: rank 7, like four other maps, and four times their
@@ -446,6 +479,24 @@ the same road twice" used to be on every level and could never fail, because
 `selectNode` refuses a road already in the route; it sat there reading "Passed"
 for the whole game. The rule is still enforced, it is just not scored.
 
+Every objective bar one forbids something, asks you to be somewhere, or caps a
+distance. The exception is `climb`, added for Crooksbury: take at least this
+many roads marked `hill`. It counts roads and not summits, deliberately, so
+that walking up the lane to a hilltop does not satisfy it, and it stays
+`incomplete` rather than `failed` while the route is short — like an unreached
+waypoint, because there may be more road to come, and a checklist that goes red
+on the first leg of every route is telling the player off for not having
+finished yet. It sits below `visit` in `FAILURE_PRIORITY`: missing Crooksbury
+Hill and being two climbs short are the same mistake, and the one with a place
+in it says more about what went wrong than a number does.
+
+Declaring `climb` also rewrites one line of the incident report. "Unnecessary
+hills" becomes "Hills climbed", scored against the number the level asked for
+instead of left as a neutral tally. Identical quantity, opposite joke: on a
+Thursday a hill is something you needlessly ran up, and at Crooksbury it is the
+reason anybody got in a car. `unnecessaryHills` is now `hillsTaken` for the
+same reason — the function counts, the report editorialises.
+
 ## Progression
 
 Levels run in the order `src/data/levels.ts` declares them. Level 1 is open to
@@ -487,8 +538,10 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 64 winning routes across the thirteen levels — and 3,717 distinct
-loops — so a completed fixture list is nowhere near a finished game.
+There are 68 winning routes across the fourteen levels — `winningRouteCount`
+summed over the roster — and 2,889 distinct loops that get home without using a
+road twice, counted the way the game counts them, with a lap and the same lap
+backwards as one. So a completed fixture list is nowhere near a finished game.
 
 How much of a map is still out there is said in three places, because a total
 nobody can see is not a total. The header carries the club's all-time points

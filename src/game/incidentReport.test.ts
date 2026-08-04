@@ -9,7 +9,7 @@ import {
   closedRoadsIgnored,
   committeeComplaints,
   pigeonsSighted,
-  unnecessaryHills,
+  hillsTaken,
   verdictFor,
 } from "./incidentReport";
 import { buildGameShare, buildRunShare, payloadToClipboard } from "./shareText";
@@ -75,8 +75,8 @@ describe("incident report tallies", () => {
 
   it("counts hills and closures", () => {
     // The perfect route dodges Hospital Hill entirely.
-    expect(unnecessaryHills(town, perfect)).toBe(0);
-    expect(unnecessaryHills(town, overHospitalHill)).toBe(2);
+    expect(hillsTaken(town, perfect)).toBe(0);
+    expect(hillsTaken(town, overHospitalHill)).toBe(2);
     expect(closedRoadsIgnored(town, perfect)).toBe(0);
     expect(closedRoadsIgnored(town, throughTheClosure)).toBe(1);
   });
