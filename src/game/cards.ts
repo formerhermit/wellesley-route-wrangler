@@ -173,10 +173,9 @@ export const CARDS: readonly Card[] = [
     name: "Somebody has new shoes",
     blurb: "They are white. They are staying white.",
     /*
-     * Mud is marked per road, not read off the surface. Forbidding trails was
-     * the obvious first go and had no home anywhere on the roster: the town
-     * maps have no trail at all, and the trail maps are trail nearly end to
-     * end, so it either did nothing or forbade the entire map.
+     * Mud is marked per road rather than read off the surface, which cannot
+     * express it: a town map has no trail on it at all, and a trail map is
+     * trail nearly end to end.
      */
     fits: (level) => level.roads.some((road) => road.muddy && !road.closed),
     effect: () => ({

@@ -37,8 +37,8 @@ export function BenCard() {
  * Dan's cows. Dan is not going home until he has said hello.
  *
  * The cow off the map, not a drawing of one — the same call `CowBadge` made,
- * for the same reason. A vector cow at this size is a blob with spots on, and
- * the first go here came out an unmistakable snail. Same file, same animal.
+ * for the same reason: a vector cow at this size is a blob with spots on.
+ * Same file, same animal.
  */
 export function DanCard() {
   return (

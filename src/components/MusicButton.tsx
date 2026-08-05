@@ -4,13 +4,8 @@ interface Props {
 }
 
 /**
- * Sits beside the speaker in the header (#123).
- *
- * A pair of notes, because that is what music is — the speaker went to the
- * sound effects, where it belongs. The two had them the wrong way round: the
- * thing playing a tune behind the game was drawn as a loudspeaker, and the
- * thing that answers a press was an abstract waveform nobody has ever seen on
- * a button before.
+ * Sits beside the speaker in the header (#123). A pair of notes, because that
+ * is what music is; the speaker belongs to the sound effects.
  *
  * Struck through rather than emptied when off, so it reads as "no music" and
  * not as "there is no music here".
