@@ -681,6 +681,121 @@ export function Cemetery() {
   );
 }
 
+/*
+ * Bourne Wood's film unit. Everything below is drawn to the same scale as the
+ * rest of the furniture — a truck is about the size of the ice cream van,
+ * because on this map both are things parked in a wood.
+ */
+
+/** The unit truck. There are never fewer than nine of them and they are always white. */
+export function UnitTruck() {
+  return (
+    <g className="sprite sprite--unittruck" aria-hidden="true">
+      <rect x={-24} y={-14} width={34} height={20} rx={1.5} className="truck-box" />
+      <path d="M 10 6 v -11 h 8 l 6 6 v 5 Z" className="truck-cab" />
+      <rect x={12} y={-4} width={7} height={5} rx={1} className="truck-window" />
+      {/* The stripe every unit truck in the country has along its side. */}
+      <path d="M -24 -4 h 34" className="truck-stripe" />
+      <circle cx={-16} cy={7} r={3.4} className="van-wheel" />
+      <circle cx={2} cy={7} r={3.4} className="van-wheel" />
+      <circle cx={18} cy={7} r={3.4} className="van-wheel" />
+    </g>
+  );
+}
+
+/** A camera on sticks, pointed at whatever is about to be set on fire. */
+export function FilmCamera() {
+  return (
+    <g className="sprite sprite--filmset" aria-hidden="true">
+      {/* Legs first, so the camera sits on top of them. */}
+      <path d="M 0 2 L -9 16 M 0 2 L 9 16 M 0 2 L 1 16" className="camera-legs" />
+      <rect x={-11} y={-11} width={19} height={13} rx={2} className="camera-body" />
+      {/* The lens, and the magazine on top, which is what makes it read as a
+          film camera rather than a box. */}
+      <rect x={8} y={-8} width={7} height={7} rx={1.5} className="camera-lens" />
+      <circle cx={-5} cy={-14} r={4} className="camera-reel" />
+      <circle cx={3} cy={-14} r={4} className="camera-reel" />
+      <circle cx={-5} cy={-14} r={1.2} className="camera-spindle" />
+      <circle cx={3} cy={-14} r={1.2} className="camera-spindle" />
+    </g>
+  );
+}
+
+/** Scene one, take four. Nobody has ever seen one used in earnest. */
+export function Clapperboard() {
+  return (
+    <g className="sprite sprite--clapperboard" aria-hidden="true">
+      <rect x={-11} y={-4} width={22} height={14} rx={1.5} className="clapper-slate" />
+      <path d="M -11 -1 h 22 M -11 4 h 22" className="clapper-line" />
+      {/* The hinged arm, drawn open, because a closed one is a rectangle. */}
+      <g transform="rotate(-16 -11 -4)">
+        <rect x={-11} y={-10} width={22} height={6} className="clapper-slate" />
+        <path
+          d="M -11 -10 h 5 l 3 6 h -5 Z M -3 -10 h 5 l 3 6 h -5 Z M 5 -10 h 5 l 1.5 3 h -5 Z"
+          className="clapper-stripe"
+        />
+      </g>
+    </g>
+  );
+}
+
+/** Somebody's name on the back, and nobody in it. */
+export function DirectorChair() {
+  return (
+    <g className="sprite sprite--directorchair" aria-hidden="true">
+      <path d="M -8 10 L 8 -6 M 8 10 L -8 -6" className="chair-frame" />
+      <rect x={-9} y={-11} width={18} height={6} rx={1} className="chair-canvas" />
+      <rect x={-8} y={-1} width={16} height={4} rx={1} className="chair-canvas" />
+      <path d="M -8 10 h 16" className="chair-frame" />
+    </g>
+  );
+}
+
+/**
+ * A Bronze Age round barrow. Twenty-odd metres across and about a metre high,
+ * which is why it is drawn as a low dome rather than a hill: from the path it
+ * is a bump you would walk over without noticing.
+ */
+export function Barrow() {
+  return (
+    <g className="sprite sprite--barrow" aria-hidden="true">
+      <path d="M -22 8 q 6 -16 22 -16 q 16 0 22 16 Z" className="barrow-mound" />
+      <path d="M -13 8 q 4 -8 13 -8 q 9 0 13 8" className="barrow-crest" />
+      <path d="M -22 8 h 44" className="barrow-ground" />
+    </g>
+  );
+}
+
+/** Mother Ludlam's, in the sandstone, with the spring still running out of it. */
+export function Cave() {
+  return (
+    <g className="sprite sprite--cave" aria-hidden="true">
+      <path d="M -20 10 v -6 q 0 -16 20 -16 q 20 0 20 16 v 6 Z" className="cave-rock" />
+      <path d="M -8 10 v -5 q 0 -9 8 -9 q 8 0 8 9 v 5 Z" className="cave-mouth" />
+      {/* The Ludwell, which supplied Waverley Abbey from 1218. */}
+      <path d="M 0 10 q -3 5 -9 6" className="cave-spring" />
+    </g>
+  );
+}
+
+/**
+ * The Canadian searchlight post in the northernmost corner of the wood, which
+ * has been there since the war and is drawn pointing where it was left.
+ */
+export function Searchlight() {
+  return (
+    <g className="sprite sprite--searchlight" aria-hidden="true">
+      <path d="M -10 12 L 0 2 L 10 12" className="searchlight-legs" />
+      <path d="M -10 12 h 20" className="searchlight-legs" />
+      <g transform="rotate(-32 0 -2)">
+        <rect x={-9} y={-9} width={14} height={14} rx={2.5} className="searchlight-drum" />
+        <ellipse cx={6} cy={-2} rx={2.5} ry={7} className="searchlight-lens" />
+        <path d="M 9 -12 L 26 -20 M 9 8 L 26 16 M 10 -2 h 18" className="searchlight-beam" />
+      </g>
+    </g>
+  );
+}
+
 /** Not a wood, exactly. Enough trees together to get lost in. */
 export function Woods() {
   return (

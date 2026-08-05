@@ -370,6 +370,43 @@ that reaches Hillbury is forced on to Crooksbury, since the hillfort's only
 other neighbours are the two ponds and both lead back the way you came, so the
 two waypoints could never fail apart. Frensham learned that the same way.
 
+**Level 15 — Bourne Wood** — a conifer plantation two kilometres south of
+Farnham which is also, on and off since 1999, Germania, Sherwood, Asgard and a
+good deal of Middle England. Forestry England runs it and says outright that it
+is strategically important to the British film industry. Gladiator was first
+and burned a stand of conifers doing it; the opening battle is this wood with
+the smoke machines on. Since then: Band of Brothers, Children of Men, Robin
+Hood, two Deathly Hallows, Captain America, War Horse, Snow White and the
+Huntsman, Thor, Avengers, Wonder Woman, Jurassic World, The Witcher, Napoleon,
+Sonic 3 and House of the Dragon.
+
+The rest of the wood is older and nobody films it. Two Bronze Age round
+barrows, twenty-odd metres across and a metre high. A Canadian searchlight post
+in the northernmost corner, concrete still there since the war. Farnham Heath,
+where the RSPB is buying the conifers back off it. Down the hill, Waverley
+Abbey — the first Cistercian house in England, 1128 — and Mother Ludlam's Cave,
+where a monk named Symon found the spring that watered the abbey from 1218
+after its own dried up. 9.5 to 11 km, the Clearing, the Abbey, and the film
+unit has the short way in coned off. Six winning routes.
+
+It is the plainest map on the roster and that is the point. Crooksbury, right
+before it, added a whole new objective; this one adds none — start, finish,
+distance, two waypoints and a closure, which is level 1's rule set exactly.
+What is new here is the **drawing**: a unit truck, a camera on sticks, a
+clapperboard, a director's chair, a round barrow, a cave and a searchlight,
+seven sprites that no other level uses. A level whose entire joke is *where it
+is* does not also need a rule nobody has met before.
+
+It is also rank 6, the only map under the comfortable range, and for the same
+reason: at rank 7 it had twelve winning routes and at 8 it had twenty-two,
+which is not a puzzle, it is a field. Cutting the two near-duplicate links on
+the east side took it to six.
+
+The closure is the film unit and it is placed where it hurts — the short track
+from Unit Base into the Clearing, which is the obvious way in. Getting to the
+Clearing the long way round *and* still coming home inside the distance is the
+whole of the level.
+
 ### What a place is standing on
 
 A trail map tints its whole ground green, which is why those maps read as
@@ -433,8 +470,10 @@ and fifty milliseconds on the hardest map on the roster is a price worth
 paying. But a map meaningfully denser than Tilford would not be a little
 slower than Tilford, it would be a lot slower, and it would be found out on
 somebody's phone rather than here. Rank 7 to 9 is where thirteen of the
-fourteen levels sit and is the comfortable range; past 11 wants measuring
-before it ships. Tilford, at 11, is the one that is not.
+fifteen levels sit and is the comfortable range; past 11 wants measuring
+before it ships. Tilford is over it at 11 and Bourne Wood is under it at 6 —
+under has never been the problem, since the cost this is about is the cost of
+searching.
 
 Rank is the ceiling rather than the count, though, and the Thursday Night Run
 is the row that says so: rank 7, like four other maps, and four times their
@@ -460,7 +499,8 @@ down, for the corners no road reaches — cats, bins, traffic lights and parked
 cars in the towns, dogs and benches out of them, gnomes and loitering youths,
 flowers and butterflies and an ice cream van at Tilford, the moon and the bats
 after dark, the running track behind the Sports Centre's car park on Loopy, the
-start line and supporters and penguins at Farnborough, and the four plastic
+start line and supporters and penguins at Farnborough, the unit trucks and the
+clapperboard and the director's chair at Bourne Wood, and the four plastic
 soldiers dug in around the Eeek Soldiers junction, each facing whichever way its
 `flip` says.
 
@@ -538,8 +578,8 @@ what you have explored is worth knowing.
 That shape is deliberate. Points per *run* would mean the best strategy is to
 run the easiest level forever; points per *discovery* cannot be farmed, and the
 distance window stops the grand tour being a strategy rather than a choice.
-There are 68 winning routes across the fourteen levels — `winningRouteCount`
-summed over the roster — and 2,889 distinct loops that get home without using a
+There are 74 winning routes across the fifteen levels — `winningRouteCount`
+summed over the roster — and 2,930 distinct loops that get home without using a
 road twice, counted the way the game counts them, with a lap and the same lap
 backwards as one. So a completed fixture list is nowhere near a finished game.
 

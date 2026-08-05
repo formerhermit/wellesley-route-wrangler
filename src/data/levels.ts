@@ -1,3 +1,4 @@
+import { bourneWood } from "./bourneWood";
 import { caesarsCamp } from "./caesarsCamp";
 import { christmasRun } from "./christmasRun";
 import { crooksburyHill } from "./crooksburyHill";
@@ -30,4 +31,5 @@ export const levels: Level[] = [
   frenshamPonds,
   farnboroughHalf,
   crooksburyHill,
+  bourneWood,
 ];

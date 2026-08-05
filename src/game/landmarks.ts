@@ -60,6 +60,15 @@ export const LANDMARK_OFFSET: Partial<
   // any map, and hanging it above a junction puts the star off the paper.
   christmastree: { dx: 44, dy: -6 },
   mulledwine: { dx: 0, dy: -44 },
+  // Bourne Wood's film unit, and the wood's own archaeology (#113).
+  filmset: { dx: 0, dy: -44 },
+  filmunit: { dx: 0, dy: -40 },
+  cave: { dx: 0, dy: -40 },
+  searchlight: { dx: 0, dy: -42 },
+  /* Below, unlike the rest. A barrow is a metre high and forty-four wide, and
+     hanging it above its junction draws it as a hill, which is the one thing
+     it is not. */
+  barrow: { dx: 0, dy: 34 },
 };
 
 /**
@@ -129,6 +138,13 @@ export const LANDMARK_BOX: Partial<Record<MapNodeType, SpriteBox>> = {
   mulledwine: [-22, 22, -20, 14],
   /* The water, which is all a pond junction draws. Well off to one side. */
   pond: [-70, -10, 11, 41],
+  // Bourne Wood (#113). The searchlight is wide because the beam is drawn:
+  // a light ray is still ink on the paper, and something behind it is hidden.
+  filmset: [-11, 15, -18, 16],
+  filmunit: [-24, 24, -14, 10],
+  barrow: [-22, 22, -8, 8],
+  cave: [-20, 20, -12, 16],
+  searchlight: [-17, 33, -32, 18],
 };
 
 /**
@@ -164,6 +180,9 @@ export const SCATTER_BOX: Record<string, SpriteBox> = {
   alpine: [-12, 12, -22, 12],
   wellingtonia: [-9, 9, -34, 16],
   gorse: [-15, 14, -13, 10],
+  unittruck: [-24, 24, -14, 10],
+  clapperboard: [-13, 11, -16, 10],
+  directorchair: [-9, 9, -11, 10],
   boat: [-10, 10, -13, 11],
   island: [-16, 16, -17, 10],
   warning: [-11, 11, -22, 12],

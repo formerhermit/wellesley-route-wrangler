@@ -50,7 +50,17 @@ export type MapNodeType =
   /** A trestle table, an urn, and the real reason anybody turned up. */
   | "mulledwine"
   /** The Atlantic Wall on Hankley Common. Concrete, shelled, and still there. */
-  | "wall";
+  | "wall"
+  /** A camera on sticks. Bourne Wood is a working film location (#113). */
+  | "filmset"
+  /** And the trucks it arrives in. */
+  | "filmunit"
+  /** A Bronze Age round barrow: twenty-odd metres across and a metre high. */
+  | "barrow"
+  /** Mother Ludlam's, in the sandstone, with the spring still coming out. */
+  | "cave"
+  /** The Canadian searchlight post, up there since the war. */
+  | "searchlight";
 
 export type RoadSurface = "road" | "trail";
 
@@ -246,6 +256,9 @@ export interface Level {
       | "alpine"
       | "wellingtonia"
       | "gorse"
+      | "unittruck"
+      | "clapperboard"
+      | "directorchair"
       | "boat"
       | "island"
       | "warning"
