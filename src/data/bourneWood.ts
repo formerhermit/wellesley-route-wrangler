@@ -200,11 +200,11 @@ export const bourneWood: Level = {
     { id: "cave-waverley", from: "mother-ludlams-cave", to: "waverley-abbey", distanceKm: 0.9, surface: "trail" },
     { id: "waverley-heath", from: "waverley-abbey", to: "farnham-heath", distanceKm: 1.3, surface: "trail" },
     { id: "heath-clearing", from: "farnham-heath", to: "the-clearing", distanceKm: 1.2, surface: "trail" },
-    { id: "heath-barrows", from: "farnham-heath", to: "the-barrows", distanceKm: 1.1, surface: "trail" },
+    { id: "heath-barrows", from: "farnham-heath", to: "the-barrows", distanceKm: 1.1, surface: "trail", muddy: true },
     { id: "barrows-clearing", from: "the-barrows", to: "the-clearing", distanceKm: 0.9, surface: "trail" },
     { id: "barrows-promontory", from: "the-barrows", to: "the-promontory", distanceKm: 0.7, surface: "trail", hill: true },
     { id: "promontory-clearing", from: "the-promontory", to: "the-clearing", distanceKm: 0.8, surface: "trail", hill: true },
-    { id: "promontory-rowledge", from: "the-promontory", to: "rowledge", distanceKm: 1.3, surface: "trail" },
+    { id: "promontory-rowledge", from: "the-promontory", to: "rowledge", distanceKm: 1.3, surface: "trail", muddy: true },
     { id: "rowledge-carpark", from: "rowledge", to: "bourne-car-park", distanceKm: 1.2 },
   ],
 

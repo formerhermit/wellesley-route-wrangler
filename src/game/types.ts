@@ -64,6 +64,17 @@ export type MapNodeType =
 
 export type RoadSurface = "road" | "trail";
 
+/**
+ * Something true of a road that a brief can ask you to keep off, marked per
+ * road rather than worked out from anything else.
+ *
+ * Both are deliberately loose of `surface`. Nearly every road on a trail map
+ * is a trail, so "avoid the trails" there forbids the whole map — and the lane
+ * along the bottom of a valley can be filthy in February while the sandy track
+ * over the heath stays dry. Mud is where the map says it is.
+ */
+export type RoadTrait = "hill" | "muddy";
+
 export interface MapNode {
   id: string;
   x: number;
@@ -117,6 +128,12 @@ export interface Road {
   distanceKm: number;
   closed?: boolean;
   hill?: boolean;
+  /**
+   * Filthy underfoot, whatever it is paved with. Nothing in the base game
+   * reads this — it is here for the briefing (#10), where somebody's new
+   * shoes and a flooded February have opinions about it.
+   */
+  muddy?: boolean;
   /** Defaults to "road". Levels may require staying off one or the other. */
   surface?: RoadSurface;
   /** 0–1. Purely decorative: drives where pigeons are drawn and animated. */
@@ -160,6 +177,16 @@ export type LevelObjective =
   | {
       kind: "avoid-surface";
       surface: RoadSurface;
+      what: string;
+      fail: ResultCopy;
+    }
+  /**
+   * Keep off every road marked with a trait. The counterpart to `climb`,
+   * which asks for hills — this one refuses them, or refuses the mud.
+   */
+  | {
+      kind: "avoid-roads";
+      trait: RoadTrait;
       what: string;
       fail: ResultCopy;
     }

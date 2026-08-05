@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 import type { Level, RouteEvaluation } from "../game/types";
 import { MusicButton } from "./MusicButton";
 import { SoundButton } from "./SoundButton";
@@ -15,6 +15,9 @@ interface Props {
   levelsButtonRef: RefObject<HTMLButtonElement | null>;
   musicOn: boolean;
   onToggleMusic: () => void;
+  /** The briefing button (#10), where this level has one. A slot rather than
+   *  four more props, since the header only has to find it a place to sit. */
+  briefing?: ReactNode;
   soundOn: boolean;
   onToggleSound: () => void;
   onShowLevels: () => void;
@@ -31,6 +34,7 @@ export function GameHeader({
   levelsButtonRef,
   musicOn,
   onToggleMusic,
+  briefing,
   soundOn,
   onToggleSound,
   onShowLevels,
@@ -150,6 +154,8 @@ export function GameHeader({
           </svg>
           <span className="visually-hidden">The club</span>
         </button>
+
+        {briefing}
 
         <MusicButton on={musicOn} onToggle={onToggleMusic} />
         <SoundButton on={soundOn} onToggle={onToggleSound} />

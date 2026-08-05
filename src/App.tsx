@@ -10,6 +10,9 @@ import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
 import { ClubDialog } from "./components/ClubDialog";
 import { RunBookDialog } from "./components/RunBookDialog";
+import { BriefingButton } from "./components/BriefingButton";
+import { BriefingCoachMark } from "./components/BriefingCoachMark";
+import { BriefingDialog } from "./components/BriefingDialog";
 import { StartingGun } from "./components/StartingGun";
 import { levels } from "./data/levels";
 import {
@@ -39,6 +42,14 @@ import { nextGnomeHome } from "./game/eggs";
 import type { GnomeHome } from "./game/eggs";
 import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
 import { clubTableEnabled } from "./club/enabled";
+import {
+  applyCards,
+  briefingAvailable,
+  dealBriefing,
+  stopsFor,
+  weatherFor,
+} from "./game/cards";
+import type { Card } from "./game/cards";
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -67,10 +78,40 @@ function rememberHelpSeen(): void {
   }
 }
 
+/** Remembers that the briefing has been pointed out once (#10). */
+const BRIEFING_SEEN_KEY = "route-wrangler:briefing-seen";
+
+function hasSeenBriefing(): boolean {
+  try {
+    return localStorage.getItem(BRIEFING_SEEN_KEY) === "1";
+  } catch {
+    // Storage blocked. Better to stay quiet than to point at the same button
+    // on every visit.
+    return true;
+  }
+}
+
+function rememberBriefingSeen(): void {
+  try {
+    localStorage.setItem(BRIEFING_SEEN_KEY, "1");
+  } catch {
+    // Storage blocked; it offers itself again next time.
+  }
+}
+
 type Phase = "planning" | "running" | "result";
 
 interface GameState {
   level: Level;
+  /**
+   * The two cards taken out on this run (#10). They are applied to a derived
+   * level everything here plans and judges against; the scoring outside this
+   * reducer keeps the level the roster declared, so a card is never worth
+   * anything.
+   */
+  cards: Card[];
+  /** Whether the hand has been run yet. There is no redeal before you run. */
+  cardsRun: boolean;
   route: Route;
   phase: Phase;
   result: GameResult | null;
@@ -88,11 +129,14 @@ type Action =
   | { type: "finish" }
   | { type: "edit" }
   | { type: "load"; route: Route }
+  | { type: "pick-cards"; cards: Card[] }
   | { type: "select-level"; level: Level };
 
 function initialState(level: Level): GameState {
   return {
     level,
+    cards: [],
+    cardsRun: false,
     route: emptyRoute(level),
     phase: "planning",
     result: null,
@@ -119,6 +163,9 @@ function formatChipTime(ms: number): string {
 
 function reducer(state: GameState, action: Action): GameState {
   const { level } = state;
+  // What the run is actually being judged against. The same map with a longer
+  // brief on it, or the level itself when no cards were taken.
+  const brief = applyCards(level, state.cards);
 
   switch (action.type) {
     case "select": {
@@ -150,10 +197,29 @@ function reducer(state: GameState, action: Action): GameState {
     case "clear-rejection":
       return { ...state, rejectedNodeId: null };
 
+    /*
+     * Picking a hand clears whatever was being planned. The brief has just
+     * changed underneath the route, so a half-laid loop is now answering a
+     * question nobody asked.
+     */
+    case "pick-cards":
+      return {
+        ...initialState(level),
+        cards: action.cards,
+        announcement: `Briefing taken: ${action.cards
+          .map((card) => card.name)
+          .join(", ")}.`,
+        nonce: state.nonce + 1,
+      };
+
     case "reset": {
       const start = nodeById(level, level.startNodeId).label;
       return {
         ...initialState(level),
+        // The cards stay. Clearing the route is replanning the same run, not
+        // turning up on a different evening.
+        cards: state.cards,
+        cardsRun: state.cardsRun,
         announcement: `Route cleared. Everyone back at ${start}.`,
         nonce: state.nonce + 1,
       };
@@ -168,7 +234,7 @@ function reducer(state: GameState, action: Action): GameState {
       };
 
     case "run":
-      if (!canRunRoute(level, state.route)) return state;
+      if (!canRunRoute(brief, state.route)) return state;
       return {
         ...state,
         phase: "running",
@@ -183,7 +249,9 @@ function reducer(state: GameState, action: Action): GameState {
       return {
         ...state,
         phase: "result",
-        result: selectResult(level, evaluateRoute(level, state.route)),
+        result: selectResult(brief, evaluateRoute(brief, state.route)),
+        // The hand has had its run, so another can be dealt.
+        cardsRun: true,
       };
     }
 
@@ -238,6 +306,8 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
   const [bookOpen, setBookOpen] = useState(false);
+  /** Whether the briefing is up (#10). The hand itself is the dialog's. */
+  const [briefingOpen, setBriefingOpen] = useState(false);
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
@@ -261,6 +331,7 @@ export default function App() {
   const modalOpen =
     showingResult ||
     showingStartingGun ||
+    briefingOpen ||
     helpOpen ||
     levelsOpen ||
     privacyOpen ||
@@ -288,15 +359,48 @@ export default function App() {
     rememberHelpSeen();
   };
 
+  /*
+   * The brief as the cards leave it (#10) — the same map with more asked of
+   * it. Everything the player plans and is judged against reads this; the
+   * scoring below keeps `level`, so a card is never worth anything.
+   */
+  const brief = useMemo(
+    () => applyCards(level, state.cards),
+    [level, state.cards],
+  );
+  const stops = useMemo(
+    () => stopsFor(level, state.cards),
+    [level, state.cards],
+  );
+  const weather = useMemo(
+    () => weatherFor(level, state.cards),
+    [level, state.cards],
+  );
+
   const evaluation = useMemo(
-    () => evaluateRoute(level, state.route),
-    [level, state.route],
+    () => evaluateRoute(brief, state.route),
+    [brief, state.route],
   );
-  const canRun = canRunRoute(level, state.route);
+  const canRun = canRunRoute(brief, state.route);
   const report = useMemo(
-    () => buildIncidentReport(level, state.route, evaluation),
-    [level, state.route, evaluation],
+    () => buildIncidentReport(brief, state.route, evaluation),
+    [brief, state.route, evaluation],
   );
+
+  /*
+   * The briefing itself. `dealBriefing` walks the map to check the hand can
+   * actually be played, so whether one is on offer is worked out once per
+   * level rather than on every render.
+   */
+  const briefingButtonRef = useRef<HTMLButtonElement>(null);
+  const briefingOffered = useMemo(
+    () =>
+      briefingAvailable(level, progress.completed) &&
+      dealBriefing(level, progress.completed, 0) !== undefined,
+    [level, progress.completed],
+  );
+  const canDeal = state.cards.length === 0 || state.cardsRun;
+  const [briefingSeen, setBriefingSeen] = useState(hasSeenBriefing);
 
   // Where the club stands. Both replay every stored route through the scoring,
   // so they are worked out when the book changes rather than on every render —
@@ -488,6 +592,16 @@ export default function App() {
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
+          briefing={
+            briefingOffered ? (
+              <BriefingButton
+                buttonRef={briefingButtonRef}
+                taken={state.cards.length}
+                canDeal={canDeal}
+                onDeal={() => setBriefingOpen(true)}
+              />
+            ) : undefined
+          }
           soundOn={sound.on}
           onToggleSound={sound.toggle}
           onShowClub={() => setClubOpen(true)}
@@ -525,6 +639,8 @@ export default function App() {
                 moveGnome();
               }}
               onEggPressed={() => sound.play("egg")}
+              stops={stops}
+              weather={weather}
             />
 
             <GameControls
@@ -609,6 +725,31 @@ export default function App() {
             sound.play("gun");
           }}
           onDone={() => setShowingStartingGun(false)}
+        />
+      )}
+
+      {briefingOpen && (
+        <BriefingDialog
+          deal={() => {
+            sound.play("select");
+            return dealBriefing(level, progress.completed, Math.random());
+          }}
+          onConfirm={(picked) => {
+            setBriefingOpen(false);
+            dispatch({ type: "pick-cards", cards: picked });
+          }}
+          onClose={() => setBriefingOpen(false)}
+        />
+      )}
+
+      {/* Pointed at once, the first time it is there to be found. */}
+      {briefingOffered && !briefingSeen && !modalOpen && (
+        <BriefingCoachMark
+          anchorRef={briefingButtonRef}
+          onDismiss={() => {
+            setBriefingSeen(true);
+            rememberBriefingSeen();
+          }}
         />
       )}
 

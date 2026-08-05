@@ -108,6 +108,45 @@ export function winningRouteCount(level: Level): number {
 }
 
 /**
+ * Whether the brief can be met at all — the same walk as above, stopped at
+ * the first route that works rather than counted to the end.
+ *
+ * For asking of a *derived* level (#10), where the only question is whether
+ * the thing is still possible and the count is nobody's business. Early exit
+ * matters there: it is asked at the moment a briefing is dealt, and a map
+ * with plenty of winners answers almost immediately.
+ */
+const winnable = new WeakMap<Level, boolean>();
+
+export function hasWinningRoute(level: Level): boolean {
+  const cached = winnable.get(level);
+  if (cached !== undefined) return cached;
+
+  const graph = graphFor(level);
+  const walk = (route: Route): boolean => {
+    const end = currentNodeId(route);
+    // Home counts as the end of the run, exactly as the count above has it:
+    // the walk stops here rather than running on through the finish.
+    if (end === level.finishNodeId && route.roadIds.length > 0) {
+      return evaluateRoute(level, route).success;
+    }
+    for (const road of graph.roadsByNode.get(end) ?? []) {
+      if (route.roadIds.includes(road.id)) continue;
+      const found = walk({
+        nodeIds: [...route.nodeIds, otherEnd(road, end)],
+        roadIds: [...route.roadIds, road.id],
+      });
+      if (found) return true;
+    }
+    return false;
+  };
+
+  const answer = walk({ nodeIds: [level.startNodeId], roadIds: [] });
+  winnable.set(level, answer);
+  return answer;
+}
+
+/**
  * What the route took in beyond what it was told to. The distance window is
  * what keeps this honest: you cannot pad a route with junctions and still come
  * home inside the brief, so the grand tour is a choice and not a strategy.
