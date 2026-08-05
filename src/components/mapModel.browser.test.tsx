@@ -147,12 +147,11 @@ describe.each(levels.map((level) => [level.id, level] as const))(
 
     /*
      * And the sizes. These are the numbers `scenery.test.ts` measures every
-     * clearance against, and until now they were a snapshot taken by hand off
-     * a browser once — so redrawing a sprite wider left the whole suite
-     * checking the old shape and passing.
-     */
-    /*
-     * And nothing is drawn bigger than the model thinks it is. Only that
+     * clearance against, and they were a snapshot taken by hand off a browser
+     * once — so redrawing a sprite wider left the whole suite checking the old
+     * shape and passing.
+     *
+     * Nothing may be drawn bigger than the model thinks it is. Only that
      * direction matters: a box larger than the drawing costs a little room on
      * the paper, a box smaller than the drawing is a collision the rules
      * cannot see, and that is #110 exactly. Some are legitimately generous —

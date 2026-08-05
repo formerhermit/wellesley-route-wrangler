@@ -192,7 +192,8 @@ export const SCATTER_BOX: Record<ScatterKind, SpriteBox> = {
   snowman: [-14, 14, -18, 14],
   candycane: [-2, 8, -9, 12],
   present: [-11, 12, -5, 12],
-  holly: [-19, 19, -15, 9],
+  // Shorter than it was: the berries moved up into the crook (#114).
+  holly: [-20, 20, -15, 5],
   xmastree: [-10, 10, -24, 8],
 };
 

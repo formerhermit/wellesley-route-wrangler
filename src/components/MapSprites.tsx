@@ -1347,10 +1347,17 @@ export function Holly() {
         <path d={HOLLY_LEAF} className="holly-leaf" />
         <path d="M 8 0 h 9" className="holly-vein" />
       </g>
-      {/* In the crook of the V, where the two stems meet. */}
-      <circle cx={-2.4} cy={3.4} r={2.2} className="holly-berry" />
-      <circle cx={2.4} cy={3.4} r={2.2} className="holly-berry" />
-      <circle cx={0} cy={7.2} r={2.2} className="holly-berry" />
+      {/*
+        In the crook of the V, and actually in it (#114). The cluster used to
+        sit four units below the leaves with clear paper between, so the sprig
+        read as three separate pieces rather than one: two leaves and some
+        berries that happened to be underneath them. The leaf bases rotate to
+        (±4.2, -2.7), so a berry centred at (±2.4, -1.1) comes within a fifth
+        of a unit of one — and both are stroked, which closes the rest.
+      */}
+      <circle cx={-2.4} cy={-1.1} r={2.2} className="holly-berry" />
+      <circle cx={2.4} cy={-1.1} r={2.2} className="holly-berry" />
+      <circle cx={0} cy={2.7} r={2.2} className="holly-berry" />
     </g>
   );
 }
