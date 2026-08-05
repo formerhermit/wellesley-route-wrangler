@@ -28,6 +28,9 @@ jobs:
 
       - run: npm ci
 
+      # The rendered half of the suite needs a browser to render into.
+      - run: npx playwright install --with-deps chromium
+
       # A failing test or type error should stop the deploy, not ship.
       - run: npm run test
       - run: npm run lint

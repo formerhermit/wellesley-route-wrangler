@@ -1,4 +1,7 @@
-import type { MapNode, MapNodeType } from "./types";
+import type { Level, MapNode, MapNodeType } from "./types";
+
+/** Every kind of scenery a level may place by hand. */
+export type ScatterKind = NonNullable<Level["scatter"]>[number]["kind"];
 
 /**
  * Where each kind of landmark sits relative to its junction. Data, not
@@ -152,7 +155,7 @@ export const LANDMARK_BOX: Partial<Record<MapNodeType, SpriteBox>> = {
  * both are still measured, and the test exempts them by kind rather than by
  * pretending they are small.
  */
-export const SCATTER_BOX: Record<string, SpriteBox> = {
+export const SCATTER_BOX: Record<ScatterKind, SpriteBox> = {
   tree: [-13, 14, -17, 12],
   rock: [-14, 18, -5, 8],
   soldier: [-8, 8, -19, 0],
@@ -191,6 +194,108 @@ export const SCATTER_BOX: Record<string, SpriteBox> = {
   present: [-11, 12, -5, 12],
   holly: [-19, 19, -15, 9],
   xmastree: [-10, 10, -24, 8],
+};
+
+/**
+ * Whether a junction of this type brings a drawing with it.
+ *
+ * A `Record` over the whole union rather than a list, so it does not compile
+ * until a new `MapNodeType` says which it is. That is the point: three of the
+ * four bugs in this family were a new thing the map draws that nothing knew to
+ * check, and a hand-kept list would have gone stale in exactly the same way.
+ *
+ * The seven that do not draw one are not undrawn — they are drawn by something
+ * other than `LANDMARK_OFFSET`. A pond and a shore are water, a canal is a
+ * ribbon through its own junctions, a park is a green with its own trees, and
+ * a plain junction, a pigeon hotspot and a pool are the dot and nothing else.
+ */
+export const LANDMARK_DRAWS: Record<MapNodeType, boolean> = {
+  junction: false,
+  canal: false,
+  park: false,
+  pigeon: false,
+  pond: false,
+  shore: false,
+  pool: false,
+
+  observatory: true,
+  bush: true,
+  shop: true,
+  carpark: true,
+  cow: true,
+  hill: true,
+  hangar: true,
+  statue: true,
+  towncentre: true,
+  cemetery: true,
+  coffee: true,
+  railway: true,
+  football: true,
+  golf: true,
+  woods: true,
+  sportscentre: true,
+  bin: true,
+  airport: true,
+  pub: true,
+  cricket: true,
+  mosque: true,
+  bridge: true,
+  church: true,
+  ghost: true,
+  portaloo: true,
+  toilet: true,
+  car: true,
+  manor: true,
+  sailing: true,
+  sand: true,
+  mud: true,
+  treaters: true,
+  cottage: true,
+  christmastree: true,
+  mulledwine: true,
+  wall: true,
+  filmset: true,
+  filmunit: true,
+  barrow: true,
+  cave: true,
+  searchlight: true,
+};
+
+/**
+ * Two drawings the map places for itself, off road geometry rather than off a
+ * junction: the triangle beside a climb (#118) and the barrier across a
+ * closure. Here rather than as literals inside the test, which is where they
+ * were and which made this the third place a sprite's size was written down.
+ */
+export const HILL_MARKER_BOX: SpriteBox = [-11, 11, -8, 7];
+export const ROAD_CLOSED_BOX: SpriteBox = [-17, 17, -6, 18];
+
+/**
+ * A tree with the leaves off, which is what a park plants once a level has a
+ * `mood` — October took them and December has not given them back. Four units
+ * taller than a live one and a little narrower, and until the rendered suite
+ * went looking nothing knew it existed: the park trees were measured as live
+ * ones on every dusk and frost map.
+ */
+export const DEAD_TREE_BOX: SpriteBox = [-12, 11, -21, 12];
+
+/** And the bird inside the bush, which is an easter egg rather than a level's. */
+export const PIGEON_BOX: SpriteBox = [-12, 17, -10, 10];
+
+/**
+ * Every box the map can draw, keyed by the class the sprite actually carries.
+ *
+ * Derived rather than written, so it cannot drift from the tables above. The
+ * rendered suite checks the map against this; nothing else needs it, because
+ * everything else knows what it is looking at.
+ */
+export const DRAWN_BOX: Record<string, SpriteBox> = {
+  ...SCATTER_BOX,
+  ...(LANDMARK_BOX as Record<string, SpriteBox>),
+  roadhill: HILL_MARKER_BOX,
+  closed: ROAD_CLOSED_BOX,
+  "dead-tree": DEAD_TREE_BOX,
+  pigeon: PIGEON_BOX,
 };
 
 /** Anything not in the tables: big enough to be worth flagging, no more. */

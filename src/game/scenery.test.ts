@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { levels } from "../data/levels";
 import {
+  DEAD_TREE_BOX,
+  HILL_MARKER_BOX,
   LANDMARK_BOX,
+  LANDMARK_DRAWS,
   LANDMARK_OFFSET,
   PARK_TREES,
+  ROAD_CLOSED_BOX,
   SCATTER_BOX,
   TRAIL_TREES,
   boxOf,
@@ -200,7 +204,14 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         .flatMap((node) =>
           PARK_TREES.map((tree) => ({
             what: `a park tree at ${node.id}`,
-            box: boxOf(SCATTER_BOX.tree, node.x + tree.dx, node.y + tree.dy),
+            // Bare once the level has a mood, and four units taller for it —
+            // which the model had wrong on every dusk and frost map until the
+            // rendered suite noticed the drawing was a different sprite.
+            box: boxOf(
+              level.mood ? DEAD_TREE_BOX : SCATTER_BOX.tree,
+              node.x + tree.dx,
+              node.y + tree.dy,
+            ),
           })),
         );
 
@@ -227,7 +238,7 @@ describe.each(levels.map((level) => [level.id, level] as const))(
           const spot = hillMarkerAt(level, road);
           return {
             what: `the hill marker on ${road.id}`,
-            box: boxOf([-11, 11, -8, 7], spot.x, spot.y),
+            box: boxOf(HILL_MARKER_BOX, spot.x, spot.y),
           };
         });
 
@@ -276,7 +287,7 @@ describe.each(levels.map((level) => [level.id, level] as const))(
           if (!from || !to) return undefined;
           return {
             what: `the closure on ${road.id}`,
-            box: boxOf([-17, 17, -6, 18], (from.x + to.x) / 2, (from.y + to.y) / 2),
+            box: boxOf(ROAD_CLOSED_BOX, (from.x + to.x) / 2, (from.y + to.y) / 2),
           };
         })
         .filter((one) => one !== undefined);
@@ -486,8 +497,70 @@ describe.each(levels.map((level) => [level.id, level] as const))(
  * the part that can quietly rot. Both cases below passed every threshold in the
  * old point-based file and both were visibly wrong on the map.
  */
+/*
+ * Nothing in the file below draws a map. It checks that the *model* the file
+ * above tests against is complete — because every bug in this family has been
+ * the model missing something rather than the geometry being wrong.
+ */
+describe("the inventory of what the map draws", () => {
+  it("measures every landmark it knows how to place", () => {
+    const drawn = Object.entries(LANDMARK_DRAWS)
+      .filter(([, draws]) => draws)
+      .map(([kind]) => kind as keyof typeof LANDMARK_BOX);
+    const unplaced = drawn.filter((kind) => !LANDMARK_OFFSET[kind]);
+    const unmeasured = drawn.filter((kind) => !LANDMARK_BOX[kind]);
+    expect(unplaced, "drawn but with nowhere to stand").toEqual([]);
+    expect(unmeasured, "drawn but never measured").toEqual([]);
+  });
+
+  /*
+   * And the other way round. A box for something the map cannot draw is
+   * harmless; an *offset* for one is not, because `landmarkBoxes` places
+   * anything with an offset and would be checking a sprite nobody renders.
+   */
+  it("places nothing it does not draw", () => {
+    const ghosts = Object.keys(LANDMARK_OFFSET).filter(
+      (kind) => !LANDMARK_DRAWS[kind as keyof typeof LANDMARK_DRAWS],
+    );
+    expect(ghosts).toEqual([]);
+  });
+
+  /*
+   * `SCATTER_BOX` is typed `Record<ScatterKind, SpriteBox>`, so a new scatter
+   * kind fails to compile until it is measured — the compiler is the test.
+   * This says so out loud, and catches the reverse.
+   */
+  it("measures every kind of scenery a level may put down", () => {
+    const kinds = new Set(
+      levels.flatMap((level) => (level.scatter ?? []).map((one) => one.kind)),
+    );
+    for (const kind of kinds) expect(SCATTER_BOX[kind], kind).toBeDefined();
+  });
+
+  /* Every level's junctions, against both tables, which is what actually bites. */
+  it("measures every landmark any level actually uses", () => {
+    const missing: string[] = [];
+    for (const level of levels) {
+      for (const node of level.nodes) {
+        const kind = node.sprite ?? node.type;
+        if (!kind || !LANDMARK_DRAWS[kind]) continue;
+        if (!LANDMARK_OFFSET[kind] || !LANDMARK_BOX[kind]) {
+          missing.push(`${level.id}: ${node.id} (${kind})`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
+  });
+});
+
 describe("measuring the drawing rather than its anchor", () => {
-  const box = (kind: string, x: number, y: number) => boxOf(SCATTER_BOX[kind] ?? LANDMARK_BOX[kind as never], x, y);
+  const box = (kind: string, x: number, y: number) =>
+    boxOf(
+      SCATTER_BOX[kind as keyof typeof SCATTER_BOX] ??
+        LANDMARK_BOX[kind as never],
+      x,
+      y,
+    );
 
   /*
    * Wharf Copse on the Thursday Night Run, exactly as it shipped. Its anchor

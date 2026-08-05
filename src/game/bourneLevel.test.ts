@@ -195,7 +195,7 @@ describe("the film unit", () => {
   });
 
   it("measures its scenery, rather than guessing at it (#110)", () => {
-    for (const kind of ["unittruck", "clapperboard", "directorchair"]) {
+    for (const kind of ["unittruck", "clapperboard", "directorchair"] as const) {
       expect(SCATTER_BOX[kind], kind).toBeDefined();
     }
     // The truck is the widest thing the level puts down by hand, and the whole

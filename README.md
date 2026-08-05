@@ -1090,7 +1090,8 @@ mid-track changes the music and keeps playing.
 ```bash
 npm install
 npm run dev      # local dev server
-npm run test     # Vitest — pure route logic
+npm run test     # Vitest — the pure suite and the rendered one
+npm run test:fast # just the pure suite, no browser
 npm run build    # type-check and production build
 npm run lint     # oxlint, as shipped by the Vite template
 ```
@@ -1114,6 +1115,49 @@ sixty renders a second through React. Level content is declarative enough that
 a second level is a new object in `src/data/`, not a rewrite.
 
 ## Tests
+
+Two suites, and the split is the point.
+
+The **pure** suite is everything in `src/**/*.test.ts`. No DOM, no browser,
+milliseconds, and it holds every rule the game has — including all of
+`scenery.test.ts`, which decides what may sit where on a map.
+
+The **rendered** suite is one file, `mapModel.browser.test.tsx`, and it runs in
+a real Chromium through `@vitest/browser`. It exists because of a specific
+recurring failure, not because component tests are generally a good idea.
+
+`scenery.test.ts` cannot see the map. It works from a *model* of what the map
+draws — a table of sizes and a list of layers, both written by hand in
+`landmarks.ts`. Four bugs in a row came from that model being out of date
+rather than from any rule being wrong: sizes that were never modelled at all
+(#110), a park's three trees that nothing knew existed, hill markers that had
+to be registered by hand in two places (#118), and junction dots that nobody
+had thought of as things which hide other things. Each was found by a person
+looking at a map.
+
+So the rendered suite tests the model rather than the map. It draws every level
+in a browser, reads the geometry the browser actually produced, and asserts
+three things: that the map draws exactly as many things as the model counts,
+that every drawing carries a class the model can measure, and that nothing is
+drawn **bigger** than the model believes it is. Only that direction matters — a
+box larger than its drawing costs a little room on the paper, a box smaller
+than its drawing is a collision the rules cannot see.
+
+It deliberately repeats none of the rules. A second copy of the thresholds
+would be a second thing to keep in step, which is the disease rather than the
+cure.
+
+It earned its keep on the first run. `DeadTree` is a different sprite from
+`Tree` — four units taller — and a park plants dead ones on any level with a
+`mood`, so every park tree on the Spooky Run and the Christmas Run had been
+measured as a live one. Nothing else was ever going to notice that.
+
+Two things guard the model from the pure side as well, and both are cheaper
+than a browser. `SCATTER_BOX` is typed `Record<ScatterKind, SpriteBox>`, so a
+new kind of scenery does not compile until somebody measures it; and
+`LANDMARK_DRAWS` is a `Record` over the whole `MapNodeType` union, so a new
+junction type does not compile until somebody says whether it draws anything.
+The compiler is the test, which is the best kind.
 
 `src/game/routeLogic.test.ts` covers distance totals, bidirectional roads,
 canal detection, the closed road, pigeon exposure, repeated roads, undo, the

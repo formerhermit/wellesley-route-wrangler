@@ -20,6 +20,12 @@ jobs:
 
       - run: npm ci
 
+      # The rendered suite drives a real Chromium: it is the only thing that
+      # can tell whether the model the pure suite tests against still matches
+      # what the map draws. Without this step `npm run test` fails at startup
+      # rather than skipping it, which is the right way round.
+      - run: npx playwright install --with-deps chromium
+
       - run: npm run test
       - run: npm run lint
 
