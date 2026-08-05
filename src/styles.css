@@ -5848,29 +5848,6 @@ body {
   stroke-linejoin: round;
 }
 
-.card-cow {
-  fill: var(--card);
-  stroke: var(--ink);
-  stroke-width: 2.5;
-}
-
-.card-cow-patch {
-  fill: var(--ink);
-}
-
-.card-cow-muzzle {
-  fill: #e8c9c4;
-  stroke: var(--ink);
-  stroke-width: 2.5;
-}
-
-.card-horn {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-
 .card-board {
   fill: var(--ink-soft);
 }

@@ -367,6 +367,14 @@ export function stopsFor(level: Level, cards: readonly Card[]): string[] {
  * nobody is dealing it a card — every run gets a moment before it starts,
  * and on a race that moment is the start pen and the gun (#116).
  *
+ * Never on a special edition either (#124). A level with a `mood` has already
+ * decided what the weather is doing and built the whole occasion on top of it:
+ * the Spooky Run is that map after dark and the Christmas Run is the lights
+ * being on, and a card that turns up with its own rain is arguing with the
+ * one thing the level exists to be. Rather than teach the weather suit which
+ * evenings it is allowed out on, the editions keep themselves — they are
+ * Halloween and Christmas, and they are run as advertised.
+ *
  * Otherwise, once the level has been completed. Cards are replay content and
  * the replay loop opens the moment a map is beaten, so gating them behind the
  * end of the roster would put them where almost nobody would find them. The
@@ -374,7 +382,7 @@ export function stopsFor(level: Level, cards: readonly Card[]): string[] {
  * after that can have the club turn up in whatever state it likes.
  */
 export function briefingAvailable(level: Level, completed: Completed): boolean {
-  if (level.field) return false;
+  if (level.field || level.mood) return false;
   return completed.has(level.id);
 }
 

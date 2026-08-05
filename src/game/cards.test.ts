@@ -18,6 +18,12 @@ import { hasWinningRoute, winningRouteCount } from "./scoring";
 /** Everything beaten, which is when a briefing is on offer. */
 const allDone = new Set(levels.map((level) => level.id));
 
+/**
+ * The levels a briefing happens on: not a race, not a special edition. Both
+ * are runs that have already decided what they are.
+ */
+const ordinary = levels.filter((level) => !level.field && !level.mood);
+
 /** Enough rolls to reach every hand the rotation can start from. */
 const ROLLS = [0, 0.13, 0.29, 0.41, 0.58, 0.66, 0.77, 0.91];
 
@@ -40,10 +46,22 @@ describe("when a briefing is on offer", () => {
     expect(dealBriefing(thursdaySocialRun, new Set(), 0)).toBeUndefined();
   });
 
+  it("never on a special edition", () => {
+    // Halloween and Christmas are the map with the occasion built on top of
+    // it (#124). A card turning up with its own weather argues with the one
+    // thing the level exists to be.
+    const editions = levels.filter((level) => level.mood && !level.field);
+    expect(editions.map((level) => level.title)).toContain("Spooky Run");
+    expect(editions.map((level) => level.title)).toContain("Christmas Run");
+    for (const level of editions) {
+      expect(briefingAvailable(level, allDone), level.title).toBe(false);
+      expect(dealBriefing(level, allDone, 0)).toBeUndefined();
+    }
+  });
+
   it("on every other level, once it is behind you", () => {
-    for (const level of levels) {
-      if (level.field) continue;
-      expect(briefingAvailable(level, allDone)).toBe(true);
+    for (const level of ordinary) {
+      expect(briefingAvailable(level, allDone), level.title).toBe(true);
     }
   });
 });
@@ -56,8 +74,7 @@ describe("dealing a briefing", () => {
   });
 
   it("only deals cards that mean something on the map", () => {
-    for (const level of levels) {
-      if (level.field) continue;
+    for (const level of ordinary) {
       for (const roll of ROLLS) {
         const hand = dealBriefing(level, allDone, roll);
         for (const card of hand ?? []) {
@@ -75,8 +92,7 @@ describe("dealing a briefing", () => {
 
   it("does not deal the same hand whatever the roll", () => {
     const dealt = new Set(
-      levels
-        .filter((level) => !level.field)
+      ordinary
         .flatMap((level) =>
           ROLLS.map((roll) =>
             dealBriefing(level, allDone, roll)
@@ -100,8 +116,7 @@ describe("dealing a briefing", () => {
    * player's to discover.
    */
   it("never deals a hand that cannot be played", () => {
-    for (const level of levels) {
-      if (level.field) continue;
+    for (const level of ordinary) {
       for (const roll of ROLLS) {
         const hand = dealBriefing(level, allDone, roll);
         expect(hand, `${level.title} dealt nothing at roll ${roll}`).toBeDefined();
@@ -121,8 +136,7 @@ describe("dealing a briefing", () => {
    * asked to stand up on its own before it is ever put in a hand.
    */
   it("never deals a card that leaves nothing to run by itself", () => {
-    for (const level of levels) {
-      if (level.field) continue;
+    for (const level of ordinary) {
       for (const roll of ROLLS) {
         for (const card of dealBriefing(level, allDone, roll) ?? []) {
           expect(
@@ -141,8 +155,7 @@ describe("dealing a briefing", () => {
    * as cards are added, not a ceiling anybody should be pleased with.
    */
   it("has something for every level worth replaying", () => {
-    const unserved = levels
-      .filter((level) => !level.field)
+    const unserved = ordinary
       .filter((level) => dealBriefing(level, allDone, 0) === undefined)
       .map((level) => level.title);
     expect(unserved).toEqual([]);
