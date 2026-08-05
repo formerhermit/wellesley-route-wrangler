@@ -49,7 +49,7 @@ import {
   stopsFor,
   weatherFor,
 } from "./game/cards";
-import type { Card, Hand } from "./game/cards";
+import type { Card } from "./game/cards";
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -306,8 +306,8 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
   const [bookOpen, setBookOpen] = useState(false);
-  /** The hand on the table, while it is being picked from (#10). */
-  const [hand, setHand] = useState<Hand>();
+  /** Whether the briefing is up (#10). The hand itself is the dialog's. */
+  const [briefingOpen, setBriefingOpen] = useState(false);
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
@@ -331,7 +331,7 @@ export default function App() {
   const modalOpen =
     showingResult ||
     showingStartingGun ||
-    hand !== undefined ||
+    briefingOpen ||
     helpOpen ||
     levelsOpen ||
     privacyOpen ||
@@ -598,14 +598,7 @@ export default function App() {
                 buttonRef={briefingButtonRef}
                 taken={state.cards.length}
                 canDeal={canDeal}
-                onDeal={() => {
-                  const dealt = dealBriefing(
-                    level,
-                    progress.completed,
-                    Math.random(),
-                  );
-                  if (dealt) setHand(dealt);
-                }}
+                onDeal={() => setBriefingOpen(true)}
               />
             ) : undefined
           }
@@ -735,14 +728,17 @@ export default function App() {
         />
       )}
 
-      {hand && (
+      {briefingOpen && (
         <BriefingDialog
-          hand={hand}
+          deal={() => {
+            sound.play("select");
+            return dealBriefing(level, progress.completed, Math.random());
+          }}
           onConfirm={(picked) => {
-            setHand(undefined);
+            setBriefingOpen(false);
             dispatch({ type: "pick-cards", cards: picked });
           }}
-          onClose={() => setHand(undefined)}
+          onClose={() => setBriefingOpen(false)}
         />
       )}
 

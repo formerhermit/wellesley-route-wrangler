@@ -5668,6 +5668,27 @@ body {
   background: var(--card);
   border: 2px dashed var(--line);
   border-radius: var(--radius);
+  /* `--deal` is the card's place in the queue, set where the hand is built.
+     `backwards` holds it off screen through the delay, so a card that has not
+     been dealt yet is not sitting there waiting to be. */
+  animation: briefing-deal 0.4s cubic-bezier(0.22, 1.1, 0.36, 1) backwards;
+  animation-delay: var(--deal, 0ms);
+}
+
+/* Up off the deck and straightened out, one after another. The turn is small
+   and it is the whole of what makes them read as cards rather than as three
+   panels that faded in. */
+@keyframes briefing-deal {
+  from {
+    opacity: 0;
+    transform: translateY(26px) rotate(-6deg);
+  }
+}
+
+/* The offer, before anything has been dealt. Wide, because it is the only
+   thing on the screen to press. */
+.briefing__deal {
+  width: 100%;
 }
 
 /* Picked reads as picked without colour being the only thing saying so: the
