@@ -554,6 +554,28 @@ export function HillMarker() {
   );
 }
 
+/**
+ * A hill, on the road rather than at a junction (#118).
+ *
+ * Until this existed the only thing that said a road was a climb was its dash
+ * pattern, and on a trail map the dash already means something else — the
+ * surface — so on Crooksbury, whose whole objective is *take seven of these*,
+ * there was no way to tell which seven. Playtesters who did not know Surrey
+ * were guessing.
+ *
+ * Deliberately the same triangle as `HillMarker`, at two thirds the size. The
+ * map already says triangle-means-hill at a junction; saying it again on a
+ * road is one symbol doing two jobs rather than a new one to learn.
+ */
+export function HillRoadMarker() {
+  return (
+    <g className="sprite sprite--roadhill" aria-hidden="true">
+      <polygon points="-11,7 0,-8 11,7" className="roadhill-body" />
+      <polygon points="-3.5,0 0,-8 3.5,0" className="roadhill-cap" />
+    </g>
+  );
+}
+
 export function RoadClosedMarker() {
   return (
     <g className="sprite sprite--closed" aria-hidden="true">

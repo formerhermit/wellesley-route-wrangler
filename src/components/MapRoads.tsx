@@ -1,5 +1,10 @@
-import { RoadClosedMarker } from "./MapSprites";
-import { acrossRoadAngle, nodeById, roadPathData } from "../game/routeGraph";
+import { HillRoadMarker, RoadClosedMarker } from "./MapSprites";
+import {
+  acrossRoadAngle,
+  hillMarkerAt,
+  nodeById,
+  roadPathData,
+} from "../game/routeGraph";
 import type { Level, Route } from "../game/types";
 
 interface Props {
@@ -30,6 +35,26 @@ export function MapRoads({ level, route }: Props) {
           <path key={road.id} className={classes} d={roadPathData(level, road)} />
         );
       })}
+
+      {/*
+        A triangle beside every climb (#118). Beside rather than on: the route
+        line is drawn after this and is fifteen units wide, so a marker on the
+        tarmac disappears under the first road you lay — and the moment you
+        most want to know which roads are hills is while you are laying them.
+      */}
+      {level.roads
+        .filter((road) => road.hill)
+        .map((road) => {
+          const spot = hillMarkerAt(level, road);
+          return (
+            <g
+              key={`${road.id}-hill`}
+              transform={`translate(${spot.x.toFixed(1)} ${spot.y.toFixed(1)})`}
+            >
+              <HillRoadMarker />
+            </g>
+          );
+        })}
 
       {level.roads
         .filter((road) => road.closed)

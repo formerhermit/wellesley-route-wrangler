@@ -9,6 +9,7 @@ import {
   boxOf,
   labelBox,
 } from "./landmarks";
+import { hillMarkerAt } from "./routeGraph";
 import type { Level, MapNode } from "./types";
 
 /**
@@ -195,6 +196,22 @@ describe.each(levels.map((level) => [level.id, level] as const))(
     const labelBoxes = () =>
       level.nodes.map((node) => ({ what: `the name of ${node.id}`, ...labelBox(node) }));
 
+    /**
+     * The triangles the map puts beside every climb (#118). Checked here for
+     * the same reason the park's trees are: nobody places them, so nobody
+     * notices when one lands on a name.
+     */
+    const hillMarkers = () =>
+      level.roads
+        .filter((road) => road.hill)
+        .map((road) => {
+          const spot = hillMarkerAt(level, road);
+          return {
+            what: `the hill marker on ${road.id}`,
+            box: boxOf([-11, 11, -8, 7], spot.x, spot.y),
+          };
+        });
+
     const roadRunsThrough = (box: Box) =>
       level.roads.some((road) => {
         const from = level.nodes.find((node) => node.id === road.from);
@@ -285,6 +302,36 @@ describe.each(levels.map((level) => [level.id, level] as const))(
           .map((name) => `${mark.what} on ${name.what}`),
       );
       expect(clashes).toEqual([]);
+    });
+
+    it("keeps the hill markers off the writing and the scenery", () => {
+      const marks = hillMarkers();
+      const clashes = [
+        ...marks.flatMap((mark) =>
+          labelBoxes()
+            .filter((name) => boxDepth(mark.box, name) > NAME_DEPTH)
+            .map((name) => `${mark.what} over ${name.what}`),
+        ),
+        ...marks.flatMap((mark) =>
+          [...landmarkBoxes(), ...scatterBoxes(), ...themeTrees(), ...parkTrees()]
+            .filter((thing) => boxDepth(mark.box, thing.box) > SOLID_DEPTH)
+            .map((thing) => `${mark.what} over ${thing.what}`),
+        ),
+      ];
+      expect(clashes).toEqual([]);
+    });
+
+    it("keeps the hill markers on the map", () => {
+      const off = hillMarkers()
+        .filter(
+          (mark) =>
+            mark.box.left < 0 ||
+            mark.box.top < 0 ||
+            mark.box.right > level.view.width ||
+            mark.box.bottom > level.view.height,
+        )
+        .map((mark) => mark.what);
+      expect(off).toEqual([]);
     });
 
     it("keeps a junction's own landmark off every other one", () => {

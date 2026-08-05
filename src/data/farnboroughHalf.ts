@@ -244,8 +244,11 @@ export const farnboroughHalf: Level = {
       label: "Danger Hill",
       blurb: "genuinely called that, at nineteen kilometres",
       type: "hill",
-      spriteDx: -55,
-      spriteDy: 15,
+      // Straight above the junction now. The climb from the Aerospace Centre
+      // carries its own triangle and the old spot to the left was underneath
+      // it (#118); below is this junction's own name.
+      spriteDx: 0,
+      spriteDy: -20,
     },
     {
       id: "cockadobby-hill",

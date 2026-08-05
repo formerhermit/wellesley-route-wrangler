@@ -75,12 +75,18 @@ const VERDICTS = [
   "The committee will be in touch.",
 ];
 
+/**
+ * The one line of the report a level may write for itself (#117), and only on
+ * a run that worked. Failure keeps the committee's own escalation, because
+ * that ladder is the joke and a level cannot be allowed to step off it.
+ */
 export function verdictFor(
   evaluation: RouteEvaluation,
   complaints: number,
+  ownVerdict?: string,
 ): string {
   if (evaluation.isEmpty) return "No run appears to have taken place.";
-  if (evaluation.success) return VERDICTS[0];
+  if (evaluation.success) return ownVerdict ?? VERDICTS[0];
   return VERDICTS[Math.min(complaints, VERDICTS.length - 1)];
 }
 
@@ -182,5 +188,5 @@ export function buildIncidentReport(
     tone: complaints > 0 ? "bad" : "good",
   });
 
-  return { lines, verdict: verdictFor(evaluation, complaints) };
+  return { lines, verdict: verdictFor(evaluation, complaints, level.verdict) };
 }

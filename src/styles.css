@@ -2698,6 +2698,24 @@ body {
   stroke: #b9a988;
 }
 
+/*
+ * The triangle beside a climb (#118). The same colours as the hill marker at a
+ * junction, because it is deliberately the same symbol — and a shade darker
+ * than the road so it reads as a sign rather than as scenery that has rolled
+ * into the verge.
+ */
+.roadhill-body {
+  fill: #cbb98f;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.roadhill-cap {
+  fill: #f2ece0;
+  stroke: none;
+}
+
 .road--trail {
   stroke: #c3ab84;
   stroke-dasharray: 1 12;

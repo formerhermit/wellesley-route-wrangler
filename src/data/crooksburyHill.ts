@@ -22,9 +22,9 @@ import type { Level } from "../game/types";
  * their time rather than making the run longer. Mark *every* road as a hill
  * and `totalCost` scales by the same factor everywhere, `fractionAt(effort)`
  * collapses back to `effort`, and the level animates exactly like a flat one.
- * A map where everything is a hill has no hills at all. So eleven of the
- * nineteen roads climb and eight do not, and the eight are what make the
- * eleven mean something — which is also true of the actual place, where the
+ * A map where everything is a hill has no hills at all. So twelve of the
+ * nineteen roads climb and seven do not, and the seven are what make the
+ * twelve mean something — which is also true of the actual place, where the
  * lanes along the bottom are the only flat ground for miles.
  *
  * Hence `kind: "climb"`, which is new here. Every other objective in the game
@@ -120,6 +120,10 @@ export const crooksburyHill: Level = {
       label: "Botany Hill",
       blurb: "the high ground over The Sands",
       type: "hill",
+      // In a bit from the usual forty-four: the climb up from The Sands now
+      // carries a triangle of its own and the default sat on top of it (#118).
+      spriteDx: -26,
+      spriteDy: 10,
     },
     {
       id: "crooksbury-hill",
@@ -301,6 +305,8 @@ export const crooksburyHill: Level = {
     message:
       "{km} km, seven climbs, the trig point and the hillfort. Nobody is talking. Somebody is lying on the grass.",
   },
+  /* Seven climbs and, as far as anybody can reconstruct, no descents (#117). */
+  verdict: "Did we just run an Escher painting?",
   emptyRoute: {
     title: "Still In The Car Park",
     message: "Everyone is looking at the hill and nobody is moving.",

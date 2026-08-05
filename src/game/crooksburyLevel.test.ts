@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import { crooksburyHill as level } from "../data/crooksburyHill";
 import { levels } from "../data/levels";
 import { buildIncidentReport, hillsTaken } from "./incidentReport";
+import { HILL_MARKER_OFFSET, hillMarkerAt } from "./routeGraph";
+import { cabinetFor } from "./achievements";
+import { emptyRecords, recordRun } from "./records";
 import { paceOf } from "./pace";
 import { graphFor, otherEnd, roadBetween, totalDistanceKm } from "./routeGraph";
 import { countHills, evaluateRoute } from "./routeEvaluation";
@@ -279,6 +282,87 @@ describe("the climb objective", () => {
     expect(hills?.tone).toBe("good");
     expect(lines.some((line) => line.label === "Unnecessary hills")).toBe(false);
     expect(hillsTaken(level, theHorseshoe)).toBe(7);
+  });
+
+  /*
+   * Every climb carries a triangle beside it (#118). Before that the only sign
+   * a road was a hill was its dash pattern, and on a trail map the dash already
+   * means the surface — so on the one level whose objective is *take seven of
+   * these*, there was no way to tell which seven. Playtesters were guessing.
+   */
+  it("marks every climb on the map, not just the summits", () => {
+    const hills = level.roads.filter((road) => road.hill);
+    expect(hills.length).toBe(12);
+    for (const road of hills) {
+      const spot = hillMarkerAt(level, road);
+      const from = level.nodes.find((one) => one.id === road.from)!;
+      const to = level.nodes.find((one) => one.id === road.to)!;
+      // Beside the road rather than on it: the route line is fifteen wide and
+      // would swallow a marker drawn on the tarmac.
+      const mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
+      expect(Math.hypot(spot.x - mid.x, spot.y - mid.y)).toBeCloseTo(
+        HILL_MARKER_OFFSET,
+        5,
+      );
+    }
+  });
+
+  /*
+   * And the flat roads do not get one, which is the other half of saying it.
+   * Pinned as a number because the file's own note about the ratio was written
+   * before the estate track was added and quietly went stale — twelve and
+   * seven, not eleven and eight.
+   */
+  it("puts no triangle on a road that is not a climb", () => {
+    const flat = level.roads.filter((road) => road.hill !== true);
+    expect(flat.length).toBe(7);
+    expect(flat.length + level.roads.filter((road) => road.hill).length).toBe(
+      level.roads.length,
+    );
+  });
+
+  /*
+   * Seven climbs and, as far as anybody can reconstruct afterwards, no
+   * descents (#117). The one line of the report this level writes itself —
+   * and only when the run worked, because the committee's escalation on a
+   * failure is the joke and a level does not get to step off it.
+   */
+  it("signs off an Escher painting, but only when the run worked", () => {
+    const won = buildIncidentReport(
+      level,
+      theHorseshoe,
+      evaluateRoute(level, theHorseshoe),
+    );
+    expect(won.verdict).toBe("Did we just run an Escher painting?");
+
+    const flat = routeOf(
+      "puttenham-common",
+      "hampton-estate",
+      "seale",
+      "botany-hill",
+      "crooksbury-hill",
+      "hillbury",
+      "generals-pond",
+      "puttenham-common",
+    );
+    const lost = buildIncidentReport(level, flat, evaluateRoute(level, flat));
+    expect(lost.verdict).not.toContain("Escher");
+    expect(lost.verdict).toMatch(/committee|Questions|acceptable/i);
+  });
+
+  /*
+   * And it is not an accidental long run (#119). Thirteen kilometres used to
+   * be the whole test, which handed the badge out for every correct route
+   * here and for every legal lap of the Farnborough Half — a race advertised
+   * as 21.1 km, which is the opposite of accidental.
+   */
+  it("does not hand out The Unexpected Long Run for doing as it asked", () => {
+    const records = recordRun(emptyRecords, level, theHorseshoe);
+    const badge = cabinetFor(records, levels).find(
+      (one) => one.id === "unexpected-long-run",
+    )!;
+    expect(totalDistanceKm(level, theHorseshoe)).toBeGreaterThan(13);
+    expect(badge.earned).toBe(false);
   });
 
   it("is the only level that asks for the climbing", () => {

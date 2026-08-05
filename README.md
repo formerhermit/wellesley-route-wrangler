@@ -354,8 +354,8 @@ seconds, so a climb costs the *flat* legs their time rather than making the run
 longer. Mark every road as a hill and `totalCost` scales by the same factor
 everywhere, `fractionAt(effort)` collapses back to `effort`, and the level
 animates exactly like a flat one. **A map where everything is a hill has no
-hills at all.** So eleven of the nineteen roads climb and eight do not, and the
-eight flat ones are what make the eleven mean anything — which is also true of
+hills at all.** So twelve of the nineteen roads climb and seven do not, and the
+seven flat ones are what make the twelve mean anything — which is also true of
 the actual place, where the lanes along the bottom are the only flat ground for
 miles. `crooksburyLevel.test.ts` pins both halves: the horseshoe's pace curve
 bends off the straight line, and a route of nothing but climbs is a straight
@@ -406,6 +406,46 @@ The closure is the film unit and it is placed where it hurts — the short track
 from Unit Base into the Clearing, which is the obvious way in. Getting to the
 Clearing the long way round *and* still coming home inside the distance is the
 whole of the level.
+
+### Saying which roads are hills
+
+A road marked `hill` used to be drawn as a dashed line and nothing else, and on
+a trail map the dash already means something — the surface. So on Crooksbury,
+whose objective is literally *take seven of these*, there was no way to tell
+which seven, and playtesters who did not know Surrey were guessing (#118).
+
+Every climb now carries a small triangle beside it. Deliberately the same
+triangle as the marker at a hill junction, at two thirds the size: the map
+already says triangle-means-hill, and saying it again on a road is one symbol
+doing two jobs rather than a new one to learn.
+
+Beside the road rather than on it, and that is the whole of the placement
+decision. The route line is drawn after the roads and is fifteen units wide, so
+a marker on the tarmac vanishes under the first road you lay — and the moment
+you most want to know which roads are climbs is while you are laying them.
+`hillMarkerAt` lives in `routeGraph.ts` rather than in the component because
+`scenery.test.ts` needs it too: a marker the map places for itself can land on
+a label exactly as easily as one placed by hand, and it has no author to
+notice. It found two immediately, both a road's triangle drawn on top of a hill
+junction's own.
+
+### One line the level writes itself
+
+The incident report signs off with a verdict, and it escalates: "Surprisingly
+competent." down to "The committee will be in touch." A level may now override
+the *successful* one with `verdict` (#117) — Crooksbury asks "Did we just run
+an Escher painting?", which is what seven climbs and no apparent descents earns
+you. Only on success: the committee's ladder on a failure is the joke, and a
+level does not get to step off it.
+
+### What counts as an accident
+
+**The Unexpected Long Run** used to test one thing — thirteen kilometres — and
+so awarded itself for a perfectly correct lap of the Farnborough Winter Half,
+a race whose distance is printed on the entry form, and for every winning route
+on Crooksbury (#119). The joke is the gap between the brief and the run, not
+the number, so the level has to have been advertised as something shorter: the
+badge now also asks that the level's own maximum is under thirteen.
 
 ### What a place is standing on
 

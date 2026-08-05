@@ -257,6 +257,30 @@ describe("the Farnborough Winter Half", () => {
   });
 });
 
+/*
+ * A measured 21.1 km race is the opposite of an accidental long run (#119).
+ * The badge used to test distance alone, so every legal lap of this course
+ * awarded "The Unexpected Long Run" — on the one level where the distance was
+ * printed on the entry form.
+ */
+describe("the badge it must not hand out", () => {
+  it("is not an accidental long run at twenty-one kilometres", () => {
+    const records = recordRun(emptyRecords, level, theCourse);
+    const badge = cabinetFor(records, levels).find(
+      (one) => one.id === "unexpected-long-run",
+    )!;
+    expect(totalDistanceKm(level, theCourse)).toBeGreaterThan(13);
+    expect(badge.earned).toBe(false);
+  });
+
+  /* But a Thursday that ran to thirteen still is, which is the joke. */
+  it("still fires on a run that was advertised as five", () => {
+    const short = levels.find((one) => one.id === "thursday-social-run")!;
+    const brief = short.objectives.find((one) => one.kind === "distance");
+    expect(brief?.kind === "distance" && brief.maxKm).toBeLessThan(13);
+  });
+});
+
 describe("the badge for running it", () => {
   const badgeFor = (records: Parameters<typeof cabinetFor>[0]) =>
     cabinetFor(records, levels).find((entry) => entry.id === "thirteen-point-one")!;

@@ -227,6 +227,38 @@ export function acrossRoadAngle(
   return across;
 }
 
+/**
+ * Where a hill road's triangle goes (#118): the middle of the road, stepped
+ * sideways off it.
+ *
+ * Here rather than in the component because two things need it and they must
+ * agree — `MapRoads` draws it and `scenery.test.ts` checks nothing else is
+ * already standing there. A marker the map places automatically can land on a
+ * label just as easily as one placed by hand, and it has no author to notice.
+ */
+export function hillMarkerAt(
+  level: Level,
+  road: Road,
+): { x: number; y: number } {
+  const from = nodeById(level, road.from);
+  const to = nodeById(level, road.to);
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy) || 1;
+  /*
+   * Always to the same side of the road as drawn, so two roads meeting at a
+   * junction cannot put their triangles in the same place — which they would
+   * if the side were chosen by, say, whichever way is uphill.
+   */
+  return {
+    x: (from.x + to.x) / 2 + (-dy / length) * HILL_MARKER_OFFSET,
+    y: (from.y + to.y) / 2 + (dx / length) * HILL_MARKER_OFFSET,
+  };
+}
+
+/** How far off the tarmac. Clear of a nine-wide road and its route line. */
+export const HILL_MARKER_OFFSET = 15;
+
 /** Screen-space points of the route, in order, for drawing and animation. */
 export function routePoints(level: Level, route: Route): MapNode[] {
   return route.nodeIds.map((id) => nodeById(level, id));

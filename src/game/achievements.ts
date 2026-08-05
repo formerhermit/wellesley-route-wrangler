@@ -67,6 +67,14 @@ function minimumKm(level: Level): number | undefined {
   return undefined;
 }
 
+/** And the longest, which is what the run was advertised as. */
+function maximumKm(level: Level): number | undefined {
+  for (const objective of level.objectives) {
+    if (objective.kind === "distance") return objective.maxKm;
+  }
+  return undefined;
+}
+
 /**
  * Somewhere to stop, and all three count. The Medical Centre Toilet is a real
  * one with a door that locks, the Random Portaloos are what the heath has, and
@@ -185,9 +193,18 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
     name: "The Unexpected Long Run",
     blurb:
       "Thirteen kilometres on a run advertised as five. Two people have gone home in a car.",
-    hint: "Thirteen kilometres in one go.",
+    hint: "Thirteen kilometres on a run that was never meant to be one.",
     reveal: "teased",
-    test: some((run) => run.distanceKm >= 13),
+    /*
+     * The joke is the gap between the brief and the run, not the number (#119).
+     * Testing thirteen kilometres alone handed this out for a *correct* lap of
+     * the Farnborough Half, which is advertised as 21.1 and is the opposite of
+     * an accidental long run — and for every winning route on Crooksbury too.
+     * So the level has to have been sold as something shorter.
+     */
+    test: some(
+      (run) => run.distanceKm >= 13 && (maximumKm(run.level) ?? 0) < 13,
+    ),
   },
   {
     id: "show-off",

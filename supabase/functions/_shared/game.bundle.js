@@ -1394,9 +1394,9 @@ const christmasRun = {
 * their time rather than making the run longer. Mark *every* road as a hill
 * and `totalCost` scales by the same factor everywhere, `fractionAt(effort)`
 * collapses back to `effort`, and the level animates exactly like a flat one.
-* A map where everything is a hill has no hills at all. So eleven of the
-* nineteen roads climb and eight do not, and the eight are what make the
-* eleven mean something — which is also true of the actual place, where the
+* A map where everything is a hill has no hills at all. So twelve of the
+* nineteen roads climb and seven do not, and the seven are what make the
+* twelve mean something — which is also true of the actual place, where the
 * lanes along the bottom are the only flat ground for miles.
 *
 * Hence `kind: "climb"`, which is new here. Every other objective in the game
@@ -1483,7 +1483,9 @@ const crooksburyHill = {
 			y: 285,
 			label: "Botany Hill",
 			blurb: "the high ground over The Sands",
-			type: "hill"
+			type: "hill",
+			spriteDx: -26,
+			spriteDy: 10
 		},
 		{
 			id: "crooksbury-hill",
@@ -1795,6 +1797,7 @@ const crooksburyHill = {
 		title: "Everything Was Uphill",
 		message: "{km} km, seven climbs, the trig point and the hillfort. Nobody is talking. Somebody is lying on the grass."
 	},
+	verdict: "Did we just run an Escher painting?",
 	emptyRoute: {
 		title: "Still In The Car Park",
 		message: "Everyone is looking at the hill and nobody is moving."
@@ -2022,8 +2025,8 @@ const farnboroughHalf = {
 			label: "Danger Hill",
 			blurb: "genuinely called that, at nineteen kilometres",
 			type: "hill",
-			spriteDx: -55,
-			spriteDy: 15
+			spriteDx: 0,
+			spriteDy: -20
 		},
 		{
 			id: "cockadobby-hill",

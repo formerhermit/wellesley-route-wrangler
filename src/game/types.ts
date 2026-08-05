@@ -297,6 +297,13 @@ export interface Level {
   /** Checklist order. Failure priority is fixed in `resultSelection`. */
   objectives: LevelObjective[];
   success: ResultCopy;
+  /**
+   * The incident report's OVERALL line, for a level that has something of its
+   * own to say about a run that worked (#117). Unset everywhere else, which
+   * leaves the club's usual "Surprisingly competent." A failed run always gets
+   * the committee's escalation instead: that ladder is the joke.
+   */
+  verdict?: string;
   emptyRoute: ResultCopy;
   fallback: ResultCopy;
   /**
