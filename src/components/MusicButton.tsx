@@ -4,8 +4,16 @@ interface Props {
 }
 
 /**
- * Sits beside the ? in the header. Drawn rather than lettered, because a
- * struck-through musical note reads as "no music here" rather than "off".
+ * Sits beside the speaker in the header (#123).
+ *
+ * A pair of notes, because that is what music is — the speaker went to the
+ * sound effects, where it belongs. The two had them the wrong way round: the
+ * thing playing a tune behind the game was drawn as a loudspeaker, and the
+ * thing that answers a press was an abstract waveform nobody has ever seen on
+ * a button before.
+ *
+ * Struck through rather than emptied when off, so it reads as "no music" and
+ * not as "there is no music here".
  */
 export function MusicButton({ on, onToggle }: Props) {
   return (
@@ -21,31 +29,40 @@ export function MusicButton({ on, onToggle }: Props) {
         aria-hidden="true"
         focusable="false"
       >
+        {/* Two stems joined by the beam, drawn as one stroke. */}
         <path
-          d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"
-          fill="currentColor"
+          d="M9.5 17.5V6.2l10-2v11.3"
+          fill="none"
           stroke="currentColor"
-          strokeWidth="1.6"
+          strokeWidth="1.8"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {on ? (
-          <g
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
-            <path d="M15.5 9.2a4 4 0 0 1 0 5.6" />
-            <path d="M18 6.7a7.5 7.5 0 0 1 0 10.6" />
-          </g>
-        ) : (
-          <path
-            d="M16 9.5l5 5m0-5l-5 5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          />
+        <ellipse cx={7} cy={17.6} rx={3} ry={2.5} fill="currentColor" />
+        <ellipse cx={17} cy={15.6} rx={3} ry={2.5} fill="currentColor" />
+        {!on && (
+          <>
+            {/*
+              Cut out of the notes rather than laid over them. The beam runs
+              shallowly the same way, so a single stroke on top merges into it
+              and reads as a third line rather than as a strike — the gap is
+              what makes it obviously in front.
+            */}
+            <path
+              d="M5 19.5L19.5 5"
+              fill="none"
+              stroke="var(--card)"
+              strokeWidth="4.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M5 19.5L19.5 5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </>
         )}
       </svg>
       <span className="visually-hidden">Music</span>
