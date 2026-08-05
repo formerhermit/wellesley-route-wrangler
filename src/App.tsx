@@ -29,6 +29,7 @@ import {
 import type { GameResult, Level, Route } from "./game/types";
 import { useReducedMotion } from "./hooks/useReducedMotion";
 import { useMusic } from "./hooks/useMusic";
+import { useSoundEffects } from "./hooks/useSoundEffects";
 import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
 import { tallyAll, tallyLevel } from "./game/records";
@@ -215,6 +216,7 @@ export default function App() {
   const level = state.level;
   const reducedMotion = useReducedMotion();
   const music = useMusic(trackFor(level));
+  const sound = useSoundEffects();
   const runButtonRef = useRef<HTMLButtonElement>(null);
   const helpButtonRef = useRef<HTMLButtonElement>(null);
   const levelsButtonRef = useRef<HTMLButtonElement>(null);
@@ -294,6 +296,15 @@ export default function App() {
     if (state.result?.success) recordCompletion(level.id);
   }, [state.phase, state.result, state.route, level, recordCompletion, logRun]);
 
+  // The incident report's own verdict, echoed as a sound (#107): a chime for
+  // a pass, a womp for a fail. A separate effect from the one above, because
+  // that one is about the book and this one is about the noise.
+  const playSound = sound.play;
+  useEffect(() => {
+    if (state.phase !== "result") return;
+    playSound(state.result?.success ? "success" : "fail");
+  }, [state.phase, state.result, playSound]);
+
   // What this run put on the wall. `earnedBy` names the badges that depend on
   // this route; a run that was not a first discovery announces none of them,
   // because the club won those the week it first went that way. Declared after
@@ -305,6 +316,16 @@ export default function App() {
         : [],
     [freshRoute, runBook.records, level, state.route],
   );
+
+  // A badge landing gets its own chime, on top of the pass/fail one above: a
+  // route that is both a win and a first discovery earns both, same as the
+  // result panel shows both. Guarded on "result" for the same reason as that
+  // effect — freshBadges otherwise still holds last run's answer while the
+  // route is being edited.
+  useEffect(() => {
+    if (state.phase !== "result" || freshBadges.length === 0) return;
+    playSound("badge");
+  }, [state.phase, freshBadges, playSound]);
 
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
@@ -386,6 +407,8 @@ export default function App() {
           levelsButtonRef={levelsButtonRef}
           musicOn={music.on}
           onToggleMusic={music.toggle}
+          soundOn={sound.on}
+          onToggleSound={sound.toggle}
           onShowClub={() => setClubOpen(true)}
           onShowLevels={() => setLevelsOpen(true)}
           onShowHelp={() => setHelpOpen(true)}
@@ -400,10 +423,27 @@ export default function App() {
               running={state.phase === "running"}
               rejectedNodeId={state.rejectedNodeId}
               reducedMotion={reducedMotion}
-              onSelect={(nodeId) => dispatch({ type: "select", nodeId })}
+              onSelect={(nodeId) => {
+                // Worked out here rather than left to the reducer's own
+                // answer, so the click and the sound it makes agree on what
+                // just happened without the reducer knowing sound exists.
+                const outcome = selectNode(level, state.route, nodeId);
+                sound.play(
+                  outcome.kind === "rejected"
+                    ? "reject"
+                    : outcome.kind === "undone"
+                      ? "undo"
+                      : "select",
+                );
+                dispatch({ type: "select", nodeId });
+              }}
               onRunFinished={() => dispatch({ type: "finish" })}
               gnome={gnome}
-              onGnomePressed={moveGnome}
+              onGnomePressed={() => {
+                sound.play("egg");
+                moveGnome();
+              }}
+              onEggPressed={() => sound.play("egg")}
             />
 
             <GameControls
@@ -412,8 +452,14 @@ export default function App() {
               canRun={canRun}
               running={state.phase === "running"}
               runButtonRef={runButtonRef}
-              onRun={() => dispatch({ type: "run" })}
-              onReset={() => dispatch({ type: "reset" })}
+              onRun={() => {
+                sound.play("run");
+                dispatch({ type: "run" });
+              }}
+              onReset={() => {
+                sound.play("reset");
+                dispatch({ type: "reset" });
+              }}
             />
           </div>
 
