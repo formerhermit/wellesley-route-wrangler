@@ -67,6 +67,13 @@ interface Props {
   onGnomePressed: () => void;
   /** A little "juice" when a scattered egg (#104) actually answers a press. */
   onEggPressed?: () => void;
+  /**
+   * Junctions the group stands still at, from the briefing (#10). Handed
+   * straight to `paceOf`, which is the only thing that needs to know: the
+   * runners, the followers and a whole race field all read their position off
+   * that one curve, so they stop and set off together without being told.
+   */
+  stops?: string[];
 }
 
 export function RouteMap({
@@ -80,6 +87,7 @@ export function RouteMap({
   gnome,
   onGnomePressed,
   onEggPressed,
+  stops,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const runnersRef = useRef<(SVGGElement | null)[]>(
@@ -173,7 +181,10 @@ export function RouteMap({
     });
   }, [level, route, followerRefs]);
 
-  const pace = useMemo(() => paceOf(level, route), [level, route]);
+  const pace = useMemo(
+    () => paceOf(level, route, stops),
+    [level, route, stops],
+  );
 
   const { start, cancel } = useRunAnimation({
     pathRef,
