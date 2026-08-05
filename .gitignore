@@ -37,3 +37,8 @@ badge-proof-sheet.html
 
 # Built by scripts/build-og-card.mjs on the way to public/og-card.png.
 og-card.svg
+
+# Failure artefacts from the rendered suite: screenshots of a map that did
+# not match the model. Useful while fixing, never worth committing.
+.vitest-attachments/
+**/__screenshots__/
