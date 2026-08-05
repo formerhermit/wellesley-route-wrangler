@@ -91,9 +91,7 @@ export function BriefingDialog({ hand, onConfirm, onClose }: Props) {
           {ready ? "Right, off we go" : `Pick ${KEEP - chosen.length} more`}
         </button>
       </div>
-      <p className="dialog__actions-hint">
-        No redeal. The next briefing comes after the run report.
-      </p>
+      <p className="dialog__actions-hint">No redeal.</p>
     </Dialog>
   );
 }

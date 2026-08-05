@@ -23,6 +23,17 @@ import type { Level, LevelObjective, MapNodeType } from "./types";
 
 export type Suit = "leader" | "runner" | "weather";
 
+/**
+ * What the sky is doing, for the cards that change how the map looks rather
+ * than what it asks. Declared here so the drawing has one thing to switch on
+ * and never has to know a card by name.
+ *
+ * Deliberately *not* the level's own `mood`. Mood and music are the seasonal
+ * kit — a card borrowing "frost" would make an ordinary Thursday read as an
+ * occasion, which is the mistake `nightLevel.test.ts` exists to forbid.
+ */
+export type CardWeather = "rain" | "clear";
+
 /** Dealt one of each, and the player keeps two. */
 export const SUITS: readonly Suit[] = ["leader", "runner", "weather"];
 
@@ -51,6 +62,8 @@ export interface CardEffect {
    * rule and a contradiction.
    */
   forbidNodeType?: MapNodeType;
+  /** What the weather looks like. Changes nothing the rules can see. */
+  weather?: CardWeather;
 }
 
 export interface Card {
@@ -228,7 +241,7 @@ export const CARDS: readonly Card[] = [
     name: "Rain",
     blurb: "Nobody wants to be out in this. Keep it short.",
     fits: (level) => alreadyAsks(level, "distance"),
-    effect: () => ({ shortenBy: 0.85 }),
+    effect: () => ({ shortenBy: 0.85, weather: "rain" }),
   },
   {
     id: "weather-perfect",
@@ -238,7 +251,7 @@ export const CARDS: readonly Card[] = [
     // The deck needs one card that only makes the run nicer, or picking is
     // nothing but damage limitation.
     fits: () => true,
-    effect: () => ({}),
+    effect: () => ({ weather: "clear" }),
   },
 ];
 
@@ -328,6 +341,18 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
   const carded: Level = { ...level, objectives };
   forLevel.set(key, carded);
   return carded;
+}
+
+/** What the sky is doing, for the map. Undefined on a hand that says nothing. */
+export function weatherFor(
+  level: Level,
+  cards: readonly Card[],
+): CardWeather | undefined {
+  for (const card of cards) {
+    const weather = card.effect(level).weather;
+    if (weather) return weather;
+  }
+  return undefined;
 }
 
 /** Where the group stands still, for `paceOf`. */

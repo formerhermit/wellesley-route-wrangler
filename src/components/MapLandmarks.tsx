@@ -82,6 +82,7 @@ import {
   scatterEggId,
 } from "../game/eggs";
 import { LANDMARK_OFFSET, PARK_TREES, TRAIL_TREES } from "../game/landmarks";
+import type { CardWeather } from "../game/cards";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
 /** What each kind of junction draws. Where it goes is in `landmarks.ts`. */
@@ -224,6 +225,20 @@ function snowflakes(width: number, height: number) {
 }
 
 /**
+ * Rain (#10), laid out the same way as the snow and falling a good deal
+ * faster: more of it, steeper, and in lines rather than circles, because a
+ * round raindrop is a snowflake.
+ */
+function raindrops(width: number, height: number) {
+  return Array.from({ length: 70 }, (_, i) => ({
+    x: Math.round(((i * 0.618033988749895) % 1) * width * 10) / 10,
+    y: Math.round(((i * 0.754877666247) % 1) * height * 10) / 10,
+    delay: -((i % 11) * 0.13),
+    duration: 0.9 + (i % 4) * 0.18,
+  }));
+}
+
+/**
  * Frost, creeping in from each corner. One fern, drawn once and turned four
  * ways: ice does the same thing at every corner of a window.
  */
@@ -304,12 +319,15 @@ export function MapLandmarks({
   level,
   onTop = false,
   eggs,
+  weather,
 }: {
   level: Level;
   /** The second pass, drawn after the roads: only the junctions that ask. */
   onTop?: boolean;
   /** Absent on a map with nothing to press, which is most of the furniture. */
   eggs?: EggHandlers;
+  /** What a briefing card has done to the sky (#10). Never the level's mood. */
+  weather?: CardWeather;
 }) {
   if (onTop) {
     const { width, height } = level.view;
@@ -383,6 +401,28 @@ export function MapLandmarks({
               ))}
             </g>
           </>
+        )}
+        {/* A card's weather falls in the same place the season's does, and
+            for the same reason: in front of the map, behind the writing. */}
+        {weather === "rain" && (
+          <g className="rain">
+            {raindrops(width, height).map((drop, index) => (
+              <line
+                key={index}
+                className="raindrop"
+                x1={drop.x}
+                y1={drop.y}
+                x2={drop.x - 3}
+                y2={drop.y + 11}
+                style={
+                  {
+                    "--fall-delay": `${drop.delay}s`,
+                    "--fall-duration": `${drop.duration}s`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </g>
         )}
       </g>
     );

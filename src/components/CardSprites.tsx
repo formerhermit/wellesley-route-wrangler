@@ -33,14 +33,26 @@ export function BenCard() {
   );
 }
 
-/** Dan's cows. Dan is not going home until he has said hello. */
+/**
+ * Dan's cows. Dan is not going home until he has said hello.
+ *
+ * Drawn head-on rather than side-on. A cow in profile at this size is a body
+ * with a smaller body stuck to one end of it, and the patch on its flank
+ * reads as an eye — the first go came out an unmistakable snail. Facing you,
+ * two ears and two eyes settle what it is before anything else has to.
+ */
 export function DanCard() {
   return (
     <Frame>
-      <ellipse cx={-1} cy={4} rx={19} ry={12} className="card-cow" />
-      <circle cx={15} cy={-8} r={9} className="card-cow" />
-      <ellipse cx={-8} cy={2} rx={6} ry={5} className="card-cow-patch" />
-      <path d="M 9 -15 L 6 -21 M 21 -15 L 24 -21" className="card-horn" />
+      <ellipse cx={-16} cy={-6} rx={7} ry={9} className="card-cow" />
+      <ellipse cx={16} cy={-6} rx={7} ry={9} className="card-cow" />
+      <path
+        d="M -15 -14 Q -15 -24 0 -24 Q 15 -24 15 -14 L 15 2 Q 15 16 0 16 Q -15 16 -15 2 Z"
+        className="card-cow"
+      />
+      <ellipse cx={0} cy={7} rx={9} ry={6} className="card-cow-muzzle" />
+      <circle cx={-7} cy={-8} r={2.6} className="card-cow-patch" />
+      <circle cx={7} cy={-8} r={2.6} className="card-cow-patch" />
     </Frame>
   );
 }

@@ -47,6 +47,7 @@ import {
   briefingAvailable,
   dealBriefing,
   stopsFor,
+  weatherFor,
 } from "./game/cards";
 import type { Card, Hand } from "./game/cards";
 
@@ -371,6 +372,10 @@ export default function App() {
     () => stopsFor(level, state.cards),
     [level, state.cards],
   );
+  const weather = useMemo(
+    () => weatherFor(level, state.cards),
+    [level, state.cards],
+  );
 
   const evaluation = useMemo(
     () => evaluateRoute(brief, state.route),
@@ -642,6 +647,7 @@ export default function App() {
               }}
               onEggPressed={() => sound.play("egg")}
               stops={stops}
+              weather={weather}
             />
 
             <GameControls

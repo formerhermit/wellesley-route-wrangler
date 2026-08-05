@@ -20,6 +20,7 @@ import {
   routePathData,
   selectableNodeIds,
 } from "../game/routeGraph";
+import type { CardWeather } from "../game/cards";
 import type { Level, Route } from "../game/types";
 
 type FollowerKind = NonNullable<Level["followers"]>[number]["kind"];
@@ -74,6 +75,8 @@ interface Props {
    * that one curve, so they stop and set off together without being told.
    */
   stops?: string[];
+  /** What a card has done to the sky (#10). Decorative from end to end. */
+  weather?: CardWeather;
 }
 
 export function RouteMap({
@@ -88,6 +91,7 @@ export function RouteMap({
   onGnomePressed,
   onEggPressed,
   stops,
+  weather,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const runnersRef = useRef<(SVGGElement | null)[]>(
@@ -238,7 +242,9 @@ export function RouteMap({
          */
         className={`map-svg map-svg--${level.id}${
           level.mood ? ` map-svg--${level.mood}` : ""
-        }${running ? " is-running" : ""}`}
+        }${weather ? ` map-svg--${weather}` : ""}${
+          running ? " is-running" : ""
+        }`}
         role="img"
         aria-labelledby="map-title map-description"
       >
@@ -257,7 +263,7 @@ export function RouteMap({
         <MapRoads level={level} route={route} />
         {/* The few landmarks that have nowhere to stand a road does not
             already cross, drawn over the top of it instead. */}
-        <MapLandmarks level={level} onTop />
+        <MapLandmarks level={level} onTop weather={weather} />
         <WanderingGnome level={level} home={gnome} onPress={onGnomePressed} />
 
         {pathData && (

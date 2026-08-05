@@ -77,8 +77,8 @@ export function BriefingCoachMark({ anchorRef, onDismiss }: Props) {
         You can be dealt a briefing
       </p>
       <p className="coach-mark__body">
-        Now this one is in the book, the club can turn up in whatever state it
-        likes. It changes the run, never the points.
+        Now this one is in the book, the club can turn up in whatever state
+        it likes.
       </p>
       <button
         ref={closeRef}
