@@ -10,6 +10,7 @@ import { LevelDialog } from "./components/LevelDialog";
 import { PrivacyDialog } from "./components/PrivacyDialog";
 import { ClubDialog } from "./components/ClubDialog";
 import { RunBookDialog } from "./components/RunBookDialog";
+import { StartingGun } from "./components/StartingGun";
 import { levels } from "./data/levels";
 import {
   levelNumber,
@@ -103,6 +104,17 @@ function initialState(level: Level): GameState {
 
 function describe(level: Level, route: Route, prefix: string): string {
   return `${prefix} Route now ${totalDistanceKm(level, route).toFixed(2)} km.`;
+}
+
+/**
+ * mm:ss for the race chip time (#116) — nobody wants a race result to
+ * three decimal places, and no run here takes an hour.
+ */
+function formatChipTime(ms: number): string {
+  const totalSeconds = Math.max(0, Math.round(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function reducer(state: GameState, action: Action): GameState {
@@ -230,8 +242,30 @@ export default function App() {
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
   const showingResult = state.phase === "result";
+
+  /*
+   * The starting gun (#116) fires when a race level arrives, not when Run
+   * Route is pressed: a gun that only goes off right before the animation
+   * looks like decoration for the run rather than a warning that the level
+   * itself is timed, and by the time it fires the player has already spent
+   * as long planning as they like without knowing it counted. Keyed on the
+   * level object itself, so it fires again on every fresh arrival — the
+   * fixture list, a reload that resumes here — and not on the edits, resets
+   * and retries that keep the same level loaded throughout.
+   */
+  const [showingStartingGun, setShowingStartingGun] = useState(false);
+  useEffect(() => {
+    if (level.field) setShowingStartingGun(true);
+  }, [level]);
+
   const modalOpen =
-    showingResult || helpOpen || levelsOpen || privacyOpen || clubOpen || bookOpen;
+    showingResult ||
+    showingStartingGun ||
+    helpOpen ||
+    levelsOpen ||
+    privacyOpen ||
+    clubOpen ||
+    bookOpen;
 
   // Asked once, on the first render that has a table to ask.
   useEffect(() => {
@@ -327,6 +361,49 @@ export default function App() {
     playSound("badge");
   }, [state.phase, freshBadges, playSound]);
 
+  /*
+   * The chip time (#116), race levels only. The watch starts exactly when
+   * the gun does — set from `StartingGun`'s own `onGun` below — so the
+   * popup's promise and the number on the debrief agree: whatever the gun
+   * announces is the whole of what gets timed, planning included. Held in a
+   * ref rather than state because starting it must never itself cause a
+   * render; it only ever surfaces once, read off at the finish below. Not
+   * reset by Reset Route or Try Again, on purpose — those are replanning
+   * inside the same race, not a new one, and a real chip has no undo either.
+   */
+  const solveStartedAt = useRef<number | null>(null);
+
+  const [chipTimeMs, setChipTimeMs] = useState<number | null>(null);
+  useEffect(() => {
+    if (state.phase !== "result") return;
+    // Explicitly nulled on a club run rather than left alone: without this,
+    // a race's chip time outlives the level it was set on and turns up on
+    // the next result screen that has nothing to do with it.
+    setChipTimeMs(
+      level.field && solveStartedAt.current !== null
+        ? Date.now() - solveStartedAt.current
+        : null,
+    );
+  }, [state.phase, level]);
+
+  // The chip time joins the report card as its own line rather than living
+  // inside `buildIncidentReport`: that function is pure and tested against
+  // exact route data, and a wall-clock reading has no business in either.
+  const reportWithChipTime = useMemo(() => {
+    if (chipTimeMs === null) return report;
+    return {
+      ...report,
+      lines: [
+        ...report.lines,
+        {
+          label: "Chip time",
+          value: formatChipTime(chipTimeMs),
+          tone: "neutral" as const,
+        },
+      ],
+    };
+  }, [report, chipTimeMs]);
+
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
   const upcoming =
@@ -372,27 +449,31 @@ export default function App() {
 
   // When a dialog closes, hand focus back to whatever it belongs to, rather
   // than dropping it on the body. Never fires on first render.
-  const previousModal = useRef<"result" | "help" | "levels" | null>(null);
+  const previousModal = useRef<"result" | "starting" | "help" | "levels" | null>(
+    null,
+  );
   useEffect(() => {
     const current = showingResult
       ? "result"
-      : helpOpen
-        ? "help"
-        : levelsOpen
-          ? "levels"
-          : null;
+      : showingStartingGun
+        ? "starting"
+        : helpOpen
+          ? "help"
+          : levelsOpen
+            ? "levels"
+            : null;
     const previous = previousModal.current;
     if (previous && !current && document.activeElement === document.body) {
       const target =
         previous === "help"
           ? helpButtonRef
-          : previous === "levels"
+          : previous === "levels" || previous === "starting"
             ? levelsButtonRef
             : runButtonRef;
       target.current?.focus();
     }
     previousModal.current = current;
-  }, [showingResult, helpOpen, levelsOpen]);
+  }, [showingResult, showingStartingGun, helpOpen, levelsOpen]);
 
   return (
     <div className="page">
@@ -519,6 +600,18 @@ export default function App() {
         />
       )}
 
+      {showingStartingGun && (
+        <StartingGun
+          level={level}
+          reducedMotion={reducedMotion}
+          onGun={() => {
+            solveStartedAt.current = Date.now();
+            sound.play("gun");
+          }}
+          onDone={() => setShowingStartingGun(false)}
+        />
+      )}
+
       {showingResult && state.result && (
         <ResultPanel
           level={level}
@@ -526,7 +619,7 @@ export default function App() {
           clubName={clubName}
           onJoinTable={() => setClubOpen(true)}
           result={state.result}
-          report={report}
+          report={reportWithChipTime}
           score={runScore}
           newRoute={freshRoute}
           freshBadges={freshBadges}
