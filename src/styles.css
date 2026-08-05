@@ -5548,3 +5548,90 @@ body {
     flex: 1 1 100%;
   }
 }
+
+/*
+ * The starting gun (#116). Held over the map from the moment a race level
+ * arrives — not after Run Route is pressed — until Go is pressed, on a race
+ * level only. Not a `.dialog`: it has one control and it is not a close
+ * button, so it does not get that component's X or its scroll handling.
+ */
+.starting-gun-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(29 43 54 / 55%);
+  animation: fade-in 0.2s ease;
+}
+
+.starting-gun {
+  width: min(340px, 100%);
+  padding: clamp(1.2rem, 4vw, 1.8rem);
+  text-align: center;
+  background: var(--card);
+  border: 3px solid var(--club);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 30%);
+}
+
+.starting-gun__bib {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  margin: 0;
+}
+
+.starting-gun__club {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.starting-gun__number {
+  font-size: clamp(2.4rem, 10vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--club);
+}
+
+.starting-gun__strapline {
+  margin: 0.4rem 0 0;
+  color: var(--ink-soft);
+}
+
+/* The one line doing the actual warning (#116): a chip time nobody was told
+   about is a surprise, not a joke. */
+.starting-gun__chip {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+/* Waits for the player rather than a clock (#116), so it needs somewhere to
+   press: full width, because it is the only thing on the card worth reaching
+   for, and there is nothing beside it to share the row with. */
+.starting-gun__go {
+  width: 100%;
+  margin-top: 1.2rem;
+}
+
+.starting-gun__call {
+  margin: 1rem 0 0;
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
+  font-weight: 800;
+  color: var(--fail);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starting-gun-backdrop {
+    animation: none;
+  }
+}
