@@ -176,9 +176,10 @@ export const fleetPondRun: Level = {
       // Up and to the right, off the tree the trail theme plants at 90,90.
       // The default put a sixty-wide wood squarely on top of it, seventeen
       // units deep, and nothing noticed until the scenery test learned how
-      // big things are drawn (#110).
-      spriteDx: 22,
-      spriteDy: -26,
+      // big things are drawn (#110). Higher again since the junction dot
+      // became a thing sprites have to clear as well.
+      spriteDx: 20,
+      spriteDy: -40,
     },
     {
       id: "golf-club",

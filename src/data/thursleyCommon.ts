@@ -197,12 +197,13 @@ export const thursleyCommon: Level = {
         * the Hankley Sands label. South-east of both is the only clear ground,
         * with the name beside it rather than under it.
         *
-        * A building may sit under its own junction — the Hanger and the town
-        * centre both do, and the junction reads as its door. A wall may not:
-        * nothing stands on a wall, so a dot on top of one is a mistake.
+        * The junction dot is drawn last and is solid white to a radius of
+        * seventeen, so anything under it is not dimmed, it is gone. That is
+        * now the rule for every landmark rather than an observation about this
+        * one, and this one moved straight below to obey it.
         */
-      spriteDx: 30,
-      spriteDy: 30,
+      spriteDx: 0,
+      spriteDy: 40,
     },
     {
       id: "hankley-sands",
@@ -235,13 +236,12 @@ export const thursleyCommon: Level = {
       blurb: "the pub in Thursley, and the run's real finish line",
       type: "pub",
       /* A pub hangs sixty units above its junction, and this one is sixty from
-         the top of the map, so it was drawn off the paper altogether. Well to
-         the west instead: it is seventy wide with the sign on a post, so
-         twenty was still half on top of the junction. */
-      /* And up, off the tree at 610,70, which the westward move had put it
-         sixteen units into. */
-      spriteDx: -10,
-      spriteDy: -22,
+         the top of the map, so it was drawn off the paper altogether. Thirty-
+         five above instead: far enough to clear the junction's own dot, and
+         still on the paper. West was tried and put it into the tree at
+         610,70. */
+      spriteDx: 0,
+      spriteDy: -35,
     },
     {
       id: "elstead-green",
@@ -251,8 +251,10 @@ export const thursleyCommon: Level = {
       label: "Elstead Green",
       blurb: "the village, the café, and a queue for both",
       type: "coffee",
+      // Far enough below to clear the junction's dot, which was taking a bite
+      // out of the van.
       spriteDx: -20,
-      spriteDy: 20,
+      spriteDy: 35,
     },
   ],
 

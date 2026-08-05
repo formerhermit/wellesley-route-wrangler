@@ -120,10 +120,11 @@ export const crooksburyHill: Level = {
       label: "Botany Hill",
       blurb: "the high ground over The Sands",
       type: "hill",
-      // In a bit from the usual forty-four: the climb up from The Sands now
-      // carries a triangle of its own and the default sat on top of it (#118).
-      spriteDx: -26,
-      spriteDy: 10,
+      // Up and left. The climb from The Sands carries a triangle of its own
+      // and the default sat on top of it (#118); pulling it in put it under
+      // this junction's dot instead.
+      spriteDx: -15,
+      spriteDy: -30,
     },
     {
       id: "crooksbury-hill",

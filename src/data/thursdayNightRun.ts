@@ -189,9 +189,10 @@ export const thursdayNightRun: Level = {
       labelSide: "right",
       /* Down and left instead of up and left. The wedge between the two roads
          climbing north is not as wide as a copse: the lane ran ten units into
-         the drawing, which a point test could never see (#110). */
-      spriteDx: -38,
-      spriteDy: 22,
+         the drawing, which a point test could never see (#110). Further down
+         again to clear the junction's own dot. */
+      spriteDx: -25,
+      spriteDy: 45,
     },
     {
       id: "puckridge-car-park",

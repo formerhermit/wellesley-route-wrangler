@@ -246,9 +246,10 @@ export const farnboroughHalf: Level = {
       type: "hill",
       // Straight above the junction now. The climb from the Aerospace Centre
       // carries its own triangle and the old spot to the left was underneath
-      // it (#118); below is this junction's own name.
+      // it (#118); below is this junction's own name. Thirty rather than
+      // twenty, to clear the dot.
       spriteDx: 0,
-      spriteDy: -20,
+      spriteDy: -30,
     },
     {
       id: "cockadobby-hill",

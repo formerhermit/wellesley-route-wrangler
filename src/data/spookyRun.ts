@@ -177,10 +177,11 @@ export const spookyRun: Level = {
       label: "Redan Road",
       blurb: "massive hill, no arguments",
       type: "hill",
-      // Down and to the right, out of the churchyard: the church stands where
-      // this hill's marker usually sits.
-      spriteDx: 30,
-      spriteDy: 22,
+      // Straight down, out of the churchyard: the church stands where this
+      // hill's marker usually sits, and down-and-right put the triangle under
+      // this junction's own dot.
+      spriteDx: 0,
+      spriteDy: 35,
     },
     {
       id: "municipal-gardens",

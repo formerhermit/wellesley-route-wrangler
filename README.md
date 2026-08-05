@@ -1202,6 +1202,21 @@ units into one of the theme's own trees, The Woods at Fleet Pond and the Three
 Horseshoes at Thursley doing the same, and a lane running ten units through
 Wharf Copse on the Thursday Night Run.
 
+There is a third thing a landmark can disappear behind, and it took until level
+15 for anybody to say so: its own junction. The dot is drawn *after* the
+landmarks and its halo is solid white to a radius of seventeen, so a sprite
+that strays under one is not dimmed, it is gone. Four on Bourne Wood were
+reported — a cave, an abbey, a hill marker and a car park sign, each with a
+bite taken out of it — and checking the rule across the roster found fourteen,
+on eight levels, going back to Fleet Pond. All fourteen moved.
+
+The rule was already written down, oddly enough. The Atlantic Wall's own
+comment argued that "a dot on top of one is a mistake" while allowing that a
+building may sit under its junction and read as its door. Nothing was enforcing
+either half, and no building on the roster was actually relying on the
+exemption, so it is now simply uniform: nothing but a bridge, which stands in
+the river where the road crosses it.
+
 It also closed the other half of #110. A `park` junction scatters three trees
 around itself and **nothing checked them at all** — the test knew about
 `TRAIL_TREES` and had never heard of `PARK_TREES`, across the seven levels that

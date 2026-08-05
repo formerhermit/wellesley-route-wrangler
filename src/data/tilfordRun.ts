@@ -120,8 +120,8 @@ export const tilfordRun: Level = {
        * at 90,90 — twenty units deep, which is most of a shop (#110). Out to
        * the side it clears the tree and still sits under its own name.
        */
-      spriteDx: -34,
-      spriteDy: -2,
+      spriteDx: -50,
+      spriteDy: 0,
     },
     {
       id: "barley-mow",

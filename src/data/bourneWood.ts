@@ -56,9 +56,9 @@ export const bourneWood: Level = {
       blurb: "pay and display, and the machine takes cards now",
       type: "carpark",
       labelAbove: true,
-      // Beside the junction: the sign hangs fifty above by default and that is
-      // where a two-line name goes.
-      spriteDx: 30,
+      // Left of the junction. Above is a two-line name and right was under
+      // the junction's own dot, which is solid white and drawn last.
+      spriteDx: -40,
       spriteDy: 0,
     },
     {
@@ -104,9 +104,9 @@ export const bourneWood: Level = {
       blurb: "the view over the whole thing, and where the crane goes",
       type: "hill",
       labelSide: "left",
-      // Below rather than left, which is where the name is.
+      // Above. Left is where the name is and below was under the dot.
       spriteDx: 0,
-      spriteDy: 22,
+      spriteDy: -30,
     },
     {
       id: "the-barrows",
@@ -126,7 +126,7 @@ export const bourneWood: Level = {
       type: "sand",
       // Above the junction. Sand sits below by default and so does this name.
       spriteDx: 0,
-      spriteDy: -27,
+      spriteDy: -35,
     },
     {
       id: "waverley-abbey",
@@ -136,9 +136,10 @@ export const bourneWood: Level = {
       blurb: "1128, and the first Cistercian house in England",
       type: "church",
       labelSide: "left",
-      // Right of the junction: above it is the lane down from the cave.
-      spriteDx: 35,
-      spriteDy: 0,
+      // Up and right of the junction: above it is the lane down from the cave,
+      // and level with it the dot was standing in the west wall.
+      spriteDx: 40,
+      spriteDy: -30,
     },
     {
       id: "mother-ludlams-cave",
@@ -148,8 +149,9 @@ export const bourneWood: Level = {
       blurb: "the Ludwell, which watered the abbey from 1218",
       type: "cave",
       labelAbove: true,
-      // Out to the side, clear of its own rather long name.
-      spriteDx: 30,
+      // Out to the side, clear of its own rather long name — and far enough
+      // out to clear the junction's dot, which was taking the mouth off it.
+      spriteDx: 40,
       spriteDy: 0,
     },
     {

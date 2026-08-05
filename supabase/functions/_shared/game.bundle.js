@@ -59,7 +59,7 @@ const bourneWood = {
 			blurb: "pay and display, and the machine takes cards now",
 			type: "carpark",
 			labelAbove: true,
-			spriteDx: 30,
+			spriteDx: -40,
 			spriteDy: 0
 		},
 		{
@@ -105,7 +105,7 @@ const bourneWood = {
 			type: "hill",
 			labelSide: "left",
 			spriteDx: 0,
-			spriteDy: 22
+			spriteDy: -30
 		},
 		{
 			id: "the-barrows",
@@ -124,7 +124,7 @@ const bourneWood = {
 			blurb: "conifers off, heather back, courtesy of the RSPB",
 			type: "sand",
 			spriteDx: 0,
-			spriteDy: -27
+			spriteDy: -35
 		},
 		{
 			id: "waverley-abbey",
@@ -134,8 +134,8 @@ const bourneWood = {
 			blurb: "1128, and the first Cistercian house in England",
 			type: "church",
 			labelSide: "left",
-			spriteDx: 35,
-			spriteDy: 0
+			spriteDx: 40,
+			spriteDy: -30
 		},
 		{
 			id: "mother-ludlams-cave",
@@ -145,7 +145,7 @@ const bourneWood = {
 			blurb: "the Ludwell, which watered the abbey from 1218",
 			type: "cave",
 			labelAbove: true,
-			spriteDx: 30,
+			spriteDx: 40,
 			spriteDy: 0
 		},
 		{
@@ -1484,8 +1484,8 @@ const crooksburyHill = {
 			label: "Botany Hill",
 			blurb: "the high ground over The Sands",
 			type: "hill",
-			spriteDx: -26,
-			spriteDy: 10
+			spriteDx: -15,
+			spriteDy: -30
 		},
 		{
 			id: "crooksbury-hill",
@@ -2026,7 +2026,7 @@ const farnboroughHalf = {
 			blurb: "genuinely called that, at nineteen kilometres",
 			type: "hill",
 			spriteDx: 0,
-			spriteDy: -20
+			spriteDy: -30
 		},
 		{
 			id: "cockadobby-hill",
@@ -2411,8 +2411,8 @@ const fleetPondRun = {
 			label: "The Woods",
 			blurb: "roots, mud, and a genuine sense of peril",
 			type: "woods",
-			spriteDx: 22,
-			spriteDy: -26
+			spriteDx: 20,
+			spriteDy: -40
 		},
 		{
 			id: "golf-club",
@@ -4223,8 +4223,8 @@ const spookyRun = {
 			label: "Redan Road",
 			blurb: "massive hill, no arguments",
 			type: "hill",
-			spriteDx: 30,
-			spriteDy: 22
+			spriteDx: 0,
+			spriteDy: 35
 		},
 		{
 			id: "municipal-gardens",
@@ -4702,8 +4702,8 @@ const thursdayNightRun = {
 			blurb: "a corner of trees, and the only bench out here",
 			type: "woods",
 			labelSide: "right",
-			spriteDx: -38,
-			spriteDy: 22
+			spriteDx: -25,
+			spriteDy: 45
 		},
 		{
 			id: "puckridge-car-park",
@@ -5601,8 +5601,8 @@ const thursleyCommon = {
 			label: "The Atlantic Wall",
 			blurb: "concrete, shelled, and still standing",
 			type: "wall",
-			spriteDx: 30,
-			spriteDy: 30
+			spriteDx: 0,
+			spriteDy: 40
 		},
 		{
 			id: "hankley-sands",
@@ -5632,8 +5632,8 @@ const thursleyCommon = {
 			label: "The Three Horseshoes",
 			blurb: "the pub in Thursley, and the run's real finish line",
 			type: "pub",
-			spriteDx: -10,
-			spriteDy: -22
+			spriteDx: 0,
+			spriteDy: -35
 		},
 		{
 			id: "elstead-green",
@@ -5644,7 +5644,7 @@ const thursleyCommon = {
 			blurb: "the village, the café, and a queue for both",
 			type: "coffee",
 			spriteDx: -20,
-			spriteDy: 20
+			spriteDy: 35
 		}
 	],
 	roads: [
@@ -6367,8 +6367,8 @@ const tilfordRun = {
 			blurb: "shuts when it feels like it",
 			type: "shop",
 			labelAbove: true,
-			spriteDx: -34,
-			spriteDy: -2
+			spriteDx: -50,
+			spriteDy: 0
 		},
 		{
 			id: "barley-mow",

@@ -107,8 +107,21 @@ const boxDepth = (a: Box, b: Box) =>
 const ROAD_DEPTH = 6;
 const SOLID_DEPTH = 8;
 const NAME_DEPTH = 6;
+/**
+ * A junction's halo is drawn at r=16 with a stroke on top, so about eighteen
+ * units of the map belong to the dot and anything under it is invisible.
+ * Junctions are drawn after the landmarks, so "under" is literal.
+ */
+const JUNCTION_DOT = 18;
 /** A junction's dot and halo take up sixteen units on their own. */
 const JUNCTION_CLEARANCE = 10;
+
+/** How far a point is from a box. Zero when it is inside it. */
+const boxToPoint = (box: Box, x: number, y: number) =>
+  Math.hypot(
+    Math.max(box.left - x, 0, x - box.right),
+    Math.max(box.top - y, 0, y - box.bottom),
+  );
 
 /**
  * The moon is scenery in the sky, and the sky is over everything.
@@ -124,6 +137,12 @@ const OVERHEAD = new Set(["moon", "bat"]);
  * the road round the Sports Centre is the whole point of that junction; and a
  * `park` is a green with roads through it, which is what a green is.
  */
+/**
+ * And the one landmark that is drawn *on* its junction on purpose: a bridge
+ * stands in the river at the point the road crosses it.
+ */
+const ON_THE_JUNCTION = new Set(["bridge"]);
+
 const IN_THE_ROAD = new Set([
   "bridge",
   "sportscentre",
@@ -353,6 +372,23 @@ describe.each(levels.map((level) => [level.id, level] as const))(
           .map((b) => `${a.what} over ${b.what}`),
       );
       expect(clashes).toEqual([]);
+    });
+
+    /*
+     * Junctions are drawn after the landmarks, so a sprite that strays under
+     * one is simply gone. Nothing checked this until level 15 shipped four of
+     * them at once — a cave, an abbey, a hill marker and a car park sign, all
+     * tucked behind their own junction's dot.
+     */
+    it("keeps a junction's own landmark out from under the dots", () => {
+      const hidden = landmarkBoxes()
+        .filter((mark) => !ON_THE_JUNCTION.has(mark.kind))
+        .flatMap((mark) =>
+          level.nodes
+            .filter((node) => boxToPoint(mark.box, node.x, node.y) < JUNCTION_DOT)
+            .map((node) => `${mark.what} under ${node.id}`),
+        );
+      expect(hidden).toEqual([]);
     });
 
     it("keeps a junction's own landmark out of the roads", () => {
