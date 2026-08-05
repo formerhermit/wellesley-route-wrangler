@@ -229,6 +229,47 @@ describe("what the cards do to the brief", () => {
     expect(stopsFor(thursdaySocialRun, [cardById("weather-rain")])).toEqual([]);
   });
 
+  it("only puts new shoes on a map that has mud on it", () => {
+    const shoes = cardById("runner-new-shoes");
+    for (const level of levels) {
+      const muddy = level.roads.some((road) => road.muddy && !road.closed);
+      expect(shoes.fits(level), level.title).toBe(muddy);
+    }
+    // And somewhere does, or the card is in the deck for nothing.
+    expect(levels.filter((level) => shoes.fits(level)).length).toBeGreaterThan(0);
+  });
+
+  /*
+   * Mud has to bite without biting through. A map where avoiding it changes
+   * nothing has not been marked up; a map where avoiding it leaves no route
+   * at all has been marked up on a chokepoint — which is what happened first
+   * time on both Tilford and Bourne Wood, where the only way to the abbey and
+   * the only way out of the pub were the roads that got the mud.
+   */
+  it("leaves a harder puzzle rather than a dead end", () => {
+    const shoes = cardById("runner-new-shoes");
+    for (const level of levels.filter((one) => shoes.fits(one))) {
+      const before = winningRouteCount(level);
+      const after = winningRouteCount(applyCards(level, [shoes]));
+      expect(after, `${level.title} has no way round the mud`).toBeGreaterThan(0);
+      expect(after, `${level.title}'s mud costs nothing`).toBeLessThan(before);
+    }
+  });
+
+  it("does not confuse two levels that happen to share an id", () => {
+    // The cache used to key on the id alone, which quietly hands back the
+    // wrong brief for a level that has been copied and changed.
+    const dry = levels.find((one) => one.roads.some((road) => road.muddy));
+    if (!dry) throw new Error("expected a level with mud on it");
+    const soaked = {
+      ...dry,
+      roads: dry.roads.map((road) => ({ ...road, muddy: true })),
+    };
+    const shoes = cardById("runner-new-shoes");
+    expect(applyCards(dry, [shoes])).not.toBe(applyCards(soaked, [shoes]));
+    expect(winningRouteCount(applyCards(soaked, [shoes]))).toBe(0);
+  });
+
   it("keeps a carded level winnable without touching the real count", () => {
     const before = winningRouteCount(thursdaySocialRun);
     const carded = applyCards(thursdaySocialRun, [cardById("weather-perfect")]);

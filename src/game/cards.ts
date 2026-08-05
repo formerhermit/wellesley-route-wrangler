@@ -155,6 +155,33 @@ export const CARDS: readonly Card[] = [
     effect: () => ({ forbidNodeType: "pigeon" }),
   },
   {
+    id: "runner-new-shoes",
+    suit: "runner",
+    name: "Somebody has new shoes",
+    blurb: "They are white. They are staying white.",
+    /*
+     * Mud is marked per road, not read off the surface. Forbidding trails was
+     * the obvious first go and had no home anywhere on the roster: the town
+     * maps have no trail at all, and the trail maps are trail nearly end to
+     * end, so it either did nothing or forbade the entire map.
+     */
+    fits: (level) => level.roads.some((road) => road.muddy && !road.closed),
+    effect: () => ({
+      objectives: [
+        {
+          kind: "avoid-roads",
+          trait: "muddy",
+          what: "the mud",
+          fail: {
+            title: "The Shoes Are Ruined",
+            message:
+              "Two hundred metres of bog, and a silence that lasted the rest of the week.",
+          },
+        },
+      ],
+    }),
+  },
+  {
     id: "runner-watch",
     suit: "runner",
     name: "Somebody's watch did not start",
@@ -223,13 +250,21 @@ export const CARDS: readonly Card[] = [
  * away — which is the difference between a briefing dealing instantly and it
  * walking Tilford's eleven hundred loops again for every question asked.
  */
-const derived = new Map<string, Level>();
+const derived = new WeakMap<Level, Map<string, Level>>();
 
 export function applyCards(level: Level, cards: readonly Card[]): Level {
   if (cards.length === 0) return level;
 
-  const key = `${level.id}|${cards.map((card) => card.id).sort().join(",")}`;
-  const cached = derived.get(key);
+  // Keyed on the level object rather than its id: two levels can share an id
+  // and differ — a roster level and a copy of it with a road changed — and
+  // handing back the wrong one would be a lie nothing downstream could catch.
+  let forLevel = derived.get(level);
+  if (!forLevel) {
+    forLevel = new Map();
+    derived.set(level, forLevel);
+  }
+  const key = cards.map((card) => card.id).sort().join(",");
+  const cached = forLevel.get(key);
   if (cached) return cached;
 
   const effects = cards.map((card) => card.effect(level));
@@ -291,7 +326,7 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
   ];
 
   const carded: Level = { ...level, objectives };
-  derived.set(key, carded);
+  forLevel.set(key, carded);
   return carded;
 }
 

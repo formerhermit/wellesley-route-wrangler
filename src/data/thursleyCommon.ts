@@ -292,6 +292,7 @@ export const thursleyCommon: Level = {
       to: "the-mire",
       distanceKm: 0.7,
       surface: "trail",
+      muddy: true,
     },
     {
       /* The bridleway, which is under 600 mm of water from October and is
@@ -311,6 +312,7 @@ export const thursleyCommon: Level = {
       to: "the-mire",
       distanceKm: 1.6,
       surface: "trail",
+      muddy: true,
     },
     {
       id: "pine-boardwalk",
@@ -391,6 +393,7 @@ export const thursleyCommon: Level = {
       to: "hammer-pond",
       distanceKm: 1.5,
       surface: "trail",
+      muddy: true,
     },
     {
       id: "mire-sands",
@@ -398,6 +401,7 @@ export const thursleyCommon: Level = {
       to: "hankley-sands",
       distanceKm: 1.4,
       surface: "trail",
+      muddy: true,
     },
     {
       id: "sands-wall",

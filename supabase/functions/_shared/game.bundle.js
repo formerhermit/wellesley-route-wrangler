@@ -247,7 +247,8 @@ const bourneWood = {
 			from: "farnham-heath",
 			to: "the-barrows",
 			distanceKm: 1.1,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "barrows-clearing",
@@ -277,7 +278,8 @@ const bourneWood = {
 			from: "the-promontory",
 			to: "rowledge",
 			distanceKm: 1.3,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "rowledge-carpark",
@@ -5675,7 +5677,8 @@ const thursleyCommon = {
 			from: "boardwalk",
 			to: "the-mire",
 			distanceKm: .7,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "moat-mire",
@@ -5690,7 +5693,8 @@ const thursleyCommon = {
 			from: "moat-car-park",
 			to: "the-mire",
 			distanceKm: 1.6,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "pine-boardwalk",
@@ -5767,14 +5771,16 @@ const thursleyCommon = {
 			from: "the-mire",
 			to: "hammer-pond",
 			distanceKm: 1.5,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "mire-sands",
 			from: "the-mire",
 			to: "hankley-sands",
 			distanceKm: 1.4,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "sands-wall",
@@ -6488,7 +6494,8 @@ const tilfordRun = {
 			from: "mosque",
 			to: "paddling-spot",
 			distanceKm: 1.3,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "mosque-hankley",
@@ -6532,7 +6539,8 @@ const tilfordRun = {
 			from: "sandy-track",
 			to: "rooty-bit",
 			distanceKm: 1.2,
-			surface: "trail"
+			surface: "trail",
+			muddy: true
 		},
 		{
 			id: "rooty-bridge",
@@ -6777,6 +6785,10 @@ function countSurface(level, route, surface) {
 function countHills(level, route) {
 	return route.roadIds.filter((id) => roadById(level, id).hill === true).length;
 }
+/** The same count, for whichever trait a brief is asking to keep off. */
+function countTrait(level, route, trait) {
+	return route.roadIds.filter((id) => roadById(level, id)[trait] === true).length;
+}
 function hasRepeatedRoad(route) {
 	return new Set(route.roadIds).size !== route.roadIds.length;
 }
@@ -6844,6 +6856,16 @@ function evaluateObjective(objective, context) {
 				kind: objective.kind,
 				label: `Stay off ${objective.what}`,
 				detail: count === 0 ? `No ${objective.what.replace(/^the /, "")} on this route.` : `${count} stretch${count === 1 ? "" : "es"} of ${objective.what}.`,
+				state: count > 0 ? "failed" : "passed",
+				fail: fillCopy(objective.fail, totalKm)
+			};
+		}
+		case "avoid-roads": {
+			const count = countTrait(level, route, objective.trait);
+			return {
+				kind: objective.kind,
+				label: `Keep off ${objective.what}`,
+				detail: count === 0 ? `None of ${objective.what} on this route.` : `${count} stretch${count === 1 ? "" : "es"} of ${objective.what}.`,
 				state: count > 0 ? "failed" : "passed",
 				fail: fillCopy(objective.fail, totalKm)
 			};

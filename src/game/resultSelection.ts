@@ -18,6 +18,10 @@ const FAILURE_PRIORITY: FailureSlot[] = [
   "no-repeat",
   "max-node-type",
   "avoid-surface",
+  // Beside the surface rule it is a cousin of, and above the waypoints: going
+  // through the mud in somebody's new shoes is a more specific account of how
+  // the run went wrong than not having reached the abbey is.
+  "avoid-roads",
   "visit",
   // Below the summits it is named for. Missing Crooksbury Hill and being two
   // climbs short are the same mistake, and the one with a place in it says
