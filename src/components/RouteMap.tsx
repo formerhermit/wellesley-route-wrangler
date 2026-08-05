@@ -65,6 +65,8 @@ interface Props {
   /** Where the one gnome is, if he is on this map at all (#104). */
   gnome: GnomeHome | undefined;
   onGnomePressed: () => void;
+  /** A little "juice" when a scattered egg (#104) actually answers a press. */
+  onEggPressed?: () => void;
 }
 
 export function RouteMap({
@@ -77,6 +79,7 @@ export function RouteMap({
   onRunFinished,
   gnome,
   onGnomePressed,
+  onEggPressed,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const runnersRef = useRef<(SVGGElement | null)[]>(
@@ -124,9 +127,10 @@ export function RouteMap({
         // The one egg that is more than an animation: it sends a rival club
         // round the Hockey Loop, which needs a path and a clock of its own.
         if (kind === "track" && hasTrackEgg(level)) setRivalsRunning(true);
+        onEggPressed?.();
       },
     }),
-    [level, pressed],
+    [level, pressed, onEggPressed],
   );
 
   // One ref per follower the level declares, replaced when the level changes.

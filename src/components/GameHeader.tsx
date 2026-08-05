@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 import type { Level, RouteEvaluation } from "../game/types";
 import { MusicButton } from "./MusicButton";
+import { SoundButton } from "./SoundButton";
 
 interface Props {
   level: Level;
@@ -14,6 +15,8 @@ interface Props {
   levelsButtonRef: RefObject<HTMLButtonElement | null>;
   musicOn: boolean;
   onToggleMusic: () => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
   onShowLevels: () => void;
   onShowHelp: () => void;
 }
@@ -28,6 +31,8 @@ export function GameHeader({
   levelsButtonRef,
   musicOn,
   onToggleMusic,
+  soundOn,
+  onToggleSound,
   onShowLevels,
   onShowHelp,
 }: Props) {
@@ -147,6 +152,7 @@ export function GameHeader({
         </button>
 
         <MusicButton on={musicOn} onToggle={onToggleMusic} />
+        <SoundButton on={soundOn} onToggle={onToggleSound} />
 
         <button
           type="button"
