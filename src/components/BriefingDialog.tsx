@@ -17,11 +17,10 @@ const KEEP = 2;
  * The briefing (#10): what the club has turned up with, and which two of it
  * you are taking out with you.
  *
- * It opens on the offer rather than on the hand. Dealing as the dialog
- * appears makes the whole thing read as a menu that was already populated —
- * the cards are simply sitting there as though they always had been, and the
- * one moment that is actually yours has happened off screen before you
- * arrived. So there is a button, and the cards land when it is pressed.
+ * It opens on the offer rather than on the hand: a dialog that deals as it
+ * appears reads as a menu that was already populated, with the one moment
+ * that is actually the player's having happened off screen. So there is a
+ * button, and the cards land when it is pressed.
  *
  * Three cards, one of each suit, and you keep two. The suits are what stop
  * two rules of a kind ever meeting, and the hand was checked before it was

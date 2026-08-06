@@ -4,12 +4,8 @@ interface Props {
 }
 
 /**
- * Sits beside the music notes (#123).
- *
- * The speaker, which is what a sound effect comes out of. It used to be on
- * the music button and the two were the wrong way round — a loudspeaker for
- * the tune playing behind the game, and a waveform nobody has seen on a
- * button before for the noise a click makes.
+ * Sits beside the music notes (#123). The speaker, which is what a sound
+ * effect comes out of.
  *
  * Waves when it is on and a cross when it is not, rather than a line through
  * the cone: a struck-through speaker reads as "no sound here" and this is a

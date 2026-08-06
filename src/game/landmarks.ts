@@ -31,11 +31,11 @@ export const LANDMARK_OFFSET: Partial<
   church: { dx: 0, dy: -52 },
   portaloo: { dx: -48, dy: 4 },
   /*
-   * Straight down (#102). It used to go up and to the right, which cleared the
-   * roads on all four maps that carry one but not the writing: every toilet
-   * junction is a Medical Centre Toilet, twenty-one characters is always two
-   * lines, and every one of them sets `labelAbove` — so the name reached out
-   * to within three units of the cistern and read as one object.
+   * Straight down (#102). Up and to the right clears the roads on all four
+   * maps that carry one but not the writing: every toilet junction is a
+   * Medical Centre Toilet, twenty-one characters is always two lines, and
+   * every one of them sets `labelAbove` — so the name reaches out to within
+   * three units of the cistern and reads as one object.
    *
    * Below the junction is the quarter the label has vacated by being above it,
    * and it is clear of the roads on all four. Fixed here rather than four

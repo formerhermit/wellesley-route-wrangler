@@ -157,9 +157,9 @@ Wall and home. Six winning routes.
 Its flock is `dragonfly`, which is the same mechanism as the crows, ducks and
 robins and the first one the level *sends you towards* rather than round.
 Everywhere else the birds are an obstacle and the brief caps them; here they
-are the reason anybody drove an hour, and the brief makes Pudmore compulsory.
-Capping them was tried first and produced a dragonfly level whose winning
-routes all avoided the dragonflies.
+are the reason anybody drove an hour, so the brief makes Pudmore compulsory
+rather than capping them — a cap here produces a dragonfly level whose winning
+routes all avoid the dragonflies.
 
 The Atlantic Wall is real too, and is next door on Hankley Common rather than
 on the reserve: a full-size replica of a stretch of the Normandy defences,
@@ -200,11 +200,11 @@ decorative. The route the club actually runs takes both in, and fails.
 It is a Thursday and it is drawn like one: no `mood`, no `flock`, no `music`,
 exactly as levels 1, 3 and 5. Those three fields between them are the Halloween
 and Christmas kit, and reaching for them makes an ordinary week look like an
-occasion. The first draft went out at dusk with crows and simply read as a
-second Spooky Run, so `nightLevel.test.ts` now asserts all three are unset —
-which is a cheaper way of saying "this is not the seasonal one" than a comment
-is. `theme: "trail"` stays, because the ground really is heath and plantation;
-the town theme would run terraces along the edge of Long Valley.
+occasion — dusk and crows on this map would simply read as a second Spooky
+Run. `nightLevel.test.ts` asserts all three are unset, which is a cheaper way
+of saying "this is not the seasonal one" than a comment is. `theme: "trail"`
+stays, because the ground really is heath and plantation; the town theme would
+run terraces along the edge of Long Valley.
 
 Two roads were cut before it shipped and neither for the look of the thing.
 Rushmoor Arena to Laffan's Plain enabled no winning route at all and cost 1,760
@@ -307,9 +307,8 @@ It is also the only map with race furniture on it, because a race has to look
 like one before you have read a word of the brief: a start line under the arch,
 with the word on it, supporters wherever a supporter can actually park, and
 penguins, which are not native to Farnborough and are not going to explain
-themselves. There were water stations too, briefly. A trestle table with a cup
-on it is four marks at this size and reads as a bin, so they went. Cove Green
-lost its trees, too: a `park` junction scatters three round itself, and three
+themselves. Cove Green has no trees on it: a `park` junction scatters three
+round itself, and three
 trees on the one corner that already has a crowd and a race going through it
 was the busiest place on the map. `noTrees` keeps the green and drops them.
 
@@ -409,10 +408,10 @@ whole of the level.
 
 ### Saying which roads are hills
 
-A road marked `hill` used to be drawn as a dashed line and nothing else, and on
-a trail map the dash already means something — the surface. So on Crooksbury,
-whose objective is literally *take seven of these*, there was no way to tell
-which seven, and playtesters who did not know Surrey were guessing (#118).
+A dash on a trail map already means something — the surface — so it cannot
+also mean a climb. On Crooksbury, whose objective is literally *take seven of
+these*, that left no way to tell which seven, and playtesters who did not know
+Surrey were guessing (#118).
 
 Every climb now carries a small triangle beside it. Deliberately the same
 triangle as the marker at a hill junction, at two thirds the size: the map
@@ -440,12 +439,11 @@ level does not get to step off it.
 
 ### What counts as an accident
 
-**The Unexpected Long Run** used to test one thing — thirteen kilometres — and
-so awarded itself for a perfectly correct lap of the Farnborough Winter Half,
-a race whose distance is printed on the entry form, and for every winning route
-on Crooksbury (#119). The joke is the gap between the brief and the run, not
-the number, so the level has to have been advertised as something shorter: the
-badge now also asks that the level's own maximum is under thirteen.
+**The Unexpected Long Run** asks for thirteen kilometres *and* that the level's
+own maximum is under thirteen (#119). Distance alone would award it for a
+perfectly correct lap of the Farnborough Winter Half, whose distance is printed
+on the entry form, and for every winning route on Crooksbury. The joke is the
+gap between the brief and the run, not the number.
 
 ### What a place is standing on
 
@@ -469,17 +467,17 @@ reading as a printing fault, and it goes with the light — blue-grey at dusk,
 paler at frost — so a town stays one place under one sky.
 
 It is no longer town-only, which it was until the Thursday Night Run wanted
-grey round the raceway and the Puckridge car park. "A trail map is already a
-field" turned out to be nearly true rather than true: a trail map is *mostly* a
-field, and an oval of hardstanding with a car park attached is not one. Drawing
-it as grass is the same mistake as flat beige, pointing the other way.
+grey round the raceway and the Puckridge car park. A trail map is only
+*mostly* a field, and an oval of hardstanding with a car park attached is not
+one. Drawing it as grass is the same mistake as flat beige, pointing the other
+way.
 
 What that did need was a second colour. The town's `#ebe7dd` was mixed to sit a
 shade off cream paper; on grass it reads as a pale warm blotch rather than as
 concrete, so `ground-patch--trail` is neutral and a touch darker. Both sit at
 lower specificity than the dusk and frost rules, so the light still wins over
-the theme. The test that used to forbid ground off a town map now forbids two
-patches overlapping instead — two of them on top of each other merge into a
+the theme. The test forbids two patches overlapping — two of them on top of
+each other merge into a
 single shape with a seam across it, which is neither of the areas anybody
 meant.
 
@@ -555,9 +553,9 @@ says so itself with `spriteDx`, `spriteDy` or `labelDy`. Landmarks are drawn
 under the roads, so a sprite left sitting on one is simply lost beneath it.
 
 Note that an objective has to be *failable* to be worth declaring. "Never use
-the same road twice" used to be on every level and could never fail, because
-`selectNode` refuses a road already in the route; it sat there reading "Passed"
-for the whole game. The rule is still enforced, it is just not scored.
+the same road twice" is not one: `selectNode` refuses a road already in the
+route, so as an objective it would read "Passed" for the whole game. The rule
+is enforced, it is just not scored.
 
 Every objective bar one forbids something, asks you to be somewhere, or caps a
 distance. The exception is `climb`, added for Crooksbury: take at least this
@@ -718,11 +716,10 @@ Facebook and Threads — so there is nothing to link to. On a phone it is in the
 native share sheet, which opens *instead* of the menu, and the picture goes
 with it. On a desktop the route is Save the picture and then post it.
 
-That last part stays unsaid in the interface. A line of explanation under the
-option was tried and taken out again: a menu is a list of things to press, and
-a paragraph about what Instagram will not accept is documentation that has
-wandered into the wrong place. **Save the picture** is a clear enough action to
-stand on its own.
+That last part stays unsaid in the interface: a menu is a list of things to
+press, and a paragraph about what Instagram will not accept is documentation
+that has wandered into the wrong place. **Save the picture** is a clear enough
+action to stand on its own.
 
 **Facebook only ever gets a link.** Its sharer takes a `u` parameter and
 nothing else, then builds its own preview by fetching that URL. No image from
@@ -846,11 +843,10 @@ Three settings, per badge, in the `reveal` field:
 
 The cabinet lives behind the trophy button in the header, in a dialog with the
 club table, under two tabs. They belong together: both are about the club
-rather than about the run in front of you, and neither had a home before. The
-cabinet briefly had a line of its own under the objective panel, which was the
-wrong place twice over — that panel is about this run, and a second link under
-the run book's turned the corner into a list of doors. The book stays there,
-because the book really is about this run.
+rather than about the run in front of you, and neither had a home before. Not
+under the objective panel: that panel is about this run, and a second link
+below the run book's would turn the corner into a list of doors. The book
+stays there, because the book really is about this run.
 
 Without a club table configured there is one tab, so there is no tab strip: the
 dialog is the cabinet and nothing else.
@@ -932,12 +928,12 @@ comes in last, because the last thing to move is the thing you look at. All of
 it is CSS keyframes, so `prefers-reduced-motion` switches the lot off without
 any of it knowing.
 
-Nothing starts on the first frame, and nothing is quick. The first draft was
-over in a second and began the instant the dialog mounted, which on a first
-visit is while the page is still being painted: by the time anybody looked up
-it had already happened, and an entrance nobody sees is just a thing that was
-already there. So the card waits a fifth of a second before it moves, each card
-travels far enough to be seen going, and the whole sequence takes a little over
+Nothing starts on the first frame, and nothing is quick. On a first visit this
+dialog mounts while the page is still being painted, so an entrance that
+starts immediately is over before anybody looks up — and an entrance nobody
+sees is just a thing that was already there. So the card waits a fifth of a
+second before it moves, each card travels far enough to be seen going, and the
+whole sequence takes a little over
 two seconds end to end — the shout at the finish included. Small and fast reads
 as a flicker, which is the worst of both.
 
@@ -953,11 +949,10 @@ only chooses where the rotation starts and every step after it is on by one:
 never a repeat, and a full turn is every tip exactly once. Nothing is stored,
 so a reload starts somewhere new.
 
-It turns while the screen is up, every four and a half seconds, and not only
-between visits. Between visits was the first attempt and it was the wrong
-answer to the same question: somebody who opens the screen once — which is most
-people, because it opens itself — sat there and watched one joke never change.
-A rotation nobody is around for is not a rotation.
+It turns while the screen is up, every four and a half seconds, rather than
+only between visits: somebody who opens the screen once — which is most
+people, because it opens itself — would sit there and watch one joke never
+change. A rotation nobody is around for is not a rotation.
 
 That is also why there are two dozen of them rather than a handful: at four and
 a half seconds each, a short list comes round in front of anybody who reads the
@@ -1185,10 +1180,6 @@ case worth covering is the one a level badge fails at: a run that missed the
 brief is logged in the book exactly like a winner, so the test asks whether the
 race was *won* rather than whether it happened.
 
-That file also pins the level to daylight: `mood`, `flock` and `music` all
-unset. It is the one assertion here that is about restraint rather than
-correctness, and it is there because the first draft reached for the Halloween
-kit for a level that is simply a Thursday.
 
 Those walks count *journeys* — every way round, in every order — which is a
 larger number than the routes the game counts, and deliberately so: it is the

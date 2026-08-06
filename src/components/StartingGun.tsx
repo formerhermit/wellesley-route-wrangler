@@ -21,13 +21,12 @@ interface Props {
  * it counted. Firing it on arrival is the whole of the warning — the chip
  * time on the debrief is not a surprise if the gun told you it was coming.
  *
- * It waits for the player rather than firing itself on a clock. An earlier
- * version counted itself down and went off after under two seconds, which
- * is not long enough to read a popup that has just appeared — the one thing
- * this screen exists to tell you would have gone before anybody had read
- * it. So the gun stays on your marks until **Go** is pressed, however long
- * that takes, and the chip time is none the worse for it: it was never
- * meant to capture reading the popup, only the race.
+ * It waits for the player rather than firing itself on a clock: a countdown
+ * is over before a popup that has only just appeared can be read, and the one
+ * thing this screen exists to say would go with it. So the gun stays on your
+ * marks until **Go** is pressed, however long that takes, and the chip time
+ * is none the worse for it — it was never meant to capture reading the popup,
+ * only the race.
  *
  * The bib is decoration and nothing more: rolled fresh every time this shows,
  * never stored, and never read by anything that scores.

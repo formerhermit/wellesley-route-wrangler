@@ -1460,8 +1460,8 @@ export function Robin({ alarmed = false }: { alarmed?: boolean }) {
  * stretch of the Normandy defences, built in 1943 for the Canadians to
  * practise blowing up and never tidied away.
  *
- * Long and flat-topped rather than a box, because the first draft came out a
- * shed. What makes it read as this wall and not a wall is the damage — the
+ * Long and flat-topped rather than a box, which reads as a shed. What makes
+ * it read as this wall and not a wall is the damage — the
  * bites out of the top, the shelled end, and the two holes — since being blown
  * up repeatedly is the only thing it was ever for.
  */
@@ -1510,8 +1510,8 @@ export function Dragonfly({ alarmed = false }: { alarmed?: boolean }) {
       aria-hidden="true"
     >
       {/* Four blades rather than four ellipses: a wing is narrow where it
-          meets the body and rounded at the tip, and an ellipse is neither, so
-          the first draft came out a flower. */}
+          meets the body and rounded at the tip, and an ellipse is neither —
+          four of those read as a flower. */}
       <g className="dragonfly-wings">
         <path
           d="M 2.6 -2.6 C -0.8 -9 -0.4 -15.5 3.8 -17.6 C 7.4 -14.2 6.6 -7.4 5 -2.4 Z"

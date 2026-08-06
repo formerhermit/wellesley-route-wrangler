@@ -39,9 +39,8 @@ let lastTip: number | null = null;
  * How long a tip holds the megaphone.
  *
  * Long enough to read twice and short enough that a screen nobody reopens
- * still gets through several: the first version changed the tip only between
- * visits, which meant a player who opened it once saw exactly one joke and no
- * rotation at all.
+ * still gets through several. Rotating only between visits would show a
+ * player who opened it once exactly one joke and no rotation at all.
  */
 const TIP_HOLD_MS = 4500;
 
