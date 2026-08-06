@@ -174,6 +174,18 @@ export type LevelObjective =
       stranded?: ResultCopy;
     }
   | { kind: "avoid-closed"; fail: ResultCopy }
+  /**
+   * Keep away from these junctions. The mirror of `visit`, and by id rather
+   * than by type because the things worth avoiding do not share one: the
+   * goose loiters at a pond on one map, a jetty on another and a beach on a
+   * third.
+   */
+  | {
+      kind: "avoid-nodes";
+      nodeIds: string[];
+      what: string;
+      fail: ResultCopy;
+    }
   | {
       kind: "avoid-surface";
       surface: RoadSurface;

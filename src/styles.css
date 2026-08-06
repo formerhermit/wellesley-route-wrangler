@@ -5655,6 +5655,19 @@ body {
   list-style: none;
 }
 
+/*
+ * The slot, which is the thing that is there before the deal and stays there
+ * through it. The card is drawn over the top of it, so one that has not
+ * landed yet leaves its place on the table rather than a hole.
+ */
+.briefing__hand > li {
+  display: grid;
+  min-height: 9.5rem;
+  background: color-mix(in srgb, var(--line) 12%, var(--card));
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+}
+
 .briefing-card {
   display: flex;
   flex-direction: column;
@@ -5666,7 +5679,9 @@ body {
   text-align: center;
   cursor: pointer;
   background: var(--card);
-  border: 2px dashed var(--line);
+  /* Transparent rather than absent, so the card keeps its size and the slot's
+     own dashes stay the only outline until this one is picked. */
+  border: 2px solid transparent;
   border-radius: var(--radius);
   /* `--deal` is the card's place in the queue, set where the hand is built.
      `backwards` holds it off screen through the delay, so a card that has not
@@ -5685,21 +5700,53 @@ body {
   }
 }
 
-/* The offer, before anything has been dealt. Wide, because it is the only
-   thing on the screen to press. */
+/* The offer. Both buttons share the row once a hand is out, so neither takes
+   the full width. */
 .briefing__deal {
-  width: 100%;
+  flex: 1 1 auto;
+}
+
+/*
+ * A slot with nothing in it yet: the shape of the card, named for its suit,
+ * so the deal has somewhere visible to land and the player can see they are
+ * getting one of each.
+ */
+.briefing-card--empty {
+  /* The slot underneath is doing the drawing; this only carries the label. */
+  background: none;
+  border-color: transparent;
+  cursor: default;
+}
+
+.briefing-card--empty .briefing-card__suit {
+  opacity: 0.65;
+}
+
+/* Spent, not gone: it stays where it was so the deal that has happened is
+   still legible, and stops looking like an offer. */
+.briefing__deal:disabled {
+  opacity: 0.4;
+}
+
+@media (max-width: 559px) {
+  .briefing__hand > li {
+    min-height: 0;
+  }
 }
 
 /* Picked reads as picked without colour being the only thing saying so: the
-   border goes solid as well as blue, and the suit tag fills in. */
+   slot's dashes go solid as well as blue, and the suit tag fills in. */
 .briefing-card.is-picked {
-  border-style: solid;
   border-color: var(--club);
   background: color-mix(in srgb, var(--brand-blue) 10%, var(--card));
 }
 
-.briefing-card:hover {
+.briefing__hand > li:has(.is-picked) {
+  border-style: solid;
+  border-color: var(--club);
+}
+
+.briefing-card:hover:not(.briefing-card--empty) {
   border-color: var(--club);
 }
 

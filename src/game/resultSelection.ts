@@ -18,6 +18,10 @@ const FAILURE_PRIORITY: FailureSlot[] = [
   "no-repeat",
   "max-node-type",
   "avoid-surface",
+  // Beside the other avoids: running the group past the one thing somebody
+  // said they could not face is a more specific account of the run than a
+  // missed waypoint.
+  "avoid-nodes",
   // Beside the surface rule it is a cousin of, and above the waypoints: going
   // through the mud in somebody's new shoes is a more specific account of how
   // the run went wrong than not having reached the abbey is.

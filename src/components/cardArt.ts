@@ -1,8 +1,8 @@
 import {
   BenCard,
   BigCoffeeCard,
-  BirdsCard,
   DanCard,
+  GeeseCard,
   NewShoesCard,
   NobodyCard,
   PerfectCard,
@@ -20,7 +20,7 @@ export const CARD_ART: Record<string, () => ReactNode> = {
   "leader-dan": DanCard,
   "leader-nobody": NobodyCard,
   "runner-new-shoes": NewShoesCard,
-  "runner-birds": BirdsCard,
+  "runner-geese": GeeseCard,
   "runner-big-coffee": BigCoffeeCard,
   "runner-watch": WatchCard,
   "weather-rain": RainCard,
