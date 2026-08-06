@@ -5655,6 +5655,19 @@ body {
   list-style: none;
 }
 
+/*
+ * The slot, which is the thing that is there before the deal and stays there
+ * through it. The card is drawn over the top of it, so one that has not
+ * landed yet leaves its place on the table rather than a hole.
+ */
+.briefing__hand > li {
+  display: grid;
+  min-height: 9.5rem;
+  background: color-mix(in srgb, var(--line) 12%, var(--card));
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+}
+
 .briefing-card {
   display: flex;
   flex-direction: column;
@@ -5666,7 +5679,9 @@ body {
   text-align: center;
   cursor: pointer;
   background: var(--card);
-  border: 2px dashed var(--line);
+  /* Transparent rather than absent, so the card keeps its size and the slot's
+     own dashes stay the only outline until this one is picked. */
+  border: 2px solid transparent;
   border-radius: var(--radius);
   /* `--deal` is the card's place in the queue, set where the hand is built.
      `backwards` holds it off screen through the delay, so a card that has not
@@ -5685,21 +5700,53 @@ body {
   }
 }
 
-/* The offer, before anything has been dealt. Wide, because it is the only
-   thing on the screen to press. */
+/* The offer. Both buttons share the row once a hand is out, so neither takes
+   the full width. */
 .briefing__deal {
-  width: 100%;
+  flex: 1 1 auto;
+}
+
+/*
+ * A slot with nothing in it yet: the shape of the card, named for its suit,
+ * so the deal has somewhere visible to land and the player can see they are
+ * getting one of each.
+ */
+.briefing-card--empty {
+  /* The slot underneath is doing the drawing; this only carries the label. */
+  background: none;
+  border-color: transparent;
+  cursor: default;
+}
+
+.briefing-card--empty .briefing-card__suit {
+  opacity: 0.65;
+}
+
+/* Spent, not gone: it stays where it was so the deal that has happened is
+   still legible, and stops looking like an offer. */
+.briefing__deal:disabled {
+  opacity: 0.4;
+}
+
+@media (max-width: 559px) {
+  .briefing__hand > li {
+    min-height: 0;
+  }
 }
 
 /* Picked reads as picked without colour being the only thing saying so: the
-   border goes solid as well as blue, and the suit tag fills in. */
+   slot's dashes go solid as well as blue, and the suit tag fills in. */
 .briefing-card.is-picked {
-  border-style: solid;
   border-color: var(--club);
   background: color-mix(in srgb, var(--brand-blue) 10%, var(--card));
 }
 
-.briefing-card:hover {
+.briefing__hand > li:has(.is-picked) {
+  border-style: solid;
+  border-color: var(--club);
+}
+
+.briefing-card:hover:not(.briefing-card--empty) {
   border-color: var(--club);
 }
 
@@ -5898,13 +5945,22 @@ body {
  * being December.
  */
 .map-svg--rain {
-  filter: saturate(0.7) brightness(0.94);
+  filter: saturate(0.5) brightness(0.88);
 }
 
-/* Golden and a shade warmer. The one card that only makes the run nicer
-   should be visible from the first frame. */
+/* The one card that only makes the run nicer has to be visible from the first
+   frame, and a filter this side of subtle is not — the warmth is carried by
+   the wash below, with the filter only lifting it. */
 .map-svg--clear {
-  filter: saturate(1.12) sepia(0.1) brightness(1.03);
+  filter: saturate(1.2) brightness(1.04);
+}
+
+/* Low evening light over the whole map, in front of it and behind the
+   writing, exactly where the snow and the rain fall. */
+.sunlight {
+  fill: #f6b73c;
+  opacity: 0.17;
+  pointer-events: none;
 }
 
 .rain {
@@ -5929,4 +5985,58 @@ body {
   to {
     transform: translate(-18px, 600px);
   }
+}
+
+/*
+ * Who came out with you (#132), under the map for as long as it is true.
+ * The briefing is otherwise a screen you visit once and have nothing to show
+ * for: its objectives sit down the page reading like the level's own.
+ */
+.briefing-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.75rem;
+  background: color-mix(in srgb, var(--brand-blue) 7%, var(--card));
+  border: 2px solid color-mix(in srgb, var(--brand-blue) 28%, var(--line));
+  border-radius: var(--radius);
+}
+
+.briefing-strip__label {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+.briefing-strip__cards {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.briefing-strip__card {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.briefing-strip__patch {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.briefing-strip__name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
 }

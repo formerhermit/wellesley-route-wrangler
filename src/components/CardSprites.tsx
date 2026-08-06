@@ -79,13 +79,20 @@ export function NewShoesCard() {
   );
 }
 
-/** The birds. Not a phobia, they say. */
-export function BirdsCard() {
+/**
+ * The goose off the map, struck through. The same animal the player has met
+ * at the pond, for the same reason the cow is a bitmap.
+ */
+export function GeeseCard() {
   return (
     <Frame>
-      <ellipse cx={-4} cy={2} rx={13} ry={10} className="badge-bird" />
-      <circle cx={9} cy={-7} r={6} className="badge-bird" />
-      <circle cx={11} cy={-9} r={1.8} className="badge-eye" />
+      <image
+        href={`${import.meta.env.BASE_URL}sprites/goose.png`}
+        x={-24}
+        y={-26}
+        width={48}
+        height={48}
+      />
       <path d="M -21 20 L 21 -16" className="badge-strike" />
     </Frame>
   );

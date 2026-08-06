@@ -211,19 +211,30 @@ describe("what the cards do to the brief", () => {
     expect(carded.objectives.some((one) => one.kind === "visit")).toBe(false);
   });
 
-  it("replaces the level's own bird cap rather than arguing with it", () => {
-    const capped = thursdaySocialRun.objectives.filter(
-      (one) => one.kind === "max-node-type" && one.nodeType === "pigeon",
-    );
-    expect(capped).toHaveLength(1);
+  it("only fears the geese where there are geese", () => {
+    const geese = cardById("runner-geese");
+    for (const level of levels) {
+      const hasGoose = (level.followers ?? []).some(
+        (one) => one.kind === "goose",
+      );
+      expect(geese.fits(level), level.title).toBe(hasGoose);
+    }
+    expect(levels.filter((one) => geese.fits(one)).length).toBeGreaterThan(0);
+  });
 
-    const carded = applyCards(thursdaySocialRun, [cardById("runner-birds")]);
-    const now = carded.objectives.filter(
-      (one) => one.kind === "max-node-type" && one.nodeType === "pigeon",
-    );
-    // One rule about the birds, not two in two different numbers.
-    expect(now).toHaveLength(1);
-    expect(now[0].kind === "max-node-type" && now[0].limit).toBe(0);
+  it("keeps the group away from wherever the goose is", () => {
+    const geese = cardById("runner-geese");
+    expect(geese.fits(thursdaySocialRun)).toBe(true);
+    const carded = applyCards(thursdaySocialRun, [geese]);
+    const avoid = carded.objectives.find((one) => one.kind === "avoid-nodes");
+    if (avoid?.kind !== "avoid-nodes") {
+      throw new Error("expected an avoid-nodes objective");
+    }
+    // The goose's own junction, whatever the map happens to call it.
+    const perch = (thursdaySocialRun.followers ?? [])
+      .filter((one) => one.kind === "goose")
+      .map((one) => one.nodeId);
+    expect(avoid.nodeIds).toEqual(perch);
   });
 
   it("asks the group to stand still where the card says so", () => {

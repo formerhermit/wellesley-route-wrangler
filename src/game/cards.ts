@@ -56,12 +56,6 @@ export interface CardEffect {
   shortenBy?: number;
   /** Throw out the level's own waypoints. Only ever makes a level easier. */
   dropVisits?: boolean;
-  /**
-   * Forbid a kind of junction outright, replacing whatever cap the level had
-   * on it — two rules about the same birds in two different numbers is one
-   * rule and a contradiction.
-   */
-  forbidNodeType?: MapNodeType;
   /** What the weather looks like. Changes nothing the rules can see. */
   weather?: CardWeather;
 }
@@ -82,6 +76,17 @@ function nodesOfType(level: Level, ...types: MapNodeType[]): string[] {
   return level.nodes
     .filter((node) => node.type !== undefined && wanted.has(node.type))
     .map((node) => node.id);
+}
+
+/**
+ * Where the goose is. Read off `followers` rather than a junction type,
+ * because it loiters at a pond on one map, a jetty on another and a beach on
+ * a third, and those share nothing but the bird.
+ */
+function geesePonds(level: Level): string[] {
+  return (level.followers ?? [])
+    .filter((waiting) => waiting.kind === "goose")
+    .map((waiting) => waiting.nodeId);
 }
 
 function hillRoads(level: Level): number {
@@ -160,12 +165,25 @@ export const CARDS: readonly Card[] = [
     effect: () => ({ dropVisits: true }),
   },
   {
-    id: "runner-birds",
+    id: "runner-geese",
     suit: "runner",
-    name: "Somebody is frightened of birds",
+    name: "Somebody is frightened of geese",
     blurb: "Not a phobia, they say. Just a very strong preference.",
-    fits: (level) => nodesOfType(level, "pigeon").length > 0,
-    effect: () => ({ forbidNodeType: "pigeon" }),
+    fits: (level) => geesePonds(level).length > 0,
+    effect: (level) => ({
+      objectives: [
+        {
+          kind: "avoid-nodes",
+          nodeIds: geesePonds(level),
+          what: "the geese",
+          fail: {
+            title: "The Geese Were Waiting",
+            message:
+              "They were on the path, they knew, and they were not moving. One of us is still in the car.",
+          },
+        },
+      ],
+    }),
   },
   {
     id: "runner-new-shoes",
@@ -300,34 +318,6 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
 
   if (effects.some((effect) => effect.dropVisits)) {
     objectives = objectives.filter((objective) => objective.kind !== "visit");
-  }
-
-  const forbidden = effects
-    .map((effect) => effect.forbidNodeType)
-    .filter((type): type is MapNodeType => type !== undefined);
-  if (forbidden.length > 0) {
-    const banned = new Set(forbidden);
-    objectives = objectives.filter(
-      (objective) =>
-        !(objective.kind === "max-node-type" && banned.has(objective.nodeType)),
-    );
-    for (const nodeType of banned) {
-      objectives = [
-        ...objectives,
-        {
-          kind: "max-node-type",
-          nodeType,
-          limit: 0,
-          what: "the birds",
-          label: "Keep away from the birds",
-          fail: {
-            title: "There Were Birds",
-            message:
-              "They were only pigeons. That was explained at the time, at some length, and it did not help.",
-          },
-        },
-      ];
-    }
   }
 
   // The cards' own objectives go on last, so a card that clears the brief
