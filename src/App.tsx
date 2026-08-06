@@ -13,6 +13,7 @@ import { RunBookDialog } from "./components/RunBookDialog";
 import { BriefingButton } from "./components/BriefingButton";
 import { BriefingCoachMark } from "./components/BriefingCoachMark";
 import { BriefingDialog } from "./components/BriefingDialog";
+import { BriefingStrip } from "./components/BriefingStrip";
 import { StartingGun } from "./components/StartingGun";
 import { levels } from "./data/levels";
 import {
@@ -49,7 +50,7 @@ import {
   stopsFor,
   weatherFor,
 } from "./game/cards";
-import type { Card } from "./game/cards";
+import type { Card, Hand } from "./game/cards";
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -306,8 +307,15 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [clubOpen, setClubOpen] = useState(false);
   const [bookOpen, setBookOpen] = useState(false);
-  /** Whether the briefing is up (#10). The hand itself is the dialog's. */
+  /** Whether the briefing is up (#10). */
   const [briefingOpen, setBriefingOpen] = useState(false);
+  /*
+   * The hand on the table, held here rather than in the dialog so that
+   * closing the briefing does not throw it away (#132). It is dealt once and
+   * it stays dealt: a hand owned by the screen showing it is a hand you can
+   * reroll by pressing Escape, which is the opposite of no redeal.
+   */
+  const [hand, setHand] = useState<Hand>();
   // The name this device is on the club table under, once we have asked. Left
   // undefined when there is no table configured, which is the usual case.
   const [clubName, setClubName] = useState<string>();
@@ -326,6 +334,11 @@ export default function App() {
   const [showingStartingGun, setShowingStartingGun] = useState(false);
   useEffect(() => {
     if (level.field) setShowingStartingGun(true);
+  }, [level]);
+
+  // A hand is dealt for the map in front of you and does not travel.
+  useEffect(() => {
+    setHand(undefined);
   }, [level]);
 
   const modalOpen =
@@ -643,6 +656,8 @@ export default function App() {
               weather={weather}
             />
 
+            <BriefingStrip cards={state.cards} />
+
             <GameControls
               level={level}
               route={state.route}
@@ -730,12 +745,14 @@ export default function App() {
 
       {briefingOpen && (
         <BriefingDialog
-          deal={() => {
+          hand={hand}
+          onDeal={() => {
             sound.play("select");
-            return dealBriefing(level, progress.completed, Math.random());
+            setHand(dealBriefing(level, progress.completed, Math.random()));
           }}
           onConfirm={(picked) => {
             setBriefingOpen(false);
+            setHand(undefined);
             dispatch({ type: "pick-cards", cards: picked });
           }}
           onClose={() => setBriefingOpen(false)}

@@ -4,8 +4,10 @@ import { CARD_ART } from "./cardArt";
 import type { Card, Hand } from "../game/cards";
 
 interface Props {
-  /** Deals a hand, when the player asks for one. */
-  deal: () => Hand | undefined;
+  /** The hand on the table, once one has been dealt. */
+  hand: Hand | undefined;
+  /** Deals one, when the player asks. Owned above, so it survives a close. */
+  onDeal: () => void;
   /** The two the player kept. Nothing happens until both are chosen. */
   onConfirm: (picked: Card[]) => void;
   onClose: () => void;
@@ -22,6 +24,10 @@ const KEEP = 2;
  * that is actually the player's having happened off screen. So there is a
  * button, and the cards land when it is pressed.
  *
+ * The hand itself belongs to the caller. Kept here it would be thrown away
+ * every time this closed, and a hand you can drop by pressing Escape is a
+ * hand you can reroll (#132).
+ *
  * Three cards, one of each suit, and you keep two. The suits are what stop
  * two rules of a kind ever meeting, and the hand was checked before it was
  * dealt, so every pair on this screen is a run somebody could actually
@@ -29,8 +35,7 @@ const KEEP = 2;
  * reach for it. There is no redeal either: the next briefing comes after the
  * run report.
  */
-export function BriefingDialog({ deal, onConfirm, onClose }: Props) {
-  const [hand, setHand] = useState<Hand>();
+export function BriefingDialog({ hand, onDeal, onConfirm, onClose }: Props) {
   const [picked, setPicked] = useState<string[]>([]);
 
   const toggle = (card: Card) => {
@@ -111,7 +116,7 @@ export function BriefingDialog({ deal, onConfirm, onClose }: Props) {
           <button
             type="button"
             className="button button--primary briefing__deal"
-            onClick={() => setHand(deal())}
+            onClick={onDeal}
           >
             Deal the cards
           </button>

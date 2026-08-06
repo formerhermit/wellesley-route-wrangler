@@ -404,6 +404,15 @@ export function MapLandmarks({
         )}
         {/* A card's weather falls in the same place the season's does, and
             for the same reason: in front of the map, behind the writing. */}
+        {weather === "clear" && (
+          <rect
+            className="sunlight"
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+          />
+        )}
         {weather === "rain" && (
           <g className="rain">
             {raindrops(width, height).map((drop, index) => (

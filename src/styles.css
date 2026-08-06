@@ -5898,13 +5898,22 @@ body {
  * being December.
  */
 .map-svg--rain {
-  filter: saturate(0.7) brightness(0.94);
+  filter: saturate(0.5) brightness(0.88);
 }
 
-/* Golden and a shade warmer. The one card that only makes the run nicer
-   should be visible from the first frame. */
+/* The one card that only makes the run nicer has to be visible from the first
+   frame, and a filter this side of subtle is not — the warmth is carried by
+   the wash below, with the filter only lifting it. */
 .map-svg--clear {
-  filter: saturate(1.12) sepia(0.1) brightness(1.03);
+  filter: saturate(1.2) brightness(1.04);
+}
+
+/* Low evening light over the whole map, in front of it and behind the
+   writing, exactly where the snow and the rain fall. */
+.sunlight {
+  fill: #f6b73c;
+  opacity: 0.17;
+  pointer-events: none;
 }
 
 .rain {
@@ -5929,4 +5938,58 @@ body {
   to {
     transform: translate(-18px, 600px);
   }
+}
+
+/*
+ * Who came out with you (#132), under the map for as long as it is true.
+ * The briefing is otherwise a screen you visit once and have nothing to show
+ * for: its objectives sit down the page reading like the level's own.
+ */
+.briefing-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.75rem;
+  background: color-mix(in srgb, var(--brand-blue) 7%, var(--card));
+  border: 2px solid color-mix(in srgb, var(--brand-blue) 28%, var(--line));
+  border-radius: var(--radius);
+}
+
+.briefing-strip__label {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--club);
+}
+
+.briefing-strip__cards {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.briefing-strip__card {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.briefing-strip__patch {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.briefing-strip__name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
 }
