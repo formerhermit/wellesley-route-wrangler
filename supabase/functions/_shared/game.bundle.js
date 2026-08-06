@@ -6860,6 +6860,17 @@ function evaluateObjective(objective, context) {
 				fail: fillCopy(objective.fail, totalKm)
 			};
 		}
+		case "avoid-nodes": {
+			const forbidden = new Set(objective.nodeIds);
+			const count = route.nodeIds.filter((id) => forbidden.has(id)).length;
+			return {
+				kind: objective.kind,
+				label: `Keep away from ${objective.what}`,
+				detail: count === 0 ? `Nowhere near ${objective.what}.` : `Straight past ${objective.what}.`,
+				state: count > 0 ? "failed" : "passed",
+				fail: fillCopy(objective.fail, totalKm)
+			};
+		}
 		case "avoid-roads": {
 			const count = countTrait(level, route, objective.trait);
 			return {
