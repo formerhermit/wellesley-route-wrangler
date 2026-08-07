@@ -8,10 +8,8 @@ import type { Level } from "../game/types";
 interface Props {
   /** The map the hand was dealt for: a card's rule line can depend on it. */
   level: Level;
-  /** The hand on the table, once one has been dealt. */
+  /** The hand on the table. Dealt by the caller on the way in. */
   hand: Hand | undefined;
-  /** Deals one, when the player asks. Owned above, so it survives a close. */
-  onDeal: () => void;
   /** The two the player kept. Nothing happens until both are chosen. */
   onConfirm: (picked: Card[]) => void;
   onClose: () => void;
@@ -23,15 +21,12 @@ const KEEP = 2;
  * The briefing (#10): what the club has turned up with, and which two of it
  * you are taking out with you.
  *
- * It opens on the offer rather than on the hand: a dialog that deals as it
- * appears reads as a menu that was already populated, with the one moment
- * that is actually the player's having happened off screen. So there is a
- * button, and the cards land when it is pressed.
- *
- * The three slots are there from the start, empty and named for their suits.
- * A button on its own says a deal is possible; three empty places say what a
- * deal is going to put in front of you, and that one will be a leader, one a
- * runner and one the weather.
+ * The hand is on the table when the dialog opens — dealt by the caller on
+ * the way in, still landing card by card. The only decision this screen
+ * holds is the pick, so the pick is the only button on it: one that counts
+ * the choice down and becomes the confirm when the choice is made, because
+ * a disabled "off we go" with nothing saying why reads as a button that
+ * does not work (#136).
  *
  * The hand itself belongs to the caller. Kept here it would be thrown away
  * every time this closed, and a hand you can drop by pressing Escape is a
@@ -44,7 +39,7 @@ const KEEP = 2;
  * reach for it. There is no redeal either: the next briefing comes after the
  * run report.
  */
-export function BriefingDialog({ level, hand, onDeal, onConfirm, onClose }: Props) {
+export function BriefingDialog({ level, hand, onConfirm, onClose }: Props) {
   const [picked, setPicked] = useState<string[]>([]);
 
   const toggle = (card: Card) => {
@@ -118,30 +113,20 @@ export function BriefingDialog({ level, hand, onDeal, onConfirm, onClose }: Prop
       </ul>
 
       <div className="dialog__actions">
-        {/*
-          Same label throughout, and spent rather than relabelled once it has
-          been used. A button that turns into "Pick 2 more" where the deal
-          button was reads as an offer to deal two more, which is not a thing
-          that can happen.
-        */}
+        {/* The label is the state: it says what is still wanted while it is
+            wanted, and turns into the confirm the moment it is not. */}
         <button
           type="button"
-          className="button button--primary briefing__deal"
-          disabled={hand !== undefined}
-          onClick={onDeal}
+          className="button button--primary"
+          disabled={!ready}
+          onClick={() => onConfirm(chosen)}
         >
-          Deal the cards
+          {ready
+            ? "Right, off we go"
+            : chosen.length === 1
+              ? "Pick one more"
+              : "Pick two"}
         </button>
-        {hand && (
-          <button
-            type="button"
-            className="button button--primary"
-            disabled={!ready}
-            onClick={() => onConfirm(chosen)}
-          >
-            Right, off we go
-          </button>
-        )}
       </div>
       {hand && <p className="dialog__actions-hint">No redeal.</p>}
     </Dialog>
