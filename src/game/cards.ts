@@ -64,8 +64,16 @@ export interface Card {
   id: string;
   suit: Suit;
   name: string;
-  /** One line. The joke, and the whole of the explanation. */
+  /** One line. The joke. */
   blurb: string;
+  /**
+   * One line. The rule: what taking this card does to the brief, stated flat
+   * so the player knows what they are agreeing to before they agree to it.
+   * The joke stays in the blurb; a card whose effect hides behind its humour
+   * reads as nothing happening. A function of the level because the
+   * honest answer can depend on the map — Rain names the window it leaves.
+   */
+  rule: (level: Level) => string;
   /** Whether this card means anything on this map at all. */
   fits: (level: Level) => boolean;
   effect: (level: Level) => CardEffect;
@@ -97,6 +105,24 @@ function alreadyAsks(level: Level, kind: LevelObjective["kind"]): boolean {
   return level.objectives.some((objective) => objective.kind === kind);
 }
 
+/** How much of the run Rain takes off. Both ends of the window, deliberately. */
+const RAIN_SHORTEN = 0.85;
+
+/**
+ * Every road is measured to one decimal place, so a shortened window is too —
+ * a ceiling of 8.4499 km would be a number no route could ever equal. Shared
+ * with Rain's own rule line, so the card promises the window it delivers.
+ */
+function shortenKm(km: number, factor: number): number {
+  return Math.round(km * factor * 10) / 10;
+}
+
+/** "the canal", or "the cows and the canal": listed the way a person would. */
+function listed(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? "";
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+}
+
 /**
  * The deck. Deliberately small to start with: two of each suit is enough to
  * prove a hand can be dealt and to make the pairs collide in ways worth
@@ -109,6 +135,7 @@ export const CARDS: readonly Card[] = [
     suit: "leader",
     name: "Run leader Ben",
     blurb: "Ben has found some hills. Ben is delighted.",
+    rule: () => "Adds: climb at least 2 hills.",
     // Only where the level is not already counting climbs, so the brief never
     // ends up asking for hills twice in two different numbers.
     fits: (level) => !alreadyAsks(level, "climb") && hillRoads(level) >= 2,
@@ -131,6 +158,7 @@ export const CARDS: readonly Card[] = [
     suit: "leader",
     name: "Run leader Dan",
     blurb: "Dan is not going home until he has said hello to the cows.",
+    rule: () => "Adds: visit the cows.",
     fits: (level) => nodesOfType(level, "cow").length > 0,
     effect: (level) => {
       const cows = nodesOfType(level, "cow");
@@ -159,6 +187,14 @@ export const CARDS: readonly Card[] = [
     suit: "leader",
     name: "Nobody volunteered to lead",
     blurb: "No plan. The group will go wherever the first person turns.",
+    // Removal is the change nobody spots on the panel — a vanished line is
+    // invisible by nature — so the card is the one place it gets said.
+    rule: (level) =>
+      `Drops: visit ${listed(
+        level.objectives
+          .filter((one) => one.kind === "visit")
+          .map((one) => one.what),
+      )}.`,
     fits: (level) => level.objectives.some((one) => one.kind === "visit"),
     // Takes the waypoints off the brief, so it can only ever add winning
     // routes. The one card that cannot make a level impossible.
@@ -169,6 +205,7 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody is frightened of geese",
     blurb: "Not a phobia, they say. Just a very strong preference.",
+    rule: () => "Adds: keep away from the geese.",
     fits: (level) => geesePonds(level).length > 0,
     effect: (level) => ({
       objectives: [
@@ -190,6 +227,7 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody has new shoes",
     blurb: "They are white. They are staying white.",
+    rule: () => "Adds: keep off the mud.",
     /*
      * Mud is marked per road rather than read off the surface, which cannot
      * express it: a town map has no trail on it at all, and a trail map is
@@ -216,6 +254,7 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody's watch did not start",
     blurb: "As far as the internet is concerned, this run never happened.",
+    rule: () => "Adds nothing.",
     /*
      * Asks nothing of the route, which is the point of it. Every suit needs
      * one card that cannot fail to fit, or whether a briefing happens at all
@@ -229,6 +268,7 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody had a large coffee",
     blurb: "There is a stop coming, whether the route plans for one or not.",
+    rule: () => "Adds: visit somewhere to stop.",
     fits: (level) => nodesOfType(level, "toilet", "portaloo", "bush").length > 0,
     effect: (level) => {
       const stops = nodesOfType(level, "toilet", "portaloo", "bush");
@@ -257,14 +297,23 @@ export const CARDS: readonly Card[] = [
     suit: "weather",
     name: "Rain",
     blurb: "Nobody wants to be out in this. Keep it short.",
+    // The window it names is the window it delivers: same factor, same
+    // rounding. "Shortens the run" alone would leave the player to find the
+    // new numbers two digits deep in a line that already existed.
+    rule: (level) => {
+      const window = level.objectives.find((one) => one.kind === "distance");
+      if (window?.kind !== "distance") return "Shortens the run.";
+      return `Shortens the run to ${shortenKm(window.minKm, RAIN_SHORTEN)}–${shortenKm(window.maxKm, RAIN_SHORTEN)} km.`;
+    },
     fits: (level) => alreadyAsks(level, "distance"),
-    effect: () => ({ shortenBy: 0.85, weather: "rain" }),
+    effect: () => ({ shortenBy: RAIN_SHORTEN, weather: "rain" }),
   },
   {
     id: "weather-perfect",
     suit: "weather",
     name: "A perfect evening",
     blurb: "Still, golden, and warm. Nobody can think of a single complaint.",
+    rule: () => "Adds nothing.",
     // The deck needs one card that only makes the run nicer, or picking is
     // nothing but damage limitation.
     fits: () => true,
@@ -306,12 +355,13 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
   let objectives = level.objectives;
 
   if (shorten !== 1) {
-    // Every road is measured to one decimal place, so the window is too —
-    // a ceiling of 8.4499 km would be a number no route could ever equal.
-    const round = (km: number) => Math.round(km * shorten * 10) / 10;
     objectives = objectives.map((objective) =>
       objective.kind === "distance"
-        ? { ...objective, minKm: round(objective.minKm), maxKm: round(objective.maxKm) }
+        ? {
+            ...objective,
+            minKm: shortenKm(objective.minKm, shorten),
+            maxKm: shortenKm(objective.maxKm, shorten),
+          }
         : objective,
     );
   }
@@ -330,6 +380,42 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
   const carded: Level = { ...level, objectives };
   forLevel.set(key, carded);
   return carded;
+}
+
+/**
+ * How the cards touched one line of the carded brief: brought it, or rewrote
+ * it. `was` is what the level's own brief asked before the cards got to it.
+ */
+export interface BriefingMark {
+  kind: "added" | "changed";
+  was?: string;
+}
+
+/**
+ * Which lines of the carded brief the cards put there, by index against
+ * `applyCards(level, cards).objectives` — which is the order `evaluateRoute`
+ * keeps, so the panel can line the two up without a join.
+ *
+ * Worked out by identity rather than by flag: `applyCards` carries the
+ * level's own objectives through by reference and builds new objects for
+ * everything it touches, so "not the level's object" is exactly "the cards
+ * did this". A rewritten window still holds its place in the list, which is
+ * why it is marked rather than counted off the end.
+ */
+export function briefingMarks(
+  level: Level,
+  brief: Level,
+): (BriefingMark | undefined)[] {
+  return brief.objectives.map((objective) => {
+    if (level.objectives.includes(objective)) return undefined;
+    if (objective.kind === "distance") {
+      const own = level.objectives.find((one) => one.kind === "distance");
+      if (own?.kind === "distance") {
+        return { kind: "changed", was: `${own.minKm}–${own.maxKm} km` };
+      }
+    }
+    return { kind: "added" };
+  });
 }
 
 /** What the sky is doing, for the map. Undefined on a hand that says nothing. */

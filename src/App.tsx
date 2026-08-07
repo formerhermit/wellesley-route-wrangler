@@ -46,6 +46,7 @@ import { clubTableEnabled } from "./club/enabled";
 import {
   applyCards,
   briefingAvailable,
+  briefingMarks,
   dealBriefing,
   stopsFor,
   weatherFor,
@@ -385,6 +386,8 @@ export default function App() {
     () => stopsFor(level, state.cards),
     [level, state.cards],
   );
+  // Which lines of the brief the cards put there, for the panel to tag.
+  const cardMarks = useMemo(() => briefingMarks(level, brief), [level, brief]);
   const weather = useMemo(
     () => weatherFor(level, state.cards),
     [level, state.cards],
@@ -678,6 +681,7 @@ export default function App() {
           <div className="layout__side">
             <ObjectivePanel
               evaluation={evaluation}
+              marks={cardMarks}
               found={levelTally.found}
               toFind={toFind}
               explored={levelTally.explored}
@@ -745,6 +749,7 @@ export default function App() {
 
       {briefingOpen && (
         <BriefingDialog
+          level={level}
           hand={hand}
           onDeal={() => {
             sound.play("select");

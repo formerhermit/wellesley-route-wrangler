@@ -8,6 +8,7 @@ import {
   SUITS,
   applyCards,
   briefingAvailable,
+  briefingMarks,
   dealBriefing,
   handIsPlayable,
   stopsFor,
@@ -294,11 +295,80 @@ describe("what the cards do to the brief", () => {
     expect(winningRouteCount(applyCards(soaked, [shoes]))).toBe(0);
   });
 
+  /*
+   * The rule line is the card owning up to its mechanics: the blurb is the
+   * joke, and a card whose effect hides behind its humour reads as nothing
+   * having happened. Every card that can be dealt on a map must have one.
+   */
+  it("states its rule on every map it fits", () => {
+    for (const level of ordinary) {
+      for (const card of CARDS.filter((one) => one.fits(level))) {
+        const rule = card.rule(level);
+        expect(rule.length, `${card.name} on ${level.title}`).toBeGreaterThan(0);
+        expect(rule.endsWith("."), `${card.name} on ${level.title}`).toBe(true);
+      }
+    }
+  });
+
+  it("has Rain promise exactly the window it delivers", () => {
+    const rain = cardById("weather-rain");
+    for (const level of ordinary.filter((one) => rain.fits(one))) {
+      const wet = applyCards(level, [rain]).objectives.find(
+        (one) => one.kind === "distance",
+      );
+      if (wet?.kind !== "distance") throw new Error("expected a window");
+      expect(rain.rule(level), level.title).toContain(
+        `${wet.minKm}–${wet.maxKm} km`,
+      );
+    }
+  });
+
+  it("has the leaderless card name what it drops", () => {
+    // "Visit the canal" is the objective it takes off level 1's brief.
+    expect(cardById("leader-nobody").rule(thursdaySocialRun)).toContain(
+      "the canal",
+    );
+  });
+
   it("keeps a carded level winnable without touching the real count", () => {
     const before = winningRouteCount(thursdaySocialRun);
     const carded = applyCards(thursdaySocialRun, [cardById("weather-perfect")]);
     expect(hasWinningRoute(carded)).toBe(true);
     // The roster's own denominator is not the carded level's business.
     expect(winningRouteCount(thursdaySocialRun)).toBe(before);
+  });
+});
+
+/*
+ * The marks are what lets the panel point at the cards' work (#10): a rule
+ * landing unannounced at the bottom of seven look-alike rows is the change
+ * the player agreed to, invisible.
+ */
+describe("what the panel can point at", () => {
+  it("marks nothing when no cards were taken", () => {
+    const marks = briefingMarks(
+      thursdaySocialRun,
+      applyCards(thursdaySocialRun, []),
+    );
+    expect(marks).toHaveLength(thursdaySocialRun.objectives.length);
+    expect(marks.every((mark) => mark === undefined)).toBe(true);
+  });
+
+  it("marks a card's own objective as added, and only that one", () => {
+    const brief = applyCards(thursdaySocialRun, [cardById("runner-geese")]);
+    const marks = briefingMarks(thursdaySocialRun, brief);
+    expect(marks).toHaveLength(brief.objectives.length);
+    // The cards' objectives go on the end, so the last line is the goose's.
+    expect(marks.at(-1)).toEqual({ kind: "added" });
+    expect(marks.slice(0, -1).every((mark) => mark === undefined)).toBe(true);
+  });
+
+  it("marks a rewritten window as changed, and says what it was", () => {
+    const brief = applyCards(thursdaySocialRun, [cardById("weather-rain")]);
+    const marks = briefingMarks(thursdaySocialRun, brief);
+    const window = brief.objectives.findIndex((one) => one.kind === "distance");
+    expect(marks[window]).toEqual({ kind: "changed", was: "5–7 km" });
+    // The rewrite is a mark on the line, not an extra line.
+    expect(marks.filter((mark) => mark !== undefined)).toHaveLength(1);
   });
 });

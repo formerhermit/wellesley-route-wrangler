@@ -1,3 +1,4 @@
+import type { BriefingMark } from "../game/cards";
 import type { ObjectiveState, RouteEvaluation } from "../game/types";
 
 const MARK: Record<ObjectiveState, string> = {
@@ -27,6 +28,13 @@ function routesFound(found: number, toFind: number): string {
 
 export function ObjectivePanel({
   evaluation,
+  /**
+   * Which lines the briefing put there or rewrote (#10), by index against
+   * `evaluation.objectives`. Without the tag a card's rule lands at the
+   * bottom of seven look-alike rows and reads as the level's own — the whole
+   * change the player just agreed to, invisible.
+   */
+  marks,
   found,
   toFind,
   /** Routes run here at all, winners and duds. Nothing to open without one. */
@@ -34,6 +42,7 @@ export function ObjectivePanel({
   onOpenBook,
 }: {
   evaluation: RouteEvaluation;
+  marks?: (BriefingMark | undefined)[];
   found: number;
   toFind: number;
   explored: number;
@@ -43,21 +52,35 @@ export function ObjectivePanel({
     <section className="objectives" aria-labelledby="objectives-heading">
       <h3 id="objectives-heading">Run objectives</h3>
       <ul className="objectives__list">
-        {evaluation.objectives.map((objective) => (
-          <li
-            key={objective.id}
-            className={`objective objective--${objective.state}`}
-          >
-            <span className="objective__mark" aria-hidden="true">
-              {MARK[objective.state]}
-            </span>
-            <span className="objective__text">
-              <span className="objective__label">{objective.label}</span>
-              <span className="objective__detail">{objective.detail}</span>
-            </span>
-            <span className="objective__state">{WORD[objective.state]}</span>
-          </li>
-        ))}
+        {evaluation.objectives.map((objective, index) => {
+          const mark = marks?.[index];
+          return (
+            <li
+              key={objective.id}
+              className={`objective objective--${objective.state}`}
+            >
+              <span className="objective__mark" aria-hidden="true">
+                {MARK[objective.state]}
+              </span>
+              <span className="objective__text">
+                <span className="objective__label">
+                  {objective.label}
+                  {mark && (
+                    <span className="objective__briefing">Briefing</span>
+                  )}
+                </span>
+                <span className="objective__detail">{objective.detail}</span>
+                {/* A rewrite says what it rewrote: two digits changing inside
+                    a line that already existed is not something anybody
+                    spots from memory. */}
+                {mark?.was && (
+                  <span className="objective__was">Was {mark.was}.</span>
+                )}
+              </span>
+              <span className="objective__state">{WORD[objective.state]}</span>
+            </li>
+          );
+        })}
       </ul>
 
       {/* The count is the door to the book: it is the number people want to

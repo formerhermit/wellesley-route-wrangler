@@ -3,8 +3,11 @@ import { Dialog } from "./Dialog";
 import { CARD_ART } from "./cardArt";
 import { SUITS } from "../game/cards";
 import type { Card, Hand } from "../game/cards";
+import type { Level } from "../game/types";
 
 interface Props {
+  /** The map the hand was dealt for: a card's rule line can depend on it. */
+  level: Level;
   /** The hand on the table, once one has been dealt. */
   hand: Hand | undefined;
   /** Deals one, when the player asks. Owned above, so it survives a close. */
@@ -41,7 +44,7 @@ const KEEP = 2;
  * reach for it. There is no redeal either: the next briefing comes after the
  * run report.
  */
-export function BriefingDialog({ hand, onDeal, onConfirm, onClose }: Props) {
+export function BriefingDialog({ level, hand, onDeal, onConfirm, onClose }: Props) {
   const [picked, setPicked] = useState<string[]>([]);
 
   const toggle = (card: Card) => {
@@ -105,6 +108,9 @@ export function BriefingDialog({ hand, onDeal, onConfirm, onClose }: Props) {
                 </span>
                 <span className="briefing-card__name">{card.name}</span>
                 <span className="briefing-card__blurb">{card.blurb}</span>
+                {/* The joke above, the small print below: what taking this
+                    card actually does to the brief. */}
+                <span className="briefing-card__rule">{card.rule(level)}</span>
               </button>
             </li>
           );
