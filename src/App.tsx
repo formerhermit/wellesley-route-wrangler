@@ -417,6 +417,20 @@ export default function App() {
   );
   const canDeal = state.cards.length === 0 || state.cardsRun;
   const [briefingSeen, setBriefingSeen] = useState(hasSeenBriefing);
+  /*
+   * The hand is dealt on the way into the dialog, not by a button inside it
+   * (#136): the only decision that screen holds is the pick, and a deal
+   * button next to a confirm both greyed the same way read as two buttons
+   * that do not work. Reopening while a hand is out keeps what is on the
+   * table — the deal happens once per run report, same as ever.
+   */
+  const openBriefing = () => {
+    if (!hand) {
+      sound.play("select");
+      setHand(dealBriefing(level, progress.completed, Math.random()));
+    }
+    setBriefingOpen(true);
+  };
 
   // Where the club stands. Both replay every stored route through the scoring,
   // so they are worked out when the book changes rather than on every render —
@@ -614,7 +628,7 @@ export default function App() {
                 buttonRef={briefingButtonRef}
                 taken={state.cards.length}
                 canDeal={canDeal}
-                onDeal={() => setBriefingOpen(true)}
+                onDeal={openBriefing}
               />
             ) : undefined
           }
@@ -751,10 +765,6 @@ export default function App() {
         <BriefingDialog
           level={level}
           hand={hand}
-          onDeal={() => {
-            sound.play("select");
-            setHand(dealBriefing(level, progress.completed, Math.random()));
-          }}
           onConfirm={(picked) => {
             setBriefingOpen(false);
             setHand(undefined);

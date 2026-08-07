@@ -5724,12 +5724,6 @@ body {
   }
 }
 
-/* The offer. Both buttons share the row once a hand is out, so neither takes
-   the full width. */
-.briefing__deal {
-  flex: 1 1 auto;
-}
-
 /*
  * A slot with nothing in it yet: the shape of the card, named for its suit,
  * so the deal has somewhere visible to land and the player can see they are
@@ -5744,12 +5738,6 @@ body {
 
 .briefing-card--empty .briefing-card__suit {
   opacity: 0.65;
-}
-
-/* Spent, not gone: it stays where it was so the deal that has happened is
-   still legible, and stops looking like an offer. */
-.briefing__deal:disabled {
-  opacity: 0.4;
 }
 
 @media (max-width: 559px) {
