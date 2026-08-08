@@ -112,6 +112,8 @@ function expectedCount(level: Level): number {
     if (kind && LANDMARK_DRAWS[kind]) n += 1;
     if (node.type === "park" && !node.noTrees) n += PARK_TREES.length;
   }
+  // Street furniture, one set per junction that asks for it (#10).
+  n += level.nodes.filter((node) => node.lights).length;
   n += (level.scatter ?? []).length;
   if (level.theme === "trail") n += TRAIL_TREES.length;
   n += level.roads.filter((road) => road.hill).length;

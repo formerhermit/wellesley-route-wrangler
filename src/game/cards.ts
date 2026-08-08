@@ -139,6 +139,11 @@ function geesePonds(level: Level): string[] {
     .map((waiting) => waiting.nodeId);
 }
 
+/** Junctions with a set of lights on them, which the group has to wait at. */
+function litJunctions(level: Level): string[] {
+  return level.nodes.filter((node) => node.lights).map((node) => node.id);
+}
+
 function hillRoads(level: Level): number {
   return level.roads.filter((road) => road.hill && !road.closed).length;
 }
@@ -397,6 +402,21 @@ export const CARDS: readonly Card[] = [
         ],
       };
     },
+  },
+  {
+    id: "leader-careful",
+    suit: "leader",
+    name: "Run leader Priya",
+    blurb: "Priya has read the Green Cross Code and she is not being talked out of it.",
+    /*
+     * The one card whose whole effect is the pace curve. It says so, because
+     * a card that quietly did nothing would be the thing the rule lines exist
+     * to stop — and standing still at three sets of lights is a visible
+     * effect even if the brief never changes.
+     */
+    rule: () => "The group waits at every set of lights. The brief is unchanged.",
+    fits: (level) => litJunctions(level).length > 0,
+    effect: (level) => ({ stops: litJunctions(level) }),
   },
   {
     id: "leader-nobody",

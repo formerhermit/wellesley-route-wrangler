@@ -81,7 +81,12 @@ import {
   landmarkEggId,
   scatterEggId,
 } from "../game/eggs";
-import { LANDMARK_OFFSET, PARK_TREES, TRAIL_TREES } from "../game/landmarks";
+import {
+  LANDMARK_OFFSET,
+  PARK_TREES,
+  TRAIL_TREES,
+  lightsAt,
+} from "../game/landmarks";
 import type { CardWeather } from "../game/cards";
 import type { Level, MapNode, MapNodeType } from "../game/types";
 
@@ -616,6 +621,20 @@ function MapLandmarksUnderRoads({
           ))}
         </g>
       )}
+
+      {/* Traffic lights, beside the junctions that have them (#10). Street
+          furniture: the junction keeps its own landmark, and these stand to
+          one side of it. */}
+      {level.nodes
+        .filter((node) => node.lights)
+        .map((node) => {
+          const spot = lightsAt(node);
+          return (
+            <g key={`lights-${node.id}`} transform={`translate(${spot.x} ${spot.y})`}>
+              <TrafficLight />
+            </g>
+          );
+        })}
 
       {level.nodes.map((node) => {
         if (node.spriteOnTop) return null;

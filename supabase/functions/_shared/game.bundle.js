@@ -3754,6 +3754,7 @@ const loopyRun = {
 		},
 		{
 			id: "back-passage",
+			lights: true,
 			labelAbove: true,
 			labelDy: -18,
 			x: 285,
@@ -3812,6 +3813,7 @@ const loopyRun = {
 		},
 		{
 			id: "sports-centre",
+			lights: true,
 			labelSide: "right",
 			x: 120,
 			y: 385,
@@ -3835,6 +3837,7 @@ const loopyRun = {
 		},
 		{
 			id: "hockey-loop",
+			lights: true,
 			x: 305,
 			y: 470,
 			label: "Hockey Loop",
@@ -5207,6 +5210,7 @@ const thursdaySocialRun = {
 		},
 		{
 			id: "wellesley-rumble",
+			lights: true,
 			labelAbove: true,
 			x: 150,
 			y: 175,
@@ -5295,6 +5299,7 @@ const thursdaySocialRun = {
 		},
 		{
 			id: "big-tesco",
+			lights: true,
 			x: 690,
 			y: 155,
 			label: "The Big Tesco",
@@ -5982,6 +5987,7 @@ const thursdayTownRun = {
 		},
 		{
 			id: "wellesley-rumble",
+			lights: true,
 			labelSide: "left",
 			x: 170,
 			y: 360,
@@ -6009,6 +6015,7 @@ const thursdayTownRun = {
 		},
 		{
 			id: "big-tesco",
+			lights: true,
 			x: 680,
 			y: 355,
 			label: "The Big Tesco",
@@ -6041,6 +6048,7 @@ const thursdayTownRun = {
 		},
 		{
 			id: "town-centre",
+			lights: true,
 			labelSide: "right",
 			x: 505,
 			y: 195,

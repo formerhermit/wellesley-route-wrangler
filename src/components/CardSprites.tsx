@@ -139,6 +139,19 @@ export function BirdsCard() {
   );
 }
 
+/** Priya's traffic lights, on red, as they always are. */
+export function CarefulCard() {
+  return (
+    <Frame>
+      <path d="M 0 26 v -14" className="card-lights-post" />
+      <rect x={-11} y={-26} width={22} height={40} rx={5} className="card-lights-box" />
+      <circle cx={0} cy={-17} r={5} className="card-lights-stop" />
+      <circle cx={0} cy={-6} r={5} className="card-lights-off" />
+      <circle cx={0} cy={5} r={5} className="card-lights-off" />
+    </Frame>
+  );
+}
+
 /** The watch that did not start. As far as the internet goes, this never happened. */
 export function WatchCard() {
   return (

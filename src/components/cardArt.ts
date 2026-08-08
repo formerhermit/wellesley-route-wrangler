@@ -2,6 +2,7 @@ import {
   BenCard,
   BigCoffeeCard,
   BirdsCard,
+  CarefulCard,
   DanCard,
   FogCard,
   GeeseCard,
@@ -26,6 +27,7 @@ import type { ReactNode } from "react";
 export const CARD_ART: Record<string, () => ReactNode> = {
   "leader-ben": BenCard,
   "leader-dan": DanCard,
+  "leader-careful": CarefulCard,
   "leader-nobody": NobodyCard,
   "leader-lost": LostCard,
   "leader-roo": RooCard,

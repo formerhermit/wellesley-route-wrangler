@@ -148,6 +148,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "wellesley-rumble",
+      lights: true,
       labelAbove: true,
       x: 150,
       y: 175,
@@ -245,6 +246,7 @@ export const thursdaySocialRun: Level = {
     },
     {
       id: "big-tesco",
+      lights: true,
       x: 690,
       y: 155,
       label: "The Big Tesco",

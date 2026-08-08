@@ -6085,6 +6085,27 @@ body {
   stroke-linecap: round;
 }
 
+/* Priya's lights: the club's ink for the housing, and the map's own red for
+   the one that is lit. */
+.card-lights-box {
+  fill: var(--ink);
+}
+
+.card-lights-post {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.card-lights-stop {
+  fill: var(--fail);
+}
+
+.card-lights-off {
+  fill: color-mix(in srgb, var(--ink) 55%, #fff);
+}
+
 /* Snow on its own card: the flakes in the same white the map uses, and the
    drift they have settled into. */
 .card-flake {

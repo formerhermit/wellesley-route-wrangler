@@ -268,6 +268,30 @@ export const LANDMARK_DRAWS: Record<MapNodeType, boolean> = {
  * closure. Here rather than as literals inside the test, which is where they
  * were and which made this the third place a sprite's size was written down.
  */
+/**
+ * The traffic lights, which stand beside their junction rather than on it:
+ * a post twelve units tall with the box on top, so the drawing runs well
+ * above the anchor and barely below it.
+ */
+export const LIGHTS_BOX: SpriteBox = [-7, 7, -24, 12];
+
+/** And how far to the side of it they stand. */
+export const LIGHTS_OFFSET = { dx: 26, dy: -4 };
+
+/**
+ * Where a junction's lights actually go: to one side, and always the side its
+ * name is not on.
+ *
+ * Derived rather than authored. Every junction carrying lights is a town one
+ * with a long name, and a name pushed out to one side reaches far enough to
+ * sit under them — which is exactly what happened to Aldershot Town Centre
+ * and the Sports Centre before this existed.
+ */
+export function lightsAt(node: MapNode): { x: number; y: number } {
+  const dx = node.labelSide === "right" ? -LIGHTS_OFFSET.dx : LIGHTS_OFFSET.dx;
+  return { x: node.x + dx, y: node.y + LIGHTS_OFFSET.dy };
+}
+
 export const HILL_MARKER_BOX: SpriteBox = [-11, 11, -8, 7];
 export const ROAD_CLOSED_BOX: SpriteBox = [-17, 17, -6, 18];
 
@@ -297,6 +321,7 @@ export const DRAWN_BOX: Record<string, SpriteBox> = {
   closed: ROAD_CLOSED_BOX,
   "dead-tree": DEAD_TREE_BOX,
   pigeon: PIGEON_BOX,
+  lights: LIGHTS_BOX,
 };
 
 /** Anything not in the tables: big enough to be worth flagging, no more. */
