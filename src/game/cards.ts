@@ -133,6 +133,29 @@ function hillRoads(level: Level): number {
   return level.roads.filter((road) => road.hill && !road.closed).length;
 }
 
+/**
+ * What the birds are called on this map, in the plural and with its article.
+ *
+ * The junction type is `pigeon` whatever they are — the flock only changes
+ * the drawing and the paperwork — so a card that names them has to ask the
+ * level rather than the map. Crows and robins are here for completeness; both
+ * belong to levels with a `mood`, which never get a briefing at all.
+ */
+function flockName(level: Level): string {
+  switch (level.flock) {
+    case "crow":
+      return "the crows";
+    case "duck":
+      return "the ducks";
+    case "robin":
+      return "the robins";
+    case "dragonfly":
+      return "the dragonflies";
+    default:
+      return "the pigeons";
+  }
+}
+
 function alreadyAsks(level: Level, kind: LevelObjective["kind"]): boolean {
   return level.objectives.some((objective) => objective.kind === kind);
 }
@@ -381,6 +404,61 @@ export const CARDS: readonly Card[] = [
             title: "The Shoes Are Ruined",
             message:
               "Two hundred metres of bog, and a silence that lasted the rest of the week.",
+          },
+        },
+      ],
+    }),
+  },
+  {
+    id: "runner-hill-session",
+    suit: "runner",
+    name: "Somebody did a hill session last night",
+    blurb: "Their legs have opinions this evening, and all of them are downhill.",
+    rule: () => "Adds: keep off the hills.",
+    /*
+     * Only where the level is not already counting climbs, for the same
+     * reason Ben is: a brief that asks for hills and forbids them in the same
+     * breath is not a hard run, it is a broken one. The dealer would refuse
+     * such a hand anyway — this keeps it from ever being offered.
+     */
+    fits: (level) => !alreadyAsks(level, "climb") && hillRoads(level) > 0,
+    effect: () => ({
+      objectives: [
+        {
+          kind: "avoid-roads",
+          trait: "hill",
+          what: "the hills",
+          fail: {
+            title: "Everything Hurts",
+            message:
+              "Halfway up the first one they stopped, turned round, and said a number of things about yesterday.",
+          },
+        },
+      ],
+    }),
+  },
+  {
+    id: "runner-birds",
+    suit: "runner",
+    name: "Somebody has seen that film",
+    blurb: "The one with the birds. They have not been the same since.",
+    rule: (level) => `Adds: keep away from ${flockName(level)}.`,
+    fits: (level) => nodesOfType(level, "pigeon").length > 0,
+    effect: (level) => ({
+      objectives: [
+        {
+          kind: "max-node-type",
+          nodeType: "pigeon",
+          limit: 0,
+          what: flockName(level),
+          // The generated label counts up to a limit, which reads badly at
+          // nought — "pass no more than 0 the pigeons" is not a sentence.
+          label: `Keep away from ${flockName(level)}`,
+          fail: {
+            title: "They Were Waiting",
+            message: `Somebody walked the last kilometre with their hood up. ${
+              flockName(level).charAt(0).toUpperCase() + flockName(level).slice(1)
+            } did nothing at all, which was somehow worse.`,
           },
         },
       ],

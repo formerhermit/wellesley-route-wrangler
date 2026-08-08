@@ -6085,6 +6085,15 @@ body {
   stroke-linecap: round;
 }
 
+/* The flock, as three pairs of wings. Ink on nothing, because a bird at this
+   size is a shape rather than a drawing. */
+.card-bird {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
 /* The plan, and what happened. Dashed and pale for the route nobody
    followed; the club's own route colour, at full weight, for where they
    actually went — the wrong line is the loud one, which is the joke. */
