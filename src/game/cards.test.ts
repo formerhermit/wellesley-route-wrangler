@@ -754,8 +754,8 @@ describe("what the cards do to the brief", () => {
    * that says it does nothing and then quietly does something.
    */
   it("waits at the lights and changes nothing else", () => {
-    const priya = cardById("leader-careful");
-    const lit = ordinary.filter((level) => priya.fits(level));
+    const crossings = cardById("runner-crossings");
+    const lit = ordinary.filter((level) => crossings.fits(level));
     expect(lit.map((level) => level.title)).toEqual([
       "Thursday Social Run",
       "Thursday Town Run",
@@ -766,19 +766,19 @@ describe("what the cards do to the brief", () => {
       const junctions = level.nodes.filter((node) => node.lights);
       expect(junctions.length, level.title).toBeGreaterThan(0);
       // It stops at every one of them and nowhere else.
-      expect(stopsFor(level, [priya]).sort()).toEqual(
+      expect(stopsFor(level, [crossings]).sort()).toEqual(
         junctions.map((node) => node.id).sort(),
       );
       // And leaves the brief exactly as the roster wrote it.
-      expect(applyCards(level, [priya]).objectives).toEqual(level.objectives);
-      expect(photoStopsFor(level, [priya])).toEqual([]);
-      expect(wandersOff(level, [priya])).toBe(false);
-      expect(weatherFor(level, [priya])).toBeUndefined();
+      expect(applyCards(level, [crossings]).objectives).toEqual(level.objectives);
+      expect(photoStopsFor(level, [crossings])).toEqual([]);
+      expect(wandersOff(level, [crossings])).toBe(false);
+      expect(weatherFor(level, [crossings])).toBeUndefined();
     }
 
     // Trail maps have no lights on the heath, so it never turns up there.
     for (const level of ordinary.filter((one) => one.theme === "trail")) {
-      expect(priya.fits(level), level.title).toBe(false);
+      expect(crossings.fits(level), level.title).toBe(false);
     }
   });
 

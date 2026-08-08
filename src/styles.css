@@ -6085,8 +6085,8 @@ body {
   stroke-linecap: round;
 }
 
-/* Priya's lights: the club's ink for the housing, and the map's own red for
-   the one that is lit. */
+/* The crossing card's lights: the club's ink for the housing, and the map's
+   own red for the one that is lit. */
 .card-lights-box {
   fill: var(--ink);
 }
