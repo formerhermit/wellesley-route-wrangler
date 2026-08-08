@@ -12,6 +12,7 @@ import {
   dealBriefing,
   extraRunners,
   handIsPlayable,
+  photoStopsFor,
   stopsFor,
   unrecordedRun,
   wandersOff,
@@ -430,6 +431,73 @@ describe("what the cards do to the brief", () => {
       winningRouteCount(thursdaySocialRun),
     );
     expect(wandersOff(thursdaySocialRun, [cardById("leader-ben")])).toBe(false);
+  });
+
+  /*
+   * Roo's photo stop, and the two things that keep it a real requirement.
+   */
+  it("stops for a photograph somewhere the brief did not already send you", () => {
+    const roo = cardById("leader-roo");
+    const served = ordinary.filter((one) => roo.fits(one));
+    // She is a character card, not a universal one — but she has to reach
+    // more than a token map or the deck has gained nothing.
+    expect(served.length).toBeGreaterThan(3);
+
+    for (const level of served) {
+      const carded = applyCards(level, [roo]);
+      const photo = carded.objectives.at(-1);
+      if (photo?.kind !== "visit") throw new Error("expected a visit");
+      expect(photo.nodeIds.length, level.title).toBeGreaterThan(0);
+      // The group stands still to be in the picture.
+      expect(stopsFor(level, [roo])).toEqual(photo.nodeIds);
+      expect(photoStopsFor(level, [roo])).toEqual(photo.nodeIds);
+
+      /*
+       * And never at a junction the level already makes compulsory. A card
+       * that re-asks for something the brief has already asked for is not a
+       * second requirement, it is the same one wearing a hat.
+       */
+      const asked = new Set(
+        level.objectives.flatMap((one) =>
+          one.kind === "visit" ? one.nodeIds : [],
+        ),
+      );
+      for (const id of photo.nodeIds) {
+        expect(asked.has(id), `${level.title} already asks for ${id}`).toBe(
+          false,
+        );
+      }
+    }
+  });
+
+  /*
+   * The photo spots and the sunset's viewpoints have to stay apart. Sharing
+   * a junction would let one stop tick two objectives, which is the trick
+   * the Frensham chord exists to avoid: two rules that cannot disagree are
+   * one rule with two ticks.
+   */
+  it("photographs somewhere other than where it watches the sun set", () => {
+    const roo = cardById("leader-roo");
+    const perfect = cardById("weather-perfect");
+    for (const level of ordinary) {
+      if (!roo.fits(level) || !perfect.fits(level)) continue;
+      const photos = new Set(photoStopsFor(level, [roo]));
+      const views = stopsFor(level, [perfect]);
+      for (const id of views) {
+        expect(photos.has(id), `${level.title} shares ${id}`).toBe(false);
+      }
+    }
+  });
+
+  it("takes no photographs when Roo is not out", () => {
+    expect(photoStopsFor(thursdaySocialRun, [cardById("leader-ben")])).toEqual(
+      [],
+    );
+    // Dan's cows are a stop and no picture, which is the distinction the
+    // separate list exists to make.
+    const dan = cardById("leader-dan");
+    expect(stopsFor(caesarsCamp, [dan]).length).toBeGreaterThan(0);
+    expect(photoStopsFor(caesarsCamp, [dan])).toEqual([]);
   });
 
   it("keeps a weather card for every map, viewpoint or not", () => {

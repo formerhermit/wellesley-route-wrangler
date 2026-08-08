@@ -8,6 +8,7 @@ import {
   NobodyCard,
   PerfectCard,
   RainCard,
+  RooCard,
   WatchCard,
   WindCard,
 } from "./CardSprites";
@@ -22,6 +23,7 @@ export const CARD_ART: Record<string, () => ReactNode> = {
   "leader-dan": DanCard,
   "leader-nobody": NobodyCard,
   "leader-lost": LostCard,
+  "leader-roo": RooCard,
   "runner-new-shoes": NewShoesCard,
   "runner-geese": GeeseCard,
   "runner-big-coffee": BigCoffeeCard,

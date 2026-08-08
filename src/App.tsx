@@ -49,6 +49,7 @@ import {
   briefingMarks,
   dealBriefing,
   extraRunners,
+  photoStopsFor,
   stopsFor,
   unrecordedRun,
   wandersOff,
@@ -340,9 +341,15 @@ export default function App() {
     if (level.field) setShowingStartingGun(true);
   }, [level]);
 
-  // A hand is dealt for the map in front of you and does not travel.
+  /*
+   * A hand is dealt for the map in front of you and does not travel. The
+   * briefing goes with it: since the deal now happens on the way in, a
+   * dialog left standing over a new map would be three empty slots with no
+   * way to fill them.
+   */
   useEffect(() => {
     setHand(undefined);
+    setBriefingOpen(false);
   }, [level]);
 
   const modalOpen =
@@ -387,6 +394,11 @@ export default function App() {
   );
   const stops = useMemo(
     () => stopsFor(level, state.cards),
+    [level, state.cards],
+  );
+  // Which of those stops the camera comes out at.
+  const photoStops = useMemo(
+    () => photoStopsFor(level, state.cards),
     [level, state.cards],
   );
   // Which lines of the brief the cards put there, for the panel to tag.
@@ -700,6 +712,7 @@ export default function App() {
               }}
               onEggPressed={() => sound.play("egg")}
               stops={stops}
+              photoStops={photoStops}
               weather={weather}
               extraRunners={turnout}
               wander={wandering}

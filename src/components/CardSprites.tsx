@@ -152,6 +152,36 @@ export function PerfectCard() {
 }
 
 /**
+ * Roo's camera, mid-flash. The body is deliberately plain so the burst off
+ * the top of it is the thing you see, which is also the thing the card does.
+ */
+export function RooCard() {
+  return (
+    <Frame>
+      <path
+        d="M -13 -13 l 4 -6 h 12 l 4 6"
+        className="card-camera-hood"
+      />
+      <rect
+        x={-22}
+        y={-13}
+        width={44}
+        height={30}
+        rx={5}
+        className="card-camera"
+      />
+      <circle cx={0} cy={2} r={9} className="card-lens" />
+      <circle cx={0} cy={2} r={4} className="card-lens-glass" />
+      <rect x={11} y={-9} width={8} height={5} rx={1.5} className="card-bulb" />
+      <path
+        d="M 15 -20 v -6 M 8 -18 l -3 -5 M 23 -18 l 3 -5"
+        className="card-spark"
+      />
+    </Frame>
+  );
+}
+
+/**
  * Nobody navigating: the route as a straight dash from A to B, and the line
  * the group actually takes wandering all over it. The joke is the gap
  * between the two, so both have to be on the card.

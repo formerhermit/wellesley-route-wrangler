@@ -4,6 +4,7 @@ import { CarolSingers, Dog, Goose, Treaters } from "./MapSprites";
 import { JunctionButtons, MapJunctions } from "./MapJunctions";
 import { MapLandmarks } from "./MapLandmarks";
 import { MapRoads } from "./MapRoads";
+import { PhotoFlash } from "./PhotoFlash";
 import { PigeonGroup } from "./PigeonGroup";
 import { RaceField } from "./RaceField";
 import { RivalRunners } from "./RivalRunners";
@@ -76,6 +77,11 @@ interface Props {
    * that one curve, so they stop and set off together without being told.
    */
   stops?: string[];
+  /**
+   * Which of those stops are photographs (#10). A subset of `stops`: the
+   * group has to be standing still to be in the picture.
+   */
+  photoStops?: string[];
   /** What a card has done to the sky (#10). Decorative from end to end. */
   weather?: CardWeather;
   /** Club runners beyond the usual five, from a card. Decorative too. */
@@ -96,6 +102,7 @@ export function RouteMap({
   onGnomePressed,
   onEggPressed,
   stops,
+  photoStops,
   weather,
   extraRunners = 0,
   wander = false,
@@ -111,6 +118,14 @@ export function RouteMap({
     runnersRef.current = Array.from({ length: runnerCount }, () => null);
   }
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
+  /*
+   * The camera going off, and when. The timestamp is only there to be a key:
+   * a second photograph at the same junction has to restart the animation
+   * rather than leave the first one's finished frame on screen.
+   */
+  const [flash, setFlash] = useState<{ nodeId: string; at: number } | null>(
+    null,
+  );
 
   // The rest of the race, where there is one (#111). An empty list on every
   // other map, which costs a component that draws nothing.
@@ -222,6 +237,20 @@ export function RouteMap({
     [level, runRoute, stops],
   );
 
+  /*
+   * Where the shutter goes. Withheld entirely under reduced motion: the flash
+   * is a bright pulse over the whole map, which is exactly what that setting
+   * is asking us not to do. The group still stands still for the photograph,
+   * because that is the pace curve and not the drawing.
+   */
+  const photos = useMemo(() => {
+    if (reducedMotion || !photoStops || photoStops.length === 0) return [];
+    const wanted = new Set(photoStops);
+    return routeMilestones(level, runRoute).filter((milestone) =>
+      wanted.has(milestone.nodeId),
+    );
+  }, [reducedMotion, photoStops, level, runRoute]);
+
   const { start, cancel } = useRunAnimation({
     pathRef,
     pace,
@@ -231,8 +260,11 @@ export function RouteMap({
     fieldRef,
     reducedMotion,
     milestones,
+    photos,
     followers,
     onReachHotspot: setAlarmedNodeId,
+    onPhoto: (nodeId) =>
+      setFlash(nodeId ? { nodeId, at: Date.now() } : null),
     onFinish: onRunFinished,
   });
 
@@ -248,6 +280,7 @@ export function RouteMap({
     return () => {
       cancel();
       setAlarmedNodeId(null);
+      setFlash(null);
     };
   }, [running, start, cancel]);
 
@@ -356,6 +389,17 @@ export function RouteMap({
           reducedMotion={reducedMotion}
           onFinish={() => setRivalsRunning(false)}
         />
+
+        {/* Last, and over everything: a flash lights the whole map, including
+            the writing on it. */}
+        {flash && (
+          <PhotoFlash
+            key={flash.at}
+            at={nodeById(level, flash.nodeId)}
+            width={level.view.width}
+            height={level.view.height}
+          />
+        )}
       </svg>
 
         <JunctionButtons
