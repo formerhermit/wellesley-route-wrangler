@@ -43,18 +43,23 @@ function Patch({ entry }: { entry: CabinetEntry }) {
 /**
  * What the club has to show for itself.
  *
- * Nothing in here is stored. Every badge is worked out from the routes in the
- * book on the spot, the same way the scoring is, so retuning one re-awards
- * everybody's history rather than stranding it.
+ * Every badge is worked out on the spot rather than stored, the same way the
+ * scoring is, so retuning one re-awards everybody's history rather than
+ * stranding it. Almost all of it comes from the routes in the book; the two
+ * about briefing cards come from `cardsRun`, because a card leaves no mark on
+ * a route to read.
  */
 export function TrophyCabinetPanel({
   levels,
   records,
+  cardsRun,
 }: {
   levels: Level[];
   records: Records;
+  /** Briefing cards this club has taken out, for the two badges about them. */
+  cardsRun?: ReadonlySet<string>;
 }) {
-  const cabinet = cabinetFor(records, levels);
+  const cabinet = cabinetFor(records, levels, cardsRun);
   const earned = earnedCount(cabinet);
   const total = cabinet.length;
 

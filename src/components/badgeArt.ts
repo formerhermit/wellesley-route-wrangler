@@ -8,7 +8,9 @@ import {
   IgnoredSignBadge,
   LocalLegendBadge,
   LongRunBadge,
+  NewShoesBadge,
   NoHillsBadge,
+  PappedBadge,
   PigeonBadge,
   PortalooBadge,
   ShortRunBadge,
@@ -40,4 +42,6 @@ export const BADGE_ART: Record<string, () => React.JSX.Element> = {
   "brave-little-soldier": PortalooBadge,
   "toilet-to-toilet": ToiletBadge,
   "goose-botherer": GooseBadge,
+  "new-shoes": NewShoesBadge,
+  papped: PappedBadge,
 };

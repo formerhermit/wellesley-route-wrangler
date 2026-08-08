@@ -3,7 +3,8 @@ import { levels } from "../data/levels";
 import { thursdaySocialRun } from "../data/thursdaySocialRun";
 import { emptyRecords, recordRun } from "./records";
 import type { Records } from "./records";
-import { cabinetFor, earnedBy, earnedCount } from "./achievements";
+import { CARD_BADGES, cabinetFor, earnedBy, earnedCount } from "./achievements";
+import { CARDS } from "./cards";
 import { evaluateRoute } from "./routeEvaluation";
 import { routeKey } from "./scoring";
 import {
@@ -81,6 +82,13 @@ describe("the trophy cabinet", () => {
     for (const entry of cabinet) {
       // Local Legend needs a whole roster's worth and is checked on its own.
       if (entry.id === "local-legend") continue;
+      /*
+       * The card badges are not about the maps at all — no route can win
+       * them, which is the point of them and would otherwise read here as a
+       * badge nobody can get. They have their own block below, which asks
+       * the same question of them in the only terms that can answer it.
+       */
+      if (entry.id in CARD_BADGES) continue;
 
       let won = false;
       for (const level of levels) {
@@ -284,3 +292,94 @@ describe("the trophy cabinet", () => {
     expect(earnedCount(cabinetFor(records, levels))).toBe(0);
   });
 });
+
+/**
+ * The two badges no route can win (#141, #142).
+ *
+ * They are the cabinet's only exception to "everything is derived from the
+ * book", so they get asked the same three questions the rest are asked, in
+ * the only terms that can answer them: can it be won, can it be won by
+ * accident, and is the thing it names still there.
+ */
+describe("the badges for who turned up", () => {
+  const everyLoop = levels.flatMap((level) =>
+    loops(level)
+      .slice(0, 4)
+      .map((route) => [level, route] as [Level, Route]),
+  );
+
+  it("names a card that is really in the deck", () => {
+    // The one way these rot: rename a card and the badge is unwinnable, with
+    // nothing anywhere to say so.
+    for (const [badgeId, cardId] of Object.entries(CARD_BADGES)) {
+      expect(CARDS.map((card) => card.id), badgeId).toContain(cardId);
+      expect(
+        cabinetFor(emptyRecords, levels).map((entry) => entry.id),
+      ).toContain(badgeId);
+    }
+  });
+
+  it("cannot be won by running, however much of it you do", () => {
+    const earned = ids(bookOf(everyLoop));
+    for (const badgeId of Object.keys(CARD_BADGES)) {
+      expect(earned, badgeId).not.toContain(badgeId);
+    }
+  });
+
+  it("is won by taking that card out, and only that card", () => {
+    for (const [badgeId, cardId] of Object.entries(CARD_BADGES)) {
+      const withIt = cabinetFor(emptyRecords, levels, new Set([cardId]));
+      expect(
+        withIt.find((entry) => entry.id === badgeId)?.earned,
+        badgeId,
+      ).toBe(true);
+
+      // And is not handed out by some other card being run.
+      const others = CARDS.map((card) => card.id).filter((id) => id !== cardId);
+      const withoutIt = cabinetFor(emptyRecords, levels, new Set(others));
+      expect(
+        withoutIt.find((entry) => entry.id === badgeId)?.earned,
+        badgeId,
+      ).toBe(false);
+    }
+  });
+
+  /*
+   * The announcement, which is where the second way of being a first run
+   * matters: an old loop taken out with a new card changes nothing in the
+   * book, so the route half of this has to stay quiet while the card half
+   * speaks up.
+   */
+  it("is announced by the run that first takes the card out", () => {
+    const level = thursdaySocialRun;
+    const route = loops(level)[0];
+    const records = bookOf([[level, route]]);
+    const cardId = CARD_BADGES["new-shoes"];
+
+    const credited = earnedBy(records, levels, level, routeKey(route), {
+      cardsRun: new Set([cardId]),
+      freshCards: [cardId],
+      // The loop was already in the book: only the card is new tonight.
+      freshRoute: false,
+    }).map((entry) => entry.id);
+
+    expect(credited).toContain("new-shoes");
+    // And nothing the route had already won weeks ago comes with it.
+    expect(credited).toEqual(["new-shoes"]);
+  });
+
+  it("stays quiet on a later run with the same card", () => {
+    const level = thursdaySocialRun;
+    const route = loops(level)[0];
+    const records = bookOf([[level, route]]);
+    const cardId = CARD_BADGES["new-shoes"];
+
+    const credited = earnedBy(records, levels, level, routeKey(route), {
+      cardsRun: new Set([cardId]),
+      freshCards: [],
+      freshRoute: false,
+    });
+    expect(credited).toEqual([]);
+  });
+});
+

@@ -8,12 +8,23 @@ import type { Level, MapNodeType, Route } from "./types";
  * Badges, earned by running. Pure, like the rest of `src/game/`, and derived
  * from the routes in the book rather than stored anywhere — the same rule the
  * scoring follows, so retuning a badge re-awards everybody's history instead
- * of stranding it. Nothing here is written down but the routes.
+ * of stranding it.
  *
  * That rule is also the constraint. `recordRun` is idempotent: running a route
  * you have already found records nothing, so the book is a set of discoveries
  * and not a diary. A badge can therefore ask "what has this club been down"
  * but never "what did it do last Thursday, and the Thursday before".
+ *
+ * Two badges are the exception, and it is worth being plain about why (#141,
+ * #142). A briefing card leaves no mark on a route: the same loop run in
+ * somebody's new white shoes is the same entry in the book, and the book is
+ * right about that. So "you have taken these cards out" is a fact no route
+ * can answer, and it arrives here as `cardsRun` from its own small store.
+ *
+ * It is not a hole in the rule the cards live by. Nothing derived from a
+ * route reads that set: no score, no route count, no other badge. A loop that
+ * won on Tuesday still wins on Wednesday whatever was dealt on either day.
+ * All the set can do is remember who turned up.
  */
 
 /** How much of a locked badge the cabinet gives away. */
@@ -89,12 +100,42 @@ function gooseNodeId(level: Level): string | undefined {
 }
 
 /**
- * Every badge is a question asked of the whole book at once. Most only need
+ * Every badge is a question asked of the whole club at once. Most only need
  * the runs; Local Legend is about what is *missing*, so it needs the roster
- * too, and it is not worth a second kind of badge to spare it an argument it
- * ignores.
+ * too, and the two card badges need the one thing a route cannot tell you.
+ * It is not worth a second kind of badge to spare any of them an argument
+ * they ignore.
  */
-type Test = (runs: Run[], levels: Level[]) => boolean;
+type Test = (
+  runs: Run[],
+  levels: Level[],
+  cardsRun: ReadonlySet<string>,
+) => boolean;
+
+/** A club that has never had a briefing, which is most of them. */
+const NO_CARDS: ReadonlySet<string> = new Set();
+
+/**
+ * The badges that are about who turned up rather than where you went, and the
+ * card each one is for (#141, #142).
+ *
+ * A table rather than two string literals buried in the list below, because
+ * the card id is the one thing here that can rot: rename a card and the badge
+ * goes quietly unwinnable, which is the exact failure the cabinet's own test
+ * exists to catch and the only one it cannot see. `achievements.test.ts`
+ * holds every id in here to a card that is really in the deck, and holds
+ * every badge in here to one nothing else can win.
+ */
+export const CARD_BADGES: Readonly<Record<string, string>> = {
+  "new-shoes": "runner-new-shoes",
+  papped: "leader-roo",
+};
+
+/** A badge for having taken a particular card out and run it. */
+const ranTheCard =
+  (cardId: string): Test =>
+  (_runs, _levels, cardsRun) =>
+    cardsRun.has(cardId);
 
 const some =
   (predicate: (run: Run) => boolean): Test =>
@@ -287,6 +328,30 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
       return goose !== undefined && run.route.nodeIds.includes(goose);
     }),
   },
+  {
+    id: "new-shoes",
+    name: "New Shoes",
+    blurb:
+      "You took the white ones out. Whether they came back white is between you and the mud.",
+    hint: "Take somebody's new shoes out on a run.",
+    reveal: "teased",
+    /*
+     * For taking the card out and running it, and not for keeping them clean
+     * (#141). The card already has an opinion about the mud and its own line
+     * of copy for losing to it; this is the club noting that somebody turned
+     * up in box-fresh trainers on a Thursday, which is the joke either way.
+     */
+    test: ranTheCard(CARD_BADGES["new-shoes"]),
+  },
+  {
+    id: "papped",
+    name: "Papped",
+    blurb:
+      "Roo got the shot. You are, for the length of one Thursday, on the socials.",
+    hint: "Get your photograph taken on a run.",
+    reveal: "teased",
+    test: ranTheCard(CARD_BADGES.papped),
+  },
 ];
 
 /**
@@ -349,11 +414,16 @@ export interface CabinetEntry extends Achievement {
 }
 
 /** Every badge, in hanging order, with whether this club has it. */
-export function cabinetFor(records: Records, levels: Level[]): CabinetEntry[] {
+export function cabinetFor(
+  records: Records,
+  levels: Level[],
+  /** Cards taken out and run. Absent is a club that has had no briefings. */
+  cardsRun: ReadonlySet<string> = NO_CARDS,
+): CabinetEntry[] {
   const runs = runsFrom(records, levels);
   return ACHIEVEMENTS.map(({ test, ...achievement }) => ({
     ...achievement,
-    earned: test(runs, levels),
+    earned: test(runs, levels, cardsRun),
   }));
 }
 
@@ -380,21 +450,43 @@ export function earnedBy(
   levels: Level[],
   level: Level,
   routeKeyOfRun: string,
+  options: {
+    /** Every card this club has run, as it stands after this run. */
+    cardsRun?: ReadonlySet<string>;
+    /** The ones this run was the first to take out. */
+    freshCards?: readonly string[];
+    /**
+     * Whether the route itself was a first discovery. False where the club
+     * has run this loop before and only the cards were new — in which case
+     * the book is unchanged, and taking the route back out of it would
+     * credit this evening with badges won weeks ago.
+     */
+    freshRoute?: boolean;
+  } = {},
 ): CabinetEntry[] {
-  const before: Records = {
-    ...records,
-    [level.id]: Object.fromEntries(
-      Object.entries(records[level.id] ?? {}).filter(
-        ([key]) => key !== routeKeyOfRun,
-      ),
-    ),
-  };
+  const { cardsRun = NO_CARDS, freshCards = [], freshRoute = true } = options;
+
+  const before: Records = freshRoute
+    ? {
+        ...records,
+        [level.id]: Object.fromEntries(
+          Object.entries(records[level.id] ?? {}).filter(
+            ([key]) => key !== routeKeyOfRun,
+          ),
+        ),
+      }
+    : records;
+  const cardsBefore =
+    freshCards.length === 0
+      ? cardsRun
+      : new Set([...cardsRun].filter((id) => !freshCards.includes(id)));
+
   const had = new Set(
-    cabinetFor(before, levels)
+    cabinetFor(before, levels, cardsBefore)
       .filter((entry) => entry.earned)
       .map((entry) => entry.id),
   );
-  return cabinetFor(records, levels).filter(
+  return cabinetFor(records, levels, cardsRun).filter(
     (entry) => entry.earned && !had.has(entry.id),
   );
 }
