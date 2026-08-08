@@ -228,6 +228,36 @@ export function LostCard() {
 }
 
 /**
+ * Snow: the flakes off the map, at card size. Three sizes rather than one,
+ * because snow drawn all one size reads as spots on the paper.
+ */
+export function SnowCard() {
+  return (
+    <Frame>
+      <circle cx={-14} cy={-16} r={4} className="card-flake" />
+      <circle cx={6} cy={-20} r={2.6} className="card-flake" />
+      <circle cx={17} cy={-6} r={3.4} className="card-flake" />
+      <circle cx={-6} cy={-2} r={3} className="card-flake" />
+      <circle cx={-20} cy={6} r={2.4} className="card-flake" />
+      <circle cx={9} cy={9} r={4} className="card-flake" />
+      {/* The ground it has settled on, which is what stops it. */}
+      <path d="M -24 20 Q -10 13 2 19 Q 14 25 24 18 L 24 26 L -24 26 Z" className="card-drift" />
+    </Frame>
+  );
+}
+
+/** The marathon crowd: a long way, and a long way to go. */
+export function MarathonCard() {
+  return (
+    <Frame>
+      <path d="M -24 12 L 24 12" className="card-longline" />
+      <path d="M -24 12 L -24 4 M 24 12 L 24 4" className="card-longline" />
+      <path d="M -6 -6 L 6 -6 M 0 -12 L 6 -6 L 0 0" className="card-arrow" />
+    </Frame>
+  );
+}
+
+/**
  * Fog: banks stacked back to front, each one fainter than the last. There is
  * nothing else on the card, because on the day there is nothing else to see.
  */

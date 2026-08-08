@@ -664,6 +664,89 @@ describe("what the cards do to the brief", () => {
     }
   });
 
+  it("drags the floor up its own window without closing it", () => {
+    const marathon = cardById("runner-marathon");
+    for (const level of ordinary) {
+      const own = level.objectives.find((one) => one.kind === "distance");
+      const asked = applyCards(level, [marathon]).objectives.find(
+        (one) => one.kind === "distance",
+      );
+      if (own?.kind !== "distance" || asked?.kind !== "distance") {
+        throw new Error("expected a window at both ends");
+      }
+      expect(asked.minKm, level.title).toBeGreaterThan(own.minKm);
+      // The ceiling is not theirs to move, and the window has to survive.
+      expect(asked.maxKm, level.title).toBe(own.maxKm);
+      expect(asked.minKm, level.title).toBeLessThan(asked.maxKm);
+      expect(marathon.rule(level), level.title).toContain(`${asked.minKm} km`);
+    }
+  });
+
+  /*
+   * The floor moves inside whatever window the weather has already left, not
+   * inside the one the roster advertised — otherwise rain and the marathon
+   * crowd between them could ask for a floor above their own ceiling.
+   */
+  it("raises the floor inside the shortened window, not the original", () => {
+    const level = thursdaySocialRun;
+    const both = applyCards(level, [
+      cardById("runner-marathon"),
+      cardById("weather-rain"),
+    ]).objectives.find((one) => one.kind === "distance");
+    const wetOnly = applyCards(level, [cardById("weather-rain")]).objectives.find(
+      (one) => one.kind === "distance",
+    );
+    if (both?.kind !== "distance" || wetOnly?.kind !== "distance") {
+      throw new Error("expected a window");
+    }
+    expect(both.maxKm).toBe(wetOnly.maxKm);
+    expect(both.minKm).toBeGreaterThan(wetOnly.minKm);
+    expect(both.minKm).toBeLessThan(both.maxKm);
+  });
+
+  it("shortens the run and shuts the hills for snow", () => {
+    const snow = cardById("weather-snow");
+    for (const level of ordinary.filter((one) => snow.fits(one))) {
+      const carded = applyCards(level, [snow]);
+      const window = carded.objectives.find((one) => one.kind === "distance");
+      if (window?.kind !== "distance") throw new Error("expected a window");
+      expect(snow.rule(level), level.title).toContain(
+        `${window.minKm}–${window.maxKm} km`,
+      );
+      expect(weatherFor(level, [snow]), level.title).toBe("snow");
+      expect(
+        carded.objectives.some(
+          (one) => one.kind === "avoid-roads" && one.trait === "hill",
+        ),
+        level.title,
+      ).toBe(true);
+      // Never where the level is counting climbs, which it would contradict.
+      expect(level.objectives.some((one) => one.kind === "climb")).toBe(false);
+    }
+  });
+
+  /*
+   * Two cards can forbid the same thing — snow and the dead legs both want
+   * the hills left alone, and they are in different suits, so a hand can hold
+   * both. A brief that says it twice reads as a bug.
+   */
+  it("says keep off the hills once, however many cards ask for it", () => {
+    const level = ordinary.find(
+      (one) =>
+        cardById("weather-snow").fits(one) &&
+        cardById("runner-hill-session").fits(one),
+    );
+    expect(level, "no level holds both").toBeDefined();
+    const carded = applyCards(level!, [
+      cardById("weather-snow"),
+      cardById("runner-hill-session"),
+    ]);
+    const hills = carded.objectives.filter(
+      (one) => one.kind === "avoid-roads" && one.trait === "hill",
+    );
+    expect(hills).toHaveLength(1);
+  });
+
   it("keeps a weather card for every map, viewpoint or not", () => {
     // Loopy has nowhere to watch a sunset from, which is exactly why the
     // wind exists: without it that map's weather would be Rain every time,
