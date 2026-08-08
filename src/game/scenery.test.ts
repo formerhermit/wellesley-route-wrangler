@@ -254,7 +254,7 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         .filter((node) => node.lights)
         .map((node) => ({
           what: `the lights at ${node.id}`,
-          box: boxOf(LIGHTS_BOX, lightsAt(node).x, lightsAt(node).y),
+          box: boxOf(LIGHTS_BOX, lightsAt(level, node).x, lightsAt(level, node).y),
         }));
 
     const roadRunsThrough = (box: Box) =>
@@ -381,6 +381,24 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       ];
       expect(clashes).toEqual([]);
+    });
+
+    /*
+     * The one that was missing, and the reason the lights shipped sitting in
+     * the tarmac. Scenery, landmarks and trees were all held off the roads;
+     * a new drawn thing was not, and nothing anywhere noticed.
+     *
+     * It is also the fix for a second bug wearing the same clothes. Every
+     * route here can be run either way round, so a lamp post *along* a road
+     * is one the group passes before stopping one way and after stopping the
+     * other. Off the roads entirely, they draw level with it from either
+     * direction.
+     */
+    it("keeps the traffic lights out of the roads", () => {
+      const inTheRoad = trafficLights()
+        .filter((light) => roadRunsThrough(light.box))
+        .map((light) => light.what);
+      expect(inTheRoad).toEqual([]);
     });
 
     it("keeps the traffic lights on the map", () => {

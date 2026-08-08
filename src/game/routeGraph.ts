@@ -259,6 +259,22 @@ export function hillMarkerAt(
 /** How far off the tarmac. Clear of a nine-wide road and its route line. */
 export const HILL_MARKER_OFFSET = 15;
 
+/**
+ * The compass bearings of the roads leaving a junction, in radians.
+ *
+ * Here because it is a fact about the graph; what gets placed in the gaps
+ * between them is `landmarks.ts`'s business.
+ */
+export function roadAnglesAt(level: Level, nodeId: string): number[] {
+  return (graphFor(level).roadsByNode.get(nodeId) ?? [])
+    .map((road) => {
+      const other = nodeById(level, otherEnd(road, nodeId));
+      const here = nodeById(level, nodeId);
+      return Math.atan2(other.y - here.y, other.x - here.x);
+    })
+    .sort((a, b) => a - b);
+}
+
 /** Screen-space points of the route, in order, for drawing and animation. */
 export function routePoints(level: Level, route: Route): MapNode[] {
   return route.nodeIds.map((id) => nodeById(level, id));

@@ -357,6 +357,20 @@ export function MapLandmarks({
             );
           })}
 
+        {/* Traffic lights, beside the junctions that carry them (#10). Drawn
+            with the on-top pass because they are street furniture: a lamp
+            post under the tarmac is the one place it cannot be. */}
+        {level.nodes
+          .filter((node) => node.lights)
+          .map((node) => {
+            const spot = lightsAt(level, node);
+            return (
+              <g key={`lights-${node.id}`} transform={`translate(${spot.x} ${spot.y})`}>
+                <TrafficLight />
+              </g>
+            );
+          })}
+
         {/* Weather comes down in front of the map and behind the writing: it
             should fall past the houses without ever making a name harder to
             read. */}
@@ -621,20 +635,6 @@ function MapLandmarksUnderRoads({
           ))}
         </g>
       )}
-
-      {/* Traffic lights, beside the junctions that have them (#10). Street
-          furniture: the junction keeps its own landmark, and these stand to
-          one side of it. */}
-      {level.nodes
-        .filter((node) => node.lights)
-        .map((node) => {
-          const spot = lightsAt(node);
-          return (
-            <g key={`lights-${node.id}`} transform={`translate(${spot.x} ${spot.y})`}>
-              <TrafficLight />
-            </g>
-          );
-        })}
 
       {level.nodes.map((node) => {
         if (node.spriteOnTop) return null;
