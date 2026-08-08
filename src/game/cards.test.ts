@@ -543,7 +543,6 @@ describe("what the cards do to the brief", () => {
     const birds = cardById("runner-birds");
     const named: Record<string, string> = {
       duck: "ducks",
-      dragonfly: "dragonflies",
       crow: "crows",
       robin: "robins",
     };
@@ -551,6 +550,27 @@ describe("what the cards do to the brief", () => {
       if (!birds.fits(level)) continue;
       const word = named[level.flock ?? ""] ?? "pigeons";
       expect(birds.rule(level), level.title).toContain(word);
+    }
+  });
+
+  /*
+   * And never turns up where the flock is not birds.
+   *
+   * The naming test above passed happily on "keep away from the dragonflies",
+   * because it only ever asked whether the card was *consistent* with the
+   * level — never whether the answer made any sense. Thursley's flock is the
+   * reason anybody drove an hour, and it is insects.
+   */
+  it("stays away from the maps whose flock is not birds", () => {
+    const birds = cardById("runner-birds");
+    const insects = levels.filter((level) => level.flock === "dragonfly");
+    expect(insects.map((level) => level.title)).toContain("Thursley Common");
+    for (const level of insects) {
+      expect(birds.fits(level), level.title).toBe(false);
+    }
+    // The flock's junctions are still there; it is the card that declines.
+    for (const level of insects) {
+      expect(level.nodes.some((node) => node.type === "pigeon")).toBe(true);
     }
   });
 

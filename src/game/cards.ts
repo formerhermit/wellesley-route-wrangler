@@ -156,6 +156,30 @@ function flockName(level: Level): string {
   }
 }
 
+/**
+ * Whether this map's flock is birds at all.
+ *
+ * They are one mechanism — pigeons, crows, ducks, robins and dragonflies all
+ * loiter, scatter and get counted identically — but they are not one animal,
+ * and a card about somebody who is frightened of birds has nothing to say
+ * about Thursley's dragonflies.
+ *
+ * Written without a `default` on purpose: a new flock is then a type error
+ * here rather than a card quietly deciding on its behalf.
+ */
+function flockIsBirds(level: Level): boolean {
+  switch (level.flock) {
+    case "dragonfly":
+      return false;
+    case "pigeon":
+    case "crow":
+    case "duck":
+    case "robin":
+    case undefined:
+      return true;
+  }
+}
+
 function alreadyAsks(level: Level, kind: LevelObjective["kind"]): boolean {
   return level.objectives.some((objective) => objective.kind === kind);
 }
@@ -443,7 +467,7 @@ export const CARDS: readonly Card[] = [
     name: "Somebody has seen that film",
     blurb: "The one with the birds. They have not been the same since.",
     rule: (level) => `Adds: keep away from ${flockName(level)}.`,
-    fits: (level) => nodesOfType(level, "pigeon").length > 0,
+    fits: (level) => flockIsBirds(level) && nodesOfType(level, "pigeon").length > 0,
     effect: (level) => ({
       objectives: [
         {
