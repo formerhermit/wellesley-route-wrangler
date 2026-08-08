@@ -260,18 +260,35 @@ export function hillMarkerAt(
 export const HILL_MARKER_OFFSET = 15;
 
 /**
- * The compass bearings of the roads leaving a junction, in radians.
+ * Every bearing leaving a junction that has tarmac on it, in radians.
  *
- * Here because it is a fact about the graph; what gets placed in the gaps
- * between them is `landmarks.ts`'s business.
+ * Mostly the roads themselves. Where two roads join the same pair of
+ * junctions, though — the Sports Centre, where the road goes round the
+ * building — each is drawn out square from the line and back again, so the
+ * pair occupies the two bearings at right angles to it as well as its own.
+ * Those count: `roadPathData` draws them, and anything placed there ends up
+ * underneath a road that is nowhere near the straight line between the ends.
+ *
+ * Here because it is a fact about the graph and how it is drawn; what gets
+ * placed in the gaps is `landmarks.ts`'s business.
  */
-export function roadAnglesAt(level: Level, nodeId: string): number[] {
-  return (graphFor(level).roadsByNode.get(nodeId) ?? [])
-    .map((road) => {
-      const other = nodeById(level, otherEnd(road, nodeId));
-      const here = nodeById(level, nodeId);
-      return Math.atan2(other.y - here.y, other.x - here.x);
-    })
+export function roadBearingsAt(level: Level, nodeId: string): number[] {
+  const here = nodeById(level, nodeId);
+  const bearings: number[] = [];
+
+  for (const road of graphFor(level).roadsByNode.get(nodeId) ?? []) {
+    const otherId = otherEnd(road, nodeId);
+    const other = nodeById(level, otherId);
+    const along = Math.atan2(other.y - here.y, other.x - here.x);
+    bearings.push(along);
+    if (roadsBetween(level, nodeId, otherId).length > 1) {
+      bearings.push(along + Math.PI / 2, along - Math.PI / 2);
+    }
+  }
+
+  // Normalised to one turn so the gaps between them can be walked in order.
+  return bearings
+    .map((bearing) => Math.atan2(Math.sin(bearing), Math.cos(bearing)))
     .sort((a, b) => a - b);
 }
 

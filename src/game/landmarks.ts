@@ -1,4 +1,4 @@
-import { roadAnglesAt } from "./routeGraph";
+import { roadBearingsAt } from "./routeGraph";
 import type { Level, MapNode, MapNodeType } from "./types";
 
 /** Every kind of scenery a level may place by hand. */
@@ -398,14 +398,58 @@ export function labelBox(node: MapNode): {
   return { left, right: left + width, top, bottom: top + height };
 }
 
-/** How far out from its junction a set of traffic lights stands. */
-export const LIGHTS_RADIUS = 30;
+/**
+ * How far out from its junction a set of traffic lights stands.
+ *
+ * Close in, deliberately. The group stops at the junction itself, so lights
+ * held out at arm's length are lights the group visibly stops past — which is
+ * the whole complaint about a stop line you have already crossed.
+ */
+export const LIGHTS_RADIUS = 21;
+
+/** And the further out it will go when that spot is taken. */
+const LIGHTS_RADII = [LIGHTS_RADIUS, 27, 33];
 
 /** And how far round from a road it has to be to count as off the road. */
 const LIGHTS_CLEARANCE = (22 * Math.PI) / 180;
 
 /** How finely the gaps between roads are searched. */
 const LIGHTS_STEP = (6 * Math.PI) / 180;
+
+/**
+ * Whether a straight road passes through a box. Liang–Barsky, so it costs the
+ * same whatever the road's length — this is asked of every road on the map
+ * for every bearing tried, and sampling it would not be free.
+ */
+function segmentHitsBox(
+  box: { left: number; right: number; top: number; bottom: number },
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+): boolean {
+  const dx = bx - ax;
+  const dy = by - ay;
+  let enter = 0;
+  let leave = 1;
+  const edges: [number, number][] = [
+    [-dx, ax - box.left],
+    [dx, box.right - ax],
+    [-dy, ay - box.top],
+    [dy, box.bottom - ay],
+  ];
+  for (const [p, q] of edges) {
+    if (p === 0) {
+      if (q < 0) return false;
+      continue;
+    }
+    const t = q / p;
+    if (p < 0) enter = Math.max(enter, t);
+    else leave = Math.min(leave, t);
+    if (enter > leave) return false;
+  }
+  return true;
+}
 
 function overlaps(
   a: { left: number; right: number; top: number; bottom: number },
@@ -432,11 +476,31 @@ function overlaps(
  * tried widest first, because the widest is the most room and the one that
  * clears the name is the one that can actually be seen.
  */
+const lightsCache = new WeakMap<Level, Map<string, { x: number; y: number }>>();
+
 export function lightsAt(level: Level, node: MapNode): { x: number; y: number } {
-  const angles = roadAnglesAt(level, node.id);
-  const at = (bearing: number) => ({
-    x: node.x + Math.cos(bearing) * LIGHTS_RADIUS,
-    y: node.y + Math.sin(bearing) * LIGHTS_RADIUS,
+  /*
+   * Remembered per junction. The search below is cheap on its own but it is
+   * asked on every render of every lit junction, and the answer cannot change
+   * without the level changing — which is what keys the cache.
+   */
+  let forLevel = lightsCache.get(level);
+  if (!forLevel) {
+    forLevel = new Map();
+    lightsCache.set(level, forLevel);
+  }
+  const remembered = forLevel.get(node.id);
+  if (remembered) return remembered;
+  const spot = placeLights(level, node);
+  forLevel.set(node.id, spot);
+  return spot;
+}
+
+function placeLights(level: Level, node: MapNode): { x: number; y: number } {
+  const angles = roadBearingsAt(level, node.id);
+  const at = (bearing: number, radius = LIGHTS_RADIUS) => ({
+    x: node.x + Math.cos(bearing) * radius,
+    y: node.y + Math.sin(bearing) * radius,
   });
   // A junction with no roads has no direction to avoid; anywhere will do.
   if (angles.length === 0) return at(0);
@@ -456,7 +520,7 @@ export function lightsAt(level: Level, node: MapNode): { x: number; y: number } 
    * above and its name below, so both bisectors are compromised while there
    * is a perfectly good spot a few degrees off one of them.
    */
-  const candidates: { bearing: number; room: number }[] = [];
+  const candidates: { bearing: number; radius: number; room: number }[] = [];
   for (const { from, to } of gaps) {
     for (
       let bearing = from + LIGHTS_CLEARANCE;
@@ -464,7 +528,10 @@ export function lightsAt(level: Level, node: MapNode): { x: number; y: number } 
       bearing += LIGHTS_STEP
     ) {
       // How far this bearing is from the nearer of the two roads.
-      candidates.push({ bearing, room: Math.min(bearing - from, to - bearing) });
+      const room = Math.min(bearing - from, to - bearing);
+      // A step or two further out, for the junctions with something already
+      // standing where the pavement would be.
+      for (const radius of LIGHTS_RADII) candidates.push({ bearing, radius, room });
     }
   }
   // No gap wide enough to stand in: take the widest and accept it, which is a
@@ -474,6 +541,7 @@ export function lightsAt(level: Level, node: MapNode): { x: number; y: number } 
     return at(widest.from + (widest.to - widest.from) / 2);
   }
 
+  const byId = new Map(level.nodes.map((one) => [one.id, one]));
   const name = labelBox(node);
   const kind = node.sprite ?? node.type;
   const place = kind ? LANDMARK_OFFSET[kind] : undefined;
@@ -487,22 +555,37 @@ export function lightsAt(level: Level, node: MapNode): { x: number; y: number } 
       : undefined;
 
   /*
-   * The name costs more than the sprite: a lamp post touching a shopfront
-   * reads as a street, and one touching the writing reads as a mistake.
+   * Roads cost most by a distance: a lamp post in the carriageway is the bug
+   * this function exists for, and the angular clearance above is not enough
+   * on its own — the sprite is thirty-six tall against an anchor near its
+   * foot, so a bearing that points downhill still reaches back over the
+   * junction the lights belong to. Then the name, then the sprite: a post
+   * touching a shopfront reads as a street, one touching the writing reads
+   * as a mistake.
    */
-  const cost = (bearing: number) => {
-    const spot = at(bearing);
+  const cost = (bearing: number, radius: number) => {
+    const spot = at(bearing, radius);
     const box = boxOf(LIGHTS_BOX, spot.x, spot.y);
+    const inRoad = level.roads.some((road) => {
+      const from = byId.get(road.from);
+      const to = byId.get(road.to);
+      return from && to && segmentHitsBox(box, from.x, from.y, to.x, to.y);
+    });
     return (
-      (overlaps(box, name) ? 2 : 0) + (sprite && overlaps(box, sprite) ? 1 : 0)
+      (inRoad ? 4 : 0) +
+      (overlaps(box, name) ? 2 : 0) +
+      (sprite && overlaps(box, sprite) ? 1 : 0)
     );
   };
   const best = candidates.reduce((a, b) => {
-    const costA = cost(a.bearing);
-    const costB = cost(b.bearing);
-    // Furthest from a road wins a tie: the middle of a pavement looks placed,
-    // the edge of one looks dropped.
-    return costB < costA || (costB === costA && b.room > a.room) ? b : a;
+    const costA = cost(a.bearing, a.radius);
+    const costB = cost(b.bearing, b.radius);
+    if (costB !== costA) return costB < costA ? b : a;
+    // Then closest in, so the group stops level with the lights rather than
+    // past them, and only then furthest from a road: the middle of a
+    // pavement looks placed, the edge of one looks dropped.
+    if (b.radius !== a.radius) return b.radius < a.radius ? b : a;
+    return b.room > a.room ? b : a;
   });
-  return at(best.bearing);
+  return at(best.bearing, best.radius);
 }
