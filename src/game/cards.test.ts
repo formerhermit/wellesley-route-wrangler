@@ -18,6 +18,7 @@ import {
   wandersOff,
 } from "./cards";
 import type { Card } from "./cards";
+import type { Level } from "./types";
 import { hasWinningRoute, winningRouteCount } from "./scoring";
 
 /** Everything beaten, which is when a briefing is on offer. */
@@ -31,6 +32,17 @@ const ordinary = levels.filter((level) => !level.field && !level.mood);
 
 /** Enough rolls to reach every hand the rotation can start from. */
 const ROLLS = [0, 0.13, 0.29, 0.41, 0.58, 0.66, 0.77, 0.91];
+
+/** Where the goose is standing on this map, if it has one at all. */
+function geeseOn(level: Level): string[] {
+  return (level.followers ?? [])
+    .filter((waiting) => waiting.kind === "goose")
+    .map((waiting) => waiting.nodeId);
+}
+
+function hasGoose(level: Level): boolean {
+  return geeseOn(level).length > 0;
+}
 
 function cardById(id: string): Card {
   const card = CARDS.find((one) => one.id === id);
@@ -548,8 +560,38 @@ describe("what the cards do to the brief", () => {
     };
     for (const level of levels) {
       if (!birds.fits(level)) continue;
-      const word = named[level.flock ?? ""] ?? "pigeons";
+      // A goose on the map means they are not all pigeons, or all ducks, so
+      // the card stops naming the flock and calls them what they are.
+      const word = hasGoose(level)
+        ? "birds"
+        : (named[level.flock ?? ""] ?? "pigeons");
       expect(birds.rule(level), level.title).toContain(word);
+    }
+  });
+
+  /*
+   * The goose is a follower and the flock is a junction type — two mechanisms
+   * that share nothing in the code and everything in the mind of somebody who
+   * is frightened of birds. The card had to be told.
+   */
+  it("keeps away from the goose as well as the flock", () => {
+    const birds = cardById("runner-birds");
+    const withBoth = levels.filter(
+      (level) => birds.fits(level) && hasGoose(level),
+    );
+    expect(withBoth.length, "no level exercises this").toBeGreaterThan(0);
+
+    for (const level of withBoth) {
+      const avoid = applyCards(level, [birds]).objectives.at(-1);
+      if (avoid?.kind !== "avoid-nodes") throw new Error("expected avoid-nodes");
+      for (const perch of geeseOn(level)) {
+        expect(avoid.nodeIds, `${level.title} ignores the goose`).toContain(perch);
+      }
+      for (const hotspot of level.nodes.filter((one) => one.type === "pigeon")) {
+        expect(avoid.nodeIds, `${level.title} ignores its flock`).toContain(
+          hotspot.id,
+        );
+      }
     }
   });
 

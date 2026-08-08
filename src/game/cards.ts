@@ -180,6 +180,27 @@ function flockIsBirds(level: Level): boolean {
   }
 }
 
+/**
+ * Every bird on the map: the flock's hotspots, and wherever the goose is
+ * standing.
+ *
+ * Two different mechanisms — a hotspot is a junction type and the goose is a
+ * follower — and somebody frightened of birds does not care which is which.
+ * Deduplicated because on Hawley they are the same junction: the goose stands
+ * on Bird Bay, which is a duck hotspot.
+ */
+function birdNodes(level: Level): string[] {
+  return [...new Set([...nodesOfType(level, "pigeon"), ...geesePonds(level)])];
+}
+
+/**
+ * What to call them all at once. The flock's own name where that is the whole
+ * of it, and the collective where a goose would make "the pigeons" a lie.
+ */
+function birdsName(level: Level): string {
+  return geesePonds(level).length > 0 ? "the birds" : flockName(level);
+}
+
 function alreadyAsks(level: Level, kind: LevelObjective["kind"]): boolean {
   return level.objectives.some((objective) => objective.kind === kind);
 }
@@ -466,23 +487,27 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody has seen that film",
     blurb: "The one with the birds. They have not been the same since.",
-    rule: (level) => `Adds: keep away from ${flockName(level)}.`,
+    rule: (level) => `Adds: keep away from ${birdsName(level)}.`,
+    /*
+     * Wants a flock to be frightened of, so a map with nothing but a goose on
+     * it stays the geese card's — those two are complementary rather than
+     * competing, and Fleet Pond and Tilford have a goose and no hotspots at
+     * all. Where there is both, this card takes in both.
+     */
     fits: (level) => flockIsBirds(level) && nodesOfType(level, "pigeon").length > 0,
     effect: (level) => ({
       objectives: [
         {
-          kind: "max-node-type",
-          nodeType: "pigeon",
-          limit: 0,
-          what: flockName(level),
-          // The generated label counts up to a limit, which reads badly at
-          // nought — "pass no more than 0 the pigeons" is not a sentence.
-          label: `Keep away from ${flockName(level)}`,
+          // One objective over every bird on the map rather than one for the
+          // flock and another for the goose: it is one fear, and it should be
+          // one line on the brief.
+          kind: "avoid-nodes",
+          nodeIds: birdNodes(level),
+          what: birdsName(level),
           fail: {
             title: "They Were Waiting",
-            message: `Somebody walked the last kilometre with their hood up. ${
-              flockName(level).charAt(0).toUpperCase() + flockName(level).slice(1)
-            } did nothing at all, which was somehow worse.`,
+            message:
+              "Somebody walked the last kilometre with their hood up. The birds did nothing at all, which was somehow worse.",
           },
         },
       ],
