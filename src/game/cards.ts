@@ -83,6 +83,13 @@ export interface CardEffect {
    * judged, scored and filed.
    */
   wander?: boolean;
+  /**
+   * Junctions where a photograph is taken, which is a `stops` that also goes
+   * off with a flash. Listed separately because standing still and being
+   * photographed are not the same thing: the cows are a stop and no picture,
+   * and the drawing needs to know which is which.
+   */
+  photoAt?: string[];
 }
 
 export interface Card {
@@ -138,19 +145,58 @@ const WIND_STRETCH = 1.15;
 
 /**
  * Somewhere worth standing at golden hour: a climb with a view, water that
- * catches the light, the statue, a beach, a Bronze Age mound. Terrain types
- * rather than named junctions, so a new map gets its sunset without touching
- * the deck — and a map with none of these (Loopy, at time of writing) simply
- * never has this card turn up.
+ * catches the light, a beach. Terrain types rather than named junctions, so a
+ * new map gets its sunset without touching the deck — and a map with none of
+ * these (Loopy, at time of writing) simply never has this card turn up.
+ *
+ * Deliberately kept clear of `PHOTO_SPOTS` below. The two are different
+ * ideas — this one is where the light is, that one is what is in the shot —
+ * and letting them share a junction would put two objectives on one stop,
+ * which is one objective with two ticks.
  */
-const VIEWPOINTS: MapNodeType[] = [
-  "hill",
+const VIEWPOINTS: MapNodeType[] = ["hill", "pond", "shore", "sand"];
+
+/**
+ * Somewhere worth photographing: a monument, a big house, a church, a
+ * concrete wall the Canadians shelled, a Bronze Age mound, a cave with a
+ * spring in it. Built things with names, as against the open ground the
+ * sunset wants.
+ *
+ * `hangar` is deliberately not here. It draws Farnborough's airship sheds,
+ * which would qualify twice over, but the only briefing-eligible map using
+ * it is Hawley, where it is the MOD Gate — a barrier and a hut, and nobody's
+ * holiday snap.
+ *
+ * Not `scoring.ts`'s `SIGHTS`, which is a different question asked for a
+ * different reason — that list is what a club would detour for and includes
+ * the portaloos. Nobody is putting the portaloos on the socials.
+ */
+const PHOTO_SPOTS: MapNodeType[] = [
   "statue",
-  "pond",
-  "shore",
-  "sand",
+  "manor",
+  "church",
+  "mosque",
+  "wall",
   "barrow",
+  "cave",
+  "filmset",
+  "christmastree",
+  "towncentre",
+  "cemetery",
 ];
+
+/**
+ * Where Roo can plausibly stop for a photograph: the map's landmarks, less
+ * anywhere the brief already sends you. A card that names a junction the
+ * level has already made compulsory is not a second requirement, it is the
+ * same one wearing a hat.
+ */
+function photoSpots(level: Level): string[] {
+  const asked = new Set(
+    level.objectives.flatMap((one) => (one.kind === "visit" ? one.nodeIds : [])),
+  );
+  return nodesOfType(level, ...PHOTO_SPOTS).filter((id) => !asked.has(id));
+}
 
 /**
  * Every road is measured to one decimal place, so a shortened window is too —
@@ -220,6 +266,38 @@ export const CARDS: readonly Card[] = [
               title: "The Cows Were Not Greeted",
               message:
                 "Dan has gone back for them. Nobody knows how long he will be.",
+            },
+          },
+        ],
+      };
+    },
+  },
+  {
+    id: "leader-roo",
+    suit: "leader",
+    name: "Run leader Roo",
+    blurb: "It does not count unless it is on the socials.",
+    rule: () => "Adds: stop somewhere scenic for a photo.",
+    fits: (level) => photoSpots(level).length > 0,
+    effect: (level) => {
+      const spots = photoSpots(level);
+      return {
+        // The group stands still for it, and the flash goes off. A stop that
+        // is also a photograph, which is why `photoAt` exists at all.
+        stops: spots,
+        photoAt: spots,
+        objectives: [
+          {
+            kind: "visit",
+            nodeIds: spots,
+            what: "somewhere scenic",
+            reportLabel: "Photo taken",
+            done: "A photograph was taken. Several, in fact.",
+            pending: "Nothing worth photographing yet.",
+            missed: {
+              title: "Nothing For The Socials",
+              message:
+                "Eight kilometres and not one usable picture. Roo has gone very quiet.",
             },
           },
         ],
@@ -566,6 +644,17 @@ export function extraRunners(level: Level, cards: readonly Card[]): number {
 /** Whether anybody is actually navigating. Drawing only, like the turnout. */
 export function wandersOff(level: Level, cards: readonly Card[]): boolean {
   return cards.some((card) => card.effect(level).wander === true);
+}
+
+/**
+ * Where the camera comes out. A subset of `stopsFor` — every photograph is a
+ * stop, and the group has to be standing still to be in it.
+ */
+export function photoStopsFor(
+  level: Level,
+  cards: readonly Card[],
+): string[] {
+  return cards.flatMap((card) => card.effect(level).photoAt ?? []);
 }
 
 /**

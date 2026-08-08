@@ -36,15 +36,29 @@ interface Options {
   reducedMotion: boolean;
   /** Points along the route that should make pigeons react. */
   milestones: Milestone[];
+  /**
+   * Points where the camera comes out (#10). Empty on an ordinary evening,
+   * and empty under reduced motion, where the caller withholds them rather
+   * than this having to know why.
+   */
+  photos: Milestone[];
   /** Whatever is waiting by the road, in whatever order the level lists them. */
   followers: Follower[];
   onReachHotspot: (nodeId: string | null) => void;
+  onPhoto: (nodeId: string | null) => void;
   onFinish: () => void;
 }
 
 const FULL_DURATION_MS = 8200;
 const REDUCED_DURATION_MS = 2600;
 const ALARM_MS = 1800;
+/**
+ * A beat between arriving and the shutter, so it reads as the group getting
+ * themselves into some sort of order rather than being papped on the move.
+ */
+const PHOTO_DELAY_MS = 320;
+/** How long the flash is up. Matches the animation in the stylesheet. */
+const FLASH_MS = 640;
 /** How long the follower takes to get across and into the group. */
 const JOIN_MS = 420;
 
@@ -66,8 +80,10 @@ export function useRunAnimation({
   fieldRef,
   reducedMotion,
   milestones,
+  photos,
   followers,
   onReachHotspot,
+  onPhoto,
   onFinish,
 }: Options) {
   const frameRef = useRef<number | null>(null);
@@ -75,21 +91,25 @@ export function useRunAnimation({
   // Callbacks are read through a ref so a re-render mid-run cannot restart it.
   const latest = useRef({
     milestones,
+    photos,
     followers,
     field,
     pace,
     runnerCount,
     onReachHotspot,
+    onPhoto,
     onFinish,
     reducedMotion,
   });
   latest.current = {
     milestones,
+    photos,
     followers,
     field,
     pace,
     runnerCount,
     onReachHotspot,
+    onPhoto,
     onFinish,
     reducedMotion,
   };
@@ -133,6 +153,10 @@ export function useRunAnimation({
       (a, b) => a.fraction - b.fraction,
     );
     let nextHotspot = 0;
+    const shutters = [...options.photos].sort(
+      (a, b) => a.fraction - b.fraction,
+    );
+    let nextShutter = 0;
     // Whoever is picked up first tacks onto the back of the group, and the
     // next one in behind them — so the queue is ordered by where on the route
     // each was standing, not by the order the level happens to list them.
@@ -258,6 +282,23 @@ export function useRunAnimation({
           window.setTimeout(() => options.onReachHotspot(null), ALARM_MS),
         );
         nextHotspot += 1;
+      }
+
+      // The camera, on the same principle as the pigeons: the group is
+      // standing still here anyway, because a photo stop is a stop.
+      while (
+        nextShutter < shutters.length &&
+        leadFraction >= shutters[nextShutter].fraction
+      ) {
+        const { nodeId } = shutters[nextShutter];
+        timersRef.current.push(
+          window.setTimeout(() => options.onPhoto(nodeId), PHOTO_DELAY_MS),
+          window.setTimeout(
+            () => options.onPhoto(null),
+            PHOTO_DELAY_MS + FLASH_MS,
+          ),
+        );
+        nextShutter += 1;
       }
 
       if (progress >= 1) {

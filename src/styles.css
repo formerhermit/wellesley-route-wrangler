@@ -2740,6 +2740,81 @@ body {
   stroke-width: 9;
 }
 
+/*
+ * Roo's camera (#10). One pulse per photograph, never a repeating flicker:
+ * the whole map goes pale for a moment the way a room does, and the light
+ * itself comes off the junction the group is standing at.
+ *
+ * Never rendered at all under reduced motion — `RouteMap` withholds the
+ * milestones rather than this having to opt out — so there is no media query
+ * here to keep in step with that decision.
+ */
+.photo-flash {
+  pointer-events: none;
+}
+
+.photo-flash__wash {
+  fill: #fff;
+  opacity: 0;
+  /* Up fast and down slowly, which is what a flash does and what stops it
+     reading as the map blinking. */
+  animation: photo-wash 640ms ease-out forwards;
+}
+
+@keyframes photo-wash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.photo-flash__burst {
+  fill: #fff;
+  opacity: 0;
+  animation: photo-burst 640ms ease-out forwards;
+}
+
+@keyframes photo-burst {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.photo-flash__rays {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: photo-rays 640ms ease-out forwards;
+}
+
+@keyframes photo-rays {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* The line the runners are measured along. Never drawn: on an ordinary
    evening it is the route exactly, and when the group is lost it is the
    wrong turnings, which are the group's business and not the map's. */
@@ -5968,6 +6043,32 @@ body {
 
 .card-sun {
   fill: var(--hi-vis);
+}
+
+/* Roo's camera. Ink body, club-blue glass, and the bulb going off in the
+   hi-vis yellow the sun and the flash already share. */
+.card-camera,
+.card-camera-hood {
+  fill: var(--ink);
+}
+
+.card-lens {
+  fill: #fdfbf5;
+}
+
+.card-lens-glass {
+  fill: var(--club);
+}
+
+.card-bulb {
+  fill: var(--hi-vis);
+}
+
+.card-spark {
+  fill: none;
+  stroke: var(--hi-vis);
+  stroke-width: 3.5;
+  stroke-linecap: round;
 }
 
 /* The plan, and what happened. Dashed and pale for the route nobody
