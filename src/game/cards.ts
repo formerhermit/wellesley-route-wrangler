@@ -54,10 +54,27 @@ export interface CardEffect {
    * cannot exist. A shorter run is a shorter target, not a narrower one.
    */
   shortenBy?: number;
+  /**
+   * Raises only the ceiling. 1 leaves it alone. The one window change that
+   * cannot cost anything: every route that won before still wins, and some
+   * that were a shade too long now do too.
+   */
+  raiseCeilingBy?: number;
   /** Throw out the level's own waypoints. Only ever makes a level easier. */
   dropVisits?: boolean;
   /** What the weather looks like. Changes nothing the rules can see. */
   weather?: CardWeather;
+  /**
+   * The run happens; the record of it does not. The incident report's
+   * distance line comes up empty — and nothing else changes, because the
+   * club counts its pigeons by eye, not by satellite.
+   */
+  unrecorded?: boolean;
+  /**
+   * Extra club runners on the road, on top of the usual five. Drawing only,
+   * exactly as `kit` is: a bigger group scores nothing and blocks nothing.
+   */
+  turnout?: number;
 }
 
 export interface Card {
@@ -107,6 +124,25 @@ function alreadyAsks(level: Level, kind: LevelObjective["kind"]): boolean {
 
 /** How much of the run Rain takes off. Both ends of the window, deliberately. */
 const RAIN_SHORTEN = 0.85;
+
+/** How much further a following wind lets the ceiling sit. Ceiling only. */
+const WIND_STRETCH = 1.15;
+
+/**
+ * Somewhere worth standing at golden hour: a climb with a view, water that
+ * catches the light, the statue, a beach, a Bronze Age mound. Terrain types
+ * rather than named junctions, so a new map gets its sunset without touching
+ * the deck — and a map with none of these (Loopy, at time of writing) simply
+ * never has this card turn up.
+ */
+const VIEWPOINTS: MapNodeType[] = [
+  "hill",
+  "statue",
+  "pond",
+  "shore",
+  "sand",
+  "barrow",
+];
 
 /**
  * Every road is measured to one decimal place, so a shortened window is too —
@@ -254,14 +290,17 @@ export const CARDS: readonly Card[] = [
     suit: "runner",
     name: "Somebody's watch did not start",
     blurb: "As far as the internet is concerned, this run never happened.",
-    rule: () => "Adds nothing.",
+    rule: () => "The report loses the distance.",
     /*
-     * Asks nothing of the route, which is the point of it. Every suit needs
-     * one card that cannot fail to fit, or whether a briefing happens at all
-     * comes down to whether the map has a cow on it.
+     * Asks nothing of the route, deliberately: one dead watch in a group of
+     * five changes nothing about where the club goes, so the consequence
+     * lands on the paperwork instead — the incident report's distance line
+     * comes up empty. Every suit needs one card that cannot fail to fit, or
+     * whether a briefing happens at all comes down to whether the map has a
+     * cow on it, and this is the runner suit's.
      */
     fits: () => true,
-    effect: () => ({}),
+    effect: () => ({ unrecorded: true }),
   },
   {
     id: "runner-big-coffee",
@@ -313,11 +352,54 @@ export const CARDS: readonly Card[] = [
     suit: "weather",
     name: "A perfect evening",
     blurb: "Still, golden, and warm. Nobody can think of a single complaint.",
-    rule: () => "Adds nothing.",
-    // The deck needs one card that only makes the run nicer, or picking is
-    // nothing but damage limitation.
-    fits: () => true,
-    effect: () => ({ weather: "clear" }),
+    rule: () => "Adds: watch the sun set from a viewpoint.",
+    // Needs somewhere worth standing at golden hour, which every map so far
+    // has except Loopy. Where there is nowhere, the evening simply is not
+    // this one — the wind below keeps the weather suit dealable.
+    fits: (level) => nodesOfType(level, ...VIEWPOINTS).length > 0,
+    effect: (level) => {
+      const views = nodesOfType(level, ...VIEWPOINTS);
+      return {
+        weather: "clear",
+        // The whole club came out, because of course they did.
+        turnout: 3,
+        // And stands there watching it go down, at every viewpoint the
+        // route passes. `paceOf` makes repeated stops brief ones.
+        stops: views,
+        objectives: [
+          {
+            kind: "visit",
+            nodeIds: views,
+            what: "a viewpoint",
+            reportLabel: "Sunset caught",
+            done: "The sunset was admired. At length.",
+            pending: "Nowhere with a view on the route yet.",
+            missed: {
+              title: "The Sun Set Unobserved",
+              message:
+                "Golden hour found the group between two hedges, discussing gutters.",
+            },
+          },
+        ],
+      };
+    },
+  },
+  {
+    id: "weather-wind",
+    suit: "weather",
+    name: "A following wind",
+    blurb: "Nobody mentions it at the time. Everybody mentions it afterwards.",
+    rule: (level) => {
+      const window = level.objectives.find((one) => one.kind === "distance");
+      if (window?.kind !== "distance") return "Raises the ceiling.";
+      return `Raises the ceiling to ${shortenKm(window.maxKm, WIND_STRETCH)} km.`;
+    },
+    // The one card that only makes the run nicer — the deck needs it, or
+    // picking is nothing but damage limitation. The ceiling comes up and the
+    // floor stays put, so every route that won before still wins and a few
+    // that were a shade too long now do too.
+    fits: (level) => alreadyAsks(level, "distance"),
+    effect: () => ({ raiseCeilingBy: WIND_STRETCH }),
   },
 ];
 
@@ -351,16 +433,22 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
     (factor, effect) => factor * (effect.shortenBy ?? 1),
     1,
   );
+  const lift = effects.reduce(
+    (factor, effect) => factor * (effect.raiseCeilingBy ?? 1),
+    1,
+  );
 
   let objectives = level.objectives;
 
-  if (shorten !== 1) {
+  if (shorten !== 1 || lift !== 1) {
     objectives = objectives.map((objective) =>
       objective.kind === "distance"
         ? {
             ...objective,
+            // The floor never hears about the wind: it only ever helps the
+            // ceiling, so a shortened, wind-assisted window stays a window.
             minKm: shortenKm(objective.minKm, shorten),
-            maxKm: shortenKm(objective.maxKm, shorten),
+            maxKm: shortenKm(objective.maxKm, shorten * lift),
           }
         : objective,
     );
@@ -433,6 +521,23 @@ export function weatherFor(
 /** Where the group stands still, for `paceOf`. */
 export function stopsFor(level: Level, cards: readonly Card[]): string[] {
   return cards.flatMap((card) => card.effect(level).stops ?? []);
+}
+
+/**
+ * Whether the run went unrecorded, for the incident report's distance line.
+ * The run still happened and everything else about it is still counted: the
+ * club has always done its pigeons by eye.
+ */
+export function unrecordedRun(level: Level, cards: readonly Card[]): boolean {
+  return cards.some((card) => card.effect(level).unrecorded === true);
+}
+
+/** How many turned up beyond the usual five. Drawing only. */
+export function extraRunners(level: Level, cards: readonly Card[]): number {
+  return cards.reduce(
+    (total, card) => total + (card.effect(level).turnout ?? 0),
+    0,
+  );
 }
 
 /**

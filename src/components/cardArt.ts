@@ -8,6 +8,7 @@ import {
   PerfectCard,
   RainCard,
   WatchCard,
+  WindCard,
 } from "./CardSprites";
 import type { ReactNode } from "react";
 
@@ -25,4 +26,5 @@ export const CARD_ART: Record<string, () => ReactNode> = {
   "runner-watch": WatchCard,
   "weather-rain": RainCard,
   "weather-perfect": PerfectCard,
+  "weather-wind": WindCard,
 };

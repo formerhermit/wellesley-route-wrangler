@@ -3,6 +3,7 @@ import type { RefObject } from "react";
 import type { Pace } from "../game/pace";
 import type { FieldPlace } from "../game/raceField";
 
+/** The club's usual five. A card may bring more out (#10). */
 export const RUNNER_COUNT = 5;
 
 interface Milestone {
@@ -26,6 +27,8 @@ interface Options {
   pathRef: RefObject<SVGPathElement | null>;
   /** How the group's speed varies over the route. Hills cost time. */
   pace: Pace;
+  /** How many are out today: the usual five, plus whatever a card brought. */
+  runnerCount: number;
   runnersRef: RefObject<(SVGGElement | null)[]>;
   /** The rest of the field, where the level is a race. Empty where it is not. */
   field: FieldPlace[];
@@ -57,6 +60,7 @@ function homeTransform({ home }: Follower): string {
 export function useRunAnimation({
   pathRef,
   pace,
+  runnerCount,
   runnersRef,
   field,
   fieldRef,
@@ -74,6 +78,7 @@ export function useRunAnimation({
     followers,
     field,
     pace,
+    runnerCount,
     onReachHotspot,
     onFinish,
     reducedMotion,
@@ -83,6 +88,7 @@ export function useRunAnimation({
     followers,
     field,
     pace,
+    runnerCount,
     onReachHotspot,
     onFinish,
     reducedMotion,
@@ -120,8 +126,9 @@ export function useRunAnimation({
     const duration = options.reducedMotion
       ? REDUCED_DURATION_MS
       : FULL_DURATION_MS;
+    const running = options.runnerCount;
     const lag = options.reducedMotion ? 0 : Math.min(20, length * 0.02);
-    const travel = length + lag * (RUNNER_COUNT - 1);
+    const travel = length + lag * (running - 1);
     const hotspots = [...options.milestones].sort(
       (a, b) => a.fraction - b.fraction,
     );
@@ -179,7 +186,7 @@ export function useRunAnimation({
       // over half pace and makes it up on the flat.
       const lead = options.pace.fractionAt(progress) * travel;
 
-      for (let i = 0; i < RUNNER_COUNT; i += 1) {
+      for (let i = 0; i < running; i += 1) {
         const runner = runnersRef.current?.[i];
         if (!runner) continue;
         const distance = Math.min(Math.max(lead - i * lag, 0), length);
@@ -216,7 +223,7 @@ export function useRunAnimation({
         const followEl = follow.ref.current;
         if (!followEl || follow.joinFraction === null) return;
         const joinAt = follow.joinFraction * length;
-        const back = lead - (RUNNER_COUNT + place) * lag;
+        const back = lead - (running + place) * lag;
         if (back <= joinAt) {
           followEl.setAttribute("transform", homeTransform(follow));
           joinedAt.delete(follow);
