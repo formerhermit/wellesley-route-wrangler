@@ -20,6 +20,7 @@ import {
   routePathData,
   selectableNodeIds,
 } from "../game/routeGraph";
+import { wanderRoll, wanderRoute } from "../game/wander";
 import type { CardWeather } from "../game/cards";
 import type { Level, Route } from "../game/types";
 
@@ -79,6 +80,8 @@ interface Props {
   weather?: CardWeather;
   /** Club runners beyond the usual five, from a card. Decorative too. */
   extraRunners?: number;
+  /** Nobody is navigating (#10). The group runs everywhere but the route. */
+  wander?: boolean;
 }
 
 export function RouteMap({
@@ -95,6 +98,7 @@ export function RouteMap({
   stops,
   weather,
   extraRunners = 0,
+  wander = false,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const runnerCount = RUNNER_COUNT + extraRunners;
@@ -169,18 +173,37 @@ export function RouteMap({
   );
   const pathData = routePathData(level, route);
 
+  /*
+   * What the group runs, as against what the player drew. The same thing on
+   * every ordinary evening; with nobody navigating (#10), the route plus
+   * every wrong turning they take off it.
+   *
+   * Never under reduced motion. A wander is direction reversals by
+   * definition, and reversals are the one thing that setting exists to spare
+   * people — so the group finds its way after all, which is the right way for
+   * this joke to fail.
+   */
+  const runRoute = useMemo(
+    () =>
+      wander && !reducedMotion
+        ? wanderRoute(level, route, wanderRoll(route))
+        : route,
+    [wander, reducedMotion, level, route],
+  );
+  const runPathData = routePathData(level, runRoute);
+
   const milestones = useMemo(
     () =>
-      routeMilestones(level, route).filter(
+      routeMilestones(level, runRoute).filter(
         (milestone) => nodeById(level, milestone.nodeId).type === "pigeon",
       ),
-    [level, route],
+    [level, runRoute],
   );
 
   // Where each follower waits, and how far along the route it will be passed.
   // Null when this route never goes that way, which leaves it standing there.
   const followers = useMemo(() => {
-    const milestones = routeMilestones(level, route);
+    const milestones = routeMilestones(level, runRoute);
     return (level.followers ?? []).map((waiting, index) => {
       const node = nodeById(level, waiting.nodeId);
       const passed = milestones.find(
@@ -192,11 +215,11 @@ export function RouteMap({
         joinFraction: passed?.fraction ?? null,
       };
     });
-  }, [level, route, followerRefs]);
+  }, [level, runRoute, followerRefs]);
 
   const pace = useMemo(
-    () => paceOf(level, route, stops),
-    [level, route, stops],
+    () => paceOf(level, runRoute, stops),
+    [level, runRoute, stops],
   );
 
   const { start, cancel } = useRunAnimation({
@@ -278,8 +301,13 @@ export function RouteMap({
 
         {pathData && (
           <>
-            <path ref={pathRef} className="route-line" d={pathData} />
+            <path className="route-line" d={pathData} />
             <path className="route-line route-line--top" d={pathData} />
+            {/* The rail the group is actually on, which is the drawn route
+                itself unless nobody is navigating. Never painted: it exists
+                to be measured, and on an ordinary evening it lies exactly
+                under the line above it. */}
+            <path ref={pathRef} className="route-rail" d={runPathData} />
           </>
         )}
 

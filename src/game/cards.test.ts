@@ -14,6 +14,7 @@ import {
   handIsPlayable,
   stopsFor,
   unrecordedRun,
+  wandersOff,
 } from "./cards";
 import type { Card } from "./cards";
 import { hasWinningRoute, winningRouteCount } from "./scoring";
@@ -406,6 +407,29 @@ describe("what the cards do to the brief", () => {
     ]).objectives.find((one) => one.kind === "distance");
     if (both?.kind !== "distance") throw new Error("expected a window");
     expect(both.minKm).toBeLessThan(both.maxKm);
+  });
+
+  /*
+   * The lost leader is the one card whose whole effect is the drawing. That
+   * makes it the easiest kind to get wrong: a card that quietly moved the
+   * goalposts while claiming to be decoration would be exactly the bug the
+   * rule lines exist to prevent.
+   */
+  it("changes where the group goes and nothing else", () => {
+    const lost = cardById("leader-lost");
+    for (const level of ordinary) {
+      expect(lost.fits(level), level.title).toBe(true);
+      expect(wandersOff(level, [lost]), level.title).toBe(true);
+      // Same brief, same waypoints, same window, same count.
+      expect(applyCards(level, [lost]).objectives).toEqual(level.objectives);
+      expect(stopsFor(level, [lost])).toEqual([]);
+      expect(extraRunners(level, [lost])).toBe(0);
+      expect(unrecordedRun(level, [lost])).toBe(false);
+    }
+    expect(winningRouteCount(applyCards(thursdaySocialRun, [lost]))).toBe(
+      winningRouteCount(thursdaySocialRun),
+    );
+    expect(wandersOff(thursdaySocialRun, [cardById("leader-ben")])).toBe(false);
   });
 
   it("keeps a weather card for every map, viewpoint or not", () => {
