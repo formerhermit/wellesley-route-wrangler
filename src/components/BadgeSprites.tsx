@@ -273,7 +273,8 @@ export function GooseBadge() {
 }
 
 /**
- * The map's own toilet, for the badge about knowing where they all are.
+ * The toilet itself, for the badge about knowing where they all are — the
+ * fitting rather than the sign the map now puts outside it.
  */
 export function ToiletBadge() {
   return (
