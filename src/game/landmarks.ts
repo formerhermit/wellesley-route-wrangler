@@ -1,3 +1,4 @@
+import { roadAnglesAt } from "./routeGraph";
 import type { Level, MapNode, MapNodeType } from "./types";
 
 /** Every kind of scenery a level may place by hand. */
@@ -275,23 +276,6 @@ export const LANDMARK_DRAWS: Record<MapNodeType, boolean> = {
  */
 export const LIGHTS_BOX: SpriteBox = [-7, 7, -24, 12];
 
-/** And how far to the side of it they stand. */
-export const LIGHTS_OFFSET = { dx: 26, dy: -4 };
-
-/**
- * Where a junction's lights actually go: to one side, and always the side its
- * name is not on.
- *
- * Derived rather than authored. Every junction carrying lights is a town one
- * with a long name, and a name pushed out to one side reaches far enough to
- * sit under them — which is exactly what happened to Aldershot Town Centre
- * and the Sports Centre before this existed.
- */
-export function lightsAt(node: MapNode): { x: number; y: number } {
-  const dx = node.labelSide === "right" ? -LIGHTS_OFFSET.dx : LIGHTS_OFFSET.dx;
-  return { x: node.x + dx, y: node.y + LIGHTS_OFFSET.dy };
-}
-
 export const HILL_MARKER_BOX: SpriteBox = [-11, 11, -8, 7];
 export const ROAD_CLOSED_BOX: SpriteBox = [-17, 17, -6, 18];
 
@@ -412,4 +396,113 @@ export function labelBox(node: MapNode): {
         ? node.x + 24
         : node.x - width / 2;
   return { left, right: left + width, top, bottom: top + height };
+}
+
+/** How far out from its junction a set of traffic lights stands. */
+export const LIGHTS_RADIUS = 30;
+
+/** And how far round from a road it has to be to count as off the road. */
+const LIGHTS_CLEARANCE = (22 * Math.PI) / 180;
+
+/** How finely the gaps between roads are searched. */
+const LIGHTS_STEP = (6 * Math.PI) / 180;
+
+function overlaps(
+  a: { left: number; right: number; top: number; bottom: number },
+  b: { left: number; right: number; top: number; bottom: number },
+): boolean {
+  return (
+    Math.min(a.right, b.right) - Math.max(a.left, b.left) > 0 &&
+    Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 0
+  );
+}
+
+/**
+ * Where a junction's traffic lights stand: out along a gap between the roads
+ * leaving it, and the widest gap that is also clear of the writing.
+ *
+ * Two bugs had one cause. Placed at a fixed offset to one side, a lamp post
+ * lands *in* a road on a junction whose roads happen to run that way — and,
+ * worse, lands *along* a road the group is running, so they pass it before
+ * stopping one way round the loop and after stopping the other. Every route
+ * here can be run in either direction, so there is no side that is right.
+ *
+ * In a gap it is beside the junction rather than on the way to it, and the
+ * group draws level with it whichever way they arrive. The gaps are then
+ * tried widest first, because the widest is the most room and the one that
+ * clears the name is the one that can actually be seen.
+ */
+export function lightsAt(level: Level, node: MapNode): { x: number; y: number } {
+  const angles = roadAnglesAt(level, node.id);
+  const at = (bearing: number) => ({
+    x: node.x + Math.cos(bearing) * LIGHTS_RADIUS,
+    y: node.y + Math.sin(bearing) * LIGHTS_RADIUS,
+  });
+  // A junction with no roads has no direction to avoid; anywhere will do.
+  if (angles.length === 0) return at(0);
+
+  const gaps = angles.map((from, i) => {
+    // The last gap wraps past three o'clock to the first road again.
+    const to = i + 1 < angles.length ? angles[i + 1] : angles[0] + Math.PI * 2;
+    return { from, to };
+  });
+
+  /*
+   * Every bearing worth trying: across each gap, at a few degrees'
+   * resolution, and never within `LIGHTS_CLEARANCE` of a road itself.
+   *
+   * Sampled rather than taking each gap's middle, because a junction can be
+   * busy enough that no middle works — the Big Tesco has two roads, its shop
+   * above and its name below, so both bisectors are compromised while there
+   * is a perfectly good spot a few degrees off one of them.
+   */
+  const candidates: { bearing: number; room: number }[] = [];
+  for (const { from, to } of gaps) {
+    for (
+      let bearing = from + LIGHTS_CLEARANCE;
+      bearing <= to - LIGHTS_CLEARANCE;
+      bearing += LIGHTS_STEP
+    ) {
+      // How far this bearing is from the nearer of the two roads.
+      candidates.push({ bearing, room: Math.min(bearing - from, to - bearing) });
+    }
+  }
+  // No gap wide enough to stand in: take the widest and accept it, which is a
+  // junction whose roads leave no pavement anywhere.
+  if (candidates.length === 0) {
+    const widest = gaps.reduce((a, b) => (b.to - b.from > a.to - a.from ? b : a));
+    return at(widest.from + (widest.to - widest.from) / 2);
+  }
+
+  const name = labelBox(node);
+  const kind = node.sprite ?? node.type;
+  const place = kind ? LANDMARK_OFFSET[kind] : undefined;
+  const sprite =
+    kind && place && LANDMARK_DRAWS[kind]
+      ? boxOf(
+          LANDMARK_BOX[kind],
+          node.x + (node.spriteDx ?? place.dx),
+          node.y + (node.spriteDy ?? place.dy),
+        )
+      : undefined;
+
+  /*
+   * The name costs more than the sprite: a lamp post touching a shopfront
+   * reads as a street, and one touching the writing reads as a mistake.
+   */
+  const cost = (bearing: number) => {
+    const spot = at(bearing);
+    const box = boxOf(LIGHTS_BOX, spot.x, spot.y);
+    return (
+      (overlaps(box, name) ? 2 : 0) + (sprite && overlaps(box, sprite) ? 1 : 0)
+    );
+  };
+  const best = candidates.reduce((a, b) => {
+    const costA = cost(a.bearing);
+    const costB = cost(b.bearing);
+    // Furthest from a road wins a tie: the middle of a pavement looks placed,
+    // the edge of one looks dropped.
+    return costB < costA || (costB === costA && b.room > a.room) ? b : a;
+  });
+  return at(best.bearing);
 }
