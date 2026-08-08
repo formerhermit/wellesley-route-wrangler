@@ -7,14 +7,16 @@ the pigeons, and get the group back to the Observatory in one piece.
 Built with React, TypeScript, Vite and hand-drawn inline SVG. No game engine
 and no canvas. Almost every sprite is vector drawn in `MapSprites.tsx`; the
 handful of bitmaps (the cow, the Duke, the ghost, the soldiers, the goose, the
-dog, and two of the how-to-play drawings) live in `public/sprites/`, cropped to
-their content and sized to a few times the space they are ever drawn in.
+dog, the Medical Centre Toilet, and two of the how-to-play drawings) live in
+`public/sprites/`, cropped to their content and sized to a few times the space
+they are ever drawn in.
 
-The Medical Centre Toilet used to be one of them. The map now draws the sign
-outside it rather than the fitting inside it — a plate on a post with the two
-figures every public convenience in the country puts on one, which is both
-what you would actually see from the road and a thing that can be drawn in
-eight shapes. Its bitmap is left to the badge.
+The toilet is two of them, for two different jobs. The map draws the *sign*
+outside it — the plate with the two figures every public convenience in the
+country puts on one, which is what you would actually see from the road — on
+a post and in a frame the map draws itself, so the bitmap is only ever the
+plate. The badge keeps the fitting, because a trophy for knowing where every
+stop on a map is wants the thing rather than the signage.
 
 One of them is not on the map at all. The standing pigeon is the game's only
 sprite that turns up on the furniture — the how-to-play strip, the club's

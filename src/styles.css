@@ -6086,14 +6086,9 @@ body {
 }
 
 /* The Medical Centre Toilet, as the sign outside it rather than the fitting
-   inside it: a plate on a post, in the club's own blue, with the two figures
-   every public convenience in the country puts on one. */
-.toilet-sign {
-  fill: var(--club);
-  stroke: var(--ink);
-  stroke-width: 1.6;
-}
-
+   inside it. The plate is a bitmap, like the cow and the goose; the post and
+   the frame round it are the map's own ink, so it sits on the paper rather
+   than on top of it. */
 .toilet-post {
   fill: none;
   stroke: var(--ink);
@@ -6101,15 +6096,10 @@ body {
   stroke-linecap: round;
 }
 
-.toilet-figure {
-  fill: #fff;
-}
-
-.toilet-divide {
+.toilet-frame {
   fill: none;
-  stroke: #fff;
-  stroke-width: 1;
-  opacity: 0.45;
+  stroke: var(--ink);
+  stroke-width: 1.6;
 }
 
 /* The crossing card's lights: the club's ink for the housing, and the map's
