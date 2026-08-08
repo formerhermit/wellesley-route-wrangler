@@ -150,3 +150,20 @@ export function PerfectCard() {
     </Frame>
   );
 }
+
+/**
+ * A following wind: three lines going the way you are, the middle one
+ * curling. Nothing but movement, because that is the whole of the card.
+ */
+export function WindCard() {
+  return (
+    <Frame>
+      <path
+        d="M -22 -10 L 6 -10 Q 16 -10 16 -17 Q 16 -23 9 -22"
+        className="card-gust"
+      />
+      <path d="M -22 0 L 14 0 Q 24 0 24 6 Q 24 12 17 11" className="card-gust" />
+      <path d="M -22 10 L 2 10" className="card-gust" />
+    </Frame>
+  );
+}

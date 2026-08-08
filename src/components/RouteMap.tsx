@@ -77,6 +77,8 @@ interface Props {
   stops?: string[];
   /** What a card has done to the sky (#10). Decorative from end to end. */
   weather?: CardWeather;
+  /** Club runners beyond the usual five, from a card. Decorative too. */
+  extraRunners?: number;
 }
 
 export function RouteMap({
@@ -92,11 +94,18 @@ export function RouteMap({
   onEggPressed,
   stops,
   weather,
+  extraRunners = 0,
 }: Props) {
   const pathRef = useRef<SVGPathElement | null>(null);
+  const runnerCount = RUNNER_COUNT + extraRunners;
   const runnersRef = useRef<(SVGGElement | null)[]>(
-    Array.from({ length: RUNNER_COUNT }, () => null),
+    Array.from({ length: runnerCount }, () => null),
   );
+  // A card can bring more out, so the slots follow the turnout rather than
+  // being fixed at the club's usual five.
+  if (runnersRef.current.length !== runnerCount) {
+    runnersRef.current = Array.from({ length: runnerCount }, () => null);
+  }
   const [alarmedNodeId, setAlarmedNodeId] = useState<string | null>(null);
 
   // The rest of the race, where there is one (#111). An empty list on every
@@ -193,6 +202,7 @@ export function RouteMap({
   const { start, cancel } = useRunAnimation({
     pathRef,
     pace,
+    runnerCount,
     runnersRef,
     field,
     fieldRef,
@@ -305,6 +315,7 @@ export function RouteMap({
         {/* Above the club's own runners, because they are quicker and the
             whole joke is that they go past. */}
         <RunnerGroup
+          count={runnerCount}
           runnersRef={runnersRef}
           kit={level.kit}
           /* One colour, and only in a race: five club shades are a club on an

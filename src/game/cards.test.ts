@@ -10,8 +10,10 @@ import {
   briefingAvailable,
   briefingMarks,
   dealBriefing,
+  extraRunners,
   handIsPlayable,
   stopsFor,
+  unrecordedRun,
 } from "./cards";
 import type { Card } from "./cards";
 import { hasWinningRoute, winningRouteCount } from "./scoring";
@@ -328,6 +330,98 @@ describe("what the cards do to the brief", () => {
     expect(cardById("leader-nobody").rule(thursdaySocialRun)).toContain(
       "the canal",
     );
+  });
+
+  /*
+   * The dead watch asks nothing of the route on purpose: one broken watch in
+   * a group of five changes nothing about where the club goes. The
+   * consequence is on the paperwork, which is also why it can still be the
+   * runner suit's card that fits everywhere.
+   */
+  it("loses the distance without touching the route", () => {
+    const watch = cardById("runner-watch");
+    for (const level of ordinary) {
+      expect(watch.fits(level), level.title).toBe(true);
+      expect(unrecordedRun(level, [watch]), level.title).toBe(true);
+      // Same brief, same map: only the report hears about it.
+      expect(applyCards(level, [watch]).objectives).toEqual(level.objectives);
+      expect(stopsFor(level, [watch])).toEqual([]);
+    }
+    expect(unrecordedRun(thursdaySocialRun, [cardById("weather-rain")])).toBe(
+      false,
+    );
+  });
+
+  it("brings the whole club out on a perfect evening", () => {
+    const perfect = cardById("weather-perfect");
+    const level = levels.find((one) => perfect.fits(one));
+    if (!level) throw new Error("expected a level with a viewpoint");
+    expect(extraRunners(level, [perfect])).toBeGreaterThan(0);
+    // Nobody else brings anybody: the turnout is this card's alone.
+    expect(extraRunners(level, [cardById("runner-watch")])).toBe(0);
+  });
+
+  it("sends the group somewhere worth watching the sunset from", () => {
+    const perfect = cardById("weather-perfect");
+    for (const level of ordinary.filter((one) => perfect.fits(one))) {
+      const carded = applyCards(level, [perfect]);
+      const view = carded.objectives.at(-1);
+      if (view?.kind !== "visit") throw new Error("expected a visit");
+      expect(view.nodeIds.length, level.title).toBeGreaterThan(0);
+      // It stands still there too, so the sunset is watched rather than run past.
+      expect(stopsFor(level, [perfect])).toEqual(view.nodeIds);
+    }
+  });
+
+  /*
+   * The wind is the deck's only-nicer card, and "nicer" has to be provable:
+   * the ceiling goes up, the floor stays, so no route that won before can
+   * lose and the count can only rise.
+   */
+  it("raises the ceiling and leaves the floor alone", () => {
+    const wind = cardById("weather-wind");
+    for (const level of ordinary.filter((one) => wind.fits(one))) {
+      const own = level.objectives.find((one) => one.kind === "distance");
+      const blown = applyCards(level, [wind]).objectives.find(
+        (one) => one.kind === "distance",
+      );
+      if (own?.kind !== "distance" || blown?.kind !== "distance") {
+        throw new Error("expected a window at both ends");
+      }
+      expect(blown.minKm, level.title).toBe(own.minKm);
+      expect(blown.maxKm, level.title).toBeGreaterThan(own.maxKm);
+      expect(
+        winningRouteCount(applyCards(level, [wind])),
+        level.title,
+      ).toBeGreaterThanOrEqual(winningRouteCount(level));
+    }
+  });
+
+  it("keeps a window a window when the wind blows through the rain", () => {
+    // Rain takes both ends down and the wind lifts only the ceiling, so the
+    // two together must still describe a run somebody could do.
+    const both = applyCards(thursdaySocialRun, [
+      cardById("weather-rain"),
+      cardById("weather-wind"),
+    ]).objectives.find((one) => one.kind === "distance");
+    if (both?.kind !== "distance") throw new Error("expected a window");
+    expect(both.minKm).toBeLessThan(both.maxKm);
+  });
+
+  it("keeps a weather card for every map, viewpoint or not", () => {
+    // Loopy has nowhere to watch a sunset from, which is exactly why the
+    // wind exists: without it that map's weather would be Rain every time,
+    // and the suit would be nothing but a penalty there.
+    for (const level of ordinary) {
+      const weather = CARDS.filter(
+        (card) => card.suit === "weather" && card.fits(level),
+      );
+      expect(weather.length, level.title).toBeGreaterThan(0);
+      expect(
+        weather.some((card) => card.id !== "weather-rain"),
+        `${level.title} has only rain`,
+      ).toBe(true);
+    }
   });
 
   it("keeps a carded level winnable without touching the real count", () => {

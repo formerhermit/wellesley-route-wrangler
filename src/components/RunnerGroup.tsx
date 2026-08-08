@@ -4,6 +4,8 @@ import { RUNNER_COUNT } from "../hooks/useRunAnimation";
 import type { Level } from "../game/types";
 
 interface Props {
+  /** How many are out today. The club's usual five unless a card says more. */
+  count?: number;
   runnersRef: RefObject<(SVGGElement | null)[]>;
   /** What they are wearing over the club vest, if the level says anything. */
   kit?: Level["kit"];
@@ -16,13 +18,13 @@ interface Props {
 }
 
 /**
- * Five runners parked at the origin until the animation moves them. Positions
+ * The group, parked at the origin until the animation moves them. Positions
  * are written straight to these nodes, never through React state.
  */
-export function RunnerGroup({ runnersRef, kit, vest }: Props) {
+export function RunnerGroup({ count = RUNNER_COUNT, runnersRef, kit, vest }: Props) {
   return (
     <g aria-hidden="true">
-      {Array.from({ length: RUNNER_COUNT }, (_, index) => (
+      {Array.from({ length: count }, (_, index) => (
         <g
           key={index}
           opacity={0}

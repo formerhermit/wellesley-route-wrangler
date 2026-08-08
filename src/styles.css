@@ -5961,6 +5961,15 @@ body {
   fill: var(--hi-vis);
 }
 
+/* The wind: the same weight as the rain, in the sky's own colour rather than
+   the water's, because this one is air and not weather you get wet in. */
+.card-gust {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
 .card-ray {
   fill: none;
   stroke: var(--hi-vis);

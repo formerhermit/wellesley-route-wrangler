@@ -48,7 +48,9 @@ import {
   briefingAvailable,
   briefingMarks,
   dealBriefing,
+  extraRunners,
   stopsFor,
+  unrecordedRun,
   weatherFor,
 } from "./game/cards";
 import type { Card, Hand } from "./game/cards";
@@ -392,6 +394,15 @@ export default function App() {
     () => weatherFor(level, state.cards),
     [level, state.cards],
   );
+  // Who else came out, and whether anybody's watch was working.
+  const turnout = useMemo(
+    () => extraRunners(level, state.cards),
+    [level, state.cards],
+  );
+  const unrecorded = useMemo(
+    () => unrecordedRun(level, state.cards),
+    [level, state.cards],
+  );
 
   const evaluation = useMemo(
     () => evaluateRoute(brief, state.route),
@@ -523,12 +534,26 @@ export default function App() {
   // The chip time joins the report card as its own line rather than living
   // inside `buildIncidentReport`: that function is pure and tested against
   // exact route data, and a wall-clock reading has no business in either.
+  //
+  // The dead watch (#10) is applied in the same place and for a related
+  // reason: the run and its distance are exactly what they were, and it is
+  // only the paperwork that has lost them. `buildIncidentReport` goes on
+  // reporting the run that happened.
   const reportWithChipTime = useMemo(() => {
-    if (chipTimeMs === null) return report;
+    const lines = unrecorded
+      ? report.lines.map((line) =>
+          line.label === "Distance"
+            ? { ...line, value: "No data", tone: "neutral" as const }
+            : line,
+        )
+      : report.lines;
+    if (chipTimeMs === null) {
+      return unrecorded ? { ...report, lines } : report;
+    }
     return {
       ...report,
       lines: [
-        ...report.lines,
+        ...lines,
         {
           label: "Chip time",
           value: formatChipTime(chipTimeMs),
@@ -536,7 +561,7 @@ export default function App() {
         },
       ],
     };
-  }, [report, chipTimeMs]);
+  }, [report, chipTimeMs, unrecorded]);
 
   // A win unlocks the next level there and then, so the result panel does not
   // have to wait for the effect above to land before offering it.
@@ -671,6 +696,7 @@ export default function App() {
               onEggPressed={() => sound.play("egg")}
               stops={stops}
               weather={weather}
+              extraRunners={turnout}
             />
 
             <BriefingStrip cards={state.cards} />
