@@ -154,6 +154,28 @@ describe("dealing a briefing", () => {
   });
 
   /*
+   * The mirror of the test below, and the one that catches dead content.
+   *
+   * `fits` is a claim about a map, not about whether the card can actually be
+   * played on it — the dealer quietly drops any card that leaves the level
+   * unwinnable, so a card can look perfectly reasonable, fit nine levels and
+   * still never once be offered. A head torch died here: every map with
+   * trails worth staying off is a map that is trails nearly end to end.
+   *
+   * This is the deck's version of "a badge nobody can win is worse than no
+   * badge", and it fails the same way — silently, and only for the player.
+   */
+  it("has no card that never gets dealt", () => {
+    const undealt = CARDS.filter(
+      (card) =>
+        !ordinary.some(
+          (level) => card.fits(level) && hasWinningRoute(applyCards(level, [card])),
+        ),
+    ).map((card) => card.name);
+    expect(undealt).toEqual([]);
+  });
+
+  /*
    * Every level the club can go back to can be dealt something. The deck is
    * young and one or two maps are served only by the cards that ask nothing —
    * Crooksbury has a single hand to its name — so this is the number to watch
@@ -498,6 +520,38 @@ describe("what the cards do to the brief", () => {
     const dan = cardById("leader-dan");
     expect(stopsFor(caesarsCamp, [dan]).length).toBeGreaterThan(0);
     expect(photoStopsFor(caesarsCamp, [dan])).toEqual([]);
+  });
+
+  /*
+   * The three cards that ask the map for something it already knows how to
+   * answer. Each one leans on an objective kind the levels use and no other
+   * card did, so what is tested here is the guard rather than the rule.
+   */
+  it("never forbids the hills on a level that asks for them", () => {
+    const tired = cardById("runner-hill-session");
+    for (const level of levels) {
+      if (!tired.fits(level)) continue;
+      expect(
+        level.objectives.some((one) => one.kind === "climb"),
+        `${level.title} both wants and forbids hills`,
+      ).toBe(false);
+    }
+    expect(levels.filter((one) => tired.fits(one)).length).toBeGreaterThan(0);
+  });
+
+  it("calls the birds whatever this map calls them", () => {
+    const birds = cardById("runner-birds");
+    const named: Record<string, string> = {
+      duck: "ducks",
+      dragonfly: "dragonflies",
+      crow: "crows",
+      robin: "robins",
+    };
+    for (const level of levels) {
+      if (!birds.fits(level)) continue;
+      const word = named[level.flock ?? ""] ?? "pigeons";
+      expect(birds.rule(level), level.title).toContain(word);
+    }
   });
 
   it("keeps a weather card for every map, viewpoint or not", () => {

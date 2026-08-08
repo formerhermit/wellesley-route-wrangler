@@ -112,6 +112,33 @@ export function BigCoffeeCard() {
   );
 }
 
+/** The hills, struck through, by somebody whose legs have had enough. */
+export function HillSessionCard() {
+  return (
+    <Frame>
+      <path d="M -24 14 L -6 -10 L 4 4 L 14 -12 L 24 14 Z" className="badge-hill" />
+      <path d="M -21 20 L 21 -18" className="badge-strike" />
+    </Frame>
+  );
+}
+
+/**
+ * The birds, as a flock rather than one of them — this is the card about all
+ * of them at once, and the single struck-through bird is the goose's.
+ */
+export function BirdsCard() {
+  return (
+    <Frame>
+      <path
+        d="M -22 -6 q 6 -7 12 0 q 6 -7 12 0"
+        className="card-bird"
+      />
+      <path d="M -6 6 q 5 -6 10 0 q 5 -6 10 0" className="card-bird" />
+      <path d="M -20 16 q 4 -5 8 0 q 4 -5 8 0" className="card-bird" />
+    </Frame>
+  );
+}
+
 /** The watch that did not start. As far as the internet goes, this never happened. */
 export function WatchCard() {
   return (
