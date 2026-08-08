@@ -123,7 +123,7 @@ export const LANDMARK_BOX: Partial<Record<MapNodeType, SpriteBox>> = {
   bin: [-13, 13, -14, 17],
   church: [-26, 30, -46, 14],
   portaloo: [-21, 21, -20, 17],
-  toilet: [-11, 11, -19, 17],
+  toilet: [-12, 12, -19, 17],
   wall: [-44, 44, -18, 9],
   car: [-33, 30, -13, 11],
   ghost: [-11, 11, -12, 12],
