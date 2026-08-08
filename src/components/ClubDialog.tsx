@@ -21,6 +21,7 @@ type Tab = "cabinet" | "table";
 export function ClubDialog({
   levels,
   records,
+  cardsRun,
   tableEnabled,
   name,
   onNameChanged,
@@ -28,6 +29,8 @@ export function ClubDialog({
 }: {
   levels: Level[];
   records: Records;
+  /** Briefing cards this club has taken out and run. */
+  cardsRun?: ReadonlySet<string>;
   /** Without a table configured there is one tab, and no tab strip. */
   tableEnabled: boolean;
   name?: string;
@@ -97,7 +100,11 @@ export function ClubDialog({
         tabIndex={-1}
       >
         {tab === "cabinet" ? (
-          <TrophyCabinetPanel levels={levels} records={records} />
+          <TrophyCabinetPanel
+            levels={levels}
+            records={records}
+            cardsRun={cardsRun}
+          />
         ) : (
           <ClubTablePanel name={name} onNameChanged={onNameChanged} />
         )}

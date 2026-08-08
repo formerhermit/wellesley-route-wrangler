@@ -289,6 +289,56 @@ export function ToiletBadge() {
   );
 }
 
+/**
+ * The white shoe off the briefing card (#141), at patch size and standing
+ * clear of the mud rather than sitting in it. The card is where the shoes
+ * are in danger; this is the badge for having brought them at all.
+ */
+export function NewShoesBadge() {
+  return (
+    <Frame>
+      <g transform="translate(0 -2) scale(1.15)">
+        <path
+          d="M -22 4 L -22 -6 Q -14 -8 -8 -2 L 4 6 L 20 8 Q 24 9 24 13 L 24 16 L -22 16 Z"
+          className="card-shoe"
+        />
+        <path d="M -22 12 L 24 12" className="card-shoe-sole" />
+      </g>
+      {/* A squeak, drawn the way the flash is: they are that clean. */}
+      <path
+        d="M -14 -14 v -6 M -22 -11 l -4 -4 M -6 -12 l 4 -5"
+        className="badge-squeak"
+      />
+    </Frame>
+  );
+}
+
+/**
+ * Roo's camera with the flash going (#142).
+ *
+ * The bolt rather than a starburst, and the camera under it rather than the
+ * light on its own: a ring of rays at patch size is a sun, and the deck
+ * already has one of those on the perfect evening.
+ */
+export function PappedBadge() {
+  return (
+    <Frame>
+      <g transform="translate(0 6)">
+        <path d="M -9 -10 l 3 -5 h 10 l 3 5" className="card-camera-hood" />
+        <rect x={-19} y={-10} width={38} height={26} rx={4} className="card-camera" />
+        <circle cx={0} cy={3} r={8} className="card-lens" />
+        <circle cx={0} cy={3} r={3.5} className="card-lens-glass" />
+      </g>
+      {/* The bolt, off the top corner, where the bulb is. */}
+      <path
+        d="M 13 -24 L 5 -13 h 6 l -3 9 l 9 -12 h -6 l 3 -6 Z"
+        className="badge-flash-core"
+      />
+      <path d="M -6 -22 l -4 -4 M -14 -15 l -6 -2" className="badge-flash-rays" />
+    </Frame>
+  );
+}
+
 /** A locked badge nobody is being told about. */
 export function MysteryBadge() {
   return (

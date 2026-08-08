@@ -37,6 +37,7 @@ import { useMusic } from "./hooks/useMusic";
 import { useSoundEffects } from "./hooks/useSoundEffects";
 import { useProgress } from "./hooks/useProgress";
 import { useRecords } from "./hooks/useRecords";
+import { useCardsRun } from "./hooks/useCardsRun";
 import { tallyAll, tallyLevel } from "./game/records";
 import { earnedBy } from "./game/achievements";
 import { nextGnomeHome } from "./game/eggs";
@@ -294,6 +295,7 @@ function reducer(state: GameState, action: Action): GameState {
 export default function App() {
   const progress = useProgress();
   const runBook = useRecords();
+  const cardHistory = useCardsRun();
   // Only read on the first render: a returning player opens on the run they
   // are up to, rather than being sent back to level one every visit.
   const [state, dispatch] = useReducer(reducer, progress.completed, (saved) =>
@@ -485,12 +487,30 @@ export default function App() {
   // goes in the book, winner or not.
   const recordCompletion = progress.complete;
   const logRun = runBook.log;
+  const recordCards = cardHistory.record;
   const [freshRoute, setFreshRoute] = useState(false);
+  /*
+   * Cards this run was the first to take out (#141, #142). Recorded in the
+   * same breath as the route and for the same reason — the run is over — but
+   * into their own store, because the book keeps routes and a card leaves no
+   * mark on one.
+   */
+  const [freshCards, setFreshCards] = useState<string[]>([]);
   useEffect(() => {
     if (state.phase !== "result") return;
     setFreshRoute(logRun(level, state.route));
+    setFreshCards(recordCards(state.cards.map((card) => card.id)));
     if (state.result?.success) recordCompletion(level.id);
-  }, [state.phase, state.result, state.route, level, recordCompletion, logRun]);
+  }, [
+    state.phase,
+    state.result,
+    state.route,
+    state.cards,
+    level,
+    recordCompletion,
+    logRun,
+    recordCards,
+  ]);
 
   // The incident report's own verdict, echoed as a sound (#107): a chime for
   // a pass, a womp for a fail. A separate effect from the one above, because
@@ -505,12 +525,20 @@ export default function App() {
   // this route; a run that was not a first discovery announces none of them,
   // because the club won those the week it first went that way. Declared after
   // the effect above because it reads what that effect decided.
+  //
+  // A run can now be a first in two separate ways, so both are asked about: an
+  // old loop run with a card nobody had taken out before is a new badge and an
+  // unchanged book.
   const freshBadges = useMemo(
     () =>
-      freshRoute
-        ? earnedBy(runBook.records, levels, level, routeKey(state.route))
+      freshRoute || freshCards.length > 0
+        ? earnedBy(runBook.records, levels, level, routeKey(state.route), {
+            cardsRun: cardHistory.ran,
+            freshCards,
+            freshRoute,
+          })
         : [],
-    [freshRoute, runBook.records, level, state.route],
+    [freshRoute, freshCards, cardHistory.ran, runBook.records, level, state.route],
   );
 
   // A badge landing gets its own chime, on top of the pass/fail one above: a
@@ -776,6 +804,7 @@ export default function App() {
         <ClubDialog
           levels={levels}
           records={runBook.records}
+          cardsRun={cardHistory.ran}
           tableEnabled={clubTableEnabled}
           name={clubName}
           onNameChanged={setClubName}

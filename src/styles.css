@@ -6045,6 +6045,20 @@ body {
   fill: var(--hi-vis);
 }
 
+/* The two card badges. The squeak off a clean shoe and the flash going off in
+   your face both borrow the hi-vis the sun and the camera bulb already use. */
+.badge-squeak,
+.badge-flash-rays {
+  fill: none;
+  stroke: var(--hi-vis);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.badge-flash-core {
+  fill: var(--hi-vis);
+}
+
 /* Roo's camera. Ink body, club-blue glass, and the bulb going off in the
    hi-vis yellow the sun and the flash already share. */
 .card-camera,
