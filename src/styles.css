@@ -2740,6 +2740,15 @@ body {
   stroke-width: 9;
 }
 
+/* The line the runners are measured along. Never drawn: on an ordinary
+   evening it is the route exactly, and when the group is lost it is the
+   wrong turnings, which are the group's business and not the map's. */
+.route-rail {
+  fill: none;
+  stroke: none;
+  pointer-events: none;
+}
+
 .map-svg.is-running .route-line--top {
   stroke-dasharray: 16 12;
   animation: route-flow 1.1s linear infinite;
@@ -5959,6 +5968,29 @@ body {
 
 .card-sun {
   fill: var(--hi-vis);
+}
+
+/* The plan, and what happened. Dashed and pale for the route nobody
+   followed; the club's own route colour, at full weight, for where they
+   actually went — the wrong line is the loud one, which is the joke. */
+.card-plan {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 2.4;
+  stroke-dasharray: 5 5;
+  stroke-linecap: round;
+}
+
+.card-astray {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card-pin {
+  fill: var(--ink);
 }
 
 /* The wind: the same weight as the rain, in the sky's own colour rather than

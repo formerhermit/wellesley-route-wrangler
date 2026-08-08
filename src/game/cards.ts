@@ -1,4 +1,5 @@
 import { hasWinningRoute } from "./scoring";
+import { canWander } from "./wander";
 import type { Completed } from "./progression";
 import type { Level, LevelObjective, MapNodeType } from "./types";
 
@@ -75,6 +76,13 @@ export interface CardEffect {
    * exactly as `kit` is: a bigger group scores nothing and blocks nothing.
    */
   turnout?: number;
+  /**
+   * The group stops following the route. They run it, in the sense that they
+   * end up everywhere on it, with several detours nobody asked for on the
+   * way. Drawing only: the route the player laid is still the route that is
+   * judged, scored and filed.
+   */
+  wander?: boolean;
 }
 
 export interface Card {
@@ -235,6 +243,21 @@ export const CARDS: readonly Card[] = [
     // Takes the waypoints off the brief, so it can only ever add winning
     // routes. The one card that cannot make a level impossible.
     effect: () => ({ dropVisits: true }),
+  },
+  {
+    id: "leader-lost",
+    suit: "leader",
+    name: "The run leader's watch is dead",
+    blurb: "No GPS, no map, and a very confident memory of a route from 2019.",
+    /*
+     * The one card whose whole effect is the drawing. It says so plainly,
+     * because a card that changed the brief invisibly would be the bug this
+     * rule line exists to prevent — and one that changes nothing the rules
+     * can see should not be allowed to imply otherwise either.
+     */
+    rule: () => "The group will not follow your route. It still counts.",
+    fits: (level) => canWander(level),
+    effect: () => ({ wander: true }),
   },
   {
     id: "runner-geese",
@@ -538,6 +561,11 @@ export function extraRunners(level: Level, cards: readonly Card[]): number {
     (total, card) => total + (card.effect(level).turnout ?? 0),
     0,
   );
+}
+
+/** Whether anybody is actually navigating. Drawing only, like the turnout. */
+export function wandersOff(level: Level, cards: readonly Card[]): boolean {
+  return cards.some((card) => card.effect(level).wander === true);
 }
 
 /**
