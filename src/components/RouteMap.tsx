@@ -325,7 +325,7 @@ export function RouteMap({
           height={level.view.height}
           className={`map-ground map-ground--${level.theme}`}
         />
-        <MapLandmarks level={level} eggs={eggs} />
+        <MapLandmarks level={level} eggs={eggs} weather={weather} />
         <MapRoads level={level} route={route} />
         {/* The few landmarks that have nowhere to stand a road does not
             already cross, drawn over the top of it instead. */}

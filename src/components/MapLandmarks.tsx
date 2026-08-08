@@ -437,15 +437,18 @@ export function MapLandmarks({
     );
   }
 
-  return <MapLandmarksUnderRoads level={level} eggs={eggs} />;
+  return <MapLandmarksUnderRoads level={level} eggs={eggs} weather={weather} />;
 }
 
 function MapLandmarksUnderRoads({
   level,
   eggs,
+  weather,
 }: {
   level: Level;
   eggs?: EggHandlers;
+  /** Only fog is read here; the rest of the sky is drawn over the top. */
+  weather?: CardWeather;
 }) {
   // One canal junction is enough to draw a stretch of water through: the
   // Loopy map has a single towpath where the Thursday map has a bridge too.
@@ -574,7 +577,10 @@ function MapLandmarksUnderRoads({
         );
       })}
 
-      {level.mood === "dusk" && (
+      {/* Fog: the level's own after dark, or a briefing card's on any
+          ordinary evening (#10). Drawn under the roads either way, because
+          fog is something the map is in rather than something on top of it. */}
+      {(level.mood === "dusk" || weather === "fog") && (
         <g className="fog">
           {FOG.map((bank) => (
             <ellipse
