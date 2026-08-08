@@ -404,6 +404,28 @@ export function MapLandmarks({
         )}
         {/* A card's weather falls in the same place the season's does, and
             for the same reason: in front of the map, behind the writing. */}
+        {/* Snow from a card is the flakes and not the frost: the ferns
+            creeping in from the corners are December, and a card must never
+            make an ordinary Thursday read as an occasion. */}
+        {weather === "snow" && (
+          <g className="snow">
+            {snowflakes(width, height).map((flake, index) => (
+              <circle
+                key={index}
+                className="snowflake"
+                cx={flake.x}
+                cy={flake.y}
+                r={flake.r}
+                style={
+                  {
+                    "--fall-delay": `${flake.delay}s`,
+                    "--fall-duration": `${flake.duration}s`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </g>
+        )}
         {weather === "clear" && (
           <rect
             className="sunlight"

@@ -6085,6 +6085,29 @@ body {
   stroke-linecap: round;
 }
 
+/* Snow on its own card: the flakes in the same white the map uses, and the
+   drift they have settled into. */
+.card-flake {
+  fill: #fff;
+  stroke: var(--line);
+  stroke-width: 1.2;
+}
+
+.card-drift {
+  fill: #fff;
+  stroke: var(--line);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* The marathon crowd's long measured line, with its end pins. */
+.card-longline {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
 /* The fog on its own card: three banks, the near one solid and the far ones
    fading out, which is the whole trick of drawing fog flat. */
 .card-fog-near {
@@ -6158,6 +6181,13 @@ body {
  */
 .map-svg--rain {
   filter: saturate(0.5) brightness(0.88);
+}
+
+/* Snow. Cold light rather than no light: the colour drains a little and the
+   whole map lifts, the way a covered field does. Nothing like the frost mood,
+   which is December and tints everything blue. */
+.map-svg--snow {
+  filter: saturate(0.55) brightness(1.07);
 }
 
 /* Fog. The colour goes out of the map and the contrast with it, which is what

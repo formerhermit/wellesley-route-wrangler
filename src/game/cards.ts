@@ -33,7 +33,7 @@ export type Suit = "leader" | "runner" | "weather";
  * kit — a card borrowing "frost" would make an ordinary Thursday read as an
  * occasion, which is the mistake `nightLevel.test.ts` exists to forbid.
  */
-export type CardWeather = "rain" | "clear" | "fog";
+export type CardWeather = "rain" | "clear" | "fog" | "snow";
 
 /** Dealt one of each, and the player keeps two. */
 export const SUITS: readonly Suit[] = ["leader", "runner", "weather"];
@@ -61,6 +61,16 @@ export interface CardEffect {
    * that were a shade too long now do too.
    */
   raiseCeilingBy?: number;
+  /**
+   * Pushes the floor up towards the ceiling, as a fraction of the gap between
+   * them: 0 leaves it alone, 0.5 asks for the long half of the window.
+   *
+   * A fraction of the gap rather than a factor on the floor, because a factor
+   * can shove the floor past the ceiling and ask for a run that cannot exist —
+   * which is the mistake `shortenBy` documents at the other end. This one
+   * cannot: the window always survives, however tight it started.
+   */
+  raiseFloorBy?: number;
   /** Throw out the level's own waypoints. Only ever makes a level easier. */
   dropVisits?: boolean;
   /** What the weather looks like. Changes nothing the rules can see. */
@@ -220,6 +230,12 @@ const WIND_STRETCH = 1.15;
  * the window is.
  */
 const FOG_SHORTEN = 0.8;
+
+/** And the snow, which is the rain's number for the same reason. */
+const SNOW_SHORTEN = 0.85;
+
+/** How far up its own window the marathon crowd drag the floor. */
+const MARATHON_FLOOR = 0.5;
 
 /**
  * Somewhere worth standing at golden hour: a climb with a view, water that
@@ -524,6 +540,23 @@ export const CARDS: readonly Card[] = [
     }),
   },
   {
+    id: "runner-marathon",
+    suit: "runner",
+    name: "Several of them are marathon training",
+    blurb: "They have a number in mind for this evening, and it is not yours.",
+    rule: (level) => {
+      const window = level.objectives.find((one) => one.kind === "distance");
+      if (window?.kind !== "distance") return "Asks for the long end of the run.";
+      const floor =
+        Math.round(
+          (window.minKm + (window.maxKm - window.minKm) * MARATHON_FLOOR) * 10,
+        ) / 10;
+      return `Raises the floor to ${floor} km. The ceiling stays where it is.`;
+    },
+    fits: (level) => alreadyAsks(level, "distance"),
+    effect: () => ({ raiseFloorBy: MARATHON_FLOOR }),
+  },
+  {
     id: "runner-watch",
     suit: "runner",
     name: "Somebody's watch did not start",
@@ -640,6 +673,45 @@ export const CARDS: readonly Card[] = [
     effect: () => ({ raiseCeilingBy: WIND_STRETCH }),
   },
   {
+    id: "weather-snow",
+    suit: "weather",
+    name: "Snow",
+    blurb: "Two centimetres, and the whole county has stopped.",
+    rule: (level) => {
+      const window = level.objectives.find((one) => one.kind === "distance");
+      const shorter =
+        window?.kind === "distance"
+          ? `Shortens the run to ${shortenKm(window.minKm, SNOW_SHORTEN)}\u2013${shortenKm(window.maxKm, SNOW_SHORTEN)} km`
+          : "Shortens the run";
+      return `${shorter}, and keeps off the hills.`;
+    },
+    /*
+     * Needs hills to refuse, and refuses to turn up where the level is
+     * counting them — the same contradiction Ben and the dead legs both
+     * avoid, and the same guard.
+     */
+    fits: (level) =>
+      alreadyAsks(level, "distance") &&
+      !alreadyAsks(level, "climb") &&
+      hillRoads(level) > 0,
+    effect: () => ({
+      shortenBy: SNOW_SHORTEN,
+      weather: "snow",
+      objectives: [
+        {
+          kind: "avoid-roads",
+          trait: "hill",
+          what: "the hills",
+          fail: {
+            title: "Nobody Is Getting Up That",
+            message:
+              "Four attempts, two falls and a video somebody has already put on the club WhatsApp.",
+          },
+        },
+      ],
+    }),
+  },
+  {
     id: "weather-fog",
     suit: "weather",
     name: "Fog",
@@ -662,6 +734,41 @@ export const CARDS: readonly Card[] = [
     effect: () => ({ shortenBy: FOG_SHORTEN, wander: true, weather: "fog" }),
   },
 ];
+
+/**
+ * What an objective forbids, where two of them could forbid the same thing.
+ *
+ * Snow and somebody's dead legs both want the hills left alone, and they are
+ * in different suits, so a hand can hold both — and a brief that says "keep
+ * off the hills" twice reads as a bug rather than as emphasis. Keyed on what
+ * is actually forbidden rather than on the whole objective, because the two
+ * carry different copy for failing it.
+ *
+ * Undefined for everything else: two `visit` objectives naming different
+ * places are two real requirements, and must both stand.
+ */
+function forbids(objective: LevelObjective): string | undefined {
+  switch (objective.kind) {
+    case "avoid-roads":
+      return `roads:${objective.trait}`;
+    case "avoid-surface":
+      return `surface:${objective.surface}`;
+    default:
+      return undefined;
+  }
+}
+
+/** The first of each forbidding, in order, and everything else untouched. */
+function withoutRepeats(objectives: LevelObjective[]): LevelObjective[] {
+  const seen = new Set<string>();
+  return objectives.filter((objective) => {
+    const key = forbids(objective);
+    if (key === undefined) return true;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 /**
  * The level as the cards leave it: same map, same roads, a longer brief.
@@ -697,21 +804,31 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
     (factor, effect) => factor * (effect.raiseCeilingBy ?? 1),
     1,
   );
+  // The keenest of them decides, rather than two cards stacking into a window
+  // with nothing in it.
+  const floor = effects.reduce(
+    (most, effect) => Math.max(most, effect.raiseFloorBy ?? 0),
+    0,
+  );
 
   let objectives = level.objectives;
 
-  if (shorten !== 1 || lift !== 1) {
-    objectives = objectives.map((objective) =>
-      objective.kind === "distance"
-        ? {
-            ...objective,
-            // The floor never hears about the wind: it only ever helps the
-            // ceiling, so a shortened, wind-assisted window stays a window.
-            minKm: shortenKm(objective.minKm, shorten),
-            maxKm: shortenKm(objective.maxKm, shorten * lift),
-          }
-        : objective,
-    );
+  if (shorten !== 1 || lift !== 1 || floor !== 0) {
+    objectives = objectives.map((objective) => {
+      if (objective.kind !== "distance") return objective;
+      // The floor never hears about the wind: it only ever helps the ceiling,
+      // so a shortened, wind-assisted window stays a window.
+      const minKm = shortenKm(objective.minKm, shorten);
+      const maxKm = shortenKm(objective.maxKm, shorten * lift);
+      return {
+        ...objective,
+        // And the floor comes up last, inside whatever window the weather has
+        // left, so the marathon crowd ask for the long end of *this* evening
+        // rather than the long end of the one the roster advertised.
+        minKm: Math.round((minKm + (maxKm - minKm) * floor) * 10) / 10,
+        maxKm,
+      };
+    });
   }
 
   if (effects.some((effect) => effect.dropVisits)) {
@@ -720,10 +837,10 @@ export function applyCards(level: Level, cards: readonly Card[]): Level {
 
   // The cards' own objectives go on last, so a card that clears the brief
   // does not then clear its own contribution to it.
-  objectives = [
+  objectives = withoutRepeats([
     ...objectives,
     ...effects.flatMap((effect) => effect.objectives ?? []),
-  ];
+  ]);
 
   const carded: Level = { ...level, objectives };
   forLevel.set(key, carded);
