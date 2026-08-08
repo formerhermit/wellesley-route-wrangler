@@ -404,21 +404,6 @@ export const CARDS: readonly Card[] = [
     },
   },
   {
-    id: "leader-careful",
-    suit: "leader",
-    name: "Run leader Priya",
-    blurb: "Priya has read the Green Cross Code and she is not being talked out of it.",
-    /*
-     * The one card whose whole effect is the pace curve. It says so, because
-     * a card that quietly did nothing would be the thing the rule lines exist
-     * to stop — and standing still at three sets of lights is a visible
-     * effect even if the brief never changes.
-     */
-    rule: () => "The group waits at every set of lights. The brief is unchanged.",
-    fits: (level) => litJunctions(level).length > 0,
-    effect: (level) => ({ stops: litJunctions(level) }),
-  },
-  {
     id: "leader-nobody",
     suit: "leader",
     name: "Nobody volunteered to lead",
@@ -575,6 +560,21 @@ export const CARDS: readonly Card[] = [
     },
     fits: (level) => alreadyAsks(level, "distance"),
     effect: () => ({ raiseFloorBy: MARATHON_FLOOR }),
+  },
+  {
+    id: "runner-crossings",
+    suit: "runner",
+    name: "Somebody waits for the green man",
+    blurb: "There is nothing coming. There has never been anything coming.",
+    /*
+     * The one card whose whole effect is the pace curve. It says so, because
+     * a card that quietly did nothing would be the thing the rule lines exist
+     * to stop — and standing still at three sets of lights is a visible
+     * effect even if the brief never changes.
+     */
+    rule: () => "The group waits at every set of lights. The brief is unchanged.",
+    fits: (level) => litJunctions(level).length > 0,
+    effect: (level) => ({ stops: litJunctions(level) }),
   },
   {
     id: "runner-watch",

@@ -139,8 +139,8 @@ export function BirdsCard() {
   );
 }
 
-/** Priya's traffic lights, on red, as they always are. */
-export function CarefulCard() {
+/** The lights, on red, as they always are when you reach them. */
+export function CrossingCard() {
   return (
     <Frame>
       <path d="M 0 26 v -14" className="card-lights-post" />
