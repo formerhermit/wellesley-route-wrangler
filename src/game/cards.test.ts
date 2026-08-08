@@ -747,6 +747,41 @@ describe("what the cards do to the brief", () => {
     expect(hills).toHaveLength(1);
   });
 
+  /*
+   * The one card whose whole effect is the pace curve: no objective, no
+   * window, just the group standing at every red light on the route. That
+   * makes it the easiest kind to get wrong in the other direction — a card
+   * that says it does nothing and then quietly does something.
+   */
+  it("waits at the lights and changes nothing else", () => {
+    const priya = cardById("leader-careful");
+    const lit = ordinary.filter((level) => priya.fits(level));
+    expect(lit.map((level) => level.title)).toEqual([
+      "Thursday Social Run",
+      "Thursday Town Run",
+      "Loopy",
+    ]);
+
+    for (const level of lit) {
+      const junctions = level.nodes.filter((node) => node.lights);
+      expect(junctions.length, level.title).toBeGreaterThan(0);
+      // It stops at every one of them and nowhere else.
+      expect(stopsFor(level, [priya]).sort()).toEqual(
+        junctions.map((node) => node.id).sort(),
+      );
+      // And leaves the brief exactly as the roster wrote it.
+      expect(applyCards(level, [priya]).objectives).toEqual(level.objectives);
+      expect(photoStopsFor(level, [priya])).toEqual([]);
+      expect(wandersOff(level, [priya])).toBe(false);
+      expect(weatherFor(level, [priya])).toBeUndefined();
+    }
+
+    // Trail maps have no lights on the heath, so it never turns up there.
+    for (const level of ordinary.filter((one) => one.theme === "trail")) {
+      expect(priya.fits(level), level.title).toBe(false);
+    }
+  });
+
   it("keeps a weather card for every map, viewpoint or not", () => {
     // Loopy has nowhere to watch a sunset from, which is exactly why the
     // wind exists: without it that map's weather would be Rain every time,

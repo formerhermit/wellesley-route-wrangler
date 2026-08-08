@@ -96,6 +96,7 @@ export const thursdayTownRun: Level = {
     },
     {
       id: "wellesley-rumble",
+      lights: true,
       labelSide: "left",
       x: 170,
       y: 360,
@@ -125,6 +126,7 @@ export const thursdayTownRun: Level = {
     },
     {
       id: "big-tesco",
+      lights: true,
       x: 680,
       y: 355,
       label: "The Big Tesco",
@@ -167,6 +169,7 @@ export const thursdayTownRun: Level = {
     },
     {
       id: "town-centre",
+      lights: true,
       labelSide: "right",
       x: 505,
       y: 195,

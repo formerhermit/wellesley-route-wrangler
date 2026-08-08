@@ -112,6 +112,15 @@ export interface MapNode {
    */
   spriteOnTop?: boolean;
   /**
+   * A set of traffic lights on this junction, drawn beside it (#10).
+   *
+   * Street furniture rather than a landmark: the junction keeps whatever
+   * `type` it already had, because this is a thing standing at the Big Tesco
+   * and not a different sort of place. Nothing in the rules reads it — it is
+   * the briefing's cautious group who care, and they only stand still.
+   */
+  lights?: boolean;
+  /**
    * Keep the green and drop the three trees a `park` junction scatters round
    * itself. For a green with something on it already — Cove Green has a race
    * going past and a crowd watching it, and the trees were standing in front

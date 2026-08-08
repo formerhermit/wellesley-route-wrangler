@@ -99,6 +99,7 @@ export const loopyRun: Level = {
     },
     {
       id: "back-passage",
+      lights: true,
       // Above, and lifted. Both sides are hopeless here: the lane in from the
       // Polo Fields and the lane on to The Hanger both leave this junction
       // almost horizontally, so a name on either side is bisected by one of
@@ -171,6 +172,7 @@ export const loopyRun: Level = {
     },
     {
       id: "sports-centre",
+      lights: true,
       labelSide: "right",
       x: 120,
       y: 385,
@@ -198,6 +200,7 @@ export const loopyRun: Level = {
     },
     {
       id: "hockey-loop",
+      lights: true,
       x: 305,
       y: 470,
       label: "Hockey Loop",

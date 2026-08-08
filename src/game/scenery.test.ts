@@ -4,6 +4,7 @@ import {
   DEAD_TREE_BOX,
   HILL_MARKER_BOX,
   LANDMARK_BOX,
+  LIGHTS_BOX,
   LANDMARK_DRAWS,
   LANDMARK_OFFSET,
   PARK_TREES,
@@ -12,6 +13,7 @@ import {
   TRAIL_TREES,
   boxOf,
   labelBox,
+  lightsAt,
 } from "./landmarks";
 import { hillMarkerAt } from "./routeGraph";
 import type { Level, MapNode } from "./types";
@@ -242,6 +244,19 @@ describe.each(levels.map((level) => [level.id, level] as const))(
           };
         });
 
+    /**
+     * The traffic lights (#10), which are placed by a fixed offset off their
+     * junction rather than by hand — so like the hill markers, nobody looks
+     * at where one has landed until it is on top of a name.
+     */
+    const trafficLights = () =>
+      level.nodes
+        .filter((node) => node.lights)
+        .map((node) => ({
+          what: `the lights at ${node.id}`,
+          box: boxOf(LIGHTS_BOX, lightsAt(node).x, lightsAt(node).y),
+        }));
+
     const roadRunsThrough = (box: Box) =>
       level.roads.some((road) => {
         const from = level.nodes.find((node) => node.id === road.from);
@@ -349,6 +364,36 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         ),
       ];
       expect(clashes).toEqual([]);
+    });
+
+    it("keeps the traffic lights off the writing and the scenery", () => {
+      const lights = trafficLights();
+      const clashes = [
+        ...lights.flatMap((light) =>
+          labelBoxes()
+            .filter((name) => boxDepth(light.box, name) > NAME_DEPTH)
+            .map((name) => `${light.what} over ${name.what}`),
+        ),
+        ...lights.flatMap((light) =>
+          [...landmarkBoxes(), ...scatterBoxes(), ...themeTrees(), ...parkTrees()]
+            .filter((thing) => boxDepth(light.box, thing.box) > SOLID_DEPTH)
+            .map((thing) => `${light.what} over ${thing.what}`),
+        ),
+      ];
+      expect(clashes).toEqual([]);
+    });
+
+    it("keeps the traffic lights on the map", () => {
+      const off = trafficLights()
+        .filter(
+          (light) =>
+            light.box.left < 0 ||
+            light.box.top < 0 ||
+            light.box.right > level.view.width ||
+            light.box.bottom > level.view.height,
+        )
+        .map((light) => light.what);
+      expect(off).toEqual([]);
     });
 
     it("keeps the hill markers on the map", () => {
