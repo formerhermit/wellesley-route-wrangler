@@ -3,6 +3,7 @@ import {
   BigCoffeeCard,
   BirdsCard,
   DanCard,
+  FogCard,
   GeeseCard,
   HillSessionCard,
   LostCard,
@@ -35,4 +36,5 @@ export const CARD_ART: Record<string, () => ReactNode> = {
   "weather-rain": RainCard,
   "weather-perfect": PerfectCard,
   "weather-wind": WindCard,
+  "weather-fog": FogCard,
 };

@@ -33,7 +33,7 @@ export type Suit = "leader" | "runner" | "weather";
  * kit — a card borrowing "frost" would make an ordinary Thursday read as an
  * occasion, which is the mistake `nightLevel.test.ts` exists to forbid.
  */
-export type CardWeather = "rain" | "clear";
+export type CardWeather = "rain" | "clear" | "fog";
 
 /** Dealt one of each, and the player keeps two. */
 export const SUITS: readonly Suit[] = ["leader", "runner", "weather"];
@@ -210,6 +210,16 @@ const RAIN_SHORTEN = 0.85;
 
 /** How much further a following wind lets the ceiling sit. Ceiling only. */
 const WIND_STRETCH = 1.15;
+
+/**
+ * And how much of it the fog takes off. Harder than the rain, because rain is
+ * a reason to hurry and fog is a reason to give up.
+ *
+ * Safe to reuse the rain's mechanic outright: only one weather card is ever
+ * dealt, so these two can never sit in the same hand and disagree about what
+ * the window is.
+ */
+const FOG_SHORTEN = 0.8;
 
 /**
  * Somewhere worth standing at golden hour: a climb with a view, water that
@@ -628,6 +638,28 @@ export const CARDS: readonly Card[] = [
     // that were a shade too long now do too.
     fits: (level) => alreadyAsks(level, "distance"),
     effect: () => ({ raiseCeilingBy: WIND_STRETCH }),
+  },
+  {
+    id: "weather-fog",
+    suit: "weather",
+    name: "Fog",
+    blurb: "Nobody is entirely sure which way the car park is.",
+    rule: (level) => {
+      const window = level.objectives.find((one) => one.kind === "distance");
+      if (window?.kind !== "distance") {
+        return "Shortens the run, and the group will get lost.";
+      }
+      return `Shortens the run to ${shortenKm(window.minKm, FOG_SHORTEN)}\u2013${shortenKm(window.maxKm, FOG_SHORTEN)} km, and the group will get lost.`;
+    },
+    fits: (level) => alreadyAsks(level, "distance"),
+    /*
+     * The one card that is two things at once, because fog is: you cut it
+     * short, and you go wrong anyway. The wander is the lost leader's
+     * mechanism doing a second job — a hand holding both simply gets the one
+     * wander, which is the right answer for "nobody is navigating and nobody
+     * can see" as well.
+     */
+    effect: () => ({ shortenBy: FOG_SHORTEN, wander: true, weather: "fog" }),
   },
 ];
 

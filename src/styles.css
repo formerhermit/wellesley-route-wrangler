@@ -6085,6 +6085,23 @@ body {
   stroke-linecap: round;
 }
 
+/* The fog on its own card: three banks, the near one solid and the far ones
+   fading out, which is the whole trick of drawing fog flat. */
+.card-fog-near {
+  fill: var(--ink-soft);
+  opacity: 0.55;
+}
+
+.card-fog-mid {
+  fill: var(--ink-soft);
+  opacity: 0.35;
+}
+
+.card-fog-far {
+  fill: var(--ink-soft);
+  opacity: 0.2;
+}
+
 /* The flock, as three pairs of wings. Ink on nothing, because a bird at this
    size is a shape rather than a drawing. */
 .card-bird {
@@ -6141,6 +6158,21 @@ body {
  */
 .map-svg--rain {
   filter: saturate(0.5) brightness(0.88);
+}
+
+/* Fog. The colour goes out of the map and the contrast with it, which is what
+   fog actually does to a view. A grey afternoon rather than dusk, so it stays
+   light — but not lifted, or the banks below have nothing to sit against. */
+.map-svg--fog {
+  filter: saturate(0.3) contrast(0.82);
+}
+
+/* And the banks themselves, which are drawn for the Spooky Run's dark map and
+   would otherwise be white-on-white here. Grey enough to see, on the one map
+   state where fog is the whole point rather than the mood. */
+.map-svg--fog .fog-bank {
+  fill: #c8d0d8;
+  opacity: 0.7;
 }
 
 /* The one card that only makes the run nicer has to be visible from the first

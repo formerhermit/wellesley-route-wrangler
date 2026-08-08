@@ -16,6 +16,7 @@ import {
   stopsFor,
   unrecordedRun,
   wandersOff,
+  weatherFor,
 } from "./cards";
 import type { Card } from "./cards";
 import type { Level } from "./types";
@@ -613,6 +614,53 @@ describe("what the cards do to the brief", () => {
     // The flock's junctions are still there; it is the card that declines.
     for (const level of insects) {
       expect(level.nodes.some((node) => node.type === "pigeon")).toBe(true);
+    }
+  });
+
+  /*
+   * Fog is two things at once, which no other weather card is: it shortens
+   * the run and it sends the group off it.
+   */
+  it("shortens the run and loses the group in the fog", () => {
+    const fog = cardById("weather-fog");
+    for (const level of ordinary) {
+      expect(fog.fits(level), level.title).toBe(true);
+
+      const dry = level.objectives.find((one) => one.kind === "distance");
+      const lost = applyCards(level, [fog]).objectives.find(
+        (one) => one.kind === "distance",
+      );
+      if (dry?.kind !== "distance" || lost?.kind !== "distance") {
+        throw new Error("expected a window at both ends");
+      }
+      expect(lost.maxKm, level.title).toBeLessThan(dry.maxKm);
+      expect(lost.minKm, level.title).toBeLessThan(dry.minKm);
+      // What the card promises is what the brief ends up saying.
+      expect(fog.rule(level), level.title).toContain(
+        `${lost.minKm}–${lost.maxKm} km`,
+      );
+
+      expect(wandersOff(level, [fog]), level.title).toBe(true);
+      expect(weatherFor(level, [fog]), level.title).toBe("fog");
+      // And it asks nothing else of the route.
+      expect(applyCards(level, [fog]).objectives.length).toBe(
+        level.objectives.length,
+      );
+    }
+  });
+
+  /*
+   * Rain and fog both move the window, which would be a bug across suits and
+   * is fine within one: only ever one weather card is dealt, so they can
+   * never both be holding the same window at the same time.
+   */
+  it("never puts two weather cards in the same hand", () => {
+    for (const level of ordinary) {
+      for (const roll of ROLLS) {
+        const hand = dealBriefing(level, allDone, roll);
+        const weathers = (hand ?? []).filter((card) => card.suit === "weather");
+        expect(weathers.length, level.title).toBeLessThanOrEqual(1);
+      }
     }
   });
 

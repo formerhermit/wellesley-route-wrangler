@@ -228,6 +228,20 @@ export function LostCard() {
 }
 
 /**
+ * Fog: banks stacked back to front, each one fainter than the last. There is
+ * nothing else on the card, because on the day there is nothing else to see.
+ */
+export function FogCard() {
+  return (
+    <Frame>
+      <ellipse cx={2} cy={-14} rx={20} ry={5} className="card-fog-far" />
+      <ellipse cx={-6} cy={-2} rx={26} ry={6} className="card-fog-mid" />
+      <ellipse cx={4} cy={11} rx={24} ry={7} className="card-fog-near" />
+    </Frame>
+  );
+}
+
+/**
  * A following wind: three lines going the way you are, the middle one
  * curling. Nothing but movement, because that is the whole of the card.
  */
