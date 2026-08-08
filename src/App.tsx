@@ -51,6 +51,7 @@ import {
   extraRunners,
   stopsFor,
   unrecordedRun,
+  wandersOff,
   weatherFor,
 } from "./game/cards";
 import type { Card, Hand } from "./game/cards";
@@ -403,6 +404,10 @@ export default function App() {
     () => unrecordedRun(level, state.cards),
     [level, state.cards],
   );
+  const wandering = useMemo(
+    () => wandersOff(level, state.cards),
+    [level, state.cards],
+  );
 
   const evaluation = useMemo(
     () => evaluateRoute(brief, state.route),
@@ -697,6 +702,7 @@ export default function App() {
               stops={stops}
               weather={weather}
               extraRunners={turnout}
+              wander={wandering}
             />
 
             <BriefingStrip cards={state.cards} />

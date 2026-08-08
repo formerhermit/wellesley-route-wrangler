@@ -152,6 +152,25 @@ export function PerfectCard() {
 }
 
 /**
+ * Nobody navigating: the route as a straight dash from A to B, and the line
+ * the group actually takes wandering all over it. The joke is the gap
+ * between the two, so both have to be on the card.
+ */
+export function LostCard() {
+  return (
+    <Frame>
+      <path d="M -22 18 L 22 -16" className="card-plan" />
+      <path
+        d="M -22 18 Q -6 20 -8 6 Q -10 -8 4 -4 Q 18 0 10 -12 Q 6 -18 22 -16"
+        className="card-astray"
+      />
+      <circle cx={-22} cy={18} r={3.4} className="card-pin" />
+      <circle cx={22} cy={-16} r={3.4} className="card-pin" />
+    </Frame>
+  );
+}
+
+/**
  * A following wind: three lines going the way you are, the middle one
  * curling. Nothing but movement, because that is the whole of the card.
  */
