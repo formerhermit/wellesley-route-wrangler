@@ -450,37 +450,24 @@ export function Portaloo() {
 export function Toilet() {
   return (
     <g className="sprite sprite--toilet" aria-hidden="true">
-      {/* The post it is bolted to, and the plate. */}
+      {/* The post it is bolted to, drawn first so the plate covers its top. */}
       <path d="M 0 17 V 2" className="toilet-post" />
+      <image
+        href={`${import.meta.env.BASE_URL}sprites/toilet-sign.png`}
+        x={-12}
+        y={-19}
+        width={24}
+        height={22.4}
+      />
+      {/* Squared off rather than rounded: the sign is a square, and a rounded
+          outline over it leaves four corners of blue outside the line. */}
       <rect
         x={-12}
         y={-19}
         width={24}
-        height={22}
-        rx={2.5}
-        className="toilet-sign"
+        height={22.4}
+        className="toilet-frame"
       />
-      <path d="M 0 -16.5 V -4.5" className="toilet-divide" />
-
-      {/* Him: head, shoulders, two legs. */}
-      <circle cx={-6} cy={-14} r={2.1} className="toilet-figure" />
-      <rect
-        x={-8.6}
-        y={-11.4}
-        width={5.2}
-        height={4.6}
-        rx={1.4}
-        className="toilet-figure"
-      />
-      <rect x={-7.7} y={-7.2} width={1.5} height={4.6} className="toilet-figure" />
-      <rect x={-5.8} y={-7.2} width={1.5} height={4.6} className="toilet-figure" />
-
-      {/* Her: the same head, and the dress that is the whole of the joke of
-          these signs. */}
-      <circle cx={6} cy={-14} r={2.1} className="toilet-figure" />
-      <path d="M 6 -11.7 L 2.3 -2.6 h 7.4 Z" className="toilet-figure" />
-      <rect x={4.5} y={-2.8} width={1.3} height={2.4} className="toilet-figure" />
-      <rect x={6.2} y={-2.8} width={1.3} height={2.4} className="toilet-figure" />
     </g>
   );
 }
