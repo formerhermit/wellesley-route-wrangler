@@ -126,6 +126,8 @@ export function RouteMap({
   const [flash, setFlash] = useState<{ nodeId: string; at: number } | null>(
     null,
   );
+  /** Which set of lights the group is standing at, if any (#160). */
+  const [haltedAt, setHaltedAt] = useState<string | null>(null);
 
   // The rest of the race, where there is one (#111). An empty list on every
   // other map, which costs a component that draws nothing.
@@ -251,6 +253,23 @@ export function RouteMap({
     );
   }, [reducedMotion, photoStops, level, runRoute]);
 
+  /*
+   * The lights the group actually waits at: the lit junctions this hand stops
+   * the group at, wherever the route reaches them. Empty on every map without
+   * lights and every hand without the card, which costs a filter over nothing.
+   */
+  const halts = useMemo(() => {
+    if (!stops || stops.length === 0) return [];
+    const waiting = new Set(
+      level.nodes.filter((node) => node.lights).map((node) => node.id),
+    );
+    const standing = new Set(stops.filter((id) => waiting.has(id)));
+    if (standing.size === 0) return [];
+    return routeMilestones(level, runRoute).filter((milestone) =>
+      standing.has(milestone.nodeId),
+    );
+  }, [stops, level, runRoute]);
+
   const { start, cancel } = useRunAnimation({
     pathRef,
     pace,
@@ -261,10 +280,12 @@ export function RouteMap({
     reducedMotion,
     milestones,
     photos,
+    halts,
     followers,
     onReachHotspot: setAlarmedNodeId,
     onPhoto: (nodeId) =>
       setFlash(nodeId ? { nodeId, at: Date.now() } : null),
+    onHalt: setHaltedAt,
     onFinish: onRunFinished,
   });
 
@@ -281,6 +302,7 @@ export function RouteMap({
       cancel();
       setAlarmedNodeId(null);
       setFlash(null);
+      setHaltedAt(null);
     };
   }, [running, start, cancel]);
 
@@ -329,7 +351,13 @@ export function RouteMap({
         <MapRoads level={level} route={route} />
         {/* The few landmarks that have nowhere to stand a road does not
             already cross, drawn over the top of it instead. */}
-        <MapLandmarks level={level} onTop weather={weather} />
+        <MapLandmarks
+          level={level}
+          onTop
+          weather={weather}
+          running={running}
+          haltedAt={haltedAt}
+        />
         <WanderingGnome level={level} home={gnome} onPress={onGnomePressed} />
 
         {pathData && (

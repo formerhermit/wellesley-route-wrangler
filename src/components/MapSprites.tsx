@@ -79,9 +79,14 @@ export function Cat() {
 }
 
 /** Red, amber, green, and a group of runners waiting for none of them. */
-export function TrafficLight() {
+export function TrafficLight({ showing }: { showing?: "stop" | "go" }) {
   return (
-    <g className="sprite sprite--lights" aria-hidden="true">
+    <g
+      className={`sprite sprite--lights${
+        showing ? ` sprite--lights--${showing}` : ""
+      }`}
+      aria-hidden="true"
+    >
       <path d="M 0 12 v -14" className="lights-post" />
       <rect x={-5} y={-24} width={10} height={23} rx={2.5} className="lights-box" />
       <circle cx={0} cy={-19} r={2.6} className="lights-stop" />

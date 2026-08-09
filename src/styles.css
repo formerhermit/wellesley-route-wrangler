@@ -903,7 +903,9 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .fog-bank,
-  .sprite--bat {
+  .sprite--bat,
+  .sprite--lights--go .lights-stop,
+  .sprite--lights--go .lights-wait {
     animation: none;
   }
 }
@@ -1050,6 +1052,54 @@ body {
 
 .lights-stop {
   fill: var(--fail);
+}
+
+/*
+ * The lamps while the group is out (#160). At rest all three are lit, which
+ * is a sign on a map rather than a light doing anything; once they set off it
+ * becomes a working set — red where they are standing, green everywhere else.
+ *
+ * The pull away is the real sequence: red and amber together, then green. It
+ * is the detail that makes a traffic light read as a traffic light, and it is
+ * already how the pressable one on the map behaves.
+ */
+.sprite--lights--stop .lights-wait,
+.sprite--lights--stop .lights-go {
+  opacity: 0.15;
+}
+
+.sprite--lights--go .lights-stop {
+  opacity: 0.15;
+  animation: lamp-pull-away-stop 460ms steps(1, end);
+}
+
+.sprite--lights--go .lights-wait {
+  opacity: 0.15;
+  animation: lamp-pull-away-wait 460ms steps(1, end);
+}
+
+@keyframes lamp-pull-away-stop {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes lamp-pull-away-wait {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
+    opacity: 0.15;
+  }
 }
 
 .lights-wait {

@@ -42,10 +42,17 @@ interface Options {
    * than this having to know why.
    */
   photos: Milestone[];
+  /**
+   * Junctions with traffic lights that the group stands at (#160). Reported
+   * as they are reached and left, so the lamps can go red and green with
+   * them — empty on every map and every hand that has no lights in it.
+   */
+  halts: Milestone[];
   /** Whatever is waiting by the road, in whatever order the level lists them. */
   followers: Follower[];
   onReachHotspot: (nodeId: string | null) => void;
   onPhoto: (nodeId: string | null) => void;
+  onHalt: (nodeId: string | null) => void;
   onFinish: () => void;
 }
 
@@ -81,9 +88,11 @@ export function useRunAnimation({
   reducedMotion,
   milestones,
   photos,
+  halts,
   followers,
   onReachHotspot,
   onPhoto,
+  onHalt,
   onFinish,
 }: Options) {
   const frameRef = useRef<number | null>(null);
@@ -92,24 +101,28 @@ export function useRunAnimation({
   const latest = useRef({
     milestones,
     photos,
+    halts,
     followers,
     field,
     pace,
     runnerCount,
     onReachHotspot,
     onPhoto,
+    onHalt,
     onFinish,
     reducedMotion,
   });
   latest.current = {
     milestones,
     photos,
+    halts,
     followers,
     field,
     pace,
     runnerCount,
     onReachHotspot,
     onPhoto,
+    onHalt,
     onFinish,
     reducedMotion,
   };
@@ -157,6 +170,13 @@ export function useRunAnimation({
       (a, b) => a.fraction - b.fraction,
     );
     let nextShutter = 0;
+    /*
+     * Which set of lights the group is standing at. A stop is a leg of no
+     * length, so `fractionAt` returns the junction's own fraction unchanged
+     * for the whole time they are there — the same number `routeMilestones`
+     * gives, off the same distances in the same order. Equality is the test.
+     */
+    let standingAt: string | null = null;
     // Whoever is picked up first tacks onto the back of the group, and the
     // next one in behind them — so the queue is ordered by where on the route
     // each was standing, not by the order the level happens to list them.
@@ -208,7 +228,8 @@ export function useRunAnimation({
       const progress = Math.min(1, elapsed / duration);
       // Time runs evenly; the group does not. On a hill it drops to a little
       // over half pace and makes it up on the flat.
-      const lead = options.pace.fractionAt(progress) * travel;
+      const along = options.pace.fractionAt(progress);
+      const lead = along * travel;
 
       for (let i = 0; i < running; i += 1) {
         const runner = runnersRef.current?.[i];
@@ -270,6 +291,15 @@ export function useRunAnimation({
           `translate(${x.toFixed(2)} ${y.toFixed(2)})${turn}`,
         );
       });
+
+      // Red while they are at a set of lights, green the moment they are not.
+      const waiting =
+        options.halts.find((halt) => Math.abs(halt.fraction - along) < 1e-6)
+          ?.nodeId ?? null;
+      if (waiting !== standingAt) {
+        standingAt = waiting;
+        options.onHalt(waiting);
+      }
 
       const leadFraction = Math.min(1, lead / length);
       while (
