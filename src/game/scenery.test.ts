@@ -4,9 +4,10 @@ import {
   DEAD_TREE_BOX,
   HILL_MARKER_BOX,
   LANDMARK_BOX,
-  LIGHTS_BOX,
   LANDMARK_DRAWS,
   LANDMARK_OFFSET,
+  LIGHTS_BOX,
+  LIGHTS_DOT_CLEARANCE,
   PARK_TREES,
   ROAD_CLOSED_BOX,
   SCATTER_BOX,
@@ -399,6 +400,23 @@ describe.each(levels.map((level) => [level.id, level] as const))(
         .filter((light) => roadRunsThrough(light.box))
         .map((light) => light.what);
       expect(inTheRoad).toEqual([]);
+    });
+
+    /*
+     * And off the junction dots. The dots are drawn after the lights and over
+     * them, so a lamp inside one is not on the map at all — which is exactly
+     * how the Aldershot Town Centre set shipped, and the third guard this
+     * sprite needed that nothing was applying to it.
+     */
+    it("keeps the traffic lights clear of the junction dots", () => {
+      const buried = trafficLights()
+        .filter((light) =>
+          level.nodes.some(
+            (node) => boxToPoint(light.box, node.x, node.y) < LIGHTS_DOT_CLEARANCE,
+          ),
+        )
+        .map((light) => light.what);
+      expect(buried).toEqual([]);
     });
 
     it("keeps the traffic lights on the map", () => {
