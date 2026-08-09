@@ -105,9 +105,16 @@ body {
 }
 
 .game-header__identity {
-  /* basis 0 so a long strapline cannot push the ? onto its own row */
+  /*
+   * Basis 0 so a long strapline cannot push the ? onto its own row, but a
+   * floor under it so the club's own name cannot be crushed into a column
+   * narrower than the word "Kilometres" (#122). Without one the title wore
+   * three lines and ran under the distance pill on a tablet — flex was doing
+   * exactly as told, and what it was told was that the title could have
+   * whatever was left.
+   */
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 12rem;
   order: 1;
 }
 
@@ -138,6 +145,11 @@ body {
 /*
  * Narrow: the ? keeps the title company and the pills take the row beneath.
  * Wide: everything sits on one line, pills first.
+ *
+ * "Wide" is a thousand and not the six-forty it used to be, because the row
+ * has to hold all three: the title, two pills and a level picker with five
+ * buttons after it. That comes to about 940 with the title given room to say
+ * its own name, and an iPad is 820.
  */
 .game-header__stats {
   order: 3;
@@ -148,7 +160,7 @@ body {
   gap: 0.5rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 1000px) {
   .game-header__stats {
     order: 2;
     flex: 0 0 auto;
@@ -210,8 +222,15 @@ body {
 /* Music and ? travel together, wherever the header decides to put them. */
 .game-header__tools {
   order: 3;
-  flex: none;
+  /*
+   * Shrinkable so the wrap below can happen at all: a level picker and five
+   * buttons come to about 340, which is wider than a small phone, and a row
+   * that cannot shrink simply runs off the side of one. The buttons keep
+   * their own size, so shrinking the row wraps it rather than squashing them.
+   */
+  flex: 0 1 auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem;
 }
