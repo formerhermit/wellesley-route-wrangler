@@ -405,10 +405,16 @@ export function labelBox(node: MapNode): {
  * held out at arm's length are lights the group visibly stops past — which is
  * the whole complaint about a stop line you have already crossed.
  */
-export const LIGHTS_RADIUS = 21;
+export const LIGHTS_RADIUS = 24;
 
 /** And the further out it will go when that spot is taken. */
-const LIGHTS_RADII = [LIGHTS_RADIUS, 27, 33];
+const LIGHTS_RADII = [LIGHTS_RADIUS, 27, 33, 39, 45];
+
+/**
+ * How much room the junction's own dot needs. It is drawn after the lights
+ * and over them, so anything inside this is simply not on the map.
+ */
+export const LIGHTS_DOT_CLEARANCE = 18;
 
 /** And how far round from a road it has to be to count as off the road. */
 const LIGHTS_CLEARANCE = (22 * Math.PI) / 180;
@@ -555,13 +561,15 @@ function placeLights(level: Level, node: MapNode): { x: number; y: number } {
       : undefined;
 
   /*
-   * Roads cost most by a distance: a lamp post in the carriageway is the bug
-   * this function exists for, and the angular clearance above is not enough
-   * on its own — the sprite is thirty-six tall against an anchor near its
-   * foot, so a bearing that points downhill still reaches back over the
-   * junction the lights belong to. Then the name, then the sprite: a post
-   * touching a shopfront reads as a street, one touching the writing reads
-   * as a mistake.
+   * Roads and the junction's own dot cost most, and for the same reason: the
+   * dot is drawn after the lights and over them, so a lamp inside it is not
+   * on the map at all, and one in the carriageway is the bug this function
+   * exists for. Neither is caught by the angular clearance above — the sprite
+   * is thirty-six tall against an anchor near its foot, so a bearing that
+   * points downhill still reaches back over the junction it belongs to.
+   *
+   * Then the name, then the sprite: a post touching a shopfront reads as a
+   * street, one touching the writing reads as a mistake.
    */
   const cost = (bearing: number, radius: number) => {
     const spot = at(bearing, radius);
@@ -571,8 +579,14 @@ function placeLights(level: Level, node: MapNode): { x: number; y: number } {
       const to = byId.get(road.to);
       return from && to && segmentHitsBox(box, from.x, from.y, to.x, to.y);
     });
+    const onTheDot =
+      box.left < node.x + LIGHTS_DOT_CLEARANCE &&
+      box.right > node.x - LIGHTS_DOT_CLEARANCE &&
+      box.top < node.y + LIGHTS_DOT_CLEARANCE &&
+      box.bottom > node.y - LIGHTS_DOT_CLEARANCE;
     return (
       (inRoad ? 4 : 0) +
+      (onTheDot ? 4 : 0) +
       (overlaps(box, name) ? 2 : 0) +
       (sprite && overlaps(box, sprite) ? 1 : 0)
     );
