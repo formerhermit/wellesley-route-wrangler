@@ -49,6 +49,7 @@ import {
   applyCards,
   briefingAvailable,
   briefingMarks,
+  cardsThatHappened,
   dealBriefing,
   extraRunners,
   photoStopsFor,
@@ -506,7 +507,11 @@ export default function App() {
     setCardsBefore(
       recordCards(
         state.cards.map((card) => card.id),
-        state.result?.success === true,
+        // Only what met the brief and actually happened: a card whose stop
+        // the route never reached is one nobody saw (#152).
+        state.result?.success === true
+          ? cardsThatHappened(level, state.cards, state.route)
+          : [],
       ),
     );
     if (state.result?.success) recordCompletion(level.id);

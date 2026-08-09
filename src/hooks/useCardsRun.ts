@@ -62,11 +62,12 @@ function writeHistory(history: CardHistory): void {
 export interface CardsRun {
   history: CardHistory;
   /**
-   * Records a finished run's cards, and hands back the history as it stood
-   * *before* it — which is exactly what a badge announcement needs, since
-   * "what is new tonight" is the difference between the two.
+   * Records a finished run: every card that was out, and the ones that both
+   * met the brief and actually happened. Hands back the history as it stood
+   * *before* it, which is what a badge announcement needs — "what is new
+   * tonight" is the difference between the two.
    */
-  record: (cardIds: readonly string[], won: boolean) => CardHistory;
+  record: (ran: readonly string[], won: readonly string[]) => CardHistory;
 }
 
 export function useCardsRun(): CardsRun {
@@ -82,16 +83,16 @@ export function useCardsRun(): CardsRun {
   const latest = useRef(history);
   latest.current = history;
 
-  const record = useCallback((cardIds: readonly string[], won: boolean) => {
+  const record = useCallback((ran: readonly string[], won: readonly string[]) => {
     const before = latest.current;
-    const fresh = cardIds.filter(
-      (id) => !before.ran.has(id) || (won && !before.won.has(id)),
-    );
-    if (fresh.length === 0) return before;
+    const isNew =
+      ran.some((id) => !before.ran.has(id)) ||
+      won.some((id) => !before.won.has(id));
+    if (!isNew) return before;
 
     const next: CardHistory = {
-      ran: new Set([...before.ran, ...cardIds]),
-      won: won ? new Set([...before.won, ...cardIds]) : before.won,
+      ran: new Set([...before.ran, ...ran]),
+      won: new Set([...before.won, ...won]),
     };
     latest.current = next;
     writeHistory(next);

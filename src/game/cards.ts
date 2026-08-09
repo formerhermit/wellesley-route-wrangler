@@ -1,7 +1,7 @@
 import { hasWinningRoute } from "./scoring";
 import { canWander } from "./wander";
 import type { Completed } from "./progression";
-import type { Level, LevelObjective, MapNodeType } from "./types";
+import type { Level, LevelObjective, MapNodeType, Route } from "./types";
 
 /**
  * The briefing (#10): what the club has turned up with this week.
@@ -940,6 +940,33 @@ export function extraRunners(level: Level, cards: readonly Card[]): number {
 /** Whether anybody is actually navigating. Drawing only, like the turnout. */
 export function wandersOff(level: Level, cards: readonly Card[]): boolean {
   return cards.some((card) => card.effect(level).wander === true);
+}
+
+/**
+ * Which of these cards actually happened on this route (#152).
+ *
+ * A card that asks the group to stand somewhere only counts where the route
+ * went there — otherwise the player never saw it, and a badge for something
+ * they did not see is a badge for nothing.
+ *
+ * General, but it only ever bites on one card. Everywhere else the stops are
+ * the card's own waypoint too: Roo cannot photograph a place the brief did
+ * not make you reach, and the same goes for Dan's cows and the coffee. The
+ * lights are the exception — the group waits at them if the route passes
+ * them, and the brief never mentions them.
+ */
+export function cardsThatHappened(
+  level: Level,
+  cards: readonly Card[],
+  route: Route,
+): string[] {
+  const visited = new Set(route.nodeIds);
+  return cards
+    .filter((card) => {
+      const stops = card.effect(level).stops ?? [];
+      return stops.length === 0 || stops.some((id) => visited.has(id));
+    })
+    .map((card) => card.id);
 }
 
 /**
