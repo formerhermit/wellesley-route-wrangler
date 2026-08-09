@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Dialog } from "./Dialog";
 import { ClubTablePanel } from "./ClubTablePanel";
 import { TrophyCabinetPanel } from "./TrophyCabinetPanel";
+import type { CardHistory } from "../game/achievements";
 import type { Records } from "../game/records";
 import type { Level } from "../game/types";
 
@@ -21,7 +22,7 @@ type Tab = "cabinet" | "table";
 export function ClubDialog({
   levels,
   records,
-  cardsRun,
+  cards,
   tableEnabled,
   name,
   onNameChanged,
@@ -29,8 +30,8 @@ export function ClubDialog({
 }: {
   levels: Level[];
   records: Records;
-  /** Briefing cards this club has taken out and run. */
-  cardsRun?: ReadonlySet<string>;
+  /** What the club has done with its briefing cards. */
+  cards?: CardHistory;
   /** Without a table configured there is one tab, and no tab strip. */
   tableEnabled: boolean;
   name?: string;
@@ -103,7 +104,7 @@ export function ClubDialog({
           <TrophyCabinetPanel
             levels={levels}
             records={records}
-            cardsRun={cardsRun}
+            cards={cards}
           />
         ) : (
           <ClubTablePanel name={name} onNameChanged={onNameChanged} />

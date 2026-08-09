@@ -40,6 +40,7 @@ import { useRecords } from "./hooks/useRecords";
 import { useCardsRun } from "./hooks/useCardsRun";
 import { tallyAll, tallyLevel } from "./game/records";
 import { earnedBy } from "./game/achievements";
+import type { CardHistory } from "./game/achievements";
 import { nextGnomeHome } from "./game/eggs";
 import type { GnomeHome } from "./game/eggs";
 import { routeKey, scoreRun, winningRouteCount } from "./game/scoring";
@@ -57,6 +58,9 @@ import {
   weatherFor,
 } from "./game/cards";
 import type { Card, Hand } from "./game/cards";
+
+/** A club that has not had a briefing yet, for the first render. */
+const NO_CARD_HISTORY: CardHistory = { ran: new Set(), won: new Set() };
 
 /** The house theme, for every level that does not name one of its own. */
 const MAIN_THEME = "main-theme.mp3";
@@ -495,11 +499,16 @@ export default function App() {
    * into their own store, because the book keeps routes and a card leaves no
    * mark on one.
    */
-  const [freshCards, setFreshCards] = useState<string[]>([]);
+  const [cardsBefore, setCardsBefore] = useState<CardHistory>(NO_CARD_HISTORY);
   useEffect(() => {
     if (state.phase !== "result") return;
     setFreshRoute(logRun(level, state.route));
-    setFreshCards(recordCards(state.cards.map((card) => card.id)));
+    setCardsBefore(
+      recordCards(
+        state.cards.map((card) => card.id),
+        state.result?.success === true,
+      ),
+    );
     if (state.result?.success) recordCompletion(level.id);
   }, [
     state.phase,
@@ -529,16 +538,17 @@ export default function App() {
   // A run can now be a first in two separate ways, so both are asked about: an
   // old loop run with a card nobody had taken out before is a new badge and an
   // unchanged book.
+  const cardsNow = cardHistory.history;
   const freshBadges = useMemo(
     () =>
-      freshRoute || freshCards.length > 0
+      freshRoute || cardsBefore !== cardsNow
         ? earnedBy(runBook.records, levels, level, routeKey(state.route), {
-            cardsRun: cardHistory.ran,
-            freshCards,
+            cards: cardsNow,
+            cardsBefore,
             freshRoute,
           })
         : [],
-    [freshRoute, freshCards, cardHistory.ran, runBook.records, level, state.route],
+    [freshRoute, cardsBefore, cardsNow, runBook.records, level, state.route],
   );
 
   // A badge landing gets its own chime, on top of the pass/fail one above: a
@@ -804,7 +814,7 @@ export default function App() {
         <ClubDialog
           levels={levels}
           records={runBook.records}
-          cardsRun={cardHistory.ran}
+          cards={cardHistory.history}
           tableEnabled={clubTableEnabled}
           name={clubName}
           onNameChanged={setClubName}

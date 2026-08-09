@@ -15,16 +15,17 @@ import type { Level, MapNodeType, Route } from "./types";
  * and not a diary. A badge can therefore ask "what has this club been down"
  * but never "what did it do last Thursday, and the Thursday before".
  *
- * Two badges are the exception, and it is worth being plain about why (#141,
- * #142). A briefing card leaves no mark on a route: the same loop run in
- * somebody's new white shoes is the same entry in the book, and the book is
- * right about that. So "you have taken these cards out" is a fact no route
- * can answer, and it arrives here as `cardsRun` from its own small store.
+ * Three badges are the exception, and it is worth being plain about why
+ * (#141, #142, #152). A briefing card leaves no mark on a route: the same
+ * loop run in somebody's new white shoes is the same entry in the book, and
+ * the book is right about that. So "you have taken these cards out, and this
+ * one came off" is a fact no route can answer, and it arrives here as a
+ * `CardHistory` from its own small store.
  *
  * It is not a hole in the rule the cards live by. Nothing derived from a
- * route reads that set: no score, no route count, no other badge. A loop that
- * won on Tuesday still wins on Wednesday whatever was dealt on either day.
- * All the set can do is remember who turned up.
+ * route reads it: no score, no route count, no other badge. A loop that won
+ * on Tuesday still wins on Wednesday whatever was dealt on either day. All
+ * the history can do is remember who turned up and how it went.
  */
 
 /** How much of a locked badge the cabinet gives away. */
@@ -100,24 +101,31 @@ function gooseNodeId(level: Level): string | undefined {
 }
 
 /**
- * Every badge is a question asked of the whole club at once. Most only need
- * the runs; Local Legend is about what is *missing*, so it needs the roster
- * too, and the two card badges need the one thing a route cannot tell you.
- * It is not worth a second kind of badge to spare any of them an argument
- * they ignore.
+ * What the club has done with its briefing cards, for the badges no route can
+ * answer. `ran` is every card ever taken out; `won` is the ones that were out
+ * on a run that met the brief.
  */
-type Test = (
-  runs: Run[],
-  levels: Level[],
-  cardsRun: ReadonlySet<string>,
-) => boolean;
-
-/** A club that has never had a briefing, which is most of them. */
-const NO_CARDS: ReadonlySet<string> = new Set();
+export interface CardHistory {
+  ran: ReadonlySet<string>;
+  won: ReadonlySet<string>;
+}
 
 /**
- * The badges that are about who turned up rather than where you went, and the
- * card each one is for (#141, #142).
+ * Every badge is a question asked of the whole club at once. Most only need
+ * the runs; Local Legend is about what is *missing*, so it needs the roster
+ * too, and the card badges need the one thing a route cannot tell you. It is
+ * not worth a second kind of badge to spare any of them an argument they
+ * ignore.
+ */
+type Test = (runs: Run[], levels: Level[], cards: CardHistory) => boolean;
+
+/** A club that has never had a briefing, which is most of them. */
+const NO_CARDS: CardHistory = { ran: new Set(), won: new Set() };
+
+/**
+ * The badges that are about who turned up rather than where you went, the
+ * card each one is for, and whether the run had to come off (#141, #142,
+ * #152).
  *
  * A table rather than two string literals buried in the list below, because
  * the card id is the one thing here that can rot: rename a card and the badge
@@ -126,16 +134,26 @@ const NO_CARDS: ReadonlySet<string> = new Set();
  * holds every id in here to a card that is really in the deck, and holds
  * every badge in here to one nothing else can win.
  */
-export const CARD_BADGES: Readonly<Record<string, string>> = {
-  "new-shoes": "runner-new-shoes",
-  papped: "leader-roo",
+export const CARD_BADGES: Readonly<
+  Record<string, { card: string; won?: true }>
+> = {
+  "new-shoes": { card: "runner-new-shoes" },
+  papped: { card: "leader-roo" },
+  // The only one that asks how the run went as well as who was on it.
+  "stuck-at-the-lights": { card: "runner-crossings", won: true },
 };
 
 /** A badge for having taken a particular card out and run it. */
 const ranTheCard =
   (cardId: string): Test =>
-  (_runs, _levels, cardsRun) =>
-    cardsRun.has(cardId);
+  (_runs, _levels, cards) =>
+    cards.ran.has(cardId);
+
+/** And one for having taken it out and come home having met the brief. */
+const wonWithTheCard =
+  (cardId: string): Test =>
+  (_runs, _levels, cards) =>
+    cards.won.has(cardId);
 
 const some =
   (predicate: (run: Run) => boolean): Test =>
@@ -341,7 +359,21 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
      * of copy for losing to it; this is the club noting that somebody turned
      * up in box-fresh trainers on a Thursday, which is the joke either way.
      */
-    test: ranTheCard(CARD_BADGES["new-shoes"]),
+    test: ranTheCard(CARD_BADGES["new-shoes"].card),
+  },
+  {
+    id: "stuck-at-the-lights",
+    name: "Stuck at the Lights",
+    blurb:
+      "Every crossing on the route, and every one of them red. The brief was met anyway.",
+    hint: "Meet a brief with somebody waiting for the green man.",
+    reveal: "teased",
+    /*
+     * The only card badge that asks how the run went. Taking the card out is
+     * not the achievement — standing at three sets of lights and still coming
+     * home inside the brief is (#152).
+     */
+    test: wonWithTheCard(CARD_BADGES["stuck-at-the-lights"].card),
   },
   {
     id: "papped",
@@ -350,7 +382,7 @@ const ACHIEVEMENTS: (Achievement & { test: Test })[] = [
       "Roo got the shot. You are, for the length of one Thursday, on the socials.",
     hint: "Get your photograph taken on a run.",
     reveal: "teased",
-    test: ranTheCard(CARD_BADGES.papped),
+    test: ranTheCard(CARD_BADGES.papped.card),
   },
 ];
 
@@ -417,13 +449,13 @@ export interface CabinetEntry extends Achievement {
 export function cabinetFor(
   records: Records,
   levels: Level[],
-  /** Cards taken out and run. Absent is a club that has had no briefings. */
-  cardsRun: ReadonlySet<string> = NO_CARDS,
+  /** What the club has done with its cards. Absent is a club with no briefings. */
+  cards: CardHistory = NO_CARDS,
 ): CabinetEntry[] {
   const runs = runsFrom(records, levels);
   return ACHIEVEMENTS.map(({ test, ...achievement }) => ({
     ...achievement,
-    earned: test(runs, levels, cardsRun),
+    earned: test(runs, levels, cards),
   }));
 }
 
@@ -451,10 +483,10 @@ export function earnedBy(
   level: Level,
   routeKeyOfRun: string,
   options: {
-    /** Every card this club has run, as it stands after this run. */
-    cardsRun?: ReadonlySet<string>;
-    /** The ones this run was the first to take out. */
-    freshCards?: readonly string[];
+    /** What the club has done with its cards, as it stands after this run. */
+    cards?: CardHistory;
+    /** And as it stood before it, which is what makes tonight's news new. */
+    cardsBefore?: CardHistory;
     /**
      * Whether the route itself was a first discovery. False where the club
      * has run this loop before and only the cards were new — in which case
@@ -464,7 +496,7 @@ export function earnedBy(
     freshRoute?: boolean;
   } = {},
 ): CabinetEntry[] {
-  const { cardsRun = NO_CARDS, freshCards = [], freshRoute = true } = options;
+  const { cards = NO_CARDS, cardsBefore = cards, freshRoute = true } = options;
 
   const before: Records = freshRoute
     ? {
@@ -476,17 +508,12 @@ export function earnedBy(
         ),
       }
     : records;
-  const cardsBefore =
-    freshCards.length === 0
-      ? cardsRun
-      : new Set([...cardsRun].filter((id) => !freshCards.includes(id)));
-
   const had = new Set(
     cabinetFor(before, levels, cardsBefore)
       .filter((entry) => entry.earned)
       .map((entry) => entry.id),
   );
-  return cabinetFor(records, levels, cardsRun).filter(
+  return cabinetFor(records, levels, cards).filter(
     (entry) => entry.earned && !had.has(entry.id),
   );
 }

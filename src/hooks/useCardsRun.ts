@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from "react";
+import type { CardHistory } from "../game/achievements";
 
 /**
- * Which briefing cards this club has actually taken out and run (#141, #142).
+ * What this club has done with its briefing cards (#141, #142, #152).
  *
  * Kept here rather than in the run book, and that is the whole point of the
  * file. The book holds routes and nothing else, so that every score and every
@@ -13,65 +14,90 @@ import { useCallback, useRef, useState } from "react";
  * So a badge about cards needs its own small store, and this is it. It still
  * does not let a card move anything: no score, no route count and no
  * route-derived badge reads this, and a loop that won on Tuesday wins on
- * Wednesday whatever was dealt. All this remembers is who turned up.
+ * Wednesday whatever was dealt. All this remembers is who turned up, and
+ * whether the run they turned up for came off.
  */
 const CARDS_RUN_KEY = "route-wrangler:cards-run";
 
-function readCardsRun(): Set<string> {
+function idsIn(value: unknown): Set<string> {
+  if (!Array.isArray(value)) return new Set();
+  return new Set(value.filter((id): id is string => typeof id === "string"));
+}
+
+function readHistory(): CardHistory {
   try {
     const raw = localStorage.getItem(CARDS_RUN_KEY);
-    if (!raw) return new Set();
+    if (!raw) return { ran: new Set(), won: new Set() };
     const parsed: unknown = JSON.parse(raw);
-    // Anything else in there is somebody else's data, or a botched write.
-    if (!Array.isArray(parsed)) return new Set();
-    return new Set(parsed.filter((id): id is string => typeof id === "string"));
+    /*
+     * A bare array is the shape this held before it knew about winning, and
+     * every card in one was taken out on a run that may or may not have come
+     * off. Read as "ran, and we cannot say" rather than thrown away: nobody
+     * loses New Shoes because the store learned a second thing.
+     */
+    if (Array.isArray(parsed)) return { ran: idsIn(parsed), won: new Set() };
+    if (parsed && typeof parsed === "object") {
+      const held = parsed as { ran?: unknown; won?: unknown };
+      return { ran: idsIn(held.ran), won: idsIn(held.won) };
+    }
+    return { ran: new Set(), won: new Set() };
   } catch {
     // Storage blocked or the value is not JSON. The club simply has no
     // history of who it has run with, rather than the game refusing to load.
-    return new Set();
+    return { ran: new Set(), won: new Set() };
   }
 }
 
-function writeCardsRun(ran: Set<string>): void {
+function writeHistory(history: CardHistory): void {
   try {
-    localStorage.setItem(CARDS_RUN_KEY, JSON.stringify([...ran]));
+    localStorage.setItem(
+      CARDS_RUN_KEY,
+      JSON.stringify({ ran: [...history.ran], won: [...history.won] }),
+    );
   } catch {
     // Storage blocked; it lasts as long as the tab does.
   }
 }
 
 export interface CardsRun {
-  ran: ReadonlySet<string>;
+  history: CardHistory;
   /**
-   * Records a finished run's cards, and hands back the ones that had never
-   * been out before — which is exactly the set a badge announcement needs,
-   * and empty on the ordinary case of running cards you have run already.
+   * Records a finished run's cards, and hands back the history as it stood
+   * *before* it — which is exactly what a badge announcement needs, since
+   * "what is new tonight" is the difference between the two.
    */
-  record: (cardIds: readonly string[]) => string[];
+  record: (cardIds: readonly string[], won: boolean) => CardHistory;
 }
 
 export function useCardsRun(): CardsRun {
-  const [ran, setRan] = useState<Set<string>>(readCardsRun);
+  const [history, setHistory] = useState<CardHistory>(readHistory);
   /*
-   * The set as it stands, read through a ref for two reasons that pull the
-   * same way: `record` has to hand back the difference *synchronously*, which
-   * a state updater cannot do because it has not run yet, and it has to keep
-   * a stable identity, because the effect that calls it lists it as a
-   * dependency and would otherwise re-run itself every time it fired.
+   * The history as it stands, read through a ref for two reasons that pull
+   * the same way: `record` has to hand back the previous state
+   * *synchronously*, which a state updater cannot do because it has not run
+   * yet, and it has to keep a stable identity, because the effect that calls
+   * it lists it as a dependency and would otherwise re-run itself every time
+   * it fired.
    */
-  const latest = useRef(ran);
-  latest.current = ran;
+  const latest = useRef(history);
+  latest.current = history;
 
-  const record = useCallback((cardIds: readonly string[]) => {
-    const added = cardIds.filter((id) => !latest.current.has(id));
-    if (added.length === 0) return [];
-    const next = new Set(latest.current);
-    for (const id of added) next.add(id);
+  const record = useCallback((cardIds: readonly string[], won: boolean) => {
+    const before = latest.current;
+    const fresh = cardIds.filter(
+      (id) => !before.ran.has(id) || (won && !before.won.has(id)),
+    );
+    if (fresh.length === 0) return before;
+
+    const next: CardHistory = {
+      ran: new Set([...before.ran, ...cardIds]),
+      won: won ? new Set([...before.won, ...cardIds]) : before.won,
+    };
     latest.current = next;
-    writeCardsRun(next);
-    setRan(next);
-    return added;
+    writeHistory(next);
+    setHistory(next);
+    return before;
   }, []);
 
-  return { ran, record };
+  return { history, record };
 }

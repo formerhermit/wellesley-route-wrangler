@@ -340,6 +340,24 @@ export function PappedBadge() {
   );
 }
 
+/**
+ * The lights, on red, with the group's shadow waiting under them (#152). The
+ * card's drawing is the lights alone; the badge is the standing about.
+ */
+export function StuckBadge() {
+  return (
+    <Frame>
+      <rect x={-11} y={-26} width={22} height={38} rx={5} className="card-lights-box" />
+      <circle cx={0} cy={-17} r={5} className="card-lights-stop" />
+      <circle cx={0} cy={-6} r={5} className="card-lights-off" />
+      <circle cx={0} cy={5} r={5} className="card-lights-off" />
+      {/* Somebody, waiting. */}
+      <circle cx={17} cy={2} r={3.4} className="badge-waiting" />
+      <path d="M 17 6 v 9 M 17 9 l -4 4 M 17 9 l 4 4 M 17 15 l -3 6 M 17 15 l 3 6" className="badge-waiting-body" />
+    </Frame>
+  );
+}
+
 /** A locked badge nobody is being told about. */
 export function MysteryBadge() {
   return (

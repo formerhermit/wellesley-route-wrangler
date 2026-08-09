@@ -6045,6 +6045,18 @@ body {
   fill: var(--hi-vis);
 }
 
+/* Somebody waiting at the crossing, in the club's own ink. */
+.badge-waiting {
+  fill: var(--ink);
+}
+
+.badge-waiting-body {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
 /* The two card badges. The squeak off a clean shoe and the flash going off in
    your face both borrow the hi-vis the sun and the camera bulb already use. */
 .badge-squeak,

@@ -1,6 +1,7 @@
 import { MysteryBadge } from "./BadgeSprites";
 import { BADGE_ART } from "./badgeArt";
 import { cabinetFor, earnedCount } from "../game/achievements";
+import type { CardHistory } from "../game/achievements";
 import type { CabinetEntry } from "../game/achievements";
 import type { Records } from "../game/records";
 import type { Level } from "../game/types";
@@ -52,14 +53,14 @@ function Patch({ entry }: { entry: CabinetEntry }) {
 export function TrophyCabinetPanel({
   levels,
   records,
-  cardsRun,
+  cards,
 }: {
   levels: Level[];
   records: Records;
-  /** Briefing cards this club has taken out, for the two badges about them. */
-  cardsRun?: ReadonlySet<string>;
+  /** What the club has done with its cards, for the badges about them. */
+  cards?: CardHistory;
 }) {
-  const cabinet = cabinetFor(records, levels, cardsRun);
+  const cabinet = cabinetFor(records, levels, cards);
   const earned = earnedCount(cabinet);
   const total = cabinet.length;
 

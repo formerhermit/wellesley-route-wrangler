@@ -17,6 +17,7 @@ import {
   ShowOffBadge,
   SpookyBadge,
   StravaTaxBadge,
+  StuckBadge,
   ToiletBadge,
 } from "./BadgeSprites";
 
@@ -44,4 +45,5 @@ export const BADGE_ART: Record<string, () => React.JSX.Element> = {
   "goose-botherer": GooseBadge,
   "new-shoes": NewShoesBadge,
   papped: PappedBadge,
+  "stuck-at-the-lights": StuckBadge,
 };
