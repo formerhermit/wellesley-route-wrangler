@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { thursdayTownRun } from "../data/thursdayTownRun";
 import { paceOf } from "./pace";
 import type { Pace } from "./pace";
-import { roadBetween } from "./routeGraph";
+import { roadBetween, routeMilestones } from "./routeGraph";
 import type { Level, Route } from "./types";
 
 function routeOf(level: Level, ...nodeIds: string[]): Route {
@@ -184,5 +184,42 @@ describe("stopping on the way round", () => {
     const pace = paceOf(level, flat, ["medical-centre"]);
     expect(pace.hilly).toBe(false);
     expect(pace.fractionAt(0.5)).not.toBeCloseTo(0.5, 3);
+  });
+});
+
+/**
+ * The assumption the traffic lights are built on (#160).
+ *
+ * A stop is a leg of no length, so while the group is standing at one,
+ * `fractionAt` hands back that junction's own fraction unchanged — the same
+ * number `routeMilestones` gives, off the same distances added in the same
+ * order. The lamps go red on that equality, so a float that drifted by a
+ * whisker would leave a set of lights that never once turned red.
+ */
+describe("standing at a junction", () => {
+  it("reports exactly the fraction the milestones give", () => {
+    const level = thursdayTownRun;
+    const route = routeOf(
+      level,
+      "observatory",
+      "wellesley-rumble",
+      "medical-centre",
+      "observatory",
+    );
+    const waiting = "wellesley-rumble";
+    const mark = routeMilestones(level, route).find(
+      (one) => one.nodeId === waiting,
+    );
+    expect(mark, "the route should pass the lights").toBeDefined();
+
+    const pace = paceOf(level, route, [waiting]);
+    expect(pace.stops).toBe(1);
+
+    // Somewhere in the run, the group is standing exactly there.
+    let held = 0;
+    for (let effort = 0; effort <= 1; effort += 0.001) {
+      if (Math.abs(pace.fractionAt(effort) - mark!.fraction) < 1e-9) held += 1;
+    }
+    expect(held, "never exactly at the junction").toBeGreaterThan(0);
   });
 });

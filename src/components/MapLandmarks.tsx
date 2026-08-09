@@ -325,6 +325,8 @@ export function MapLandmarks({
   onTop = false,
   eggs,
   weather,
+  running = false,
+  haltedAt = null,
 }: {
   level: Level;
   /** The second pass, drawn after the roads: only the junctions that ask. */
@@ -333,6 +335,10 @@ export function MapLandmarks({
   eggs?: EggHandlers;
   /** What a briefing card has done to the sky (#10). Never the level's mood. */
   weather?: CardWeather;
+  /** Whether the group is out (#160). The lamps only work while they are. */
+  running?: boolean;
+  /** And which set of lights they are standing at, if any. */
+  haltedAt?: string | null;
 }) {
   if (onTop) {
     const { width, height } = level.view;
@@ -366,7 +372,14 @@ export function MapLandmarks({
             const spot = lightsAt(level, node);
             return (
               <g key={`lights-${node.id}`} transform={`translate(${spot.x} ${spot.y})`}>
-                <TrafficLight />
+                {/* Red while the group is standing here, green while they are
+                    out and moving, and all three at rest — which is the sign
+                    a map draws rather than a light doing anything. */}
+                <TrafficLight
+                  showing={
+                    !running ? undefined : haltedAt === node.id ? "stop" : "go"
+                  }
+                />
               </g>
             );
           })}
