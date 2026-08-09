@@ -450,24 +450,16 @@ export function Portaloo() {
 export function Toilet() {
   return (
     <g className="sprite sprite--toilet" aria-hidden="true">
-      {/* The post it is bolted to, drawn first so the plate covers its top. */}
-      <path d="M 0 17 V 2" className="toilet-post" />
       <image
         href={`${import.meta.env.BASE_URL}sprites/toilet-sign.png`}
         x={-12}
         y={-19}
         width={24}
-        height={22.4}
+        height={22}
       />
       {/* Squared off rather than rounded: the sign is a square, and a rounded
           outline over it leaves four corners of blue outside the line. */}
-      <rect
-        x={-12}
-        y={-19}
-        width={24}
-        height={22.4}
-        className="toilet-frame"
-      />
+      <rect x={-12} y={-19} width={24} height={22} className="toilet-frame" />
     </g>
   );
 }

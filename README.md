@@ -13,9 +13,8 @@ they are ever drawn in.
 
 The toilet is two of them, for two different jobs. The map draws the *sign*
 outside it — the plate with the two figures every public convenience in the
-country puts on one, which is what you would actually see from the road — on
-a post and in a frame the map draws itself, so the bitmap is only ever the
-plate. The badge keeps the fitting, because a trophy for knowing where every
+country puts on one, which is what you would actually see from the road — in
+a frame the map draws itself, so the bitmap is only ever the plate. The badge keeps the fitting, because a trophy for knowing where every
 stop on a map is wants the thing rather than the signage.
 
 One of them is not on the map at all. The standing pigeon is the game's only

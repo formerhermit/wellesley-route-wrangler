@@ -6086,16 +6086,9 @@ body {
 }
 
 /* The Medical Centre Toilet, as the sign outside it rather than the fitting
-   inside it. The plate is a bitmap, like the cow and the goose; the post and
-   the frame round it are the map's own ink, so it sits on the paper rather
-   than on top of it. */
-.toilet-post {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-
+   inside it. The plate is a bitmap, like the cow and the goose; the frame
+   round it is the map's own ink, so it sits on the paper rather than on top
+   of it. */
 .toilet-frame {
   fill: none;
   stroke: var(--ink);
