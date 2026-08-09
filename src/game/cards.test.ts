@@ -9,6 +9,7 @@ import {
   applyCards,
   briefingAvailable,
   briefingMarks,
+  cardsThatHappened,
   dealBriefing,
   extraRunners,
   handIsPlayable,
@@ -19,7 +20,7 @@ import {
   weatherFor,
 } from "./cards";
 import type { Card } from "./cards";
-import type { Level } from "./types";
+import type { Level, Route } from "./types";
 import { hasWinningRoute, winningRouteCount } from "./scoring";
 
 /** Everything beaten, which is when a briefing is on offer. */
@@ -780,6 +781,41 @@ describe("what the cards do to the brief", () => {
     for (const level of ordinary.filter((one) => one.theme === "trail")) {
       expect(crossings.fits(level), level.title).toBe(false);
     }
+  });
+
+  /*
+   * What "this card happened" means (#152). A card that asks the group to
+   * stand somewhere only counts where the route went there — otherwise the
+   * player never saw it, and a badge for something they did not see is a
+   * badge for nothing.
+   */
+  it("only counts a card whose stop the route actually reached", () => {
+    const level = thursdaySocialRun;
+    const crossings = cardById("runner-crossings");
+    const lit = level.nodes.filter((node) => node.lights).map((n) => n.id);
+    expect(lit.length).toBeGreaterThan(0);
+
+    const past: Route = {
+      nodeIds: [level.startNodeId, lit[0], level.startNodeId],
+      roadIds: [],
+    };
+    const nowhereNear: Route = {
+      nodeIds: [level.startNodeId, "polo-fields"],
+      roadIds: [],
+    };
+    expect(cardsThatHappened(level, [crossings], past)).toEqual([
+      "runner-crossings",
+    ]);
+    expect(cardsThatHappened(level, [crossings], nowhereNear)).toEqual([]);
+  });
+
+  it("counts a card that asks nobody to stand anywhere, wherever you went", () => {
+    const level = thursdaySocialRun;
+    const anywhere: Route = { nodeIds: [level.startNodeId], roadIds: [] };
+    // The watch asks nothing of the route, so there is nothing to miss.
+    expect(cardsThatHappened(level, [cardById("runner-watch")], anywhere)).toEqual(
+      ["runner-watch"],
+    );
   });
 
   it("keeps a weather card for every map, viewpoint or not", () => {
