@@ -311,7 +311,7 @@ describe("the badges for who turned up", () => {
   it("names a card that is really in the deck", () => {
     // The one way these rot: rename a card and the badge is unwinnable, with
     // nothing anywhere to say so.
-    for (const [badgeId, cardId] of Object.entries(CARD_BADGES)) {
+    for (const [badgeId, { card: cardId }] of Object.entries(CARD_BADGES)) {
       expect(CARDS.map((card) => card.id), badgeId).toContain(cardId);
       expect(
         cabinetFor(emptyRecords, levels).map((entry) => entry.id),
@@ -327,21 +327,52 @@ describe("the badges for who turned up", () => {
   });
 
   it("is won by taking that card out, and only that card", () => {
-    for (const [badgeId, cardId] of Object.entries(CARD_BADGES)) {
-      const withIt = cabinetFor(emptyRecords, levels, new Set([cardId]));
+    for (const [badgeId, badge] of Object.entries(CARD_BADGES)) {
+      const one = (ids: string[]) =>
+        badge.won
+          ? { ran: new Set(ids), won: new Set(ids) }
+          : { ran: new Set(ids), won: new Set<string>() };
+
+      const withIt = cabinetFor(emptyRecords, levels, one([badge.card]));
       expect(
         withIt.find((entry) => entry.id === badgeId)?.earned,
         badgeId,
       ).toBe(true);
 
       // And is not handed out by some other card being run.
-      const others = CARDS.map((card) => card.id).filter((id) => id !== cardId);
-      const withoutIt = cabinetFor(emptyRecords, levels, new Set(others));
+      const others = CARDS.map((card) => card.id).filter(
+        (id) => id !== badge.card,
+      );
+      const withoutIt = cabinetFor(emptyRecords, levels, one(others));
       expect(
         withoutIt.find((entry) => entry.id === badgeId)?.earned,
         badgeId,
       ).toBe(false);
     }
+  });
+
+  /*
+   * Stuck at the Lights is the one that asks how the run went (#152). Taking
+   * the card out is not the achievement; standing at every crossing on the
+   * route and still meeting the brief is.
+   */
+  it("does not hand out Stuck at the Lights for a run that failed", () => {
+    const cardId = CARD_BADGES["stuck-at-the-lights"].card;
+    const tookItOut = cabinetFor(emptyRecords, levels, {
+      ran: new Set([cardId]),
+      won: new Set(),
+    });
+    expect(
+      tookItOut.find((entry) => entry.id === "stuck-at-the-lights")?.earned,
+    ).toBe(false);
+
+    const cameOff = cabinetFor(emptyRecords, levels, {
+      ran: new Set([cardId]),
+      won: new Set([cardId]),
+    });
+    expect(
+      cameOff.find((entry) => entry.id === "stuck-at-the-lights")?.earned,
+    ).toBe(true);
   });
 
   /*
@@ -354,11 +385,11 @@ describe("the badges for who turned up", () => {
     const level = thursdaySocialRun;
     const route = loops(level)[0];
     const records = bookOf([[level, route]]);
-    const cardId = CARD_BADGES["new-shoes"];
+    const cardId = CARD_BADGES["new-shoes"].card;
 
     const credited = earnedBy(records, levels, level, routeKey(route), {
-      cardsRun: new Set([cardId]),
-      freshCards: [cardId],
+      cards: { ran: new Set([cardId]), won: new Set() },
+      cardsBefore: { ran: new Set(), won: new Set() },
       // The loop was already in the book: only the card is new tonight.
       freshRoute: false,
     }).map((entry) => entry.id);
@@ -372,11 +403,12 @@ describe("the badges for who turned up", () => {
     const level = thursdaySocialRun;
     const route = loops(level)[0];
     const records = bookOf([[level, route]]);
-    const cardId = CARD_BADGES["new-shoes"];
+    const cardId = CARD_BADGES["new-shoes"].card;
+    const held = { ran: new Set([cardId]), won: new Set<string>() };
 
     const credited = earnedBy(records, levels, level, routeKey(route), {
-      cardsRun: new Set([cardId]),
-      freshCards: [],
+      cards: held,
+      cardsBefore: held,
       freshRoute: false,
     });
     expect(credited).toEqual([]);
