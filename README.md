@@ -1350,6 +1350,30 @@ every build — without it Pages drops the domain each time it republishes.
 Because the site is served from the root of its own domain, Vite's `base`
 stays `/`.
 
+### Keeping the club table awake
+
+Supabase switches a Free-plan project off after a week without database
+activity, and it does not switch itself back on. That is the part worth
+knowing: it is not a cold start with a wait on the end of it, it is an outage
+that lasts until somebody opens the dashboard and presses Resume.
+
+`.github/workflows/keep-awake.yml` reads one row from `players` once a day so
+that never happens. It has to go at the database directly, because the obvious
+version of this — request the site on a timer — keeps nothing awake at all: the
+game never touches Supabase on load, so the Pages site can be busy all week
+while the project sleeps underneath it.
+
+Two things about it are deliberate. It runs daily rather than every few days,
+because it is one request and the margin is free — six can fail in a row before
+the project is at risk. And it fails loudly rather than quietly, so a project
+that has already been paused turns up as a red workflow and an email, which is
+the only warning there is going to be.
+
+The caveat is GitHub's, not Supabase's: scheduled workflows in a public
+repository are disabled after 60 days without a commit. That quiet spell is
+exactly what this job is for, so if the warning mail arrives, push something or
+press Run workflow.
+
 ## Licence
 
 Copyright © 2026 Jo Hutchins-Joss / Silly Game Studio.

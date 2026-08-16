@@ -1,0 +1,77 @@
+name: Keep the club table awake
+
+# Supabase switches a Free-plan project off after a week of no database
+# activity, and it does not switch itself back on. There is no cold start to
+# wait through: the table simply stops answering, and stays that way until
+# somebody opens the dashboard and presses Resume. So something has to use the
+# database on the weeks when nobody plays.
+#
+# It cannot be a visit to the site, which is the obvious thing to reach for and
+# does nothing. The game never touches Supabase on load — the client is behind
+# a dynamic import, fetched only when somebody opens the table or submits a run
+# — so the Pages site can be busy all week while the project goes to sleep
+# underneath it. This reads a row instead, which is the thing that counts.
+#
+# Daily rather than every few days, because it is one request and the margin is
+# free: Supabase asks for "a few requests each day over the previous week", and
+# at this rate six runs can fail in a row before the project is at risk.
+#
+# One caveat. GitHub disables scheduled workflows in a public repository after
+# 60 days with no commits, having emailed the owner first — and that quiet
+# spell is exactly what this job is here for. If that mail arrives, push
+# something or press Run workflow, or the keep-alive stops with the repo.
+
+on:
+  schedule:
+    # Not on the hour: that is when everybody else's cron runs and GitHub
+    # queues scheduled jobs behind the crowd.
+    - cron: "14 7 * * *"
+  workflow_dispatch:
+
+# Nothing here reads the repository or writes anything back.
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read one row from the club table
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+
+          # A fork has no secrets and no project of its own. Nothing to keep
+          # awake is not a failure.
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
+            echo "No Supabase project configured. Nothing to keep awake."
+            exit 0
+          fi
+
+          # A project that cannot be reached leaves no body behind, so make
+          # sure there is no older one left to read as this run's.
+          rm -f /tmp/response
+
+          # The same read the game does when somebody opens the table, cut to
+          # one column of one row. Anyone may read `players` — that is the
+          # first policy in the migration — so the anon key is enough.
+          #
+          # `|| true` so that a project which fails to answer at all reaches
+          # the check below with a status of 000, rather than tripping `set -e`
+          # and failing the step with curl's message and none of the context.
+          status=$(curl --silent --show-error \
+            --output /tmp/response --write-out '%{http_code}' \
+            --max-time 30 --retry 3 --retry-delay 20 --retry-all-errors \
+            "${SUPABASE_URL}/rest/v1/players?select=id&limit=1" \
+            --header "apikey: ${SUPABASE_ANON_KEY}" \
+            --header "Authorization: Bearer ${SUPABASE_ANON_KEY}" || true)
+
+          if [ "${status}" != "200" ]; then
+            echo "Response body:"
+            cat /tmp/response 2>/dev/null || echo "(nothing — the project did not answer at all)"
+            echo "::error::The club table did not answer (HTTP ${status}). If the project has already been paused, restoring it is a manual job in the Supabase dashboard."
+            exit 1
+          fi
+
+          echo "The club table answered ${status}. Project is awake."
