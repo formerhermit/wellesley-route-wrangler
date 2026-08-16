@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { Level } from "../game/types";
 
 interface Props {
   level: Level;
-  reducedMotion: boolean;
   /** The gun itself, and the moment the chip time starts (#116) — so the
    * component does not need to know either sound or a clock exists. */
   onGun: () => void;
@@ -28,12 +27,17 @@ interface Props {
  * is none the worse for it — it was never meant to capture reading the popup,
  * only the race.
  *
- * The bib is decoration and nothing more: rolled fresh every time this shows,
- * never stored, and never read by anything that scores.
+ * **Go** then clears it, and that is the whole of it (#158). This used to
+ * hold a second screen up for two seconds first — the same card with a red
+ * GO! where the button had been — which read as a second popup to get past
+ * rather than as the start of anything. The player has just pressed Go; the
+ * gun is audible; the word was telling them what they had already done, and
+ * charging them a two-second wait to be told it. The race starting *is* the
+ * map, so the card gets out of the way and lets them see it.
  */
-export function StartingGun({ level, reducedMotion, onGun, onDone }: Props) {
-  const [bib] = useState(() => 100 + Math.floor(Math.random() * 900));
-  const [fired, setFired] = useState(false);
+export function StartingGun({ level, onGun, onDone }: Props) {
+  const bib = useRef(100 + Math.floor(Math.random() * 900));
+  const fired = useRef(false);
   const goButtonRef = useRef<HTMLButtonElement>(null);
 
   // The only control on the screen, so it takes focus the way a dialog's own
@@ -42,18 +46,13 @@ export function StartingGun({ level, reducedMotion, onGun, onDone }: Props) {
     goButtonRef.current?.focus();
   }, []);
 
+  // A ref rather than state because it guards a click, and the unmount that
+  // follows this one is not going to arrive before a second click can.
   const fire = () => {
-    if (fired) return;
-    setFired(true);
+    if (fired.current) return;
+    fired.current = true;
     onGun();
-
-    // Long enough to actually read "GO!" rather than catch it disappearing —
-    // the button click already told the player what they pressed, so this
-    // is the one pause here that is about the word, not the decision. A
-    // player who has asked for less motion still gets it shorter, not gone:
-    // reduced motion is about cutting movement, not cutting the reveal down
-    // to nothing.
-    window.setTimeout(onDone, reducedMotion ? 900 : 2000);
+    onDone();
   };
 
   return (
@@ -61,25 +60,19 @@ export function StartingGun({ level, reducedMotion, onGun, onDone }: Props) {
       <div className="starting-gun">
         <p className="starting-gun__bib">
           <span className="starting-gun__club">Wellesley Runners</span>
-          <span className="starting-gun__number">{bib}</span>
+          <span className="starting-gun__number">{bib.current}</span>
         </p>
         <p className="starting-gun__strapline">{level.strapline}</p>
         <p className="starting-gun__chip">Chip timed from the gun.</p>
 
-        {fired ? (
-          <p className="starting-gun__call" role="status" aria-live="assertive">
-            GO!
-          </p>
-        ) : (
-          <button
-            ref={goButtonRef}
-            type="button"
-            className="button button--primary starting-gun__go"
-            onClick={fire}
-          >
-            Go
-          </button>
-        )}
+        <button
+          ref={goButtonRef}
+          type="button"
+          className="button button--primary starting-gun__go"
+          onClick={fire}
+        >
+          Go
+        </button>
       </div>
     </div>
   );

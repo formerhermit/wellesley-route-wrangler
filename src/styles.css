@@ -5802,13 +5802,6 @@ body {
   margin-top: 1.2rem;
 }
 
-.starting-gun__call {
-  margin: 1rem 0 0;
-  font-size: clamp(1.3rem, 5vw, 1.7rem);
-  font-weight: 800;
-  color: var(--fail);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .starting-gun-backdrop {
     animation: none;

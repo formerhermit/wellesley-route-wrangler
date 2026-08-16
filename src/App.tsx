@@ -841,7 +841,6 @@ export default function App() {
       {showingStartingGun && (
         <StartingGun
           level={level}
-          reducedMotion={reducedMotion}
           onGun={() => {
             solveStartedAt.current = Date.now();
             sound.play("gun");
